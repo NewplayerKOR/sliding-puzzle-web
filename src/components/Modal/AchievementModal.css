@@ -1,0 +1,223 @@
+.achieve-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn var(--transition-fast);
+}
+
+.achieve-modal-content {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--board-border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem;
+  max-width: 520px;
+  max-height: 88dvh;
+  width: 100%;
+  box-shadow: var(--shadow-xl);
+  animation: popIn var(--transition-spring);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow: hidden;
+}
+
+.achieve-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.achieve-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.achieve-header-icon {
+  color: #f59e0b;
+  animation: pulseGlow 2s infinite;
+}
+
+.achieve-header-img {
+  width: 28px;
+  height: 28px;
+  max-width: 28px;
+  max-height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+
+.achieve-modal-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.achieve-progress-badge {
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+.achieve-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.3rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.achieve-close-btn:hover {
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+.achieve-modal-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: -0.25rem 0 0.15rem;
+}
+
+/* Grid */
+.achieve-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  max-height: 60vh;
+}
+
+.achieve-card {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.65rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--board-border);
+  background-color: var(--bg-surface-subtle);
+  transition: all var(--transition-fast);
+}
+
+.achieve-card.unlocked {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), transparent);
+}
+
+.achieve-card.locked {
+  opacity: 0.65;
+}
+
+.achieve-card-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--board-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.achieve-card.unlocked .achieve-card-icon-box {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.05));
+  border-color: #f59e0b;
+}
+
+.achieve-icon {
+  color: #f59e0b;
+}
+
+.achieve-lock-icon {
+  color: var(--text-muted);
+}
+
+.achieve-card-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.achieve-card-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+.achieve-item-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.achieve-unlocked-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.achieve-item-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.25;
+  margin-top: 0.15rem;
+}
+
+.achieve-progress-bar-wrapper {
+  position: relative;
+  height: 12px;
+  background-color: var(--bg-body);
+  border-radius: 9999px;
+  margin-top: 0.35rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.achieve-progress-bar-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  border-radius: 9999px;
+}
+
+.achieve-progress-text {
+  position: relative;
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 0 auto;
+  z-index: 1;
+}
+
+@media (max-width: 480px) {
+  .achieve-grid {
+    grid-template-columns: 1fr;
+  }
+}

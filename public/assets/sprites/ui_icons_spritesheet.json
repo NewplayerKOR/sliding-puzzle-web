@@ -1,0 +1,95 @@
+{
+  "image": "ui_icons_spritesheet.png",
+  "size": {
+    "w": 1376,
+    "h": 768
+  },
+  "format": "RGBA8888",
+  "description": "Exact pixel bounding boxes for all 14 UI elements in the 1376x768 spritesheet",
+  "frames": {
+    "icon_sound_on": {
+      "x": 40,
+      "y": 45,
+      "w": 220,
+      "h": 185
+    },
+    "icon_sound_off": {
+      "x": 310,
+      "y": 40,
+      "w": 220,
+      "h": 195
+    },
+    "icon_pause": {
+      "x": 605,
+      "y": 40,
+      "w": 165,
+      "h": 195
+    },
+    "icon_play": {
+      "x": 865,
+      "y": 45,
+      "w": 180,
+      "h": 190
+    },
+    "icon_reset": {
+      "x": 1115,
+      "y": 35,
+      "w": 215,
+      "h": 205
+    },
+    "icon_hint": {
+      "x": 35,
+      "y": 285,
+      "w": 235,
+      "h": 210
+    },
+    "icon_number_toggle": {
+      "x": 315,
+      "y": 290,
+      "w": 210,
+      "h": 210
+    },
+    "icon_theme_selector": {
+      "x": 575,
+      "y": 290,
+      "w": 220,
+      "h": 210
+    },
+    "ui_empty_slot_glow": {
+      "x": 835,
+      "y": 280,
+      "w": 240,
+      "h": 235
+    },
+    "badge_trophy": {
+      "x": 1100,
+      "y": 280,
+      "w": 245,
+      "h": 215
+    },
+    "stars_0": {
+      "x": 18,
+      "y": 560,
+      "w": 270,
+      "h": 165
+    },
+    "stars_1": {
+      "x": 355,
+      "y": 560,
+      "w": 300,
+      "h": 165
+    },
+    "stars_2": {
+      "x": 715,
+      "y": 560,
+      "w": 290,
+      "h": 165
+    },
+    "stars_3": {
+      "x": 1085,
+      "y": 550,
+      "w": 275,
+      "h": 175
+    }
+  }
+}

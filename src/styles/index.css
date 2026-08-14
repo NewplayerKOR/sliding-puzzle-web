@@ -1,0 +1,245 @@
+/* ==========================================================================
+   CSS RESET & BASE DESIGN SYSTEM TOKENS
+   ========================================================================== */
+
+:root {
+  /* Color Palette - Refined Modern Slate & Indigo Accent */
+  --bg-app: hsl(220, 20%, 97%);
+  --bg-surface: hsl(0, 0%, 100%);
+  --bg-surface-elevated: hsl(220, 20%, 99%);
+  --bg-surface-subtle: hsl(220, 15%, 93%);
+  --bg-surface-active: hsl(220, 15%, 88%);
+  --bg-body: hsl(220, 18%, 95%);
+
+  --text-main: hsl(222, 47%, 11%);
+  --text-muted: hsl(215, 16%, 47%);
+  --text-subtle: hsl(215, 16%, 65%);
+  --text-inverse: hsl(0, 0%, 100%);
+
+  /* Primary Accent - Vibrant Royal Blue */
+  --primary-50: hsl(217, 91%, 95%);
+  --primary-100: hsl(217, 91%, 90%);
+  --primary-200: hsl(217, 91%, 80%);
+  --primary-500: hsl(221, 83%, 53%);
+  --primary-600: hsl(224, 76%, 48%);
+  --primary-700: hsl(226, 70%, 40%);
+
+  /* Success / Victory / Amber */
+  --success-50: hsl(142, 70%, 95%);
+  --success-500: hsl(142, 71%, 45%);
+  --success-600: hsl(142, 72%, 36%);
+  --amber-500: hsl(45, 93%, 47%);
+  --amber-50: hsl(45, 93%, 95%);
+
+  /* Board & Tile Tokens */
+  --board-bg: hsl(220, 14%, 90%);
+  --board-border: hsl(220, 13%, 82%);
+  --tile-bg: hsl(0, 0%, 100%);
+  --tile-text: hsl(222, 47%, 18%);
+  --tile-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  --tile-shadow-hover: 0 8px 14px -2px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08);
+  --tile-shadow-active: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  --tile-movable-border: hsl(221, 83%, 65%);
+  --tile-empty-bg: hsl(220, 14%, 86%);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Typography */
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Global Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--font-family);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+  overflow-x: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Custom Smooth Scrollbars for Modals */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--board-border);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--primary-500);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   DIRECT USER SPRITESHEETS: UI ICONS & FX ANIMATIONS
+   ========================================================================== */
+
+/* Base UI Icon Sprite (/assets/sprites/ui_icons_spritesheet.png - 5x3 Grid) */
+.sprite,
+.sprite-ui {
+  background-image: url('/assets/sprites/ui_icons_spritesheet.png');
+  background-size: 500% 300%;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Icons (48x48) */
+.sprite-icon { width: 48px; height: 48px; }
+.sprite-icon-sound-on       { background-position: 0% 0%; }
+.sprite-icon-sound-off      { background-position: 25% 0%; }
+.sprite-icon-pause          { background-position: 50% 0%; }
+.sprite-icon-play           { background-position: 75% 0%; }
+.sprite-icon-reset          { background-position: 100% 0%; }
+
+.sprite-icon-hint           { background-position: 0% 50%; }
+.sprite-icon-number-toggle  { background-position: 25% 50%; }
+.sprite-icon-theme-selector { background-position: 50% 50%; }
+.sprite-empty-slot-glow     { width: 64px; height: 64px; background-position: 75% 50%; }
+.sprite-badge-trophy        { width: 80px; height: 80px; background-position: 100% 50%; }
+
+/* Ratings & Badges */
+.sprite-stars-0             { width: 64px; height: 64px; background-position: 0% 100%; }
+.sprite-stars-1             { width: 64px; height: 64px; background-position: 25% 100%; }
+.sprite-stars-2             { width: 64px; height: 64px; background-position: 50% 100%; }
+.sprite-stars-3             { width: 64px; height: 64px; background-position: 75% 100%; }
+
+/* FX Sparkle Sequence (/assets/sprites/fx_animations_spritesheet.png - 6x2 Grid) */
+.sprite-sparkle {
+  background-image: url('/assets/sprites/fx_animations_spritesheet.png');
+  background-size: 600% 200%;
+  background-repeat: no-repeat;
+  width: 64px;
+  height: 64px;
+  display: inline-block;
+}
+.sprite-sparkle-1 { background-position: 0% 0%; }
+.sprite-sparkle-2 { background-position: 20% 0%; }
+.sprite-sparkle-3 { background-position: 40% 0%; }
+.sprite-sparkle-4 { background-position: 60% 0%; }
+.sprite-sparkle-5 { background-position: 80% 0%; }
+.sprite-sparkle-6 { background-position: 100% 0%; }
+
+/* FX Confetti Sequence (/assets/sprites/fx_animations_spritesheet.png - 8x2 Grid) */
+.sprite-confetti {
+  background-image: url('/assets/sprites/fx_animations_spritesheet.png');
+  background-size: 800% 200%;
+  background-repeat: no-repeat;
+  width: 128px;
+  height: 128px;
+  display: inline-block;
+}
+.sprite-confetti-1 { background-position: 0% 100%; }
+.sprite-confetti-2 { background-position: 14.2857% 100%; }
+.sprite-confetti-3 { background-position: 28.5714% 100%; }
+.sprite-confetti-4 { background-position: 42.8571% 100%; }
+.sprite-confetti-5 { background-position: 57.1428% 100%; }
+.sprite-confetti-6 { background-position: 71.4285% 100%; }
+.sprite-confetti-7 { background-position: 85.7142% 100%; }
+.sprite-confetti-8 { background-position: 100% 100%; }
+
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    box-shadow: inset 0 0 8px rgba(37, 99, 235, 0.2);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: inset 0 0 16px rgba(37, 99, 235, 0.4);
+  }
+}
+
+@keyframes sparklePop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  70% {
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

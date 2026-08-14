@@ -1,0 +1,23 @@
+{
+  "name": "Sliding Block Puzzle",
+  "short_name": "SlidingPuzzle",
+  "description": "Interactive sliding block puzzle web game with themes, sounds, and achievements.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./assets/icons/badge_trophy.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/icons/badge_trophy.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+
+}

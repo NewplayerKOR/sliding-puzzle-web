@@ -1,0 +1,187 @@
+.puzzle-tile {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  font-weight: 800;
+  font-size: clamp(0.95rem, calc(0.6rem + 2.5vw), 1.8rem);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  overflow: hidden;
+  transform: translateZ(0);
+  image-rendering: -webkit-optimize-contrast;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+}
+
+.tile-empty {
+  background-color: var(--tile-empty-bg);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-slot-indicator {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/icons/ui_empty_slot_glow.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: inherit;
+  opacity: 0.85;
+  animation: emptySlotGlowFade 1.6s infinite ease-in-out;
+  transform: none !important;
+}
+
+@keyframes emptySlotGlowFade {
+  0%, 100% {
+    opacity: 0.15;
+    filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.2));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.8));
+  }
+}
+
+.tile-filled {
+  background-color: var(--tile-bg);
+  color: var(--tile-text);
+  border: 1px solid var(--board-border);
+  box-shadow: var(--tile-shadow);
+  cursor: not-allowed;
+}
+
+/* Image Mode */
+.tile-filled.mode-image {
+  background-color: var(--board-bg);
+  background-repeat: no-repeat;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Pixel Art crisp rendering */
+.tile-filled.mode-image.pixel-art {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.tile-filled.movable {
+  cursor: pointer;
+  border-color: var(--tile-movable-border);
+}
+
+.tile-filled.movable:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: var(--tile-shadow-hover);
+  z-index: 10;
+}
+
+.tile-filled.mode-number.movable:hover {
+  background-color: var(--primary-50);
+  color: var(--primary-700);
+}
+
+.tile-filled.mode-image.movable:hover {
+  filter: brightness(1.06);
+}
+
+.tile-filled.movable:active {
+  transform: translateY(1px) scale(0.96);
+  box-shadow: var(--tile-shadow-active);
+}
+
+.tile-number {
+  line-height: 1;
+}
+
+/* Image Mode Number Overlay Pill */
+.number-overlay {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: clamp(0.6rem, 1.8vw, 0.8rem);
+  font-weight: 800;
+  padding: 1px 5px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(2px);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  line-height: 1.2;
+}
+
+.tile-indicator {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--success-500);
+  opacity: 0.85;
+}
+
+/* AI Smart Hint Overlay */
+.tile-ai-hint-overlay {
+  position: absolute;
+  inset: 0;
+  border: 3px solid #38bdf8;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 20;
+  animation: hintPulseGlow 1s infinite alternate ease-in-out;
+}
+
+.hint-arrow {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(56, 189, 248, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8);
+  animation: bounceHint 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes hintPulseGlow {
+  from {
+    box-shadow: inset 0 0 6px #38bdf8, 0 0 10px #38bdf8;
+  }
+  to {
+    box-shadow: inset 0 0 16px #38bdf8, 0 0 24px #38bdf8;
+  }
+}
+
+@keyframes bounceHint {
+  from { transform: scale(0.9); }
+  to { transform: scale(1.2); }
+}
+
+@media (max-width: 480px) {
+  .puzzle-tile {
+    border-radius: var(--radius-sm);
+  }
+  .number-overlay {
+    top: 3px;
+    left: 3px;
+    padding: 1px 4px;
+  }
+  .tile-indicator {
+    top: 3px;
+    right: 3px;
+    width: 4px;
+    height: 4px;
+  }
+}

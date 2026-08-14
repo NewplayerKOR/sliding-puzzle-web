@@ -1,0 +1,114 @@
+/* ==========================================================================
+   DIRECT USER SPRITESHEETS: UI ICONS & FX ANIMATIONS
+   ========================================================================== */
+
+/* Base UI Icon Sprite (1408x768 -> 5 columns x 3 rows) */
+.sprite,
+.sprite-ui {
+  background-image: url('./ui_icons_spritesheet.png');
+  background-size: 500% 300%;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: middle;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+}
+
+/* System & Utility Icons (48x48) */
+.sprite-icon {
+  width: 48px;
+  height: 48px;
+}
+.sprite-icon-sound-on       { background-position: 0% 0%; }
+.sprite-icon-sound-off      { background-position: 25% 0%; }
+.sprite-icon-pause          { background-position: 50% 0%; }
+.sprite-icon-play           { background-position: 75% 0%; }
+.sprite-icon-reset          { background-position: 100% 0%; }
+
+.sprite-icon-hint           { background-position: 0% 50%; }
+.sprite-icon-number-toggle  { background-position: 25% 50%; }
+.sprite-icon-theme-selector { background-position: 50% 50%; }
+.sprite-empty-slot-glow     { width: 64px; height: 64px; background-position: 75% 50%; }
+.sprite-badge-trophy        { width: 80px; height: 80px; background-position: 100% 50%; }
+
+/* Star Ratings (3-star horizontal bar: 160x65) */
+.sprite-stars,
+.sprite-stars-item,
+[class*="sprite-stars-"] {
+  background-image: url('./ui_icons_spritesheet.png');
+  background-size: 757px 422px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  vertical-align: middle;
+  width: 160px;
+  height: 65px;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+}
+.sprite-stars-0             { background-position: -3px -321px; }
+.sprite-stars-1             { background-position: -197px -321px; }
+.sprite-stars-2             { background-position: -394px -321px; }
+.sprite-stars-3             { background-position: -594px -321px; }
+
+/* FX Sparkle Sequence (6 columns x 2 rows -> background-size: 600% 200%) */
+.sprite-sparkle {
+  background-image: url('./fx_animations_spritesheet.png');
+  background-size: 600% 200%;
+  background-repeat: no-repeat;
+  width: 64px;
+  height: 64px;
+  display: inline-block;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+}
+.sprite-sparkle-1 { background-position: 0% 0%; }
+.sprite-sparkle-2 { background-position: 20% 0%; }
+.sprite-sparkle-3 { background-position: 40% 0%; }
+.sprite-sparkle-4 { background-position: 60% 0%; }
+.sprite-sparkle-5 { background-position: 80% 0%; }
+.sprite-sparkle-6 { background-position: 100% 0%; }
+
+/* Animated Sparkle Sequence for Tile Correct FX */
+@keyframes sparkleSequence {
+  0%   { background-position: 0% 0%; transform: scale(0.6); opacity: 0; }
+  15%  { background-position: 0% 0%; transform: scale(1.0); opacity: 1; }
+  35%  { background-position: 20% 0%; transform: scale(1.15); opacity: 1; }
+  55%  { background-position: 40% 0%; transform: scale(1.2); opacity: 0.95; }
+  75%  { background-position: 60% 0%; transform: scale(1.0); opacity: 0.8; }
+  90%  { background-position: 80% 0%; transform: scale(0.85); opacity: 0.5; }
+  100% { background-position: 100% 0%; transform: scale(0.5); opacity: 0; }
+}
+
+.animated-sparkle {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  background-image: url('./fx_animations_spritesheet.png');
+  background-size: 600% 200%;
+  background-repeat: no-repeat;
+  animation: sparkleSequence 0.6s ease-out forwards;
+  pointer-events: none;
+  z-index: 25;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* FX Confetti Sequence (8 columns x 2 rows -> background-size: 800% 200%) */
+.sprite-confetti {
+  background-image: url('./fx_animations_spritesheet.png');
+
+  background-size: 800% 200%;
+  background-repeat: no-repeat;
+  width: 128px;
+  height: 128px;
+  display: inline-block;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+}
+.sprite-confetti-1 { background-position: 0% 100%; }
+.sprite-confetti-2 { background-position: 14.2857% 100%; }
+.sprite-confetti-3 { background-position: 28.5714% 100%; }
+.sprite-confetti-4 { background-position: 42.8571% 100%; }
+.sprite-confetti-5 { background-position: 57.1428% 100%; }
+.sprite-confetti-6 { background-position: 71.4285% 100%; }
+.sprite-confetti-7 { background-position: 85.7142% 100%; }
+.sprite-confetti-8 { background-position: 100% 100%; }

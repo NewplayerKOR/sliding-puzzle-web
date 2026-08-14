@@ -1,0 +1,87 @@
+.app-container {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem 1rem max(1rem, env(safe-area-inset-bottom)) 1rem;
+  background: radial-gradient(circle at 50% 0%, hsl(220, 25%, 96%) 0%, hsl(220, 20%, 92%) 100%);
+  box-sizing: border-box;
+}
+
+.global-toast-banner {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2500;
+  background-color: var(--primary-600);
+  color: #fff;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.825rem;
+  font-weight: 700;
+  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+  animation: toastSlideDown 0.3s ease-out;
+}
+
+.game-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.game-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--board-border);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem 1.25rem;
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  align-items: center;
+}
+
+.app-footer {
+  text-align: center;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  font-weight: 500;
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    padding: 0.75rem 0.65rem max(0.75rem, env(safe-area-inset-bottom)) 0.65rem;
+  }
+  .game-main {
+    gap: 0.75rem;
+  }
+  .game-card {
+    padding: 0.85rem 0.75rem;
+    border-radius: var(--radius-lg);
+    gap: 0.85rem;
+  }
+  .app-footer {
+    padding-top: 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .app-container {
+    padding: 0.5rem 0.4rem max(0.5rem, env(safe-area-inset-bottom)) 0.4rem;
+  }
+  .game-card {
+    padding: 0.7rem 0.5rem;
+    border-radius: var(--radius-md);
+    gap: 0.65rem;
+  }
+}
