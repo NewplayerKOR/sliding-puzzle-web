@@ -34,8 +34,8 @@ dist-ssr/
 # Vercel deployment artifacts
 .vercel
 
-# AI Generative Artifacts & Agent Docs (User Request)
 docs/
+PROJECT_GUIDE.md
 
 # Test coverage
 coverage/

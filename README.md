@@ -2,6 +2,7 @@
 
 * **참여자**: NewplayerKOR
 * **기술 스택**: React 19, TypeScript, Vite
+* **📌 개발/QA 세션 진입 시**: [PROJECT_GUIDE.md](./PROJECT_GUIDE.md) (통합 참고 문서)를 먼저 읽으세요.
 
 React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이딩 퍼즐(N-Puzzle) 웹 애플리케이션입니다. 브라우저 표준 API(Canvas API, Web Audio API, Web Worker, Service Worker)를 활용하여 별도 백엔드 없이 모든 기능이 동작합니다.
 
