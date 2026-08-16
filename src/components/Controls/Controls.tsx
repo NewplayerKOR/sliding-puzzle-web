@@ -244,7 +244,7 @@ export const Controls: React.FC<ControlsProps> = ({
           <span>{t.resetBoard}</span>
         </button>
 
-        {onAutoSolve && (
+        {onAutoSolve && !import.meta.env.PROD && (
           <button
             type="button"
             className="btn btn-autoclear"
