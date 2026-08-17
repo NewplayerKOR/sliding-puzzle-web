@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { findNextOptimalMove, AISolutionStep } from './aiSolver';
+import { findNextOptimalMove, AISolutionStep, clearSolverMemory } from './aiSolver';
 import { generateSolvedBoard, isAdjacent, swapTiles } from './puzzleLogic';
 import { mulberry32 } from './prng';
 import { Board, GridSize } from '../types/puzzle';
@@ -79,6 +79,35 @@ function assertNoOscillation(gridSize: GridSize, seed: number, hintCount: number
     expect(hint).not.toBeNull();
     followHint(trace, hint as AISolutionStep, gridSize);
   }
+}
+
+/** Follow N hints with forced cache invalidation before each hint and assert zero oscillation. */
+function assertForcedRecomputeNoOscillation(gridSize: GridSize, seed: number, hintCount: number): void {
+  const trace: Trace = { board: randomWalkBoard(gridSize, seed), prevTileValue: null, prevEmptyIdx: null };
+  for (let i = 0; i < hintCount; i++) {
+    clearSolverMemory();
+    const hint = findNextOptimalMove(trace.board, gridSize);
+    expect(hint).not.toBeNull();
+    followHint(trace, hint as AISolutionStep, gridSize);
+  }
+}
+
+/** Complete puzzle with forced cache invalidation at every single step. */
+function assertForcedRecomputeSolvesPuzzle(gridSize: GridSize, seed: number, cap: number): void {
+  const trace: Trace = { board: randomWalkBoard(gridSize, seed), prevTileValue: null, prevEmptyIdx: null };
+  let nulls = 0;
+  for (let i = 0; i < cap; i++) {
+    clearSolverMemory();
+    const hint = findNextOptimalMove(trace.board, gridSize);
+    if (hint === null) {
+      nulls++;
+      break;
+    }
+    followHint(trace, hint, gridSize);
+    if (trace.board.every((t) => t.currentPos === t.targetPos)) break;
+  }
+  expect(nulls).toBe(0);
+  expect(trace.board.every((t) => t.currentPos === t.targetPos)).toBe(true);
 }
 
 /** Following hints (served from the cached solution path) solves the board. */
@@ -163,6 +192,17 @@ describe('aiSolver', () => {
   );
 
   it(
+    '4x4: forced cache recomputation at each step never reverses the same tile across multiple seeds (zero oscillation stress test)',
+    () => {
+      const seeds = [101, 202, 303, 404, 505];
+      for (const seed of seeds) {
+        assertForcedRecomputeNoOscillation(4, seed, 15);
+      }
+    },
+    30000
+  );
+
+  it(
     '5x5: 10 consecutive hints never reverse the same tile (no oscillation)',
     () => {
       assertNoOscillation(5, 5678, 10);
@@ -174,6 +214,14 @@ describe('aiSolver', () => {
     '4x4: following hints completes the puzzle',
     () => {
       assertHintsSolvePuzzle(4, 7777, 200);
+    },
+    30000
+  );
+
+  it(
+    '4x4: forced cache recomputation solves the puzzle to completion',
+    () => {
+      assertForcedRecomputeSolvesPuzzle(4, 9999, 150);
     },
     30000
   );

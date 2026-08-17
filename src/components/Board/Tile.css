@@ -142,7 +142,7 @@
   justify-content: center;
   pointer-events: none;
   z-index: 20;
-  animation: hintPulseGlow 1s infinite alternate ease-in-out;
+  animation: hintPulseGlow 1.2s infinite alternate ease-in-out;
 }
 
 .hint-arrow {
@@ -150,7 +150,23 @@
   font-weight: 900;
   color: #fff;
   text-shadow: 0 0 8px rgba(56, 189, 248, 0.9), 0 2px 4px rgba(0, 0, 0, 0.8);
-  animation: bounceHint 0.8s infinite alternate ease-in-out;
+  animation: bounceHint 0.9s infinite alternate ease-in-out;
+}
+
+.tile-ai-hint-overlay.dir-up .hint-arrow {
+  animation-name: nudgeUp;
+}
+
+.tile-ai-hint-overlay.dir-down .hint-arrow {
+  animation-name: nudgeDown;
+}
+
+.tile-ai-hint-overlay.dir-left .hint-arrow {
+  animation-name: nudgeLeft;
+}
+
+.tile-ai-hint-overlay.dir-right .hint-arrow {
+  animation-name: nudgeRight;
 }
 
 @keyframes hintPulseGlow {
@@ -158,13 +174,33 @@
     box-shadow: inset 0 0 6px #38bdf8, 0 0 10px #38bdf8;
   }
   to {
-    box-shadow: inset 0 0 16px #38bdf8, 0 0 24px #38bdf8;
+    box-shadow: inset 0 0 14px #38bdf8, 0 0 20px #38bdf8;
   }
 }
 
 @keyframes bounceHint {
-  from { transform: scale(0.9); }
-  to { transform: scale(1.2); }
+  from { transform: translateY(0); }
+  to { transform: translateY(-2px); }
+}
+
+@keyframes nudgeUp {
+  from { transform: translateY(0); }
+  to { transform: translateY(-2px); }
+}
+
+@keyframes nudgeDown {
+  from { transform: translateY(0); }
+  to { transform: translateY(2px); }
+}
+
+@keyframes nudgeLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-2px); }
+}
+
+@keyframes nudgeRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(2px); }
 }
 
 @media (max-width: 480px) {

@@ -43,6 +43,47 @@ const FULL_HEURISTIC_BUDGET = 2000000; // fallback attempts (full-goal MD+LC)
 const TIME_LIMIT_MS = 2800; // whole-computation wall-clock limit
 
 /**
+ * 4x4 reduction pipeline:
+ * Phase 1 (Row 1): tiles 1, 2 individually, then corner pair (3, 4)
+ * Phase 2 (Col 1): tile 5 individually, then corner pair (9, 13)
+ * Phase 3: remaining 3x3 block on cells {5,6,7, 9,10,11, 13,14,15} mapped to 1..8 and solved with 3x3 optimal A*
+ */
+const SINGLE_STAGES_4: Array<[tileValue: number, cell: number]> = [
+  [1, 0],
+  [2, 1],
+];
+
+const ROW_PAIR_4 = {
+  tiles: [3, 4] as const,
+  cells: [2, 3] as const,
+};
+
+const COL_SINGLE_4: Array<[tileValue: number, cell: number]> = [
+  [5, 4],
+];
+
+const COL_PAIR_4 = {
+  tiles: [9, 13] as const,
+  cells: [8, 12] as const,
+};
+
+const REDUCE_MAP_4: Record<number, number> = {
+  6: 1,
+  7: 2,
+  8: 3,
+  10: 4,
+  11: 5,
+  12: 6,
+  14: 7,
+  15: 8,
+};
+
+const UNREDUCE_MAP_4: Record<number, number> = {};
+for (const [k, v] of Object.entries(REDUCE_MAP_4)) {
+  UNREDUCE_MAP_4[v] = Number(k);
+}
+
+/**
  * 5x5 reduction pipeline: tiles 1,2,3 and 6,11 are placed individually;
  * corner pairs (4,5) and (16,21) are solved with a joint 2-tile A-star
  * (their cells stay unfrozen during the search — no manual maneuvers).
@@ -374,11 +415,15 @@ class MinHeap {
   }
 }
 
+interface BudgetTracker {
+  remaining: number;
+}
+
 interface AStarConfig {
   values: Uint16Array;
   emptyIdx: number;
   gridSize: GridSize;
-  budget: number;
+  budget: number | BudgetTracker;
   deadline: number;
   weight: number;
   frozen: Set<number> | null;
@@ -410,7 +455,11 @@ function aStarCore(cfg: AStarConfig): AStarResult {
   let expansions = 0;
 
   while (heap.size > 0) {
-    if (++expansions > budget) return { move: null, path: null };
+    if (typeof budget === 'object') {
+      if (--budget.remaining < 0) return { move: null, path: null };
+    } else {
+      if (++expansions > budget) return { move: null, path: null };
+    }
     if ((expansions & 1023) === 0 && now() > deadline) return { move: null, path: null };
 
     const node = heap.pop() as AStarNode;
@@ -471,7 +520,7 @@ function solveStandard(
   values: Uint16Array,
   emptyIdx: number,
   gridSize: GridSize,
-  budget: number,
+  budget: number | BudgetTracker,
   deadline: number,
   weight: number
 ): AISolutionStep[] | null {
@@ -492,20 +541,8 @@ function solveStandard(
   return res.path;
 }
 
-/**
- * 4x4 solver: single weighted A-star search, f = g + w * (MD + LC).
- */
-function solve4x4(
-  values: Uint16Array,
-  emptyIdx: number,
-  budget: number,
-  deadline: number
-): AISolutionStep[] | null {
-  return solveStandard(values, emptyIdx, 4, budget, deadline, WEIGHTED_W);
-}
-
 /* ------------------------------------------------------------------------- */
-/* Frozen-mask placement searches — 5x5 reduction pipeline                   */
+/* Frozen-mask placement searches — 4x4 and 5x5 reduction pipeline            */
 /* ------------------------------------------------------------------------- */
 
 interface PlacementResult {
@@ -527,7 +564,7 @@ function placeTiles(
   gridSize: GridSize,
   frozen: Set<number>,
   targets: Array<{ tileValue: number; cell: number }>,
-  budget: number,
+  budget: number | BudgetTracker,
   deadline: number
 ): PlacementResult | null {
   if (targets.every((t) => state[t.cell] === t.tileValue)) {
@@ -587,7 +624,7 @@ function placeTiles(
     values: state,
     emptyIdx,
     gridSize,
-    budget: FULL_HEURISTIC_BUDGET,
+    budget: typeof budget === 'object' ? budget : FULL_HEURISTIC_BUDGET,
     deadline,
     weight: FALLBACK_W,
     frozen,
@@ -612,22 +649,117 @@ function solveCornerPair(
   frozen: Set<number>,
   tiles: readonly [number, number],
   cells: readonly [number, number],
-  deadline: number
+  deadline: number,
+  gridSize: GridSize = 5,
+  tracker?: BudgetTracker
 ): PlacementResult | null {
   const targets = [
     { tileValue: tiles[0], cell: cells[0] },
     { tileValue: tiles[1], cell: cells[1] },
   ];
 
-  let res = placeTiles(state, emptyIdx, 5, frozen, targets, PAIR_BUDGET, deadline);
+  let res = placeTiles(state, emptyIdx, gridSize, frozen, targets, tracker ?? PAIR_BUDGET, deadline);
   if (res) return res;
 
-  const firstParked = placeTiles(state, emptyIdx, 5, frozen, [targets[0]], PLACE_BUDGET, deadline);
+  const firstParked = placeTiles(state, emptyIdx, gridSize, frozen, [targets[0]], tracker ?? PLACE_BUDGET, deadline);
   if (!firstParked) return null;
-  res = placeTiles(firstParked.endState, firstParked.endEmptyIdx, 5, frozen, targets, PAIR_BUDGET, deadline);
+  res = placeTiles(firstParked.endState, firstParked.endEmptyIdx, gridSize, frozen, targets, tracker ?? PAIR_BUDGET, deadline);
   if (!res) return null;
   res.moves = [...firstParked.moves, ...res.moves];
   return res;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 4x4 reduction pipeline (sub-goals: Row 1 -> Col 1 -> 3x3 block)           */
+/* ------------------------------------------------------------------------- */
+
+function solve4x4(
+  state: Uint16Array,
+  emptyIdx: number,
+  deadline: number,
+  budgetOverride?: number
+): AISolutionStep[] | null {
+  const frozen = new Set<number>();
+  const path: AISolutionStep[] = [];
+  let s = state;
+  let e = emptyIdx;
+  const tracker: BudgetTracker | undefined = budgetOverride !== undefined ? { remaining: budgetOverride } : undefined;
+
+  // Phase 1: Row 1 — tiles 1, 2 individually, then corner pair (3, 4)
+  for (const [tv, cell] of SINGLE_STAGES_4) {
+    if (s[cell] === tv) {
+      frozen.add(cell);
+      continue;
+    }
+    const placed = placeTiles(s, e, 4, frozen, [{ tileValue: tv, cell }], tracker ?? PLACE_BUDGET, deadline);
+    if (!placed) return ultimateFallback4(state, emptyIdx, deadline, tracker);
+    frozen.add(cell);
+    path.push(...placed.moves);
+    s = placed.endState;
+    e = placed.endEmptyIdx;
+  }
+
+  const rowPair = solveCornerPair(s, e, frozen, ROW_PAIR_4.tiles, ROW_PAIR_4.cells, deadline, 4, tracker);
+  if (!rowPair) return ultimateFallback4(state, emptyIdx, deadline, tracker);
+  for (const cell of ROW_PAIR_4.cells) frozen.add(cell);
+  path.push(...rowPair.moves);
+  s = rowPair.endState;
+  e = rowPair.endEmptyIdx;
+
+  // Phase 2: Column 1 — tile 5 individually, then corner pair (9, 13)
+  for (const [tv, cell] of COL_SINGLE_4) {
+    if (s[cell] === tv) {
+      frozen.add(cell);
+      continue;
+    }
+    const placed = placeTiles(s, e, 4, frozen, [{ tileValue: tv, cell }], tracker ?? PLACE_BUDGET, deadline);
+    if (!placed) return ultimateFallback4(state, emptyIdx, deadline, tracker);
+    frozen.add(cell);
+    path.push(...placed.moves);
+    s = placed.endState;
+    e = placed.endEmptyIdx;
+  }
+
+  const colPair = solveCornerPair(s, e, frozen, COL_PAIR_4.tiles, COL_PAIR_4.cells, deadline, 4, tracker);
+  if (!colPair) return ultimateFallback4(state, emptyIdx, deadline, tracker);
+  for (const cell of COL_PAIR_4.cells) frozen.add(cell);
+  path.push(...colPair.moves);
+  s = colPair.endState;
+  e = colPair.endEmptyIdx;
+
+  // Phase 3: reduce remaining 3x3 block and solve with optimal A*
+  const reduced = new Uint16Array(9);
+  for (let r = 1; r <= 3; r++) {
+    for (let c = 1; c <= 3; c++) {
+      const v = s[r * 4 + c];
+      reduced[(r - 1) * 3 + (c - 1)] = v === 0 ? 0 : REDUCE_MAP_4[v];
+    }
+  }
+  const reducedEmpty = reduced.indexOf(0);
+  const moves3 = solveStandard(reduced, reducedEmpty, 3, tracker ?? A_STAR_BUDGET_3, deadline, 1);
+  if (!moves3) return ultimateFallback4(state, emptyIdx, deadline, tracker);
+
+  for (const m of moves3) {
+    const gRow = 1 + Math.floor(m.tileIndex / 3);
+    const col3 = m.tileIndex % 3;
+    path.push({
+      tileValue: UNREDUCE_MAP_4[m.tileValue],
+      tileIndex: gRow * 4 + (col3 + 1),
+      direction: m.direction,
+    });
+  }
+
+  return sanitizePath(path);
+}
+
+function ultimateFallback4(
+  state: Uint16Array,
+  emptyIdx: number,
+  deadline: number,
+  tracker?: BudgetTracker
+): AISolutionStep[] | null {
+  const budget = tracker ?? BUDGET_4;
+  return solveStandard(state, emptyIdx, 4, budget, deadline, WEIGHTED_W);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -654,7 +786,7 @@ function solve5x5(state: Uint16Array, emptyIdx: number, deadline: number): AISol
     e = placed.endEmptyIdx;
   }
 
-  const rowPair = solveCornerPair(s, e, frozen, ROW_PAIR.tiles, ROW_PAIR.cells, deadline);
+  const rowPair = solveCornerPair(s, e, frozen, ROW_PAIR.tiles, ROW_PAIR.cells, deadline, 5);
   if (!rowPair) return ultimateFallback(state, emptyIdx, deadline);
   for (const cell of ROW_PAIR.cells) frozen.add(cell);
   path.push(...rowPair.moves);
@@ -675,7 +807,7 @@ function solve5x5(state: Uint16Array, emptyIdx: number, deadline: number): AISol
     e = placed.endEmptyIdx;
   }
 
-  const colPair = solveCornerPair(s, e, frozen, COL_PAIR.tiles, COL_PAIR.cells, deadline);
+  const colPair = solveCornerPair(s, e, frozen, COL_PAIR.tiles, COL_PAIR.cells, deadline, 5);
   if (!colPair) return ultimateFallback(state, emptyIdx, deadline);
   for (const cell of COL_PAIR.cells) frozen.add(cell);
   path.push(...colPair.moves);
@@ -691,7 +823,7 @@ function solve5x5(state: Uint16Array, emptyIdx: number, deadline: number): AISol
     }
   }
   const reducedEmpty = reduced.indexOf(0);
-  const moves4 = solve4x4(reduced, reducedEmpty, BUDGET_4, deadline);
+  const moves4 = solve4x4(reduced, reducedEmpty, deadline);
   if (!moves4) return ultimateFallback(state, emptyIdx, deadline);
 
   for (const m of moves4) {
@@ -756,6 +888,14 @@ function sanitizePath(moves: AISolutionStep[]): AISolutionStep[] {
  * board. On failure (node budget / time limit) returns null — never a fake
  * hint.
  */
+/**
+ * Reset module-level solver cache (useful for testing forced recomputes).
+ */
+export function clearSolverMemory(): void {
+  solverMemory.path = null;
+  solverMemory.expectedKey = null;
+}
+
 export function findNextOptimalMove(
   board: Board,
   gridSize: GridSize,
@@ -795,9 +935,8 @@ export function findNextOptimalMove(
   if (gridSize === 3) {
     path = solveStandard(state, emptyIdx, 3, A_STAR_BUDGET_3, deadline, 1);
   } else if (gridSize === 4) {
-    const budget = options?.maxNodes ?? BUDGET_4;
     const fourDeadline = now() + Math.min(timeLimit, TIMEOUT_4_MS);
-    path = solve4x4(state, emptyIdx, budget, fourDeadline);
+    path = solve4x4(state, emptyIdx, fourDeadline, options?.maxNodes);
   } else {
     path = solve5x5(state, emptyIdx, deadline);
   }
