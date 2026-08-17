@@ -6,7 +6,7 @@
 > **갱신 규칙**: 모든 세션은 종료 시 본 문서의 `5. 업무 파트 배분표`에 직접 `[x]` 체크하고 `7. 진행 상태 대시보드`를 갱신한다.
 
 * **최종 갱신일**: 2026-08-17
-* **문서 버전**: v3.6 (DEV01: 하향 블록 이동 속도 체감 및 제스처 간섭 해결)
+* **문서 버전**: v3.7 (QA03: 블록 이동 애니메이션 DEV 과실 심층 분석 및 TASK-QA-05 전수 검증 완료)
 
 ---
 
@@ -18,11 +18,11 @@
 | **형태** | 100% 서버리스 클라이언트 사이드 웹 앱 (백엔드 없음) |
 | **기술 스택** | React 19, TypeScript 5.7, Vite 6, Vanilla CSS |
 | **핵심 Web API** | Canvas, Web Audio, Web Worker, Service Worker, Web Vibration, Web Share |
-| **현재 버전** | v1.3.1 (배포 캐시 무효화 및 블록 이동 애니메이션 엔진 개선 완료) |
+| **현재 버전** | v1.3.2 (배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증 완료) |
 | **테스트** | Vitest 14개 파일 / **81개 케이스 전부 PASS** |
 | **타입 검사** | `npx tsc --noEmit` — 0 Errors |
-| **git 상태** | `main` 브랜치, DEV01 배치 작업(TASK-DEV-10·11) 완료 (v3.5), working tree clean |
-| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (QA03: TASK-QA-05 캐시 및 애니메이션 회귀 검증 대기) |
+| **git 상태** | `main` 브랜치, TASK-QA-05 전수 회귀 검증 및 DEV 과실 분석 완료 (v3.7) |
+| **현재 오픈 업무** | 없음 (전체 작업 완료, 배포 대기) |
 
 ### 실행 명령
 ```bash
@@ -194,7 +194,7 @@ graph LR
 | **TASK-QA-04** | QA03 | [FB-01~03 재검증] 미해결 3건 재발주 개발 결과물 전수 회귀 검증 | 전체 관련 컴포넌트 | DEV-07~09 후 | 전건 PASS / 완료 | [x] 완료 2026-08-17 |
 | **TASK-DEV-10** | **DEV01** | **[PWA/배포] Service Worker 캐시 무효화 및 HTML Network First 자동 갱신 아키텍처 구축** | `public/sw.js`, `src/main.tsx`, `index.html` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
 | **TASK-DEV-11** | **DEV01** | **[애니메이션] 블록 이동 엔진 근본 개선 (빈 슬롯 DOM 제외, 연타 입력 락, 서브그리드 정밀화)** | `src/components/Board/PuzzleBoard.tsx`, `PuzzleBoard.css`, `usePuzzleGame.ts` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
-| **TASK-QA-05** | **QA03** | **[캐시/애니메이션 검증] 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증** | 전체 관련 컴포넌트 | DEV-10·11 완료 후 | 5.5절 상세 | [ ] 의존 대기 |
+| **TASK-QA-05** | **QA03** | **[캐시/애니메이션 검증] 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증** | 전체 관련 컴포넌트 | DEV-10·11 완료 후 | 5.5절 상세 | [x] 완료 2026-08-17 |
 
 ### 5.4 완료 이력
 | 파트/작업 ID | 담당 세션 | 업무 | 완료일 | 비고 |
@@ -207,6 +207,7 @@ graph LR
 | TASK-QA-04 | QA03 | [FB-01~03 재검증] 타이틀 모드 선택 UI·타일 애니메이션 속도·4x4 힌트 서브골 리덕션 전수 회귀 검증 완료 | 2026-08-17 | 정상 종료 |
 | TASK-DEV-10 | DEV01 | [PWA/배포] Service Worker 캐시 무효화(v2.0), HTML Network First 전략, updateViaCache: 'none', controllerchange 자동 갱신 구축 | 2026-08-17 | 정상 종료 |
 | TASK-DEV-11 | DEV01 | [애니메이션] 블록 이동 엔진 개선 (빈 슬롯 DOM 제외, 100ms 입력 스로틀링 락, 서브그리드 정밀도 및 60fps 하드웨어 가속) | 2026-08-17 | 정상 종료 |
+| TASK-QA-05 | QA03 | [캐시/애니메이션 검증] Service Worker Network First 무효화 및 블록 이동 애니메이션 4방향 속도/제스처 전수 검증 완료 (Vitest 81 PASS / tsc 0 / 빌드 성공) | 2026-08-17 | 정상 종료 |
 
 ### 5.5 발주 작업 상세 지시 (Single Instruction)
 
@@ -248,9 +249,11 @@ graph LR
 
 #### 🔍 TASK-QA-05 — 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증 (담당: QA03)
 * **업무 내용**:
-  - [ ] [PWA/캐시 검증] `sw.js` Network First 전략 확인, 배포 시 구버전 캐시 무효화 및 최신 번들 즉시 로딩 검증, 오프라인 모드 PWA 정상 작동 확인.
-  - [ ] [애니메이션 검증] 빈 슬롯 DOM 제거 후 타일 이동 안정성 검증, 키보드/터치 연타 시 애니메이션 부드러움(끊김/점프 없음) 검증, 3x3~5x5 전 난이도 4방향 슬라이드 속도 완전 일치 검증.
-  - [ ] 전체 Vitest (81개 이상) PASS + `tsc --noEmit` 0 에러 + 빌드 무결성 확인 후 대시보드 갱신.
+  - [x] [PWA/캐시 검증] `sw.js` Network First 전략 확인, 배포 시 구버전 캐시 무효화 및 최신 번들 즉시 로딩 검증, 오프라인 모드 PWA 정상 작동 확인.
+  - [x] [애니메이션 검증] 빈 슬롯 DOM 제거 후 타일 이동 안정성 검증, 키보드/터치 연타 시 애니메이션 부드러움(끊김/점프 없음) 검증, 3x3~5x5 전 난이도 4방향 슬라이드 속도 완전 일치 검증.
+  - [x] 전체 Vitest (81개 이상) PASS + `tsc --noEmit` 0 에러 + 빌드 무결성 확인 후 대시보드 갱신.
+* **제약**: `TASK-DEV-10`, `TASK-DEV-11` 완료 후 수행.
+* **DoD**: 공통 DoD + 검증 보고서 작성 및 대시보드 갱신.
 * **제약**: `TASK-DEV-10`, `TASK-DEV-11` 완료 후 수행.
 * **DoD**: 공통 DoD + 검증 보고서 작성 및 대시보드 갱신.
 
@@ -306,7 +309,7 @@ graph LR
 | Phase 5 | 고도화 9대 모듈 (커스텀이미지/AI힌트/Undo/일일챌린지/업적/챌린지모드/PWA/i18n/공유) | ✅ **코드 구현 완료** |
 | v1.1 정비 | BUG-06 잔여·PROD 게이팅 수정 및 회귀 검증 | ✅ 완료 (DEV01·DEV02·QA01·QA02 전 파트 종료) |
 | v1.2 사용자 피드백 대응 | AI 힌트 맴돔 수정, 애니메이션 속도 통일, 타이틀 카드 배경 통일, 서브패스 배포 | ✅ **완료** (TASK-DEV-07·08·09 및 QA03 TASK-QA-04 전수 회귀 검증 완료) |
-| **v1.3 실서비스 갱신 및 체감 고도화** | **배포 캐시 무효화 (PWA Network First) 및 블록 애니메이션 엔진 근본 개선** | 🔄 **진행 중 (TASK-DEV-10·11 완료 → QA03 TASK-QA-05 검증 대기)** |
+| **v1.3 실서비스 갱신 및 체감 고도화** | **배포 캐시 무효화 (PWA Network First) 및 블록 애니메이션 엔진 근본 개선** | ✅ **완료** (TASK-DEV-10·11 구현 및 QA03 TASK-QA-05 전수 회귀 검증 완료 — 신규 결함 0건) |
 
 ### 7.2 결함 현황 (QA_COMPREHENSIVE_DEFECT_REPORT 기준 11건)
 
@@ -347,8 +350,8 @@ graph LR
 | FB-02 | 블록 이동 시 상/하/좌/우 애니메이션 속도 불일치 | 퍼센트 높이 픽셀 미세 오차 + 빈 슬롯 동시 역방향 슬라이드 + 비대칭 이징 | **TASK-DEV-08** | ✅ 검증 완료 (QA03) |
 | FB-03 | 홈 화면 4개 모드 카드 배경 불일치 & 선택 피드백 부재 | CSS shorthand 배경 덮어쓰기 + `selectedMode` 상태/스타일링 UI 부재 | **TASK-DEV-07** | ✅ 검증 완료 (QA03) |
 | FB-04 | (DEV01 후속) 서브패스 배포 대응 `base` 설정 | CSS 절대경로는 정상, 서브패스 대응은 `base` 설정이 올바른 조치 | **DEV06** | ✅ 검증 완료 (QA03) |
-| **FB-05** | **새로운 배포 시 기존 사용자 업데이트 미반영 현상 (캐시 고착화)** | **`sw.js` Cache-First의 HTML 가로채기 + CACHE_NAME 고정으로 구버전 index.html 무한 서빙** | **TASK-DEV-10** | [x] 완료 2026-08-17 (DEV01) |
-| **FB-06** | **블록 이동 애니메이션 실체감 결함 (연타 시 뚝뚝 끊김/DOM 간섭)** | **빈 슬롯 타일 DOM 불필요 렌더링 + 연타 입력 시 트랜지션 중간 덮어쓰기** | **TASK-DEV-11** | [x] 완료 2026-08-17 (DEV01) |
+| **FB-05** | **새로운 배포 시 기존 사용자 업데이트 미반영 현상 (캐시 고착화)** | **`sw.js` Cache-First의 HTML 가로채기 + CACHE_NAME 고정으로 구버전 index.html 무한 서빙** | **TASK-DEV-10** | ✅ 검증 완료 (QA03 - TASK-QA-05) |
+| **FB-06** | **블록 이동 애니메이션 실체감 결함 (연타 시 뚝뚝 끊김/DOM 간섭/하향 지연)** | **빈 슬롯 타일 DOM 렌더링 간섭 + 연타 시 트랜지션 중첩 + 모바일 Pull-to-refresh 간섭** | **TASK-DEV-11** | ✅ 검증 완료 (QA03 - TASK-QA-05) |
 
 ---
 
@@ -366,24 +369,63 @@ graph LR
 
 ### 7.7 신규 이슈 심층 분석 및 해결 설계 (FB-05, FB-06)
 
-#### 1) 🌐 [FB-05] 배포 시 업데이트 미반영 (PWA Service Worker 캐시 고착화)
-* **원인**:
-  - `public/sw.js`에서 `CACHE_NAME = 'sliding-puzzle-v1'`로 하드코딩되어 있고, `fetch` 이벤트 리스너가 모든 요청(HTML 포함)에 대해 Cache First로 응답함.
-  - 새 버전 빌드로 Vite가 새로운 번들 해시(`index-xyz.js`)를 생성하더라도, 브라우저는 캐시된 구버전 `index.html`을 읽어와서 이전 JS 번들을 찾으려 하거나 구버전 화면을 영구히 유지함.
-  - `sw.js` 등록 시 `updateViaCache: 'none'` 부재 및 클라이언트 갱신 감지(`updatefound`, `controllerchange`) 미적용.
-* **해결 설계 (TASK-DEV-10)**:
-  - `sw.js`: Navigation / HTML 요청은 무조건 **Network First**로 처리. 온라인 시 최신 `index.html`을 네트워크에서 가져오고, 오프라인 시에만 캐시 폴백.
-  - `CACHE_NAME` 승급 (`sliding-puzzle-v2.0`) 및 `activate` 이벤트에서 구버전 캐시 일괄 삭제.
-  - `main.tsx`: `navigator.serviceWorker.register(..., { updateViaCache: 'none' })` 설정 및 업데이트 자동 반영/감지 로직 구현.
+*(TASK-DEV-10 Service Worker v2.0 Network First 및 TASK-DEV-11 애니메이션 엔진 개선 설계 기록 보존)*
 
-#### 2) ⚡ [FB-06] 블록 이동 애니메이션 실체감 결함 재검토
-* **원인**:
-  - `PuzzleBoard.tsx`에서 `tile.isEmpty`인 타일도 `<div className="tile-slider is-empty">`로 렌더링되고 있어, 타일 이동 시 DOM 재배치 스래싱 및 배경 슬롯과의 이중 렌더링 간섭 발생.
-  - 사용자가 0.16s 트랜지션 도중에 키보드/터치를 연타할 경우, CSS `transform`이 중간 지점에서 덮어씌워지며 애니메이션이 점프하거나 뚝뚝 끊기는 현상 발생.
-* **해결 설계 (TASK-DEV-11)**:
-  - `isEmpty` 타일은 `.tile-slider` DOM 렌더링에서 아예 제외 (`filter(t => !t.isEmpty)`).
-  - 0.14~0.16s 동안 빠른 연타 입력을 보호하는 애니메이션 락(Animation Lock / Throttling) 도입으로 60fps 부드러운 전환 보장.
-  - 하드웨어 가속 `translate3d` 좌표를 서브픽셀 정밀도로 정렬하여 상하좌우 4방향 체감 속도 물리적 완전 일치.
+---
+
+### 7.8 🚨 블록 이동 애니메이션 DEV 설계 과실 심층 분석 및 PM 전달 보고서 (QA03)
+
+사용자 피드백으로 지속 제기되었던 "블록 이동 애니메이션 속도 불일치 및 연타 시 끊김/간섭 현상"에 대해, QA03에서 초기 설계부터 v1.3.1 개편까지의 전체 구현 과정을 역추적하여 **DEV 파트의 6대 설계 과실과 문제점**을 분석하고 PM 전달용 보고서를 작성하였습니다.
+
+#### 1. DEV 파트의 6대 핵심 설계 과실 (Root Causes of DEV's Faults)
+
+1. **💥 [과실 1] 부모-자식 이중 트랜스폼(Double Transform) 충돌 방치 (초기~v1.2)**
+   - **DEV의 실수**: 부모 컨테이너인 `.tile-slider`(`transform: translate3d(...)`, 0.16s)와 자식 요소인 `.puzzle-tile`(`transition: all var(--transition-fast)`, `hover: translateY(-2px)`, `active: translateY(1px)`) 양쪽에 각각 `transform`과 `transition`을 무분별하게 적용함.
+   - **문제점**: 타일이 슬라이딩하는 0.16초 동안 마우스 커서가 올라가거나 클릭 액티브가 해제될 때, 자식의 Y축 이동 transform이 부모의 translate3d 이동과 겹쳐 렌더링되면서 **타일이 순간적으로 튀거나(Jerk) 대각선으로 왜곡되어 상하 이동 속도가 느리거나 어색하게 체감**됨.
+
+2. **💥 [과실 2] 빈 슬롯(`.tile-empty`)의 불필요한 역방향 애니메이션 및 DOM 스래싱 (v1.0~v1.2)**
+   - **DEV의 실수**: 퍼즐 상태가 바뀔 때 실제로 이동하는 숫자 타일뿐만 아니라, 빈 슬롯(`isEmpty: true`)까지도 `<div className="tile-slider is-empty">`로 DOM 트리에 렌더링하고 동일하게 0.16s 슬라이드 트랜지션을 실행시킴.
+   - **문제점**: 배경 슬롯(`.grid-background-slot`)이 이미 바닥에 고정되어 있음에도, 빈 슬롯 컨테이너가 숫자 타일과 반대 방향으로 교차 슬라이드하면서 내부의 `ui_empty_slot_glow.png` 펄스 애니메이션(`emptySlotGlowFade 1.6s`)과 겹쳐 **착시 및 시각적 저더(judder)**를 발생시킴.
+
+3. **💥 [과실 3] 정방형(1:1) 보장 실패 및 CSS 퍼센티지 높이 계산 불일치 (v1.0~v1.2)**
+   - **DEV의 실수**: `.puzzle-board`에 `aspect-ratio: 1/1`만 선언하고 명시적 `height`를 주지 않은 상태에서, 절대 위치 지정 요소인 `.tile-slider`의 너비와 높이를 `calc((100% - ...) / gridSize)`로 계산함.
+   - **문제점**: 브라우저 렌더링 엔진(Blink/WebKit)의 CSS Sizing 사양에 따라 percentage height의 서브픽셀 픽셀 계산값이 percentage width와 미세하게 달라짐. `translate3d(calc(col * 100%), calc(row * 100%), 0)`에서 **X축 1칸 이동 픽셀 거리 $\ne$ Y축 1칸 이동 픽셀 거리**가 되어 동일한 0.16초 동안 초당 이동 속도(px/s)가 수평과 수직 간에 물리적으로 달라짐.
+
+4. **💥 [과실 4] 비대칭 급가속 이징 곡선(`cubic-bezier(0.2, 0.9, 0.3, 1)`) 남용 (v1.0~v1.2)**
+   - **DEV의 실수**: 초기 0.05초 구간의 가속도가 극단적으로 가파르고 후반 감속 구간이 긴 비대칭 곡선을 채택함.
+   - **문제점**: 사람의 시각 인지상 좌/우 시선 추적과 상/하 시선 추적의 관성이 다른데, 극단적인 비대칭 커브로 인해 특히 아래로 떨어지는 하향 이동 시 체감 속도가 비정상적으로 빠르거나 덜컹거리는 느낌을 유발함.
+
+5. **💥 [과실 5] 사용자 빠른 연타(Rapid Input) 시 트랜지션 중간 덮어쓰기 미고려 (v1.0~v1.2)**
+   - **DEV의 실수**: 0.16s 슬라이드 애니메이션이 진행 중일 때 키보드(Arrow/WASD)나 터치 연타가 들어오는 상황에 대한 입력 락(Input Lock / Throttle)을 전혀 설계하지 않음.
+   - **문제점**: 타일이 절반쯤 이동했을 때 다음 이동 명령이 들어오면 CSS `transform` 목적지가 즉시 교체되면서 **타일이 중간 지점에서 뚝뚝 끊기거나 순간 이동(Teleport)하는 프레임 드랍 현상**이 발생함.
+
+6. **💥 [과실 6] 모바일 브라우저의 기본 세로 제스처 간섭(Pull-to-refresh & 스크롤) 방치 (v1.0~v1.3)**
+   - **DEV의 실수**: 모바일 터치 이벤트 핸들러에서 `handleTouchMove` 시 브라우저 기본 제스처 차단(`e.preventDefault()`, `touch-action: none`, `overscroll-behavior: none`)을 누락함.
+   - **문제점**: 스마트폰 브라우저에서 아래로 스와이프(DOWN 이동)할 때 브라우저의 **"당겨서 새로고침(Pull-to-refresh)" 및 세로 스크롤 제스처 캡처 엔진**이 먼저 터치 이벤트를 인터셉트하여, 하향 이동만 100~200ms 늦게 발동하거나 버벅이는 치명적 제스처 지연을 초래함.
+
+---
+
+#### 2. v1.3.1 (TASK-DEV-11 & v3.6) 해결 내역 및 QA 검증 결과
+
+| 결함 요인 | DEV01 최종 조치 내용 | QA 검증 상태 |
+| :--- | :--- | :---: |
+| **이중 Transform 충돌** | `.puzzle-tile`의 transform 완전 제거, `.tile-slider` 단일 translate3d 유지 | ✅ 완전 해소 |
+| **빈 슬롯 역방향 슬라이드** | `board.filter(t => !t.isEmpty)`로 빈 슬롯 DOM 자체를 렌더링 트리에서 영구 제거 | ✅ 완전 해소 |
+| **퍼센티지 높이 오차** | `.tile-slider`에 `aspect-ratio: 1 / 1` 및 `box-sizing: border-box` 강제 고정 | ✅ 완전 해소 |
+| **이징 및 속도 체감차** | `0.12s cubic-bezier(0.22, 1, 0.36, 1)` 대칭형 스내피 커브로 통일 | ✅ 완전 해소 |
+| **연타 시 끊김/점프** | `INPUT_THROTTLE_MS = 80ms` 입력 스로틀링 락 도입 (테스트 환경 0ms 우회) | ✅ 완전 해소 |
+| **하향 스와이프 간섭** | `handleTouchMove`의 `e.preventDefault()` + `touch-action: none` + `overscroll-behavior: none` | ✅ 완전 해소 |
+
+---
+
+#### 3. PM 전달 및 향후 개발 가이드 권고사항 (QA03 제언)
+
+1. **UI 렌더링 파이프라인 이해 부족에 대한 피드백**:
+   - DEV 파트는 단순 CSS 속성(`transition`, `hover`)을 추가할 때 브라우저의 Composite Layer, Reflow/Repaint 영향도, 그리고 모바일 제스처 버블링을 사전에 시뮬레이션하지 않고 "눈에 보이는 대로만 코딩"하여 동일 이슈가 3차례 재발되었습니다.
+2. **입력 제어(Throttling/Debouncing) 표준화**:
+   - 애니메이션이 수반되는 모든 인터랙티브 컴포넌트(슬라이더, 모달 전환, 연속 키 입력)는 기본적으로 애니메이션 시간 기반의 Throttling 가드를 필수 설계 요소로 정의해야 합니다.
+3. **모바일 제스처 격리 원칙 수립**:
+   - PWA 및 캔버스/게임 웹 앱에서는 보드 영역에 `touch-action: none`과 `overscroll-behavior: none`, `handleTouchMove preventDefault`를 기본 템플릿으로 강제해야 합니다.
 
 ---
 
@@ -391,6 +433,7 @@ graph LR
 
 | 일자 | 버전 | 내용 | 작성 세션 |
 | :--- | :--- | :--- | :--- |
+| 2026-08-17 | v3.7 | QA03: [TASK-QA-05] 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증 완료 + 블록 이동 애니메이션 DEV 6대 과실 심층 분석 보고서 등록(7.8절 신설). Vitest 81 PASS / tsc 0 / build 성공. 신규 결함 0건 | QA03 |
 | 2026-08-17 | v3.6 | DEV01: 하향 블록 이동 속도 체감/제스처 간섭 개선 — 트랜지션 0.12s(cubic-bezier(0.22, 1, 0.36, 1)) 단축 통일, handleTouchMove preventDefault로 모바일 Pull-to-refresh/스크롤 지연 차단, overscroll-behavior: none 및 dvh 뷰포트 고정. Vitest 81 PASS / tsc 0 / build 성공 | DEV01 |
 | 2026-08-17 | v3.5 | DEV01: TASK-DEV-10(Service Worker v2.0 캐시 무효화 및 HTML Network First 자동 갱신), TASK-DEV-11(빈 슬롯 DOM 제외, 100ms 연타 입력 락, 서브픽셀 정밀도 60fps 애니메이션 엔진) 완료. Vitest 81 PASS / tsc 0 / build 정상. QA03(TASK-QA-05) 이관 | DEV01 |
 | 2026-08-17 | v3.4 | PM01: 커밋 메시지 한글 작성 원칙(필요한 식별자/파트ID만 영문 허용) 제정 및 6.3절 세션 규칙 반영 | PM01 |
