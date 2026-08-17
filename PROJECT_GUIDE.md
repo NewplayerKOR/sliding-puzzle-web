@@ -6,7 +6,7 @@
 > **갱신 규칙**: 모든 세션은 종료 시 본 문서의 `5. 업무 파트 배분표`에 직접 `[x]` 체크하고 `7. 진행 상태 대시보드`를 갱신한다.
 
 * **최종 갱신일**: 2026-08-17
-* **문서 버전**: v2.5
+* **문서 버전**: v2.6 (DEV01: DEV04, DEV05, DEV06 완료)
 
 ---
 
@@ -21,8 +21,8 @@
 | **현재 버전** | v1.0.0 (Phase 1~5 기능 전부 구현 완료, v1.1 정비 완료) |
 | **테스트** | Vitest 14개 파일 / **79개 케이스 전부 PASS** |
 | **타입 검사** | `npx tsc --noEmit` — 0 Errors |
-| **git 상태** | `main` 브랜치, 최근 커밋 — DEV03 AI 힌트 개편 (v2.5), working tree clean |
-| **현재 오픈 업무** | `5. 업무 파트 배분표` 참조 (DEV04~06, QA03 — 사용자 피드백 대응) |
+| **git 상태** | `main` 브랜치, DEV01 배치 작업(DEV04·05·06) 완료 (v2.6) |
+| **현재 오픈 업무** | `5. 업무 파트 배분표` 참조 (QA03 — 사용자 피드백 대응 검증 대기) |
 
 ### 실행 명령
 ```bash
@@ -171,9 +171,9 @@ graph LR
 | **QA01** | QA | BUG-00~10 11건 결함의 코드 반영 여부 회귀 검증 (DEV01·02 산출물 포함) | 전체 소스 대조 + 동적 테스트 | DEV01·DEV02 완료 후 | 검증 결과를 본 문서 대시보드에 반영 | [x] 완료 2026-08-17 |
 | **QA02** | QA | 실기기 검수: 모바일(360px) 3x3/4x4/5x5 렌더링, PWA 오프라인 캐싱, SW 404 부재 확인 | 브라우저 실기기 테스트 | 없음 (병렬 가능) | 검증 결과를 본 문서 대시보드에 반영 | [x] 완료 2026-08-17 |
 | **DEV03** | DEV | AI 힌트 4x4/5x5 "같은 자리 맴돔" 현상 수정 (그리디 룩어헤드 → A*/IDA* 기반으로 개선) | `src/utils/aiSolver.ts` + `aiSolver.test.ts` | 없음 | 상세: 5.6절 | [x] 완료 2026-08-17 |
-| **DEV04** | DEV | 타일 슬라이드 애니메이션 단일화 (상/하/좌/우 속도 통일) | `src/components/Board/Tile.css`, `Tile.tsx`, `PuzzleBoard.css` | 없음 | 상세: 5.6절 | [ ] |
-| **DEV05** | DEV | 타이틀 모드 카드 4종 배경 패턴 통일 (일반모드에 파란색 그라디언트 추가) | `src/components/Title/TitleScreen.css` | 없음 | 상세: 5.6절 | [ ] |
-| **DEV06** | DEV | `vite.config.ts` `base` 설정 (서브패스 배포 대응 — DEV01 결과 후속) | `vite.config.ts` | 없음 | 상세: 5.6절 | [ ] |
+| **DEV04** | DEV | 타일 슬라이드 애니메이션 단일화 (상/하/좌/우 속도 통일) | `src/components/Board/Tile.css`, `Tile.tsx`, `PuzzleBoard.css` | 없음 | 상세: 5.6절 | [x] 완료 2026-08-17 |
+| **DEV05** | DEV | 타이틀 모드 카드 4종 배경 패턴 통일 (일반모드에 파란색 그라디언트 추가) | `src/components/Title/TitleScreen.css` | 없음 | 상세: 5.6절 | [x] 완료 2026-08-17 |
+| **DEV06** | DEV | `vite.config.ts` `base` 설정 (서브패스 배포 대응 — DEV01 결과 후속) | `vite.config.ts` | 없음 | 상세: 5.6절 | [x] 완료 2026-08-17 |
 | **QA03** | QA | 사용자 피드백 3건(힌트/애니메이션/카드) 회귀 검증 + DEV06 서브패스 배포 확인 | 해당 기능 전수 | DEV03·04·05·06 완료 후 | 상세: 5.6절 | [ ] |
 
 ### 5.4 완료 이력 (파트 종료 시 이곳으로 이동)
@@ -184,6 +184,9 @@ graph LR
 | QA01 | QA | BUG-00~10 11건 회귀 검증 완료 — 소스 대조 + 동적 테스트 전건 PASS, 신규 결함 없음 | 2026-08-17 | QA01 세션 |
 | QA02 | QA | 실기기 검수 완료 — 사용자 실기기 직접 확인: 360px 3x3/4x4/5x5 렌더링, PWA 오프라인 캐싱, SW 404 부재 이상 없음 | 2026-08-17 | QA02 세션 |
 | DEV03 | DEV | AI 힌트 솔버 전면 개편 — 4x4: Weighted A*(MD+LC, w=2) 단일 탐색, 5x5: Joint 서브골 리덕션 파이프라인(1행/1열 고정 마스크 + 모서리 페어 조인트 A* + 4x4 위임), 경로 결합·정제·모듈 캐싱으로 수렴 보장 | 2026-08-17 | DEV03 세션 |
+| DEV04 | DEV | 타일 슬라이드 애니메이션 단일화 (.tile-slider 0.16s 단일 경로 유지, .puzzle-tile hover/active transform 제거) | 2026-08-17 | DEV01 세션 |
+| DEV05 | DEV | 타이틀 모드 카드 4종 배경 패턴 통일 (standard 카드에 파란색 그라디언트 및 테두리 추가) | 2026-08-17 | DEV01 세션 |
+| DEV06 | DEV | `vite.config.ts` `base: './'` 설정 (서브패스 배포 대응 에셋 경로 상대화 및 빌드 검증 완료) | 2026-08-17 | DEV01 세션 |
 
 ### 5.5 세션 지시 템플릿 (PM이 세션 발주 시 사용)
 
@@ -208,35 +211,35 @@ graph LR
 #### 🚀 DEV03 — AI 힌트 4x4/5x5 맴돔 현상 수정 (최우선)
 * **원인 분석 (PM 확인)**: `src/utils/aiSolver.ts` L205~249 — 4x4/5x5는 완전 탐색 대신 **2단계 그리디 룩어헤드** 사용. 지역 최소값에 빠져 "힌트대로 이동 → 다음 힌트가 역방향 추천" 왕복 반복 발생 (3x3은 L131 A* 정상 동작).
 * **업무 내용**:
-  - [ ] 4x4: 3x3과 동일한 완전 A* 경로 적용 (maxSteps 대폭 상향, 예: 200k~500k. 워커 실행이므로 메인 스레드 무영향)
-  - [ ] 5x5: IDA* 적용 또는 "직전 힌트 역방향 금지 + 심화 룩어헤드(3단계 이상)" 폴백
-  - [ ] 노드 상한 초과 시 허위 힌트 반환 금지 → `null` 반환 (App에서 "계산 실패" 처리)
-  - [ ] `aiSolver.test.ts` 동반 갱신 (4x4/5x5 왕복 없음 케이스 추가)
+  - [x] 4x4: 3x3과 동일한 완전 A* 경로 적용 (maxSteps 대폭 상향, 예: 200k~500k. 워커 실행이므로 메인 스레드 무영향)
+  - [x] 5x5: IDA* 적용 또는 "직전 힌트 역방향 금지 + 심화 룩어헤드(3단계 이상)" 폴백
+  - [x] 노드 상한 초과 시 허위 힌트 반환 금지 → `null` 반환 (App에서 "계산 실패" 처리)
+  - [x] `aiSolver.test.ts` 동반 갱신 (4x4/5x5 왕복 없음 케이스 추가)
 * **제약**: `solver.worker.ts` 메시지 계약(board/gridSize/requestId) 변경 금지, `App.tsx` 힌트 상태 구조 유지, 응답 3초 내 목표
 * **DoD**: 공통 DoD + 4x4/5x5에서 힌트 10회 연속 추적 시 동일 타일 왕복 0회
 
 #### 🚀 DEV04 — 타일 슬라이드 애니메이션 단일화
 * **원인 분석 (PM 확인)**: 이중 transform transition 충돌 — `.tile-slider`(부모, PuzzleBoard.css:52 `0.16s`)와 `.puzzle-tile`(자식, Tile.css:17 `--transition-fast`)이 각각 transform을 애니메이션하고, hover(`translateY(-2px) scale(1.02)`, Tile.css:85) / active(`translateY(1px)`, Tile.css:100) 상태 transform이 슬라이드와 간섭 → 방향·타이밍별 체감 속도 불균형.
 * **업무 내용**:
-  - [ ] 슬라이드 이동 transform은 `.tile-slider` 단일 경로로 유지
-  - [ ] `.puzzle-tile`의 hover/active `transform` 제거 → box-shadow/filter 등 비-transform 효과로 대체 (Tile.css)
-  - [ ] 필요 시 Tile.tsx에서 transform 관련 클래스 조정, 4방향 이동 시간·거리 동일 확인 (0.16s 커브 통일)
+  - [x] 슬라이드 이동 transform은 `.tile-slider` 단일 경로로 유지
+  - [x] `.puzzle-tile`의 hover/active `transform` 제거 → box-shadow/filter 등 비-transform 효과로 대체 (Tile.css)
+  - [x] 필요 시 Tile.tsx에서 transform 관련 클래스 조정, 4방향 이동 시간·거리 동일 확인 (0.16s 커브 통일)
 * **제약**: Sparkle VFX(`tile-sparkle-fx`) 및 AI 힌트 오버레이(`tile-ai-hint-overlay`) 동작 보존, 빈 슬롯 글로우(`emptySlotGlowFade`) 무관
 * **DoD**: 공통 DoD + PC·모바일에서 4방향 슬라이드 속도 육안 동일
 
 #### 🚀 DEV05 — 타이틀 모드 카드 배경 통일
 * **원인 분석 (PM 확인)**: `TitleScreen.css` — `.mode-card` 기본은 단색 `var(--bg-surface)`(L317), timeattack/movelimit/daily는 각각 색상 그라디언트(L340/348/356) → 일반모드만 패턴 불일치.
 * **업무 내용**:
-  - [ ] `.mode-card.standard`에 파란색 계열 그라디언트 추가 — 기존 3개 카드와 동일 형식: `background: linear-gradient(135deg, rgba(37, 99, 235, 0.04), transparent); border-color: rgba(37, 99, 235, 0.3);` (TitleScreen.css)
-  - [ ] hover 시 `border-color: var(--primary-500)` 유지 (기존 규칙 L334~336 확인)
+  - [x] `.mode-card.standard`에 파란색 계열 그라디언트 추가 — 기존 3개 카드와 동일 형식: `background: linear-gradient(135deg, rgba(37, 99, 235, 0.04), transparent); border-color: rgba(37, 99, 235, 0.3);` (TitleScreen.css)
+  - [x] hover 시 `border-color: var(--primary-500)` 유지 (기존 규칙 L334~336 확인)
 * **제약**: 다크/라이트 테마 CSS 변수 사용 규칙 준수, 다른 컴포넌트 CSS 수정 금지
 * **DoD**: 공통 DoD + 4개 카드 배경 패턴 육안 일치
 
 #### 🚀 DEV06 — vite.config.ts base 설정 (서브패스 배포 대응)
 * **배경**: DEV01 검증 결과 — CSS `/assets/...` 경로는 Vite 파이프라인상 정상이며, 서브패스 배포의 올바른 조치는 `base` 설정.
 * **업무 내용**:
-  - [ ] `vite.config.ts`에 `base: './'` 적용 (상대 경로 기반 에셋 해석)
-  - [ ] `npm run build` + `npm run preview`로 루트 및 서브패스(예: `/sliding-block-puzzle/`) 배포 에셋 로딩 확인
+  - [x] `vite.config.ts`에 `base: './'` 적용 (상대 경로 기반 에셋 해석)
+  - [x] `npm run build` + `npm run preview`로 루트 및 서브패스(예: `/sliding-block-puzzle/`) 배포 에셋 로딩 확인
 * **제약**: `server.port` 등 기존 dev 설정 변경 금지, sw.js 캐시 경로(`./` 상대)와 호환 확인
 * **DoD**: 공통 DoD + 서브패스 배포에서 에셋 404 0건
 
@@ -301,12 +304,12 @@ A코드를 무심코 고쳐 B코드에서 에러가 나는 사태를 방지하�
 | Phase 4 | v1.0 릴리즈 (프리로더, 에셋 통합) | ✅ 완료 |
 | Phase 5 | 고도화 9대 모듈 (커스텀이미지/AI힌트/Undo/일일챌린지/업적/챌린지모드/PWA/i18n/공유) | ✅ **코드 구현 완료** |
 | v1.1 정비 | BUG-06 잔여·PROD 게이팅 수정 및 회귀 검증 | ✅ 완료 (DEV01·DEV02·QA01·QA02 전 파트 종료 — 회귀 검증 및 실기기 검수 완료) |
-| v1.2 사용자 피드백 대응 | AI 힌트 맴돔 수정, 애니메이션 속도 통일, 타이틀 카드 배경 통일, 서브패스 배포 | 🔄 진행 중 (DEV03 완료 — DEV04·05·06 → QA03) |
+| v1.2 사용자 피드백 대응 | AI 힌트 맴돔 수정, 애니메이션 속도 통일, 타이틀 카드 배경 통일, 서브패스 배포 | 🔄 진행 중 (DEV03·DEV04·DEV05·DEV06 완료 → QA03 검증 대기) |
 
 ### 7.2 결함 현황 (QA_COMPREHENSIVE_DEFECT_REPORT 기준 11건)
 
 | ID | 요약 | 심각도 | 상태 | 담당 파트 |
-| :--- | :--- | :---: | :--- | :--- |
+| :--- | :--- | :--- | :---: | :--- |
 | BUG-00 | 난이도 전환 렌더링 왜곡 | P0 | ✅ 검증 완료 (QA01) | — |
 | BUG-01 | Undo 버튼 누락 | P0 | ✅ 검증 완료 (QA01) | — |
 | BUG-02 | SW 캐시 404 (sfx_snap.mp3) | P0 | ✅ 검증 완료 (QA01) | — |
@@ -321,7 +324,7 @@ A코드를 무심코 고쳐 B코드에서 에러가 나는 사태를 방지하�
 
 > **✅ 별도 발견 (PM 세션)**: 자동 클리어 버튼의 `import.meta.env.PROD` 게이팅 미적용 → **DEV02** 파트로 발번 → 2026-08-17 수정 완료 (`Controls.tsx`에서 PROD 시 렌더링 제외, 프로덕션 번들에서 제거 확인).
 > **📋 QA01 회귀 검증 결과 (2026-08-17)**: BUG-00~10 전건 코드 반영 확인 — `usePuzzleGame.ts` L130 `setGridSize`, `spriteCalculator.ts` `toFixed(4)`+`border-box`, `Controls.tsx` Undo 버튼, `sw.js` sfx_snap 제거/sfx_blocked·shuffle 등록, `App.tsx` 4개 지점 `localStorage.removeItem`, `dailyChallenge.ts` 스트릭 보정, `isAutoSolved` 치트 가드, `requestId` 대조, `GameOverModal` 닫기 시 `resetGame()`, `audioManager` WAV 폴백, `starCalculator` 하이브리드 기준 — 모두 확인. 동적 테스트: 프로덕션 빌드 성공, preview 서버에서 SW 캐시 목록 34개 에셋 전부 HTTP 200, PROD 번들에서 `btn-autoclear` 완전 제거 확인. `npm test` 71/71 PASS, `npx tsc --noEmit` 0 에러. **신규 결함 없음** (실기기/오프라인 검수는 QA02 담당).
-> **📝 DEV01 검증 결과**: CSS 5건은 Vite 빌드가 public 에셋 URL을 올바르게 재배치하므로 수정 불필요. `/assets/...`→`./assets/...` 변경은 번들 CSS(`dist/assets/index-*.css`) 기준 해석으로 프로덕션 404를 유발하여 미적용. 서브패스 배포의 올바른 조치는 `vite.config.ts` `base` 설정 → **신규 파트 발번 요청 (PM)**.
+> **📝 DEV01 검증 결과**: CSS 5건은 Vite 빌드가 public 에셋 URL을 올바르게 재배치하므로 수정 불필요. `/assets/...`→`./assets/...` 변경은 번들 CSS(`dist/assets/index-*.css`) 기준 해석으로 프로덕션 404를 유발하여 미적용. 서브패스 배포의 올바른 조치는 `vite.config.ts` `base` 설정 → **DEV06 완료**.
 > **📱 QA02 실기기 검수 결과 (2026-08-17)**: 사용자 실기기 직접 확인 완료 — 모바일(360px) 3x3/4x4/5x5 보드 렌더링, PWA 오프라인 캐싱(34개 에셋 프리캐시), SW 404 부재 전 항목 이상 없음. **신규 결함 없음** → v1.1 정비 마일스톤 완료.
 
 ### 7.3 문서 이력 자료 현황 (docs/ 폴더 — 수정 금지, 참고용)
@@ -338,11 +341,11 @@ A코드를 무심코 고쳐 B코드에서 에러가 나는 사태를 방지하�
 ### 7.4 사용자 피드백 현황 (2026-08-17 접수)
 
 | 피드백 ID | 내용 | 원인 (PM 확인) | 담당 파트 | 상태 |
-| :--- | :--- | :--- | :---: | :---: |
+| :--- | :--- | :--- | :---: | :--- |
 | FB-01 | AI 힌트가 4x4/5x5에서 같은 자리 맴돔 (3x3은 정상) | `aiSolver.ts` 4x4/5x5 그리디 룩어헤드의 지역 최소값 함정 | **DEV03** | [x] 완료 2026-08-17 (DEV03) |
-| FB-02 | 블록 이동 시 상/하/좌/우 애니메이션 속도 불일치 | `.tile-slider`/`.puzzle-tile` 이중 transform transition + hover·active 간섭 | **DEV04** | [ ] 진행 대기 |
-| FB-03 | 홈 화면 4개 모드 카드 배경색 불일치 | `.mode-card.standard`만 단색 (나머지 3개는 그라디언트) | **DEV05** | [ ] 진행 대기 |
-| FB-04 | (DEV01 후속) 서브패스 배포 대응 `base` 설정 | CSS 절대경로는 정상, 서브패스 대응은 `base` 설정이 올바른 조치 | **DEV06** | [ ] 진행 대기 |
+| FB-02 | 블록 이동 시 상/하/좌/우 애니메이션 속도 불일치 | `.tile-slider`/`.puzzle-tile` 이중 transform transition + hover·active 간섭 | **DEV04** | [x] 완료 2026-08-17 (DEV01) |
+| FB-03 | 홈 화면 4개 모드 카드 배경색 불일치 | `.mode-card.standard`만 단색 (나머지 3개는 그라디언트) | **DEV05** | [x] 완료 2026-08-17 (DEV01) |
+| FB-04 | (DEV01 후속) 서브패스 배포 대응 `base` 설정 | CSS 절대경로는 정상, 서브패스 대응은 `base` 설정이 올바른 조치 | **DEV06** | [x] 완료 2026-08-17 (DEV01) |
 
 ---
 
@@ -350,6 +353,7 @@ A코드를 무심코 고쳐 B코드에서 에러가 나는 사태를 방지하�
 
 | 일자 | 버전 | 내용 | 작성 세션 |
 | :--- | :--- | :--- | :--- |
+| 2026-08-17 | v2.6 | DEV01: 배치 작업(DEV04, DEV05, DEV06) 3건 완료 — DEV04(타일 슬라이드 애니메이션 단일화: .tile-slider 0.16s 단일 경로 유지 및 .puzzle-tile hover/active transform 제거), DEV05(타이틀 모드 카드 4종 배경 통일: standard 파란 그라디언트 및 테두리 추가), DEV06(vite.config.ts base: './' 서브패스 배포 대응 설정 및 프로덕션 빌드 상대경로 검증). 79 PASS / tsc 0 / build 성공. QA03 이관 | DEV01 |
 | 2026-08-17 | v2.5 | DEV03: AI 힌트 솔버 전면 개편 완료 — 4x4 Weighted A*(w=2, MD+LC, 200k/2s), 5x5 조인트 서브골 리덕션(1행/1열 고정 마스크 + 모서리 페어 조인트 A* + 4x4 위임), 경로 정제 및 모듈 캐싱. 스트레스 30+30 시드: 왕복 0·null 0·완주 100%, 첫 힌트 4x4 ≤23ms / 5x5 ≤1.1s, 테스트 79 PASS | DEV03 |
 | 2026-08-17 | v2.4 | 사용자 피드백 3건(FB-01~03) + 서브패스 배포(FB-04) 파트 발번: DEV03·DEV04·DEV05·DEV06·QA03 (5.3/5.6/7.4) | PM |
 | 2026-08-17 | v2.3 | QA02: 실기기 검수 완료 (사용자 직접 확인 — 360px 3x3/4x4/5x5 렌더링, PWA 오프라인 캐싱, SW 404 부재 이상 없음) | QA02 |

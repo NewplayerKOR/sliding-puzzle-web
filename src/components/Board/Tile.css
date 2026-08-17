@@ -12,9 +12,8 @@
   -webkit-user-select: none;
   touch-action: none;
   overflow: hidden;
-  transform: translateZ(0);
   image-rendering: -webkit-optimize-contrast;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+  transition: box-shadow var(--transition-fast), filter var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .tile-empty {
@@ -82,7 +81,6 @@
 }
 
 .tile-filled.movable:hover {
-  transform: translateY(-2px) scale(1.02);
   box-shadow: var(--tile-shadow-hover);
   z-index: 10;
 }
@@ -93,12 +91,12 @@
 }
 
 .tile-filled.mode-image.movable:hover {
-  filter: brightness(1.06);
+  filter: brightness(1.08);
 }
 
 .tile-filled.movable:active {
-  transform: translateY(1px) scale(0.96);
   box-shadow: var(--tile-shadow-active);
+  filter: brightness(0.96);
 }
 
 .tile-number {
