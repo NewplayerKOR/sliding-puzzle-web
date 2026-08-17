@@ -235,4 +235,41 @@ describe('usePuzzleGame Hook', () => {
     expect(result.current.board[14].value).toBe(15);
     expect(result.current.board[15].isEmpty).toBe(true);
   });
+
+  it('supports multi-tile push (4 tiles) and single-step undo restoration on 5x5', () => {
+    const { result } = renderHook(() => usePuzzleGame(5));
+
+    // Initially on 5x5: empty at 24 (row 4, col 4)
+    // Click index 20 (row 4, col 0 -> 4 tiles away from empty)
+    expect(result.current.isTileMovable(20)).toBe(true);
+    expect(result.current.isTileMovable(21)).toBe(true);
+    expect(result.current.isTileMovable(22)).toBe(true);
+    expect(result.current.isTileMovable(23)).toBe(true);
+
+    act(() => {
+      const moved = result.current.moveTile(20);
+      expect(moved).toBe(true);
+    });
+
+    expect(result.current.moveCount).toBe(1);
+    expect(result.current.emptyIndex).toBe(20);
+    expect(result.current.board[20].isEmpty).toBe(true);
+    expect(result.current.board[21].value).toBe(21);
+    expect(result.current.board[22].value).toBe(22);
+    expect(result.current.board[23].value).toBe(23);
+    expect(result.current.board[24].value).toBe(24);
+
+    // Undo restores all 4 moved tiles in 1 call
+    act(() => {
+      const undone = result.current.undoMove();
+      expect(undone).toBe(true);
+    });
+
+    expect(result.current.emptyIndex).toBe(24);
+    expect(result.current.board[20].value).toBe(21);
+    expect(result.current.board[21].value).toBe(22);
+    expect(result.current.board[22].value).toBe(23);
+    expect(result.current.board[23].value).toBe(24);
+    expect(result.current.board[24].isEmpty).toBe(true);
+  });
 });
