@@ -6,7 +6,7 @@
 > **갱신 규칙**: 모든 세션은 종료 시 본 문서의 `5. 업무 파트 배분표`에 직접 `[x]` 체크하고 `7. 진행 상태 대시보드`를 갱신한다.
 
 * **최종 갱신일**: 2026-08-17
-* **문서 버전**: v4.0 (DEV02: TASK-DEV-12 멀티 타일 슬라이드 엔진 구현 및 단위 테스트 103 PASS 완료)
+* **문서 버전**: v4.1 (DEV03: TASK-DEV-13 테마별 4종 특화 SFX & 콤보 피치 시스템 구축 완료)
 
 ---
 
@@ -18,11 +18,11 @@
 | **형태** | 100% 서버리스 클라이언트 사이드 웹 앱 (백엔드 없음) |
 | **기술 스택** | React 19, TypeScript 5.7, Vite 6, Vanilla CSS |
 | **핵심 Web API** | Canvas, Web Audio, Web Worker, Service Worker, Web Vibration, Web Share |
-| **현재 버전** | v1.4.0 (멀티 타일 슬라이드 엔진 구현 완료, 테마 사운드팩 연동 진행 중) |
+| **현재 버전** | v1.4.0 (멀티 타일 슬라이드 엔진 및 테마 사운드팩 연동 완료, 회귀 검증 대기) |
 | **테스트** | Vitest 14개 파일 / **103개 케이스 전부 PASS** |
 | **타입 검사** | `npx tsc --noEmit` — 0 Errors |
-| **git 상태** | `main` 브랜치, TASK-DEV-12 완료 (v4.0) |
-| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (DEV03: TASK-DEV-13, QA01: TASK-QA-06) |
+| **git 상태** | `main` 브랜치, TASK-DEV-12·13 완료 (v4.1) |
+| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (QA01: TASK-QA-06) |
 
 ### 실행 명령
 ```bash
@@ -175,10 +175,10 @@ graph LR
 * **PM Pool**: `PM01` (Active — 총괄 관리 및 배분)
 * **DEV Pool**:
   * `DEV01` (Retired — TASK-DEV-07·08·10·11 완료 후 퇴역)
-  * `DEV02` (Active — UI/인터랙션 전문: `TASK-DEV-12` 멀티 타일 슬라이드 엔진 신규 할당)
-  * `DEV03` (Active — 오디오/알고리즘 전문: `TASK-DEV-13` 테마 사운드팩 & 콤보 할당)
+  * `DEV02` (Active — UI/인터랙션 전문: `TASK-DEV-12` 멀티 타일 슬라이드 엔진 완료)
+  * `DEV03` (Active — 오디오/알고리즘 전문: `TASK-DEV-13` 테마 사운드팩 & 콤보 완료)
 * **QA Pool**:
-  * `QA01` (Active — 회귀 검증 전문: `TASK-QA-06` v1.4 전수 검증 신규 할당)
+  * `QA01` (Active — 회귀 검증 전문: `TASK-QA-06` v1.4 전수 검증 진행)
   * `QA02` (대기)
   * `QA03` (Retired — TASK-QA-04·05 완료 및 7.8절 분석 후 퇴역)
 
@@ -189,8 +189,8 @@ graph LR
 | **DEV01~11** | DEV01/03 | v1.1~v1.3 결함 수정 및 PWA/애니메이션 엔진 개편 완료 | 다수 파일 | 없음 | 완료 | [x] 완료 2026-08-17 |
 | **QA01~05** | QA01/02/03 | 결함, 실기기, 심층 추적 및 PWA/애니메이션 전수 검증 완료 | 전체 소스 | 없음 | 완료 | [x] 완료 2026-08-17 |
 | **TASK-DEV-12** | **DEV02** | **[조작감 혁신] 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직 & 제스처 엔진 구현** | `src/utils/puzzleLogic.ts`, `puzzleLogic.test.ts`, `usePuzzleGame.ts`, `PuzzleBoard.tsx` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
-| **TASK-DEV-13** | **DEV03** | **[사운드 고도화] 테마별 4종 특화 SFX 사운드팩 연동 & 연속 조작 콤보 피치 시스템 구축** | `src/utils/audioManager.ts`, `audioManager.test.ts`, `src/types/theme.ts`, `themeData.ts`, `App.tsx` | 없음 | 5.5절 상세 | [ ] 발주 완료 |
-| **TASK-QA-06** | **QA01** | **[v1.4 전수 검증] 멀티 타일 슬라이드 60fps 부드러움, Undo 1회 복구, 테마 사운드 회귀 검증** | 전체 관련 컴포넌트 | DEV-12·13 완료 후 | 5.5절 상세 | [ ] 의존 대기 |
+| **TASK-DEV-13** | **DEV03** | **[사운드 고도화] 테마별 4종 특화 SFX 사운드팩 연동 & 연속 조작 콤보 피치 시스템 구축** | `src/utils/audioManager.ts`, `audioManager.test.ts`, `src/types/theme.ts`, `themeData.ts`, `App.tsx` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
+| **TASK-QA-06** | **QA01** | **[v1.4 전수 검증] 멀티 타일 슬라이드 60fps 부드러움, Undo 1회 복구, 테마 사운드 회귀 검증** | 전체 관련 컴포넌트 | DEV-12·13 완료 후 | 5.5절 상세 | [ ] 진행 대기 |
 
 ### 5.4 완료 이력
 | 파트/작업 ID | 담당 세션 | 업무 | 완료일 | 비고 |
@@ -203,6 +203,7 @@ graph LR
 | TASK-DEV-11 | DEV01 | [애니메이션] 블록 이동 엔진 개선 (빈 슬롯 DOM 제외, 80ms 입력 락, 서브그리드 정밀도 및 60fps 하드웨어 가속) | 2026-08-17 | 정상 종료 |
 | TASK-QA-05 | QA03 | [캐시/애니메이션 검증] SW Network First 무효화 및 블록 이동 애니메이션 전수 검증 완료 (Vitest 81 PASS / 7.8절 등록) | 2026-08-17 | 정상 종료 |
 | **TASK-DEV-12** | **DEV02** | **[조작감 혁신] 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직 & 제스처 엔진 및 1회 Undo 복구 지원 완료 (Vitest 97 PASS)** | **2026-08-17** | **정상 종료** |
+| **TASK-DEV-13** | **DEV03** | **[사운드 고도화] 테마별 4종 특화 SFX 사운드팩(세라믹/목재/사이버네틱/오가닉) 및 콤보 피치(+6%~+42%) 시스템 구축 (Vitest 103 PASS)** | **2026-08-17** | **정상 종료** |
 
 ### 5.5 발주 작업 상세 지시 (Single Instruction)
 
@@ -235,7 +236,7 @@ graph LR
 * **목표 & 배경**:
   - 테마별 시각적 개성에 맞는 청각적 타격감을 부여하고, 빠른 속도로 연속 퍼즐을 맞출 때 짜릿한 손맛(Game Feel)을 제공.
 * **업무 내용**:
-  - [ ] `src/utils/audioManager.ts`:
+  - [x] `src/utils/audioManager.ts`:
     - Web Audio API 합성 엔진에 테마별 음색 파라미터 분기 도입 (`playThemeMoveSfx(themeId: ThemeId, comboCount: number)`):
       - **Classic**: 깔끔하고 정갈한 세라믹 탭 (주파수 ~800Hz, 빠른 감쇠)
       - **Wood**: 묵직하고 자연스러운 목재 노크 톤 (주파수 ~300Hz, 공명감)
@@ -243,9 +244,9 @@ graph LR
       - **Nature / Custom**: 부드러운 오가닉 톤 (주파수 ~520Hz, 소프트 어택)
     - 기존 WAV/MP3 오디오 파일 로딩과의 하이브리드 폴백 구조 유지.
     - **연속 이동 콤보 피치 시스템**: 0.6초 이내에 연속으로 타일을 이동할 때마다 사운드 재생 피치(Pitch / Frequency)가 1.0x -> 1.06x -> 1.12x -> 1.18x (최대 8콤보)로 점진적 상승하여 연속 조작 쾌감 극대화.
-  - [ ] `src/utils/audioManager.test.ts`:
+  - [x] `src/utils/audioManager.test.ts`:
     - 테마별 사운드 합성 분기 및 콤보 피치 배율 계산 단위 테스트 추가 및 PASS.
-  - [ ] `src/App.tsx` & `src/hooks/useAudio.ts`:
+  - [x] `src/App.tsx` & `src/hooks/useAudio.ts`:
     - 현재 선택된 테마 ID(`currentTheme.id`)를 타일 이동 사운드 재생 시 전달하도록 연동.
 * **제약**: 음소거(Mute) 상태 완벽 보존 및 AudioContext 사용자 인터랙션 이전 자동 차단 에러 방지.
 * **DoD**: 공통 DoD + 4개 테마 전환 시 이동 사운드 음색이 뚜렷하게 차별화되고, 빠른 연타 시 경쾌한 콤보 피치 상승 동작 확인.
@@ -312,7 +313,7 @@ graph LR
 | v1.1 정비 | BUG-06 잔여·PROD 게이팅 수정 및 회귀 검증 | ✅ 완료 (DEV01·DEV02·QA01·QA02 전 파트 종료) |
 | v1.2 사용자 피드백 대응 | AI 힌트 맴돔 수정, 애니메이션 속도 통일, 타이틀 카드 배경 통일, 서브패스 배포 | ✅ **완료** (TASK-DEV-07·08·09 및 QA03 TASK-QA-04 전수 회귀 검증 완료) |
 | v1.3 실서비스 갱신 및 체감 고도화 | 배포 캐시 무효화 (PWA Network First) 및 블록 애니메이션 엔진 근본 개선 | ✅ **완료** (TASK-DEV-10·11 구현 및 QA03 TASK-QA-05 전수 회귀 검증 완료 — 신규 결함 0건) |
-| **v1.4 조작감 및 사운드 고도화** | **멀티 타일 슬라이드 엔진 (1열 연쇄 밀기) 및 테마별 특화 SFX 사운드팩 구축** | 🔄 **진행 중 (TASK-DEV-12, TASK-DEV-13 발주 완료 → QA03 TASK-QA-06)** |
+| **v1.4 조작감 및 사운드 고도화** | **멀티 타일 슬라이드 엔진 (1열 연쇄 밀기) 및 테마별 특화 SFX 사운드팩 구축** | 🔄 **진행 중 (TASK-DEV-12, TASK-DEV-13 완료 → QA01 TASK-QA-06 회귀 검증 진행)** |
 
 ### 7.2 결함 현황 (QA_COMPREHENSIVE_DEFECT_REPORT 기준 11건)
 
@@ -436,6 +437,7 @@ graph LR
 
 | 일자 | 버전 | 내용 | 작성 세션 |
 | :--- | :--- | :--- | :--- |
+| 2026-08-17 | v4.1 | DEV03: [TASK-DEV-13] 테마별 4종 특화 SFX 사운드팩(Classic/Wood/Neon/Nature) Web Audio API 절차적 합성 엔진 및 0.6s 연속 조작 콤보 피치(+6%~+42%) 시스템 구축, 단위 테스트 6건 추가(총 103 PASS) / tsc 0 / build 성공. QA01(TASK-QA-06) 이관 | DEV03 |
 | 2026-08-17 | v4.0 | DEV02: [TASK-DEV-12] 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직(getLineTilesToMove, moveTileLine, canMoveTile) 및 usePuzzleGame 연동, 1회 Undo 복구 지원 완료. 단위 테스트 16건 추가(총 103 PASS) / tsc 0 / build 정상 | DEV02 |
 | 2026-08-17 | v3.9 | PM01: 세션 풀 교체 — DEV01/QA03 역할 종료(Retired) 및 DEV02(TASK-DEV-12)/QA01(TASK-QA-06) 신규 활성화·업무 재할당 | PM01 |
 | 2026-08-17 | v3.8 | PM01: v1.4 조작감 및 사운드 고도화 작업 발주 — TASK-DEV-12(멀티 타일 슬라이드 엔진/7.8절 6대 과실 방지 수칙 준수), TASK-DEV-13(테마별 4종 특화 SFX & 콤보 피치 시스템), TASK-QA-06(v1.4 회귀 전수 검증) | PM01 |

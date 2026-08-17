@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { audioManager, SfxType, BGM_TRACKS, BgmTrack } from '../utils/audioManager';
+import { ThemeId } from '../types/theme';
 
 export function useAudio() {
   const [audioConfig, setAudioConfig] = useState(() => audioManager.getConfig());
@@ -11,8 +12,24 @@ export function useAudio() {
     return unsubscribe;
   }, []);
 
-  const playSfx = useCallback((type: SfxType) => {
-    audioManager.playSfx(type);
+  const playSfx = useCallback((type: SfxType, themeId?: ThemeId | string) => {
+    audioManager.playSfx(type, themeId);
+  }, []);
+
+  const playThemeMoveSfx = useCallback((themeId?: ThemeId | string, comboCount?: number) => {
+    audioManager.playThemeMoveSfx(themeId, comboCount);
+  }, []);
+
+  const setCurrentTheme = useCallback((themeId: ThemeId | string) => {
+    audioManager.setCurrentTheme(themeId);
+  }, []);
+
+  const getComboCount = useCallback(() => {
+    return audioManager.getComboCount();
+  }, []);
+
+  const resetCombo = useCallback(() => {
+    audioManager.resetCombo();
   }, []);
 
   const playBgm = useCallback(() => {
@@ -55,6 +72,10 @@ export function useAudio() {
     bgmTracks: BGM_TRACKS,
     currentTrack,
     playSfx,
+    playThemeMoveSfx,
+    setCurrentTheme,
+    getComboCount,
+    resetCombo,
     playBgm,
     pauseBgm,
     toggleBgmMute,

@@ -73,6 +73,11 @@ export const App: React.FC = () => {
   const [isDailyGameActive, setIsDailyGameActive] = useState<boolean>(false);
   const [showNumberOverlay, setShowNumberOverlay] = useState<boolean>(true);
 
+  // 테마 변경 시 오디오 매니저의 효과음 음색 동기화
+  useEffect(() => {
+    audioManager.setCurrentTheme(customImageSrc ? 'nature' : themeId);
+  }, [themeId, customImageSrc]);
+
   // 모달 제어 상태
   const [isHintOpen, setIsHintOpen] = useState<boolean>(false);
   const [isThemeModalOpen, setIsThemeModalOpen] = useState<boolean>(false);

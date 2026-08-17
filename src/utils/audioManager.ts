@@ -1,3 +1,4 @@
+import { ThemeId } from '../types/theme';
 import { getAssetUrl } from './assetPath';
 
 export type SfxType = 'slide' | 'blocked' | 'shuffle' | 'click' | 'victory';
@@ -62,6 +63,18 @@ const STORAGE_KEY_BGM_VOL = 'sliding_puzzle_bgm_vol';
 const STORAGE_KEY_CURRENT_BGM = 'sliding_puzzle_current_bgm';
 const STORAGE_KEY_AUTO_THEME_BGM = 'sliding_puzzle_auto_theme_bgm';
 
+export const COMBO_TIMEOUT_MS = 600; // 0.6 seconds timeout
+export const MAX_COMBO = 8; // Max 8 combos
+
+/**
+ * Calculates pitch multiplier based on consecutive combo count (1..8)
+ * 1 combo: 1.00x, 2 combo: 1.06x, 3 combo: 1.12x, ..., 8+ combo: 1.42x (+6% per combo)
+ */
+export function getComboPitchMultiplier(comboCount: number): number {
+  const clamped = Math.min(Math.max(comboCount, 1), MAX_COMBO);
+  return parseFloat((1.0 + (clamped - 1) * 0.06).toFixed(4));
+}
+
 const SFX_PATHS: Record<SfxType, string[]> = {
   slide: ['assets/audio/sfx_slide.mp3', 'assets/audio/sfx_slide.wav'].map(getAssetUrl),
   blocked: ['assets/audio/sfx_blocked.mp3', 'assets/audio/sfx_blocked.wav'].map(getAssetUrl),
@@ -79,6 +92,12 @@ class AudioManager {
   private isBgmPlaying = false;
   private fadeInterval: number | null = null;
   private listeners: Set<(config: AudioConfig) => void> = new Set();
+
+  // Web Audio API context for procedural theme synthesis & dynamic pitch
+  private audioCtx: AudioContext | null = null;
+  private currentThemeId: ThemeId = 'abstract';
+  private lastMoveTime = 0;
+  private comboCount = 0;
 
   private config: AudioConfig = {
     sfxVolume: 0.8,
@@ -188,10 +207,37 @@ class AudioManager {
     });
   }
 
+  private getAudioContext(): AudioContext | null {
+    if (typeof window === 'undefined') return null;
+    if (!this.audioCtx) {
+      const AudioCtxClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (AudioCtxClass) {
+        try {
+          this.audioCtx = new AudioCtxClass();
+        } catch {
+          this.audioCtx = null;
+        }
+      }
+    }
+    if (this.audioCtx && this.audioCtx.state === 'suspended' && this.isUserInteracted) {
+      this.audioCtx.resume().catch(() => {});
+    }
+    return this.audioCtx;
+  }
+
+  public setAudioContextForTesting(ctx: AudioContext | null): void {
+    this.audioCtx = ctx;
+  }
+
   private setupUserInteractionListener(): void {
     const handleFirstInteraction = () => {
       if (this.isUserInteracted) return;
       this.isUserInteracted = true;
+      if (this.audioCtx && this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume().catch(() => {});
+      }
       if (!this.config.bgmMuted && !this.isBgmPlaying) {
         this.playBgm();
       }
@@ -257,7 +303,8 @@ class AudioManager {
     }
 
     const currentAudio = this.bgmAudio;
-    const shouldPlay = (this.isBgmPlaying || this.isUserInteracted || forcePlay) && !this.config.bgmMuted;
+    const shouldPlay =
+      (this.isBgmPlaying || this.isUserInteracted || forcePlay) && !this.config.bgmMuted;
 
     if (currentAudio && this.isBgmPlaying) {
       // Fade out (approx 150ms)
@@ -364,9 +411,30 @@ class AudioManager {
   }
 
   /**
+   * Sets current active theme for procedural SFX generation
+   */
+  public setCurrentTheme(themeId: ThemeId | string): void {
+    if (
+      themeId === 'nature' ||
+      themeId === 'pixel_art' ||
+      themeId === 'abstract' ||
+      themeId === 'animal'
+    ) {
+      this.currentThemeId = themeId;
+    } else {
+      this.currentThemeId = 'nature'; // fallback for custom/photo mode
+    }
+  }
+
+  public getCurrentTheme(): ThemeId {
+    return this.currentThemeId;
+  }
+
+  /**
    * Syncs BGM with selected theme if autoThemeBgm option is enabled
    */
   public syncThemeBgm(themeId: string): void {
+    this.setCurrentTheme(themeId);
     if (!this.config.autoThemeBgm) return;
 
     const matched = BGM_TRACKS.find((t) => t.recommendedThemeIds.includes(themeId));
@@ -401,8 +469,195 @@ class AudioManager {
     this.saveSettings();
   }
 
-  public playSfx(type: SfxType): void {
+  public getComboCount(): number {
+    return this.comboCount;
+  }
+
+  public resetCombo(): void {
+    this.comboCount = 0;
+    this.lastMoveTime = 0;
+  }
+
+  /**
+   * Plays theme-specific move SFX using procedural Web Audio API with combo pitch scaling.
+   * Falls back gracefully to HTMLAudio if Web Audio API is unavailable.
+   */
+  public playThemeMoveSfx(themeId?: ThemeId | string, explicitCombo?: number): void {
+    if (this.config.sfxMuted || this.config.sfxVolume <= 0 || typeof window === 'undefined') return;
+
+    const activeTheme = (themeId || this.currentThemeId) as ThemeId | string;
+    const now = Date.now();
+
+    if (explicitCombo !== undefined) {
+      this.comboCount = Math.min(Math.max(explicitCombo, 1), MAX_COMBO);
+      this.lastMoveTime = now;
+    } else {
+      if (now - this.lastMoveTime <= COMBO_TIMEOUT_MS) {
+        this.comboCount = Math.min(this.comboCount + 1, MAX_COMBO);
+      } else {
+        this.comboCount = 1;
+      }
+      this.lastMoveTime = now;
+    }
+
+    const pitch = getComboPitchMultiplier(this.comboCount);
+    const ctx = this.getAudioContext();
+
+    if (ctx && ctx.state !== 'closed') {
+      try {
+        this.synthesizeThemeMove(ctx, activeTheme, pitch);
+        return;
+      } catch {
+        // Fallback to HTMLAudio pool
+      }
+    }
+
+    this.playFallbackSlide(pitch);
+  }
+
+  /**
+   * Procedural sound synthesis tailored to 4 theme acoustic identities:
+   * - Classic (abstract): Crisp ceramic tap (~800Hz with fast decay)
+   * - Wood (animal): Warm, deep wooden knock (~300Hz with resonant body tone)
+   * - Neon (pixel_art): Futuristic cybernetic pulse (~1200Hz with resonant lowpass filter sweep)
+   * - Nature / Custom (nature): Gentle organic marimba/waterdrop tone (~520Hz with soft attack)
+   */
+  private synthesizeThemeMove(ctx: AudioContext, theme: string, pitch: number): void {
+    const t0 = ctx.currentTime;
+    const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(this.config.sfxVolume, t0);
+    masterGain.connect(ctx.destination);
+
+    if (theme === 'pixel_art') {
+      // --- NEON / CYBER SYNTH ---
+      const osc = ctx.createOscillator();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+
+      osc.type = 'sawtooth';
+      const baseFreq = 1200 * pitch;
+      osc.frequency.setValueAtTime(baseFreq, t0);
+      osc.frequency.exponentialRampToValueAtTime(Math.max(20, 380 * pitch), t0 + 0.07);
+
+      filter.type = 'lowpass';
+      filter.Q.setValueAtTime(4, t0);
+      filter.frequency.setValueAtTime(2800 * pitch, t0);
+      filter.frequency.exponentialRampToValueAtTime(500, t0 + 0.07);
+
+      gain.gain.setValueAtTime(0.001, t0);
+      gain.gain.linearRampToValueAtTime(0.6 * this.config.sfxVolume, t0 + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.075);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(masterGain);
+
+      osc.start(t0);
+      osc.stop(t0 + 0.08);
+    } else if (theme === 'animal') {
+      // --- WOOD / NATURAL KNOCK ---
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = 'sine';
+      const f1 = 300 * pitch;
+      osc1.frequency.setValueAtTime(f1, t0);
+      osc1.frequency.exponentialRampToValueAtTime(Math.max(20, 160 * pitch), t0 + 0.08);
+
+      osc2.type = 'triangle';
+      const f2 = 580 * pitch;
+      osc2.frequency.setValueAtTime(f2, t0);
+      osc2.frequency.exponentialRampToValueAtTime(Math.max(20, 320 * pitch), t0 + 0.05);
+
+      gain.gain.setValueAtTime(0.001, t0);
+      gain.gain.linearRampToValueAtTime(0.9 * this.config.sfxVolume, t0 + 0.003);
+      gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.09);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(masterGain);
+
+      osc1.start(t0);
+      osc2.start(t0);
+      osc1.stop(t0 + 0.095);
+      osc2.stop(t0 + 0.095);
+    } else if (theme === 'nature') {
+      // --- NATURE / MARIMBA WATERDROP ---
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc1.type = 'sine';
+      const f1 = 520 * pitch;
+      osc1.frequency.setValueAtTime(f1, t0);
+      osc1.frequency.exponentialRampToValueAtTime(Math.max(20, 480 * pitch), t0 + 0.11);
+
+      osc2.type = 'triangle';
+      const f2 = 1040 * pitch;
+      osc2.frequency.setValueAtTime(f2, t0);
+      osc2.frequency.exponentialRampToValueAtTime(Math.max(20, 960 * pitch), t0 + 0.04);
+
+      gain.gain.setValueAtTime(0.001, t0);
+      gain.gain.linearRampToValueAtTime(0.75 * this.config.sfxVolume, t0 + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.12);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(masterGain);
+
+      osc1.start(t0);
+      osc2.start(t0);
+      osc1.stop(t0 + 0.125);
+      osc2.stop(t0 + 0.125);
+    } else {
+      // --- CLASSIC (ABSTRACT) CERAMIC TAP ---
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = 'triangle';
+      const baseFreq = 800 * pitch;
+      osc.frequency.setValueAtTime(baseFreq, t0);
+      osc.frequency.exponentialRampToValueAtTime(Math.max(20, 360 * pitch), t0 + 0.045);
+
+      gain.gain.setValueAtTime(0.001, t0);
+      gain.gain.linearRampToValueAtTime(0.85 * this.config.sfxVolume, t0 + 0.002);
+      gain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.055);
+
+      osc.connect(gain);
+      gain.connect(masterGain);
+
+      osc.start(t0);
+      osc.stop(t0 + 0.06);
+    }
+  }
+
+  private playFallbackSlide(pitch: number): void {
+    const pool = this.sfxPool.get('slide');
+    if (!pool || pool.length === 0) return;
+    const audio = pool.find((a) => a.paused || a.ended) || pool[0];
+    try {
+      audio.currentTime = 0;
+      audio.volume = this.config.sfxVolume;
+      if ('playbackRate' in audio) {
+        audio.playbackRate = pitch;
+      }
+      const playPromise = audio.play();
+      if (playPromise !== undefined && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {});
+      }
+    } catch {
+      // Suppress audio play error
+    }
+  }
+
+  public playSfx(type: SfxType, themeId?: ThemeId | string): void {
     if (this.config.sfxMuted || typeof window === 'undefined') return;
+
+    if (type === 'slide') {
+      this.playThemeMoveSfx(themeId || this.currentThemeId);
+      return;
+    }
 
     const pool = this.sfxPool.get(type);
     if (!pool || pool.length === 0) {
@@ -423,6 +678,9 @@ class AudioManager {
     try {
       audio.currentTime = 0;
       audio.volume = this.config.sfxVolume;
+      if ('playbackRate' in audio) {
+        audio.playbackRate = 1.0;
+      }
       const playPromise = audio.play();
       if (playPromise !== undefined && typeof playPromise.catch === 'function') {
         playPromise.catch(() => {});
