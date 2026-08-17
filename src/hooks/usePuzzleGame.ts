@@ -3,9 +3,9 @@ import { Board, GameStatus, GameChallengeMode, GridSize, MoveDirection } from '.
 import {
   generateSolvedBoard,
   shuffleBoard,
-  isAdjacent,
   checkWinCondition,
-  swapTiles,
+  canMoveTile,
+  moveTileLine,
 } from '../utils/puzzleLogic';
 import { audioManager } from '../utils/audioManager';
 import { triggerHaptic } from '../utils/haptics';
@@ -73,11 +73,11 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
   // 빈 칸(value === 0) 인덱스 계산
   const emptyIndex = board.findIndex((tile) => tile.isEmpty);
 
-  // 특정 타일이 현재 빈 칸과 인접하여 이동 가능한지 여부
+  // 특정 타일이 현재 빈 칸과 동일 행/열에 위치하여 이동 가능한지 여부 (멀티 타일 슬라이드 지원)
   const isTileMovable = useCallback(
     (index: number) => {
       if (emptyIndex === -1 || status === 'won' || status === 'gameover') return false;
-      return isAdjacent(index, emptyIndex, gridSize);
+      return canMoveTile(index, emptyIndex, gridSize);
     },
     [emptyIndex, gridSize, status]
   );
@@ -224,7 +224,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
     return true;
   }, [moveHistory, status]);
 
-  // 타일 이동 로직
+  // 타일 이동 로직 (멀티 타일 슬라이드 연쇄 이동 지원)
   const moveTile = useCallback(
     (index: number): boolean => {
       if (status === 'won' || status === 'gameover' || index === emptyIndex) {
@@ -232,7 +232,8 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
         return false;
       }
 
-      if (!isAdjacent(index, emptyIndex, gridSize)) {
+      const moveResult = moveTileLine(board, index, gridSize);
+      if (!moveResult) {
         audioManager.playSfx('blocked');
         return false;
       }
@@ -247,7 +248,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
         setStatus('playing');
       }
 
-      const newBoard = swapTiles(board, index, emptyIndex);
+      const newBoard = moveResult.newBoard;
       const nextMoveCount = moveCount + 1;
 
       setBoard(newBoard);

@@ -1,4 +1,4 @@
-import { Board, GridSize } from '../types/puzzle';
+import { Board, GridSize, TileData } from '../types/puzzle';
 
 /**
  * 정답 상태의 기본 보드를 생성합니다.
@@ -210,4 +210,144 @@ export function swapTiles(board: Board, tileIndex: number, emptyIndex: number): 
   newBoard[emptyIndex] = tile;
 
   return newBoard;
+}
+
+/**
+ * 특정 타일이 빈 칸과 동일한 행 또는 열에 위치하여 이동 가능한지(멀티 타일 슬라이드 포함) 검사합니다.
+ */
+export function canMoveTile(index: number, emptyIndex: number, gridSize: GridSize): boolean {
+  if (
+    index < 0 ||
+    index >= gridSize * gridSize ||
+    emptyIndex < 0 ||
+    emptyIndex >= gridSize * gridSize ||
+    index === emptyIndex
+  ) {
+    return false;
+  }
+
+  const row = Math.floor(index / gridSize);
+  const col = index % gridSize;
+  const emptyRow = Math.floor(emptyIndex / gridSize);
+  const emptyCol = emptyIndex % gridSize;
+
+  return row === emptyRow || col === emptyCol;
+}
+
+/**
+ * 클릭한 타일과 빈 슬롯 사이의 이동 대상 타일 인덱스 목록을 반환합니다.
+ * 클릭한 타일부터 빈 슬롯 직전 타일까지의 순서([clickedIndex, ..., nextToEmpty])로 반환하며,
+ * 같은 행/열이 아니거나 유효하지 않은 경우 null을 반환합니다.
+ */
+export function getLineTilesToMove(
+  board: Board,
+  clickedIndex: number,
+  gridSize: GridSize
+): number[] | null {
+  if (clickedIndex < 0 || clickedIndex >= gridSize * gridSize) {
+    return null;
+  }
+
+  const emptyIndex = board.findIndex((tile) => tile.isEmpty);
+  if (emptyIndex === -1 || clickedIndex === emptyIndex) {
+    return null;
+  }
+
+  const clickedRow = Math.floor(clickedIndex / gridSize);
+  const clickedCol = clickedIndex % gridSize;
+  const emptyRow = Math.floor(emptyIndex / gridSize);
+  const emptyCol = emptyIndex % gridSize;
+
+  if (clickedRow !== emptyRow && clickedCol !== emptyCol) {
+    return null;
+  }
+
+  const indices: number[] = [];
+
+  if (clickedRow === emptyRow) {
+    const step = clickedCol < emptyCol ? 1 : -1;
+    for (let curr = clickedIndex; curr !== emptyIndex; curr += step) {
+      indices.push(curr);
+    }
+  } else {
+    const step = clickedRow < emptyRow ? gridSize : -gridSize;
+    for (let curr = clickedIndex; curr !== emptyIndex; curr += step) {
+      indices.push(curr);
+    }
+  }
+
+  return indices;
+}
+
+export interface MoveLineResult {
+  newBoard: Board;
+  movedTiles: Array<{
+    tile: TileData;
+    fromIndex: number;
+    toIndex: number;
+  }>;
+}
+
+/**
+ * 클릭한 타일부터 빈 슬롯 사이의 모든 타일을 빈 슬롯 방향으로 1칸씩 연쇄 슬라이드한 새 보드와 이동 내역을 반환합니다.
+ */
+export function moveTileLine(
+  board: Board,
+  clickedIndex: number,
+  gridSize: GridSize
+): MoveLineResult | null {
+  const lineIndices = getLineTilesToMove(board, clickedIndex, gridSize);
+  if (!lineIndices || lineIndices.length === 0) {
+    return null;
+  }
+
+  const emptyIndex = board.findIndex((tile) => tile.isEmpty);
+  if (emptyIndex === -1) {
+    return null;
+  }
+
+  const clickedRow = Math.floor(clickedIndex / gridSize);
+  const clickedCol = clickedIndex % gridSize;
+  const emptyRow = Math.floor(emptyIndex / gridSize);
+  const emptyCol = emptyIndex % gridSize;
+
+  const step =
+    clickedRow === emptyRow
+      ? clickedCol < emptyCol
+        ? 1
+        : -1
+      : clickedRow < emptyRow
+      ? gridSize
+      : -gridSize;
+
+  const newBoard = board.map((tile) => ({ ...tile }));
+  const movedTiles: Array<{
+    tile: TileData;
+    fromIndex: number;
+    toIndex: number;
+  }> = [];
+
+  const emptyTileOriginal = newBoard[emptyIndex];
+  const emptyTile: TileData = {
+    ...emptyTileOriginal,
+    currentPos: clickedIndex,
+  };
+
+  // 빈 칸에 가장 가까운 타일부터 차례대로 빈 칸 쪽으로 1칸씩 이동
+  for (let i = lineIndices.length - 1; i >= 0; i--) {
+    const fromIndex = lineIndices[i];
+    const toIndex = fromIndex + step;
+    const tile = newBoard[fromIndex];
+    tile.currentPos = toIndex;
+    newBoard[toIndex] = tile;
+    movedTiles.unshift({ tile, fromIndex, toIndex });
+  }
+
+  // 빈 슬롯을 클릭되었던 최초 타일 위치에 배치
+  newBoard[clickedIndex] = emptyTile;
+
+  return {
+    newBoard,
+    movedTiles,
+  };
 }

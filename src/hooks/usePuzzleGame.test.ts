@@ -167,4 +167,72 @@ describe('usePuzzleGame Hook', () => {
     expect(result.current.emptyIndex).toBe(8); // Restored to 8
     expect(result.current.moveCount).toBe(2); // +1 penalty move
   });
+
+  it('supports multi-tile push (2 tiles) and single-step undo restoration on 3x3', () => {
+    const { result } = renderHook(() => usePuzzleGame(3));
+
+    // Initially on 3x3: empty at 8 (row 2, col 2)
+    // Click index 6 (row 2, col 0 -> 2 tiles away from empty)
+    expect(result.current.isTileMovable(6)).toBe(true);
+
+    act(() => {
+      const moved = result.current.moveTile(6);
+      expect(moved).toBe(true);
+    });
+
+    // 1 operation = 1 move count increment
+    expect(result.current.moveCount).toBe(1);
+    expect(result.current.emptyIndex).toBe(6);
+    expect(result.current.board[6].isEmpty).toBe(true);
+    expect(result.current.board[7].value).toBe(7);
+    expect(result.current.board[8].value).toBe(8);
+    expect(result.current.canUndo).toBe(true);
+
+    // Single undo restores all 2 tiles back to original positions
+    act(() => {
+      const undone = result.current.undoMove();
+      expect(undone).toBe(true);
+    });
+
+    expect(result.current.emptyIndex).toBe(8);
+    expect(result.current.board[6].value).toBe(7);
+    expect(result.current.board[7].value).toBe(8);
+    expect(result.current.board[8].isEmpty).toBe(true);
+    expect(result.current.moveCount).toBe(2); // +1 penalty move
+    expect(result.current.usedUndoCount).toBe(1);
+  });
+
+  it('supports multi-tile push (3 tiles) and single-step undo restoration on 4x4', () => {
+    const { result } = renderHook(() => usePuzzleGame(4));
+
+    // Initially on 4x4: empty at 15 (row 3, col 3)
+    // Click index 12 (row 3, col 0 -> 3 tiles away from empty)
+    expect(result.current.isTileMovable(12)).toBe(true);
+    expect(result.current.isTileMovable(13)).toBe(true);
+    expect(result.current.isTileMovable(14)).toBe(true);
+
+    act(() => {
+      const moved = result.current.moveTile(12);
+      expect(moved).toBe(true);
+    });
+
+    expect(result.current.moveCount).toBe(1);
+    expect(result.current.emptyIndex).toBe(12);
+    expect(result.current.board[12].isEmpty).toBe(true);
+    expect(result.current.board[13].value).toBe(13);
+    expect(result.current.board[14].value).toBe(14);
+    expect(result.current.board[15].value).toBe(15);
+
+    // Undo restores all 3 moved tiles in 1 call
+    act(() => {
+      const undone = result.current.undoMove();
+      expect(undone).toBe(true);
+    });
+
+    expect(result.current.emptyIndex).toBe(15);
+    expect(result.current.board[12].value).toBe(13);
+    expect(result.current.board[13].value).toBe(14);
+    expect(result.current.board[14].value).toBe(15);
+    expect(result.current.board[15].isEmpty).toBe(true);
+  });
 });

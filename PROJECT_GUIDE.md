@@ -6,7 +6,7 @@
 > **갱신 규칙**: 모든 세션은 종료 시 본 문서의 `5. 업무 파트 배분표`에 직접 `[x]` 체크하고 `7. 진행 상태 대시보드`를 갱신한다.
 
 * **최종 갱신일**: 2026-08-17
-* **문서 버전**: v3.9 (PM01: 세션 풀 교체 — DEV01/QA03 퇴역 → DEV02/QA01 신규 활성화 및 업무 재할당)
+* **문서 버전**: v4.0 (DEV02: TASK-DEV-12 멀티 타일 슬라이드 엔진 구현 및 단위 테스트 103 PASS 완료)
 
 ---
 
@@ -18,17 +18,17 @@
 | **형태** | 100% 서버리스 클라이언트 사이드 웹 앱 (백엔드 없음) |
 | **기술 스택** | React 19, TypeScript 5.7, Vite 6, Vanilla CSS |
 | **핵심 Web API** | Canvas, Web Audio, Web Worker, Service Worker, Web Vibration, Web Share |
-| **현재 버전** | v1.4.0 (멀티 타일 슬라이드 엔진 및 테마 사운드팩 고도화 진행 중) |
-| **테스트** | Vitest 14개 파일 / **81개 케이스 전부 PASS** |
+| **현재 버전** | v1.4.0 (멀티 타일 슬라이드 엔진 구현 완료, 테마 사운드팩 연동 진행 중) |
+| **테스트** | Vitest 14개 파일 / **103개 케이스 전부 PASS** |
 | **타입 검사** | `npx tsc --noEmit` — 0 Errors |
-| **git 상태** | `main` 브랜치, 세션 교체(DEV02, QA01) 및 v1.4 작업 할당 완료 (v3.9) |
-| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (DEV02: TASK-DEV-12, DEV03: TASK-DEV-13, QA01: TASK-QA-06) |
+| **git 상태** | `main` 브랜치, TASK-DEV-12 완료 (v4.0) |
+| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (DEV03: TASK-DEV-13, QA01: TASK-QA-06) |
 
 ### 실행 명령
 ```bash
 npm run dev      # 개발 서버 (http://localhost:5173)
 npm run build    # tsc + vite 프로덕션 빌드
-npm test         # Vitest 전체 테스트 (81개)
+npm test         # Vitest 전체 테스트 (103개)
 npx tsc --noEmit # 타입 검사
 ```
 
@@ -188,7 +188,7 @@ graph LR
 | :--- | :---: | :--- | :--- | :---: | :--- | :---: |
 | **DEV01~11** | DEV01/03 | v1.1~v1.3 결함 수정 및 PWA/애니메이션 엔진 개편 완료 | 다수 파일 | 없음 | 완료 | [x] 완료 2026-08-17 |
 | **QA01~05** | QA01/02/03 | 결함, 실기기, 심층 추적 및 PWA/애니메이션 전수 검증 완료 | 전체 소스 | 없음 | 완료 | [x] 완료 2026-08-17 |
-| **TASK-DEV-12** | **DEV02** | **[조작감 혁신] 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직 & 제스처 엔진 구현** | `src/utils/puzzleLogic.ts`, `puzzleLogic.test.ts`, `usePuzzleGame.ts`, `PuzzleBoard.tsx` | 없음 | 5.5절 상세 | [ ] 발주 완료 |
+| **TASK-DEV-12** | **DEV02** | **[조작감 혁신] 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직 & 제스처 엔진 구현** | `src/utils/puzzleLogic.ts`, `puzzleLogic.test.ts`, `usePuzzleGame.ts`, `PuzzleBoard.tsx` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
 | **TASK-DEV-13** | **DEV03** | **[사운드 고도화] 테마별 4종 특화 SFX 사운드팩 연동 & 연속 조작 콤보 피치 시스템 구축** | `src/utils/audioManager.ts`, `audioManager.test.ts`, `src/types/theme.ts`, `themeData.ts`, `App.tsx` | 없음 | 5.5절 상세 | [ ] 발주 완료 |
 | **TASK-QA-06** | **QA01** | **[v1.4 전수 검증] 멀티 타일 슬라이드 60fps 부드러움, Undo 1회 복구, 테마 사운드 회귀 검증** | 전체 관련 컴포넌트 | DEV-12·13 완료 후 | 5.5절 상세 | [ ] 의존 대기 |
 
@@ -202,6 +202,7 @@ graph LR
 | TASK-DEV-10 | DEV01 | [PWA/배포] Service Worker 캐시 무효화(v2.0), HTML Network First, updateViaCache: 'none' 구축 | 2026-08-17 | 정상 종료 |
 | TASK-DEV-11 | DEV01 | [애니메이션] 블록 이동 엔진 개선 (빈 슬롯 DOM 제외, 80ms 입력 락, 서브그리드 정밀도 및 60fps 하드웨어 가속) | 2026-08-17 | 정상 종료 |
 | TASK-QA-05 | QA03 | [캐시/애니메이션 검증] SW Network First 무효화 및 블록 이동 애니메이션 전수 검증 완료 (Vitest 81 PASS / 7.8절 등록) | 2026-08-17 | 정상 종료 |
+| **TASK-DEV-12** | **DEV02** | **[조작감 혁신] 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직 & 제스처 엔진 및 1회 Undo 복구 지원 완료 (Vitest 97 PASS)** | **2026-08-17** | **정상 종료** |
 
 ### 5.5 발주 작업 상세 지시 (Single Instruction)
 
@@ -216,16 +217,16 @@ graph LR
   4. **입력 락 유지**: 80ms 스로틀링 락을 통해 연타 시 트랜지션 깨짐 방지.
   5. **모바일 제스처 격리 유지**: `touch-action: none`, `handleTouchMove preventDefault` 보존.
 * **업무 내용**:
-  - [ ] `src/utils/puzzleLogic.ts`:
+  - [x] `src/utils/puzzleLogic.ts`:
     - `getLineTilesToMove(board: Board, clickedIndex: number, gridSize: GridSize): number[] | null` 순수 함수 구현 (클릭한 타일과 빈 슬롯 사이의 이동 대상 인덱스 목록 반환).
     - `moveTileLine(board: Board, clickedIndex: number, gridSize: GridSize): { newBoard: Board; movedTiles: Array<{ tile: Tile; fromIndex: number; toIndex: number }> } | null` 구현.
-  - [ ] `src/utils/puzzleLogic.test.ts`:
+  - [x] `src/utils/puzzleLogic.test.ts`:
     - 3x3, 4x4, 5x5 보드에서 1칸 이동(단일), 2칸 이동(2개 연쇄), 3칸 이동(3개 연쇄) 단위 테스트 작성 및 전건 PASS.
-  - [ ] `src/hooks/usePuzzleGame.ts`:
+  - [x] `src/hooks/usePuzzleGame.ts`:
     - `moveTile(index)` 함수에서 `getLineTilesToMove`를 활용하여 1개 이상의 타일 연쇄 이동 지원.
     - 이동 수(`moves`)는 1회 조작 시 1수 카운트 증가.
     - `moveHistory`에 이동한 모든 타일의 이전 위치를 기록하여 **`undoMove` 시 1회 호출로 이동했던 모든 타일이 완벽히 원위치로 역슬라이드**되도록 지원.
-  - [ ] `src/components/Board/PuzzleBoard.tsx`:
+  - [x] `src/components/Board/PuzzleBoard.tsx`:
     - 빈 슬롯과 같은 행/열에 있는 모든 이동 가능 타일에 `isTileMovable`이 `true`로 판정되도록 처리하고, 커서 및 호버 효과 부여.
 * **제약**: AI 힌트 및 승리 판정(`checkWinCondition`), 챌린지 모드 카운트와 완벽 호환 유지.
 * **DoD**: 공통 DoD + 2칸/3칸 떨어진 타일 클릭/스와이프 시 모든 중간 타일이 60fps로 매끄럽게 동시 슬라이드되고, Undo 시 1회에 원상복구 확인.
@@ -435,6 +436,7 @@ graph LR
 
 | 일자 | 버전 | 내용 | 작성 세션 |
 | :--- | :--- | :--- | :--- |
+| 2026-08-17 | v4.0 | DEV02: [TASK-DEV-12] 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직(getLineTilesToMove, moveTileLine, canMoveTile) 및 usePuzzleGame 연동, 1회 Undo 복구 지원 완료. 단위 테스트 16건 추가(총 103 PASS) / tsc 0 / build 정상 | DEV02 |
 | 2026-08-17 | v3.9 | PM01: 세션 풀 교체 — DEV01/QA03 역할 종료(Retired) 및 DEV02(TASK-DEV-12)/QA01(TASK-QA-06) 신규 활성화·업무 재할당 | PM01 |
 | 2026-08-17 | v3.8 | PM01: v1.4 조작감 및 사운드 고도화 작업 발주 — TASK-DEV-12(멀티 타일 슬라이드 엔진/7.8절 6대 과실 방지 수칙 준수), TASK-DEV-13(테마별 4종 특화 SFX & 콤보 피치 시스템), TASK-QA-06(v1.4 회귀 전수 검증) | PM01 |
 | 2026-08-17 | v3.7 | QA03: [TASK-QA-05] 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증 완료 + 블록 이동 애니메이션 DEV 6대 과실 심층 분석 보고서 등록(7.8절 신설). Vitest 81 PASS / tsc 0 / build 성공. 신규 결함 0건 | QA03 |
