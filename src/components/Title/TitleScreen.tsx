@@ -45,16 +45,19 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   const streakData = getDailyStreakData();
 
   // Selected size per mode
+  const [selectedMode, setSelectedMode] = useState<GameChallengeMode | 'daily'>('standard');
   const [standardSize, setStandardSize] = useState<GridSize>(4);
   const [timeAttackSize, setTimeAttackSize] = useState<GridSize>(4);
   const [moveLimitSize, setMoveLimitSize] = useState<GridSize>(4);
 
   const handleModeClick = (mode: GameChallengeMode, size: GridSize) => {
+    setSelectedMode(mode);
     playSfx('click');
     onStartGame(mode, size);
   };
 
   const handleDailyClick = () => {
+    setSelectedMode('daily');
     playSfx('click');
     onStartDaily();
   };
@@ -174,7 +177,14 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
       {/* 4 Mode Selection Cards Grid */}
       <div className="mode-cards-grid">
         {/* 1. 일반 모드 (Standard Mode) */}
-        <div className="mode-card standard">
+        <div
+          className={`mode-card standard ${selectedMode === 'standard' ? 'selected' : ''}`}
+          onClick={() => setSelectedMode('standard')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMode('standard'); }}
+          aria-pressed={selectedMode === 'standard'}
+        >
           <div className="mode-card-header">
             <div className="mode-icon-box standard">
               <Shield size={24} />
@@ -193,7 +203,11 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 key={sz}
                 type="button"
                 className={`size-pill ${standardSize === sz ? 'active' : ''}`}
-                onClick={() => setStandardSize(sz)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedMode('standard');
+                  setStandardSize(sz);
+                }}
               >
                 {sz}×{sz}
               </button>
@@ -203,7 +217,10 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <button
             type="button"
             className="btn-play-mode standard"
-            onClick={() => handleModeClick('standard', standardSize)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleModeClick('standard', standardSize);
+            }}
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
@@ -215,7 +232,14 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         </div>
 
         {/* 2. 타임어택 모드 (Time Attack) */}
-        <div className="mode-card timeattack">
+        <div
+          className={`mode-card timeattack ${selectedMode === 'timeAttack' ? 'selected' : ''}`}
+          onClick={() => setSelectedMode('timeAttack')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMode('timeAttack'); }}
+          aria-pressed={selectedMode === 'timeAttack'}
+        >
           <div className="mode-card-header">
             <div className="mode-icon-box timeattack">
               <Clock size={24} />
@@ -234,7 +258,11 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 key={sz}
                 type="button"
                 className={`size-pill ${timeAttackSize === sz ? 'active' : ''}`}
-                onClick={() => setTimeAttackSize(sz)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedMode('timeAttack');
+                  setTimeAttackSize(sz);
+                }}
               >
                 {sz}×{sz} ({TIME_LIMITS[sz]}초)
               </button>
@@ -244,7 +272,10 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <button
             type="button"
             className="btn-play-mode timeattack"
-            onClick={() => handleModeClick('timeAttack', timeAttackSize)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleModeClick('timeAttack', timeAttackSize);
+            }}
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
@@ -256,7 +287,14 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         </div>
 
         {/* 3. 이동 제한 모드 (Move Limit) */}
-        <div className="mode-card movelimit">
+        <div
+          className={`mode-card movelimit ${selectedMode === 'moveLimit' ? 'selected' : ''}`}
+          onClick={() => setSelectedMode('moveLimit')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMode('moveLimit'); }}
+          aria-pressed={selectedMode === 'moveLimit'}
+        >
           <div className="mode-card-header">
             <div className="mode-icon-box movelimit">
               <Footprints size={24} />
@@ -275,7 +313,11 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 key={sz}
                 type="button"
                 className={`size-pill ${moveLimitSize === sz ? 'active' : ''}`}
-                onClick={() => setMoveLimitSize(sz)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedMode('moveLimit');
+                  setMoveLimitSize(sz);
+                }}
               >
                 {sz}×{sz} ({MOVE_LIMITS[sz]}회)
               </button>
@@ -285,7 +327,10 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <button
             type="button"
             className="btn-play-mode movelimit"
-            onClick={() => handleModeClick('moveLimit', moveLimitSize)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleModeClick('moveLimit', moveLimitSize);
+            }}
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
@@ -297,7 +342,14 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         </div>
 
         {/* 4. 오늘의 퍼즐 (Daily Challenge) */}
-        <div className="mode-card daily">
+        <div
+          className={`mode-card daily ${selectedMode === 'daily' ? 'selected' : ''}`}
+          onClick={() => setSelectedMode('daily')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMode('daily'); }}
+          aria-pressed={selectedMode === 'daily'}
+        >
           <div className="mode-card-header">
             <div className="mode-icon-box daily">
               <Flame size={24} />
@@ -318,7 +370,10 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <button
             type="button"
             className="btn-play-mode daily"
-            onClick={handleDailyClick}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDailyClick();
+            }}
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
