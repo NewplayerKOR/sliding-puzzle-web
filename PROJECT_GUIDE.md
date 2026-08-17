@@ -6,7 +6,7 @@
 > **갱신 규칙**: 모든 세션은 종료 시 본 문서의 `5. 업무 파트 배분표`에 직접 `[x]` 체크하고 `7. 진행 상태 대시보드`를 갱신한다.
 
 * **최종 갱신일**: 2026-08-17
-* **문서 버전**: v3.4 (PM01: 커밋 메시지 한글 작성 원칙 제정 및 6.3절 규칙 반영)
+* **문서 버전**: v3.5 (DEV01: TASK-DEV-10, TASK-DEV-11 완료)
 
 ---
 
@@ -18,11 +18,11 @@
 | **형태** | 100% 서버리스 클라이언트 사이드 웹 앱 (백엔드 없음) |
 | **기술 스택** | React 19, TypeScript 5.7, Vite 6, Vanilla CSS |
 | **핵심 Web API** | Canvas, Web Audio, Web Worker, Service Worker, Web Vibration, Web Share |
-| **현재 버전** | v1.3.0 (배포 캐시 무효화 및 블록 이동 애니메이션 근본 개선 진행 중) |
+| **현재 버전** | v1.3.1 (배포 캐시 무효화 및 블록 이동 애니메이션 엔진 개선 완료) |
 | **테스트** | Vitest 14개 파일 / **81개 케이스 전부 PASS** |
 | **타입 검사** | `npx tsc --noEmit` — 0 Errors |
-| **git 상태** | `main` 브랜치, 신규 작업(TASK-DEV-10·11, TASK-QA-05) 발주 완료 (v3.3) |
-| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (DEV01: TASK-DEV-10·11, QA03: TASK-QA-05) |
+| **git 상태** | `main` 브랜치, DEV01 배치 작업(TASK-DEV-10·11) 완료 (v3.5), working tree clean |
+| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (QA03: TASK-QA-05 캐시 및 애니메이션 회귀 검증 대기) |
 
 ### 실행 명령
 ```bash
@@ -174,7 +174,7 @@ graph LR
 #### 🟢 활성 세션 풀 (Active Session Pool — 최대 3세션)
 * **PM Pool**: `PM01` (Active — 총괄 관리 및 배분)
 * **DEV Pool**:
-  * `DEV01` (Active — 캐시 및 애니메이션 엔진 전문: `TASK-DEV-10`, `TASK-DEV-11` 배치 할당)
+  * `DEV01` (Active — 캐시 및 애니메이션 엔진 전문: `TASK-DEV-10`, `TASK-DEV-11` 배치 완료)
   * `DEV02` (Active — 대기)
   * `DEV03` (Active — 알고리즘/솔버 전문: 대기)
 * **QA Pool**:
@@ -192,8 +192,8 @@ graph LR
 | **TASK-DEV-08** | DEV01 | [FB-02] 타일 슬라이드 정방형 고정, 빈 슬롯 트랜지션 제거, 대칭 이징 적용 | `PuzzleBoard.css`, `Tile.css`, `PuzzleBoard.tsx` | 없음 | 81 PASS / 완료 | [x] 완료 2026-08-17 |
 | **TASK-DEV-09** | DEV03 | [FB-01] 4x4 AI 힌트 1행 고정 서브골 리덕션 & 사이클 가드 + 시각 넛지 개선 | `aiSolver.ts`, `aiSolver.test.ts`, `Tile.css` | 없음 | 81 PASS / 완료 | [x] 완료 2026-08-17 |
 | **TASK-QA-04** | QA03 | [FB-01~03 재검증] 미해결 3건 재발주 개발 결과물 전수 회귀 검증 | 전체 관련 컴포넌트 | DEV-07~09 후 | 전건 PASS / 완료 | [x] 완료 2026-08-17 |
-| **TASK-DEV-10** | **DEV01** | **[PWA/배포] Service Worker 캐시 무효화 및 HTML Network First 자동 갱신 아키텍처 구축** | `public/sw.js`, `src/main.tsx`, `index.html` | 없음 | 5.5절 상세 | [ ] 발주 대기 |
-| **TASK-DEV-11** | **DEV01** | **[애니메이션] 블록 이동 엔진 근본 개선 (빈 슬롯 DOM 제외, 연타 입력 락, 서브그리드 정밀화)** | `src/components/Board/PuzzleBoard.tsx`, `PuzzleBoard.css`, `usePuzzleGame.ts` | 없음 | 5.5절 상세 | [ ] 발주 대기 |
+| **TASK-DEV-10** | **DEV01** | **[PWA/배포] Service Worker 캐시 무효화 및 HTML Network First 자동 갱신 아키텍처 구축** | `public/sw.js`, `src/main.tsx`, `index.html` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
+| **TASK-DEV-11** | **DEV01** | **[애니메이션] 블록 이동 엔진 근본 개선 (빈 슬롯 DOM 제외, 연타 입력 락, 서브그리드 정밀화)** | `src/components/Board/PuzzleBoard.tsx`, `PuzzleBoard.css`, `usePuzzleGame.ts` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
 | **TASK-QA-05** | **QA03** | **[캐시/애니메이션 검증] 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증** | 전체 관련 컴포넌트 | DEV-10·11 완료 후 | 5.5절 상세 | [ ] 의존 대기 |
 
 ### 5.4 완료 이력
@@ -205,6 +205,8 @@ graph LR
 | TASK-DEV-08 | DEV01 | [FB-02] 타일 슬라이더 정방형 고정(aspect-ratio 1:1), 빈 슬롯 역방향 트랜지션 제거, 대칭 이징 적용 | 2026-08-17 | 정상 종료 |
 | TASK-DEV-09 | DEV03 | [FB-01] 4x4 AI 힌트 서브골 리덕션(Row 1/Col 1/3x3), 강제 재탐색 왕복 0회 검증, Tile 2px 시각 넛지 적용 | 2026-08-17 | 81 PASS / 0 Error |
 | TASK-QA-04 | QA03 | [FB-01~03 재검증] 타이틀 모드 선택 UI·타일 애니메이션 속도·4x4 힌트 서브골 리덕션 전수 회귀 검증 완료 | 2026-08-17 | 정상 종료 |
+| TASK-DEV-10 | DEV01 | [PWA/배포] Service Worker 캐시 무효화(v2.0), HTML Network First 전략, updateViaCache: 'none', controllerchange 자동 갱신 구축 | 2026-08-17 | 정상 종료 |
+| TASK-DEV-11 | DEV01 | [애니메이션] 블록 이동 엔진 개선 (빈 슬롯 DOM 제외, 100ms 입력 스로틀링 락, 서브그리드 정밀도 및 60fps 하드웨어 가속) | 2026-08-17 | 정상 종료 |
 
 ### 5.5 발주 작업 상세 지시 (Single Instruction)
 
@@ -214,17 +216,17 @@ graph LR
   - 신규 배포 시 브라우저가 캐시된 구버전 `index.html`을 즉시 반환하여, Vite가 새로 생성한 번들 JS/CSS를 불러오지 못하고 구버전 앱이 영구 잔존함.
   - SW 등록 시 브라우저 HTTP 캐시 방지 옵션(`updateViaCache: 'none'`) 및 클라이언트 갱신 감지/자동 리로드 로직 부재.
 * **업무 내용**:
-  - [ ] `public/sw.js`:
+  - [x] `public/sw.js`:
     - `CACHE_NAME`을 `sliding-puzzle-v2.0`으로 승급 (명시적 네임스페이스 분리).
     - **HTML 및 Navigation 요청은 무조건 Network First 전략 적용**:
       `event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')`인 경우 네트워크를 최우선으로 fetch하고, 성공 시 캐시를 갱신하며, 네트워크 실패(오프라인) 시에만 `caches.match('./index.html')`로 폴백.
     - 정적 번들 에셋(해시가 포함된 JS/CSS/이미지/사운드)은 Cache First로 고속 로딩 유지.
     - `activate` 이벤트에서 현재 `CACHE_NAME`과 일치하지 않는 모든 구버전 캐시(`v1` 등)를 `caches.delete`로 완벽히 삭제.
     - `install` 시 `self.skipWaiting()`, `activate` 시 `self.clients.claim()` 확실히 보장.
-  - [ ] `src/main.tsx`:
+  - [x] `src/main.tsx`:
     - Service Worker 등록 시 `navigator.serviceWorker.register(url, { updateViaCache: 'none' })` 적용하여 `sw.js` 파일 자체의 브라우저 HTTP 캐시 방지.
     - SW 갱신 리스너 등록: `registration.addEventListener('updatefound', ...)` 및 `navigator.serviceWorker.addEventListener('controllerchange', ...)`를 통해 새 SW 활성화 시 최신 상태로 즉시 연결되도록 처리.
-  - [ ] `npm run build` 후 배포 번들 및 SW 캐시 동작 검증.
+  - [x] `npm run build` 후 배포 번들 및 SW 캐시 동작 검증.
 * **제약**: 오프라인 PWA 기본 기능(`manifest.webmanifest`, 오프라인 플레이) 훼손 금지.
 * **DoD**: 공통 DoD + 신규 배포 시 캐시 삭제 및 Network First로 최신 버전 즉시 반영 확인, 오프라인 시 정상 로딩 확인.
 
@@ -234,12 +236,12 @@ graph LR
   - 0.16s 슬라이드 애니메이션 도중 타일 연타(Rapid Click/Keydown) 시 `transform` 좌표가 중간 지점에서 덮어씌워지며 뚝뚝 끊기거나 점프하는 현상 발생.
   - 브라우저 서브픽셀 렌더링에 따른 X/Y축 계산 오차 미세 잔존.
 * **업무 내용**:
-  - [ ] `PuzzleBoard.tsx`:
+  - [x] `PuzzleBoard.tsx`:
     - `tile.isEmpty`인 타일은 `.tile-slider` 렌더링에서 완전히 제외 (`board.filter(tile => !tile.isEmpty).map(...)`).
     - 배경 슬롯(`.grid-background-slot`)이 이미 모든 격자 위치를 안정적으로 렌더링하므로, 불필요한 빈 타일 DOM을 제거하여 렌더링 오버헤드 및 역방향 간섭 원천 박멸.
-  - [ ] `usePuzzleGame.ts` / `PuzzleBoard.tsx`:
+  - [x] `usePuzzleGame.ts` / `PuzzleBoard.tsx`:
     - 타일 이동 애니메이션 진행 중(0.14~0.16s) 과도한 연타 입력으로 인한 프레임 드랍 및 애니메이션 끊김 방지 가드(애니메이션 락 / Throttling) 도입.
-  - [ ] `PuzzleBoard.css` & `Tile.css`:
+  - [x] `PuzzleBoard.css` & `Tile.css`:
     - `.tile-slider`의 하드웨어 가속 `translate3d` 좌표 계산을 서브픽셀 정밀도로 정렬하여 상/하/좌/우 4방향 이동 거리와 체감 속도를 물리적으로 100% 일치화.
 * **제약**: 키보드/터치 스와이프/클릭 모든 입력 방식 정상 작동 유지, Sparkle VFX 및 AI 힌트 오버레이 보존.
 * **DoD**: 공통 DoD + 연속 연타 시에도 끊김 없는 부드러운 60fps 슬라이드 렌더링 및 4방향 속도 육안 완전 일치.
@@ -304,7 +306,7 @@ graph LR
 | Phase 5 | 고도화 9대 모듈 (커스텀이미지/AI힌트/Undo/일일챌린지/업적/챌린지모드/PWA/i18n/공유) | ✅ **코드 구현 완료** |
 | v1.1 정비 | BUG-06 잔여·PROD 게이팅 수정 및 회귀 검증 | ✅ 완료 (DEV01·DEV02·QA01·QA02 전 파트 종료) |
 | v1.2 사용자 피드백 대응 | AI 힌트 맴돔 수정, 애니메이션 속도 통일, 타이틀 카드 배경 통일, 서브패스 배포 | ✅ **완료** (TASK-DEV-07·08·09 및 QA03 TASK-QA-04 전수 회귀 검증 완료) |
-| **v1.3 실서비스 갱신 및 체감 고도화** | **배포 캐시 무효화 (PWA Network First) 및 블록 애니메이션 엔진 근본 개선** | 🔄 **진행 중 (TASK-DEV-10·11 발주 완료 → QA03 TASK-QA-05)** |
+| **v1.3 실서비스 갱신 및 체감 고도화** | **배포 캐시 무효화 (PWA Network First) 및 블록 애니메이션 엔진 근본 개선** | 🔄 **진행 중 (TASK-DEV-10·11 완료 → QA03 TASK-QA-05 검증 대기)** |
 
 ### 7.2 결함 현황 (QA_COMPREHENSIVE_DEFECT_REPORT 기준 11건)
 
@@ -345,8 +347,8 @@ graph LR
 | FB-02 | 블록 이동 시 상/하/좌/우 애니메이션 속도 불일치 | 퍼센트 높이 픽셀 미세 오차 + 빈 슬롯 동시 역방향 슬라이드 + 비대칭 이징 | **TASK-DEV-08** | ✅ 검증 완료 (QA03) |
 | FB-03 | 홈 화면 4개 모드 카드 배경 불일치 & 선택 피드백 부재 | CSS shorthand 배경 덮어쓰기 + `selectedMode` 상태/스타일링 UI 부재 | **TASK-DEV-07** | ✅ 검증 완료 (QA03) |
 | FB-04 | (DEV01 후속) 서브패스 배포 대응 `base` 설정 | CSS 절대경로는 정상, 서브패스 대응은 `base` 설정이 올바른 조치 | **DEV06** | ✅ 검증 완료 (QA03) |
-| **FB-05** | **새로운 배포 시 기존 사용자 업데이트 미반영 현상 (캐시 고착화)** | **`sw.js` Cache-First의 HTML 가로채기 + CACHE_NAME 고정으로 구버전 index.html 무한 서빙** | **TASK-DEV-10** | ⏳ **발주 대기 (DEV01)** |
-| **FB-06** | **블록 이동 애니메이션 실체감 결함 (연타 시 뚝뚝 끊김/DOM 간섭)** | **빈 슬롯 타일 DOM 불필요 렌더링 + 연타 입력 시 트랜지션 중간 덮어쓰기** | **TASK-DEV-11** | ⏳ **발주 대기 (DEV01)** |
+| **FB-05** | **새로운 배포 시 기존 사용자 업데이트 미반영 현상 (캐시 고착화)** | **`sw.js` Cache-First의 HTML 가로채기 + CACHE_NAME 고정으로 구버전 index.html 무한 서빙** | **TASK-DEV-10** | [x] 완료 2026-08-17 (DEV01) |
+| **FB-06** | **블록 이동 애니메이션 실체감 결함 (연타 시 뚝뚝 끊김/DOM 간섭)** | **빈 슬롯 타일 DOM 불필요 렌더링 + 연타 입력 시 트랜지션 중간 덮어쓰기** | **TASK-DEV-11** | [x] 완료 2026-08-17 (DEV01) |
 
 ---
 
@@ -389,6 +391,7 @@ graph LR
 
 | 일자 | 버전 | 내용 | 작성 세션 |
 | :--- | :--- | :--- | :--- |
+| 2026-08-17 | v3.5 | DEV01: TASK-DEV-10(Service Worker v2.0 캐시 무효화 및 HTML Network First 자동 갱신), TASK-DEV-11(빈 슬롯 DOM 제외, 100ms 연타 입력 락, 서브픽셀 정밀도 60fps 애니메이션 엔진) 완료. Vitest 81 PASS / tsc 0 / build 정상. QA03(TASK-QA-05) 이관 | DEV01 |
 | 2026-08-17 | v3.4 | PM01: 커밋 메시지 한글 작성 원칙(필요한 식별자/파트ID만 영문 허용) 제정 및 6.3절 세션 규칙 반영 | PM01 |
 | 2026-08-17 | v3.3 | PM01: 신규 이슈 2건(FB-05 배포 캐시 고착화, FB-06 블록 이동 연타/DOM 간섭) 심층 분석 및 신규 파트 발주 — TASK-DEV-10(PWA Network First/캐시 무효화), TASK-DEV-11(빈슬롯 DOM 제외/연타 락/서브그리드 정밀화), TASK-QA-05(전수 검증) | PM01 |
 | 2026-08-17 | v3.2 | QA03: [TASK-QA-04] 미해결 3건 재발주 개발 결과물(TASK-DEV-07~09) 전수 회귀 검증 완료 — Vitest 81 PASS / tsc 0 / 빌드 성공 (신규 결함 0건) | QA03 |

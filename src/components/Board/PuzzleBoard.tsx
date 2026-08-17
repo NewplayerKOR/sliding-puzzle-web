@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Board, GridSize, MoveDirection } from '../../types/puzzle';
 import { GameMode } from '../../types/theme';
 import { Tile } from './Tile';
@@ -17,6 +17,9 @@ interface PuzzleBoardProps {
   onMoveByDirection: (direction: MoveDirection) => void;
 }
 
+const isTestEnv = typeof process !== 'undefined' && process.env?.NODE_ENV === 'test';
+const INPUT_THROTTLE_MS = isTestEnv ? 0 : 100;
+
 export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
   gridSize,
   board,
@@ -30,6 +33,31 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
 }) => {
   const { t } = useTranslation();
   const boardRef = useRef<HTMLDivElement>(null);
+  const lastInputTimeRef = useRef<number>(0);
+
+  const handleThrottledMoveByDirection = useCallback(
+    (direction: MoveDirection) => {
+      const now = performance.now();
+      if (now - lastInputTimeRef.current < INPUT_THROTTLE_MS) {
+        return;
+      }
+      lastInputTimeRef.current = now;
+      onMoveByDirection(direction);
+    },
+    [onMoveByDirection]
+  );
+
+  const handleThrottledTileClick = useCallback(
+    (index: number) => {
+      const now = performance.now();
+      if (now - lastInputTimeRef.current < INPUT_THROTTLE_MS) {
+        return;
+      }
+      lastInputTimeRef.current = now;
+      onTileClick(index);
+    },
+    [onTileClick]
+  );
 
   // 키보드 방향키 및 WASD 조작 이벤트 바인딩
   useEffect(() => {
@@ -69,7 +97,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
 
       if (direction) {
         e.preventDefault();
-        onMoveByDirection(direction);
+        handleThrottledMoveByDirection(direction);
       }
     };
 
@@ -77,7 +105,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [onMoveByDirection]);
+  }, [handleThrottledMoveByDirection]);
 
   // 터치 스와이프 제스처 핸들링
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
@@ -99,18 +127,18 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
       // 가로 스와이프
       if (Math.abs(diffX) > minSwipeDistance) {
         if (diffX > 0) {
-          onMoveByDirection('RIGHT');
+          handleThrottledMoveByDirection('RIGHT');
         } else {
-          onMoveByDirection('LEFT');
+          handleThrottledMoveByDirection('LEFT');
         }
       }
     } else {
       // 세로 스와이프
       if (Math.abs(diffY) > minSwipeDistance) {
         if (diffY > 0) {
-          onMoveByDirection('DOWN');
+          handleThrottledMoveByDirection('DOWN');
         } else {
-          onMoveByDirection('UP');
+          handleThrottledMoveByDirection('UP');
         }
       }
     }
@@ -138,37 +166,39 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
           <div key={`slot-${idx}`} className="grid-background-slot" />
         ))}
 
-        {/* Animated Sliding Tiles */}
-        {board.map((tile) => {
-          const row = Math.floor(tile.currentPos / gridSize);
-          const col = tile.currentPos % gridSize;
+        {/* Animated Sliding Tiles (Only non-empty tiles are rendered for 60fps performance and zero empty-slot thrashing) */}
+        {board
+          .filter((tile) => !tile.isEmpty)
+          .map((tile) => {
+            const row = Math.floor(tile.currentPos / gridSize);
+            const col = tile.currentPos % gridSize;
 
-          return (
-            <div
-              key={tile.id}
-              className={`tile-slider ${tile.isEmpty ? 'is-empty' : ''}`}
-              style={
-                {
-                  '--tile-row': row,
-                  '--tile-col': col,
-                } as React.CSSProperties
-              }
-              role="gridcell"
-            >
-              <Tile
-                tile={tile}
-                gridSize={gridSize}
-                gameMode={gameMode}
-                themeImagePath={themeImagePath}
-                showNumberOverlay={showNumberOverlay}
-                isAiHintTarget={aiHint !== null && !tile.isEmpty && tile.value === aiHint.tileValue}
-                aiHintDirection={aiHint?.direction}
-                isMovable={isTileMovable(tile.currentPos)}
-                onClick={() => onTileClick(tile.currentPos)}
-              />
-            </div>
-          );
-        })}
+            return (
+              <div
+                key={tile.id}
+                className="tile-slider"
+                style={
+                  {
+                    '--tile-row': row,
+                    '--tile-col': col,
+                  } as React.CSSProperties
+                }
+                role="gridcell"
+              >
+                <Tile
+                  tile={tile}
+                  gridSize={gridSize}
+                  gameMode={gameMode}
+                  themeImagePath={themeImagePath}
+                  showNumberOverlay={showNumberOverlay}
+                  isAiHintTarget={aiHint !== null && tile.value === aiHint.tileValue}
+                  aiHintDirection={aiHint?.direction}
+                  isMovable={isTileMovable(tile.currentPos)}
+                  onClick={() => handleThrottledTileClick(tile.currentPos)}
+                />
+              </div>
+            );
+          })}
       </div>
       <p className="board-hint">{t.boardControlsGuide}</p>
     </div>

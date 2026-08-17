@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sliding-puzzle-v1';
+const CACHE_NAME = 'sliding-puzzle-v2.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -34,7 +34,7 @@ const ASSETS_TO_CACHE = [
   './assets/icons/ui_empty_slot_glow.png',
 ];
 
-
+// Install: Pre-cache core shell & assets and activate immediately
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -46,12 +46,14 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
+// Activate: Purge all stale caches and claim clients immediately
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('[SW] Purging outdated cache:', key);
             return caches.delete(key);
           }
         })
@@ -61,35 +63,55 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// Fetch: Network First for Navigation/HTML, Cache First for hashed static assets
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request)
+  const isNavigation =
+    event.request.mode === 'navigate' ||
+    (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'));
+
+  if (isNavigation) {
+    // Network First Strategy for HTML / Navigation
+    event.respondWith(
+      fetch(event.request)
         .then((networkResponse) => {
-          if (
-            networkResponse &&
-            networkResponse.status === 200 &&
-            (event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))
-          ) {
+          if (networkResponse && networkResponse.status === 200) {
             const responseToCache = networkResponse.clone();
             caches.open(CACHE_NAME).then((cache) => {
               cache.put(event.request, responseToCache);
+              cache.put('./index.html', responseToCache.clone());
             });
           }
           return networkResponse;
         })
         .catch(() => {
-          // If offline and request is HTML navigation, fallback to ./index.html
-          if (event.request.headers.get('accept')?.includes('text/html')) {
-            return caches.match('./index.html');
-          }
-        });
+          // Offline fallback
+          return caches.match('./index.html').then((cached) => cached || caches.match('./'));
+        })
+    );
+    return;
+  }
+
+  // Cache First Strategy for Static Assets (Images, Sounds, JS/CSS bundles)
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      return fetch(event.request).then((networkResponse) => {
+        if (
+          networkResponse &&
+          networkResponse.status === 200 &&
+          (event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))
+        ) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      });
     })
   );
 });
-

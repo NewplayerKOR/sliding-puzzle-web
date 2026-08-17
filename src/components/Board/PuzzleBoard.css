@@ -22,6 +22,7 @@
   box-shadow: var(--shadow-lg);
   user-select: none;
   touch-action: none;
+  box-sizing: border-box;
   --board-padding: 8px;
   --tile-gap: 8px;
 }
@@ -52,14 +53,16 @@
   );
   transition: transform 0.16s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  contain: layout paint;
+  box-sizing: border-box;
   z-index: 10;
   display: flex;
 }
 
 .tile-slider.is-empty {
-  z-index: 2;
-  pointer-events: none;
-  transition: none !important;
+  display: none !important;
 }
 
 .board-hint {
