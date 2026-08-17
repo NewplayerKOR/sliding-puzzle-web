@@ -6,7 +6,7 @@
 > **갱신 규칙**: 모든 세션은 종료 시 본 문서의 `5. 업무 파트 배분표`에 직접 `[x]` 체크하고 `7. 진행 상태 대시보드`를 갱신한다.
 
 * **최종 갱신일**: 2026-08-17
-* **문서 버전**: v3.7 (QA03: 블록 이동 애니메이션 DEV 과실 심층 분석 및 TASK-QA-05 전수 검증 완료)
+* **문서 버전**: v3.8 (PM01: v1.4 조작감 및 사운드 고도화 작업 발주 — TASK-DEV-12, TASK-DEV-13, TASK-QA-06)
 
 ---
 
@@ -18,11 +18,11 @@
 | **형태** | 100% 서버리스 클라이언트 사이드 웹 앱 (백엔드 없음) |
 | **기술 스택** | React 19, TypeScript 5.7, Vite 6, Vanilla CSS |
 | **핵심 Web API** | Canvas, Web Audio, Web Worker, Service Worker, Web Vibration, Web Share |
-| **현재 버전** | v1.3.2 (배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증 완료) |
+| **현재 버전** | v1.4.0 (멀티 타일 슬라이드 엔진 및 테마 사운드팩 고도화 진행 중) |
 | **테스트** | Vitest 14개 파일 / **81개 케이스 전부 PASS** |
 | **타입 검사** | `npx tsc --noEmit` — 0 Errors |
-| **git 상태** | `main` 브랜치, TASK-QA-05 전수 회귀 검증 및 DEV 과실 분석 완료 (v3.7) |
-| **현재 오픈 업무** | 없음 (전체 작업 완료, 배포 대기) |
+| **git 상태** | `main` 브랜치, v1.4 신규 작업(TASK-DEV-12, TASK-DEV-13, TASK-QA-06) 발주 완료 (v3.8) |
+| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (DEV01: TASK-DEV-12, DEV03: TASK-DEV-13, QA03: TASK-QA-06) |
 
 ### 실행 명령
 ```bash
@@ -174,87 +174,88 @@ graph LR
 #### 🟢 활성 세션 풀 (Active Session Pool — 최대 3세션)
 * **PM Pool**: `PM01` (Active — 총괄 관리 및 배분)
 * **DEV Pool**:
-  * `DEV01` (Active — 캐시 및 애니메이션 엔진 전문: `TASK-DEV-10`, `TASK-DEV-11` 배치 완료)
+  * `DEV01` (Active — UI/인터랙션 전문: `TASK-DEV-12` 멀티 타일 슬라이드 엔진 할당)
   * `DEV02` (Active — 대기)
-  * `DEV03` (Active — 알고리즘/솔버 전문: 대기)
+  * `DEV03` (Active — 오디오/알고리즘 전문: `TASK-DEV-13` 테마 사운드팩 & 콤보 할당)
 * **QA Pool**:
   * `QA01` (Active — 대기)
   * `QA02` (Active — 대기)
-  * `QA03` (Active — 회귀 검증 전문: `TASK-QA-05` 할당 대기)
+  * `QA03` (Active — 회귀 검증 전문: `TASK-QA-06` 할당 대기)
 
 #### 📋 업무 배분표 (Task Board)
 
 | 작업 ID | 담당 세션 | 업무 내용 | 대상 파일 | 의존 | DoD | 상태 |
 | :--- | :---: | :--- | :--- | :---: | :--- | :---: |
-| **DEV01~06** | DEV01/03 | v1.1 정비 및 v1.2 1차 피드백 대응 완료 | 다수 파일 | 없음 | 완료 | [x] 완료 2026-08-17 |
-| **QA01~03** | QA01/02/03 | 결함 및 실기기, 심층 추적 검수 완료 | 전체 소스 | 없음 | 완료 | [x] 완료 2026-08-17 |
-| **TASK-DEV-07** | DEV01 | [FB-03] 타이틀 모드 카드 선택 UI 아키텍처 구축 & CSS 레이어 분리 | `TitleScreen.tsx`, `TitleScreen.css` | 없음 | 81 PASS / 완료 | [x] 완료 2026-08-17 |
-| **TASK-DEV-08** | DEV01 | [FB-02] 타일 슬라이드 정방형 고정, 빈 슬롯 트랜지션 제거, 대칭 이징 적용 | `PuzzleBoard.css`, `Tile.css`, `PuzzleBoard.tsx` | 없음 | 81 PASS / 완료 | [x] 완료 2026-08-17 |
-| **TASK-DEV-09** | DEV03 | [FB-01] 4x4 AI 힌트 1행 고정 서브골 리덕션 & 사이클 가드 + 시각 넛지 개선 | `aiSolver.ts`, `aiSolver.test.ts`, `Tile.css` | 없음 | 81 PASS / 완료 | [x] 완료 2026-08-17 |
-| **TASK-QA-04** | QA03 | [FB-01~03 재검증] 미해결 3건 재발주 개발 결과물 전수 회귀 검증 | 전체 관련 컴포넌트 | DEV-07~09 후 | 전건 PASS / 완료 | [x] 완료 2026-08-17 |
-| **TASK-DEV-10** | **DEV01** | **[PWA/배포] Service Worker 캐시 무효화 및 HTML Network First 자동 갱신 아키텍처 구축** | `public/sw.js`, `src/main.tsx`, `index.html` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
-| **TASK-DEV-11** | **DEV01** | **[애니메이션] 블록 이동 엔진 근본 개선 (빈 슬롯 DOM 제외, 연타 입력 락, 서브그리드 정밀화)** | `src/components/Board/PuzzleBoard.tsx`, `PuzzleBoard.css`, `usePuzzleGame.ts` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
-| **TASK-QA-05** | **QA03** | **[캐시/애니메이션 검증] 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증** | 전체 관련 컴포넌트 | DEV-10·11 완료 후 | 5.5절 상세 | [x] 완료 2026-08-17 |
+| **DEV01~11** | DEV01/03 | v1.1~v1.3 결함 수정 및 PWA/애니메이션 엔진 개편 완료 | 다수 파일 | 없음 | 완료 | [x] 완료 2026-08-17 |
+| **QA01~05** | QA01/02/03 | 결함, 실기기, 심층 추적 및 PWA/애니메이션 전수 검증 완료 | 전체 소스 | 없음 | 완료 | [x] 완료 2026-08-17 |
+| **TASK-DEV-12** | **DEV01** | **[조작감 혁신] 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직 & 제스처 엔진 구현** | `src/utils/puzzleLogic.ts`, `puzzleLogic.test.ts`, `usePuzzleGame.ts`, `PuzzleBoard.tsx` | 없음 | 5.5절 상세 | [ ] 발주 완료 |
+| **TASK-DEV-13** | **DEV03** | **[사운드 고도화] 테마별 4종 특화 SFX 사운드팩 연동 & 연속 조작 콤보 피치 시스템 구축** | `src/utils/audioManager.ts`, `audioManager.test.ts`, `src/types/theme.ts`, `themeData.ts`, `App.tsx` | 없음 | 5.5절 상세 | [ ] 발주 완료 |
+| **TASK-QA-06** | **QA03** | **[v1.4 전수 검증] 멀티 타일 슬라이드 60fps 부드러움, Undo 1회 복구, 테마 사운드 회귀 검증** | 전체 관련 컴포넌트 | DEV-12·13 완료 후 | 5.5절 상세 | [ ] 의존 대기 |
 
 ### 5.4 완료 이력
 | 파트/작업 ID | 담당 세션 | 업무 | 완료일 | 비고 |
 | :--- | :---: | :--- | :--- | :---: |
 | DEV01~06 | DEV01/03 | v1.1 정비 및 v1.2 1차 피드백 대응 완료 | 2026-08-17 | 정상 종료 |
 | QA01~03 | QA01/02/03 | 결함 및 실기기, 심층 추적 검수 완료 | 2026-08-17 | 정상 종료 |
-| TASK-DEV-07 | DEV01 | [FB-03] 타이틀 모드 카드 선택 UI 아키텍처(selectedMode) 및 CSS 레이어 분리/선택 하이라이트 구현 | 2026-08-17 | 정상 종료 |
-| TASK-DEV-08 | DEV01 | [FB-02] 타일 슬라이더 정방형 고정(aspect-ratio 1:1), 빈 슬롯 역방향 트랜지션 제거, 대칭 이징 적용 | 2026-08-17 | 정상 종료 |
-| TASK-DEV-09 | DEV03 | [FB-01] 4x4 AI 힌트 서브골 리덕션(Row 1/Col 1/3x3), 강제 재탐색 왕복 0회 검증, Tile 2px 시각 넛지 적용 | 2026-08-17 | 81 PASS / 0 Error |
-| TASK-QA-04 | QA03 | [FB-01~03 재검증] 타이틀 모드 선택 UI·타일 애니메이션 속도·4x4 힌트 서브골 리덕션 전수 회귀 검증 완료 | 2026-08-17 | 정상 종료 |
-| TASK-DEV-10 | DEV01 | [PWA/배포] Service Worker 캐시 무효화(v2.0), HTML Network First 전략, updateViaCache: 'none', controllerchange 자동 갱신 구축 | 2026-08-17 | 정상 종료 |
-| TASK-DEV-11 | DEV01 | [애니메이션] 블록 이동 엔진 개선 (빈 슬롯 DOM 제외, 100ms 입력 스로틀링 락, 서브그리드 정밀도 및 60fps 하드웨어 가속) | 2026-08-17 | 정상 종료 |
-| TASK-QA-05 | QA03 | [캐시/애니메이션 검증] Service Worker Network First 무효화 및 블록 이동 애니메이션 4방향 속도/제스처 전수 검증 완료 (Vitest 81 PASS / tsc 0 / 빌드 성공) | 2026-08-17 | 정상 종료 |
+| TASK-DEV-07~09 | DEV01/03 | 타이틀 카드 선택 UI/배경 분리, 타일 정방형/이징, 4x4 힌트 서브골 리덕션 완료 | 2026-08-17 | 정상 종료 |
+| TASK-QA-04 | QA03 | [FB-01~03 재검증] 타이틀 모드 선택 UI·타일 속도·4x4 힌트 서브골 리덕션 전수 검증 완료 | 2026-08-17 | 정상 종료 |
+| TASK-DEV-10 | DEV01 | [PWA/배포] Service Worker 캐시 무효화(v2.0), HTML Network First, updateViaCache: 'none' 구축 | 2026-08-17 | 정상 종료 |
+| TASK-DEV-11 | DEV01 | [애니메이션] 블록 이동 엔진 개선 (빈 슬롯 DOM 제외, 80ms 입력 락, 서브그리드 정밀도 및 60fps 하드웨어 가속) | 2026-08-17 | 정상 종료 |
+| TASK-QA-05 | QA03 | [캐시/애니메이션 검증] SW Network First 무효화 및 블록 이동 애니메이션 전수 검증 완료 (Vitest 81 PASS / 7.8절 등록) | 2026-08-17 | 정상 종료 |
 
 ### 5.5 발주 작업 상세 지시 (Single Instruction)
 
-#### 🚀 TASK-DEV-10 — PWA Service Worker 캐시 무효화 및 HTML Network First 자동 갱신 아키텍처 구축 (담당: DEV01)
-* **원인 분석 (PM 확인)**:
-  - `public/sw.js`에서 `CACHE_NAME = 'sliding-puzzle-v1'`로 고정되어 있고, `fetch` 리스너가 **Cache First** 전략으로 `index.html`을 가로챔.
-  - 신규 배포 시 브라우저가 캐시된 구버전 `index.html`을 즉시 반환하여, Vite가 새로 생성한 번들 JS/CSS를 불러오지 못하고 구버전 앱이 영구 잔존함.
-  - SW 등록 시 브라우저 HTTP 캐시 방지 옵션(`updateViaCache: 'none'`) 및 클라이언트 갱신 감지/자동 리로드 로직 부재.
+#### 🚀 TASK-DEV-12 — 멀티 타일 슬라이드(Multi-Tile Push) 순수 로직 & 제스처 엔진 구현 (담당: DEV01)
+* **목표 & 배경**:
+  - 클래식 15-퍼즐의 핵심 손맛인 "1열/1행 연쇄 밀기"를 구현하여 조작 속도와 몰입감을 대폭 향상.
+  - 사용자가 빈 슬롯과 동일 행/열에 있는 타일(2~4칸 떨어진 타일)을 클릭/터치하거나 스와이프했을 때, 해당 타일부터 빈 슬롯 사이의 **모든 중간 타일이 한 번에 빈 슬롯 방향으로 1칸씩 연쇄 슬라이드**되도록 엔진 확장.
+* **⚠️ 7.8절 6대 과실 재발 방지 필수 지침**:
+  1. **부모-자식 이중 transform 금지**: 각 타일은 오직 `.tile-slider`의 단일 `translate3d`로만 이동하며, `.puzzle-tile` 내부에 별도 `transform`을 추가하지 않는다.
+  2. **빈 슬롯 DOM 제외 유지**: `board.filter(t => !t.isEmpty)` 렌더링 트리를 그대로 유지한다.
+  3. **정방형 및 0.12s 대칭 이징 유지**: 이동하는 모든 복수 타일에 동일한 `0.12s cubic-bezier(0.22, 1, 0.36, 1)` 적용.
+  4. **입력 락 유지**: 80ms 스로틀링 락을 통해 연타 시 트랜지션 깨짐 방지.
+  5. **모바일 제스처 격리 유지**: `touch-action: none`, `handleTouchMove preventDefault` 보존.
 * **업무 내용**:
-  - [x] `public/sw.js`:
-    - `CACHE_NAME`을 `sliding-puzzle-v2.0`으로 승급 (명시적 네임스페이스 분리).
-    - **HTML 및 Navigation 요청은 무조건 Network First 전략 적용**:
-      `event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')`인 경우 네트워크를 최우선으로 fetch하고, 성공 시 캐시를 갱신하며, 네트워크 실패(오프라인) 시에만 `caches.match('./index.html')`로 폴백.
-    - 정적 번들 에셋(해시가 포함된 JS/CSS/이미지/사운드)은 Cache First로 고속 로딩 유지.
-    - `activate` 이벤트에서 현재 `CACHE_NAME`과 일치하지 않는 모든 구버전 캐시(`v1` 등)를 `caches.delete`로 완벽히 삭제.
-    - `install` 시 `self.skipWaiting()`, `activate` 시 `self.clients.claim()` 확실히 보장.
-  - [x] `src/main.tsx`:
-    - Service Worker 등록 시 `navigator.serviceWorker.register(url, { updateViaCache: 'none' })` 적용하여 `sw.js` 파일 자체의 브라우저 HTTP 캐시 방지.
-    - SW 갱신 리스너 등록: `registration.addEventListener('updatefound', ...)` 및 `navigator.serviceWorker.addEventListener('controllerchange', ...)`를 통해 새 SW 활성화 시 최신 상태로 즉시 연결되도록 처리.
-  - [x] `npm run build` 후 배포 번들 및 SW 캐시 동작 검증.
-* **제약**: 오프라인 PWA 기본 기능(`manifest.webmanifest`, 오프라인 플레이) 훼손 금지.
-* **DoD**: 공통 DoD + 신규 배포 시 캐시 삭제 및 Network First로 최신 버전 즉시 반영 확인, 오프라인 시 정상 로딩 확인.
+  - [ ] `src/utils/puzzleLogic.ts`:
+    - `getLineTilesToMove(board: Board, clickedIndex: number, gridSize: GridSize): number[] | null` 순수 함수 구현 (클릭한 타일과 빈 슬롯 사이의 이동 대상 인덱스 목록 반환).
+    - `moveTileLine(board: Board, clickedIndex: number, gridSize: GridSize): { newBoard: Board; movedTiles: Array<{ tile: Tile; fromIndex: number; toIndex: number }> } | null` 구현.
+  - [ ] `src/utils/puzzleLogic.test.ts`:
+    - 3x3, 4x4, 5x5 보드에서 1칸 이동(단일), 2칸 이동(2개 연쇄), 3칸 이동(3개 연쇄) 단위 테스트 작성 및 전건 PASS.
+  - [ ] `src/hooks/usePuzzleGame.ts`:
+    - `moveTile(index)` 함수에서 `getLineTilesToMove`를 활용하여 1개 이상의 타일 연쇄 이동 지원.
+    - 이동 수(`moves`)는 1회 조작 시 1수 카운트 증가.
+    - `moveHistory`에 이동한 모든 타일의 이전 위치를 기록하여 **`undoMove` 시 1회 호출로 이동했던 모든 타일이 완벽히 원위치로 역슬라이드**되도록 지원.
+  - [ ] `src/components/Board/PuzzleBoard.tsx`:
+    - 빈 슬롯과 같은 행/열에 있는 모든 이동 가능 타일에 `isTileMovable`이 `true`로 판정되도록 처리하고, 커서 및 호버 효과 부여.
+* **제약**: AI 힌트 및 승리 판정(`checkWinCondition`), 챌린지 모드 카운트와 완벽 호환 유지.
+* **DoD**: 공통 DoD + 2칸/3칸 떨어진 타일 클릭/스와이프 시 모든 중간 타일이 60fps로 매끄럽게 동시 슬라이드되고, Undo 시 1회에 원상복구 확인.
 
-#### 🚀 TASK-DEV-11 — 블록 이동 애니메이션 엔진 근본 개선 (담당: DEV01)
-* **원인 분석 (PM 확인)**:
-  - `PuzzleBoard.tsx`에서 `tile.isEmpty`인 타일도 `.tile-slider.is-empty`로 렌더링되어 타일 이동 시 리액트 DOM 재배치 스래싱 및 빈 슬롯과의 렌더링 간섭 발생.
-  - 0.16s 슬라이드 애니메이션 도중 타일 연타(Rapid Click/Keydown) 시 `transform` 좌표가 중간 지점에서 덮어씌워지며 뚝뚝 끊기거나 점프하는 현상 발생.
-  - 브라우저 서브픽셀 렌더링에 따른 X/Y축 계산 오차 미세 잔존.
+#### 🚀 TASK-DEV-13 — 테마별 4종 특화 SFX 사운드팩 연동 & 연속 조작 콤보 피치 시스템 구축 (담당: DEV03)
+* **목표 & 배경**:
+  - 테마별 시각적 개성에 맞는 청각적 타격감을 부여하고, 빠른 속도로 연속 퍼즐을 맞출 때 짜릿한 손맛(Game Feel)을 제공.
 * **업무 내용**:
-  - [x] `PuzzleBoard.tsx`:
-    - `tile.isEmpty`인 타일은 `.tile-slider` 렌더링에서 완전히 제외 (`board.filter(tile => !tile.isEmpty).map(...)`).
-    - 배경 슬롯(`.grid-background-slot`)이 이미 모든 격자 위치를 안정적으로 렌더링하므로, 불필요한 빈 타일 DOM을 제거하여 렌더링 오버헤드 및 역방향 간섭 원천 박멸.
-  - [x] `usePuzzleGame.ts` / `PuzzleBoard.tsx`:
-    - 타일 이동 애니메이션 진행 중(0.14~0.16s) 과도한 연타 입력으로 인한 프레임 드랍 및 애니메이션 끊김 방지 가드(애니메이션 락 / Throttling) 도입.
-  - [x] `PuzzleBoard.css` & `Tile.css`:
-    - `.tile-slider`의 하드웨어 가속 `translate3d` 좌표 계산을 서브픽셀 정밀도로 정렬하여 상/하/좌/우 4방향 이동 거리와 체감 속도를 물리적으로 100% 일치화.
-* **제약**: 키보드/터치 스와이프/클릭 모든 입력 방식 정상 작동 유지, Sparkle VFX 및 AI 힌트 오버레이 보존.
-* **DoD**: 공통 DoD + 연속 연타 시에도 끊김 없는 부드러운 60fps 슬라이드 렌더링 및 4방향 속도 육안 완전 일치.
+  - [ ] `src/utils/audioManager.ts`:
+    - Web Audio API 합성 엔진에 테마별 음색 파라미터 분기 도입 (`playThemeMoveSfx(themeId: ThemeId, comboCount: number)`):
+      - **Classic**: 깔끔하고 정갈한 세라믹 탭 (주파수 ~800Hz, 빠른 감쇠)
+      - **Wood**: 묵직하고 자연스러운 목재 노크 톤 (주파수 ~300Hz, 공명감)
+      - **Neon**: 사이버네틱 펄스 톤 (주파수 ~1200Hz, 하모닉스 배음)
+      - **Nature / Custom**: 부드러운 오가닉 톤 (주파수 ~520Hz, 소프트 어택)
+    - 기존 WAV/MP3 오디오 파일 로딩과의 하이브리드 폴백 구조 유지.
+    - **연속 이동 콤보 피치 시스템**: 0.6초 이내에 연속으로 타일을 이동할 때마다 사운드 재생 피치(Pitch / Frequency)가 1.0x -> 1.06x -> 1.12x -> 1.18x (최대 8콤보)로 점진적 상승하여 연속 조작 쾌감 극대화.
+  - [ ] `src/utils/audioManager.test.ts`:
+    - 테마별 사운드 합성 분기 및 콤보 피치 배율 계산 단위 테스트 추가 및 PASS.
+  - [ ] `src/App.tsx` & `src/hooks/useAudio.ts`:
+    - 현재 선택된 테마 ID(`currentTheme.id`)를 타일 이동 사운드 재생 시 전달하도록 연동.
+* **제약**: 음소거(Mute) 상태 완벽 보존 및 AudioContext 사용자 인터랙션 이전 자동 차단 에러 방지.
+* **DoD**: 공통 DoD + 4개 테마 전환 시 이동 사운드 음색이 뚜렷하게 차별화되고, 빠른 연타 시 경쾌한 콤보 피치 상승 동작 확인.
 
-#### 🔍 TASK-QA-05 — 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증 (담당: QA03)
+#### 🔍 TASK-QA-06 — v1.4 멀티 타일 슬라이드 및 테마 사운드 회귀 전수 검증 (담당: QA03)
 * **업무 내용**:
-  - [x] [PWA/캐시 검증] `sw.js` Network First 전략 확인, 배포 시 구버전 캐시 무효화 및 최신 번들 즉시 로딩 검증, 오프라인 모드 PWA 정상 작동 확인.
-  - [x] [애니메이션 검증] 빈 슬롯 DOM 제거 후 타일 이동 안정성 검증, 키보드/터치 연타 시 애니메이션 부드러움(끊김/점프 없음) 검증, 3x3~5x5 전 난이도 4방향 슬라이드 속도 완전 일치 검증.
-  - [x] 전체 Vitest (81개 이상) PASS + `tsc --noEmit` 0 에러 + 빌드 무결성 확인 후 대시보드 갱신.
-* **제약**: `TASK-DEV-10`, `TASK-DEV-11` 완료 후 수행.
-* **DoD**: 공통 DoD + 검증 보고서 작성 및 대시보드 갱신.
-* **제약**: `TASK-DEV-10`, `TASK-DEV-11` 완료 후 수행.
+  - [ ] [멀티 타일 슬라이드 검증] 3x3, 4x4, 5x5 전 모드에서 2~4칸 거리 타일 클릭/터치/스와이프 시 동시 슬라이드 검증, 이동 수 1 카운트 확인, Undo 1회 실행 시 모든 타일 원상복구 확인.
+  - [ ] [7.8절 6대 과실 재발 점검] 멀티 타일 이동 시에도 부모-자식 이중 transform 부재 확인, 빈 슬롯 DOM 미생성 확인, 0.12s 4방향 속도 균일성 유지 확인, 모바일 360px 터치 제스처 간섭 없음 확인.
+  - [ ] [테마 사운드 & 콤보 검증] 4종 테마별 이동 효과음 차별화 확인, 0.6s 이내 연속 이동 시 콤보 피치 상승 및 0.6s 초과 시 리셋 확인, 음소거 시 무음 확인.
+  - [ ] 전체 Vitest PASS (기존 81개 + 신규 테스트) + `tsc --noEmit` 0 에러 + 프로덕션 빌드 성공 확인 후 대시보드 갱신.
+* **제약**: `TASK-DEV-12`, `TASK-DEV-13` 완료 후 수행.
 * **DoD**: 공통 DoD + 검증 보고서 작성 및 대시보드 갱신.
 
 ---
@@ -309,7 +310,8 @@ graph LR
 | Phase 5 | 고도화 9대 모듈 (커스텀이미지/AI힌트/Undo/일일챌린지/업적/챌린지모드/PWA/i18n/공유) | ✅ **코드 구현 완료** |
 | v1.1 정비 | BUG-06 잔여·PROD 게이팅 수정 및 회귀 검증 | ✅ 완료 (DEV01·DEV02·QA01·QA02 전 파트 종료) |
 | v1.2 사용자 피드백 대응 | AI 힌트 맴돔 수정, 애니메이션 속도 통일, 타이틀 카드 배경 통일, 서브패스 배포 | ✅ **완료** (TASK-DEV-07·08·09 및 QA03 TASK-QA-04 전수 회귀 검증 완료) |
-| **v1.3 실서비스 갱신 및 체감 고도화** | **배포 캐시 무효화 (PWA Network First) 및 블록 애니메이션 엔진 근본 개선** | ✅ **완료** (TASK-DEV-10·11 구현 및 QA03 TASK-QA-05 전수 회귀 검증 완료 — 신규 결함 0건) |
+| v1.3 실서비스 갱신 및 체감 고도화 | 배포 캐시 무효화 (PWA Network First) 및 블록 애니메이션 엔진 근본 개선 | ✅ **완료** (TASK-DEV-10·11 구현 및 QA03 TASK-QA-05 전수 회귀 검증 완료 — 신규 결함 0건) |
+| **v1.4 조작감 및 사운드 고도화** | **멀티 타일 슬라이드 엔진 (1열 연쇄 밀기) 및 테마별 특화 SFX 사운드팩 구축** | 🔄 **진행 중 (TASK-DEV-12, TASK-DEV-13 발주 완료 → QA03 TASK-QA-06)** |
 
 ### 7.2 결함 현황 (QA_COMPREHENSIVE_DEFECT_REPORT 기준 11건)
 
@@ -433,6 +435,7 @@ graph LR
 
 | 일자 | 버전 | 내용 | 작성 세션 |
 | :--- | :--- | :--- | :--- |
+| 2026-08-17 | v3.8 | PM01: v1.4 조작감 및 사운드 고도화 작업 발주 — TASK-DEV-12(멀티 타일 슬라이드 엔진/7.8절 6대 과실 방지 수칙 준수), TASK-DEV-13(테마별 4종 특화 SFX & 콤보 피치 시스템), TASK-QA-06(v1.4 회귀 전수 검증) | PM01 |
 | 2026-08-17 | v3.7 | QA03: [TASK-QA-05] 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증 완료 + 블록 이동 애니메이션 DEV 6대 과실 심층 분석 보고서 등록(7.8절 신설). Vitest 81 PASS / tsc 0 / build 성공. 신규 결함 0건 | QA03 |
 | 2026-08-17 | v3.6 | DEV01: 하향 블록 이동 속도 체감/제스처 간섭 개선 — 트랜지션 0.12s(cubic-bezier(0.22, 1, 0.36, 1)) 단축 통일, handleTouchMove preventDefault로 모바일 Pull-to-refresh/스크롤 지연 차단, overscroll-behavior: none 및 dvh 뷰포트 고정. Vitest 81 PASS / tsc 0 / build 성공 | DEV01 |
 | 2026-08-17 | v3.5 | DEV01: TASK-DEV-10(Service Worker v2.0 캐시 무효화 및 HTML Network First 자동 갱신), TASK-DEV-11(빈 슬롯 DOM 제외, 100ms 연타 입력 락, 서브픽셀 정밀도 60fps 애니메이션 엔진) 완료. Vitest 81 PASS / tsc 0 / build 정상. QA03(TASK-QA-05) 이관 | DEV01 |
