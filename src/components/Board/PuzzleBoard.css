@@ -5,6 +5,8 @@
   gap: 0.6rem;
   width: 100%;
   margin: 0 auto;
+  touch-action: none;
+  overscroll-behavior: none;
 }
 
 .puzzle-board {
@@ -13,7 +15,7 @@
   grid-template-columns: repeat(var(--grid-size, 4), 1fr);
   grid-template-rows: repeat(var(--grid-size, 4), 1fr);
   gap: var(--tile-gap, 8px);
-  width: min(100%, min(460px, calc(100vw - 32px), 52vh));
+  width: min(100%, min(460px, calc(100vw - 32px), 52dvh));
   aspect-ratio: 1 / 1;
   background-color: var(--board-bg);
   border: 2px solid var(--board-border);
@@ -21,7 +23,9 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   user-select: none;
+  -webkit-user-select: none;
   touch-action: none;
+  overscroll-behavior: none;
   box-sizing: border-box;
   --board-padding: 8px;
   --tile-gap: 8px;
@@ -36,6 +40,7 @@
   border-radius: var(--radius-md);
   border: 1px dashed rgba(255, 255, 255, 0.06);
   box-sizing: border-box;
+  touch-action: none;
 }
 
 /* Smooth Hardware-Accelerated Sliding Tile Animation */
@@ -51,12 +56,15 @@
     calc(var(--tile-row, 0) * (100% + var(--tile-gap, 8px))),
     0
   );
-  transition: transform 0.16s cubic-bezier(0.25, 1, 0.5, 1);
+  /* 0.12s snappy transition with smooth natural ease-out for unified 4-directional responsiveness */
+  transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
+  transform-style: preserve-3d;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   contain: layout paint;
   box-sizing: border-box;
+  touch-action: none;
   z-index: 10;
   display: flex;
 }
@@ -77,7 +85,7 @@
     --board-padding: 6px;
     --tile-gap: 5px;
     border-radius: var(--radius-md);
-    width: min(100%, min(420px, calc(100vw - 24px), 48vh));
+    width: min(100%, min(420px, calc(100vw - 24px), 48dvh));
   }
   .board-hint {
     font-size: 0.7rem;
@@ -88,7 +96,7 @@
   .puzzle-board {
     --board-padding: 5px;
     --tile-gap: 4px;
-    width: min(100%, min(380px, calc(100vw - 20px), 44vh));
+    width: min(100%, min(380px, calc(100vw - 20px), 44dvh));
   }
   .board-wrapper {
     gap: 0.4rem;

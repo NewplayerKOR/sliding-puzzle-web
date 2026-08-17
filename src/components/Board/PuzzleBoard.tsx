@@ -18,7 +18,7 @@ interface PuzzleBoardProps {
 }
 
 const isTestEnv = typeof process !== 'undefined' && process.env?.NODE_ENV === 'test';
-const INPUT_THROTTLE_MS = isTestEnv ? 0 : 100;
+const INPUT_THROTTLE_MS = isTestEnv ? 0 : 80;
 
 export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
   gridSize,
@@ -115,13 +115,20 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
     touchStartRef.current = { x: touch.clientX, y: touch.clientY };
   };
 
+  const handleTouchMove = (e: React.TouchEvent) => {
+    // 터치 스와이프 진행 중 브라우저의 기본 세로 스크롤 / Pull-to-refresh 간섭 원천 차단
+    if (touchStartRef.current && e.cancelable) {
+      e.preventDefault();
+    }
+  };
+
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (!touchStartRef.current) return;
 
     const touch = e.changedTouches[0];
     const diffX = touch.clientX - touchStartRef.current.x;
     const diffY = touch.clientY - touchStartRef.current.y;
-    const minSwipeDistance = 30; // 최소 스와이프 감지 거리
+    const minSwipeDistance = 25; // 스와이프 감지 임계값을 25px로 최적화하여 빠른 반응성 확보
 
     if (Math.abs(diffX) > Math.abs(diffY)) {
       // 가로 스와이프
@@ -133,7 +140,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
         }
       }
     } else {
-      // 세로 스와이프
+      // 세로 스와이프 (위/아래)
       if (Math.abs(diffY) > minSwipeDistance) {
         if (diffY > 0) {
           handleThrottledMoveByDirection('DOWN');
@@ -157,6 +164,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
           } as React.CSSProperties
         }
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         role="grid"
         aria-label={`${gridSize}x${gridSize} 슬라이딩 퍼즐 보드`}

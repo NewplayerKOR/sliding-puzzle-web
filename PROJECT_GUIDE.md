@@ -6,7 +6,7 @@
 > **갱신 규칙**: 모든 세션은 종료 시 본 문서의 `5. 업무 파트 배분표`에 직접 `[x]` 체크하고 `7. 진행 상태 대시보드`를 갱신한다.
 
 * **최종 갱신일**: 2026-08-17
-* **문서 버전**: v3.5 (DEV01: TASK-DEV-10, TASK-DEV-11 완료)
+* **문서 버전**: v3.6 (DEV01: 하향 블록 이동 속도 체감 및 제스처 간섭 해결)
 
 ---
 
@@ -391,6 +391,7 @@ graph LR
 
 | 일자 | 버전 | 내용 | 작성 세션 |
 | :--- | :--- | :--- | :--- |
+| 2026-08-17 | v3.6 | DEV01: 하향 블록 이동 속도 체감/제스처 간섭 개선 — 트랜지션 0.12s(cubic-bezier(0.22, 1, 0.36, 1)) 단축 통일, handleTouchMove preventDefault로 모바일 Pull-to-refresh/스크롤 지연 차단, overscroll-behavior: none 및 dvh 뷰포트 고정. Vitest 81 PASS / tsc 0 / build 성공 | DEV01 |
 | 2026-08-17 | v3.5 | DEV01: TASK-DEV-10(Service Worker v2.0 캐시 무효화 및 HTML Network First 자동 갱신), TASK-DEV-11(빈 슬롯 DOM 제외, 100ms 연타 입력 락, 서브픽셀 정밀도 60fps 애니메이션 엔진) 완료. Vitest 81 PASS / tsc 0 / build 정상. QA03(TASK-QA-05) 이관 | DEV01 |
 | 2026-08-17 | v3.4 | PM01: 커밋 메시지 한글 작성 원칙(필요한 식별자/파트ID만 영문 허용) 제정 및 6.3절 세션 규칙 반영 | PM01 |
 | 2026-08-17 | v3.3 | PM01: 신규 이슈 2건(FB-05 배포 캐시 고착화, FB-06 블록 이동 연타/DOM 간섭) 심층 분석 및 신규 파트 발주 — TASK-DEV-10(PWA Network First/캐시 무효화), TASK-DEV-11(빈슬롯 DOM 제외/연타 락/서브그리드 정밀화), TASK-QA-05(전수 검증) | PM01 |
