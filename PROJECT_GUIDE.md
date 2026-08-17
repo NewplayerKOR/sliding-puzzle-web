@@ -6,7 +6,7 @@
 > **갱신 규칙**: 모든 세션은 종료 시 본 문서의 `5. 업무 파트 배분표`에 직접 `[x]` 체크하고 `7. 진행 상태 대시보드`를 갱신한다.
 
 * **최종 갱신일**: 2026-08-17
-* **문서 버전**: v3.2 (QA03: TASK-QA-04 전수 회귀 검증 완료)
+* **문서 버전**: v3.3 (PM01: 배포 캐시 갱신 및 블록 애니메이션 재검토 신규 파트 발주 — TASK-DEV-10·11, TASK-QA-05)
 
 ---
 
@@ -18,11 +18,11 @@
 | **형태** | 100% 서버리스 클라이언트 사이드 웹 앱 (백엔드 없음) |
 | **기술 스택** | React 19, TypeScript 5.7, Vite 6, Vanilla CSS |
 | **핵심 Web API** | Canvas, Web Audio, Web Worker, Service Worker, Web Vibration, Web Share |
-| **현재 버전** | v1.2.4 (Phase 1~5 및 v1.1 정비 완료, TASK-DEV-07·08·09 및 TASK-QA-04 전수 검증 완료) |
+| **현재 버전** | v1.3.0 (배포 캐시 무효화 및 블록 이동 애니메이션 근본 개선 진행 중) |
 | **테스트** | Vitest 14개 파일 / **81개 케이스 전부 PASS** |
 | **타입 검사** | `npx tsc --noEmit` — 0 Errors |
-| **git 상태** | `main` 브랜치, TASK-QA-04 전수 회귀 검증 완료 (v3.2) |
-| **현재 오픈 업무** | 없음 (전 파트 완료, 배포 대기) |
+| **git 상태** | `main` 브랜치, 신규 작업(TASK-DEV-10·11, TASK-QA-05) 발주 완료 (v3.3) |
+| **현재 오픈 업무** | `5.3 업무 배분표` 참조 (DEV01: TASK-DEV-10·11, QA03: TASK-QA-05) |
 
 ### 실행 명령
 ```bash
@@ -174,98 +174,82 @@ graph LR
 #### 🟢 활성 세션 풀 (Active Session Pool — 최대 3세션)
 * **PM Pool**: `PM01` (Active — 총괄 관리 및 배분)
 * **DEV Pool**:
-  * `DEV01` (Active — UI/스타일 전문: `TASK-DEV-07`, `TASK-DEV-08` 배치 완료)
+  * `DEV01` (Active — 캐시 및 애니메이션 엔진 전문: `TASK-DEV-10`, `TASK-DEV-11` 배치 할당)
   * `DEV02` (Active — 대기)
-  * `DEV03` (Active — 알고리즘/솔버 전문: `TASK-DEV-09` 완료)
+  * `DEV03` (Active — 알고리즘/솔버 전문: 대기)
 * **QA Pool**:
   * `QA01` (Active — 대기)
   * `QA02` (Active — 대기)
-  * `QA03` (Active — 회귀 검증 전문: `TASK-QA-04` 할당 대기)
+  * `QA03` (Active — 회귀 검증 전문: `TASK-QA-05` 할당 대기)
 
 #### 📋 업무 배분표 (Task Board)
 
 | 작업 ID | 담당 세션 | 업무 내용 | 대상 파일 | 의존 | DoD | 상태 |
 | :--- | :---: | :--- | :--- | :---: | :--- | :---: |
-| **DEV01** | DEV01 | CSS 절대경로 5건 검증 (BUG-06 잔여) — Vite 정상 판정 | `src/styles/index.css` 등 | 없음 | 71 PASS / tsc 0 / 빌드 정상 | [x] 완료 2026-08-17 |
-| **DEV02** | DEV02 | 자동 클리어 버튼 PROD 게이팅 비활성화 (BUG-05 보완) | `Controls.tsx` | 없음 | 동일 | [x] 완료 2026-08-17 |
-| **QA01** | QA01 | BUG-00~10 11건 결함 회귀 검증 | 전체 소스 대조 + 동적 테스트 | DEV01·02 후 | 대시보드 반영 | [x] 완료 2026-08-17 |
-| **QA02** | QA02 | 실기기 검수 (360px 모바일, PWA 오프라인, SW 404 부재) | 브라우저 실기기 테스트 | 없음 | 대시보드 반영 | [x] 완료 2026-08-17 |
-| **DEV03** | DEV03 | AI 힌트 4x4/5x5 맴돔 1차 개편 (Weighted A* / 서브골 리덕션) | `aiSolver.ts`, `aiSolver.test.ts` | 없음 | 79 PASS / 왕복 0회 | [x] 완료 2026-08-17 |
-| **DEV04** | DEV01 | 타일 슬라이드 애니메이션 1차 단일화 | `Tile.css`, `Tile.tsx`, `PuzzleBoard.css` | 없음 | 동일 | [x] 완료 2026-08-17 |
-| **DEV05** | DEV01 | 타이틀 모드 카드 1차 배경 통일 | `TitleScreen.css` | 없음 | 동일 | [x] 완료 2026-08-17 |
-| **DEV06** | DEV01 | `vite.config.ts` `base: './'` 설정 (서브패스 배포 대응) | `vite.config.ts` | 없음 | 상대경로 404 0건 | [x] 완료 2026-08-17 |
-| **QA03** | QA03 | 피드백 3건 심층 원인 추적 및 보고 완료 (7.5절 참조) | 전수 분석 | DEV03~06 후 | 7.5절 보고서 작성 | [x] 완료 2026-08-17 |
-| **TASK-DEV-07** | **DEV01** | **[FB-03] 타이틀 모드 카드 선택 UI 아키텍처 구축 & CSS 레이어 분리** | `src/components/Title/TitleScreen.tsx`, `TitleScreen.css` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
-| **TASK-DEV-08** | **DEV01** | **[FB-02] 타일 슬라이드 정방형 고정, 빈 슬롯 트랜지션 제거, 대칭 이징 적용** | `src/components/Board/PuzzleBoard.css`, `Tile.css`, `PuzzleBoard.tsx` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
-| **TASK-DEV-09** | **DEV03** | **[FB-01] 4x4 AI 힌트 1행 고정 서브골 리덕션 & 사이클 가드 + 시각 넛지 개선** | `src/utils/aiSolver.ts`, `aiSolver.test.ts`, `src/components/Board/Tile.css` | 없음 | 5.5절 상세 | [x] 완료 2026-08-17 |
-| **TASK-QA-04** | **QA03** | **[FB-01~03 재검증] 미해결 3건 재발주 개발 결과물 전수 회귀 검증** | 전체 관련 컴포넌트 | DEV-07~09 완료 후 | 5.5절 상세 | [x] 완료 2026-08-17 |
+| **DEV01~06** | DEV01/03 | v1.1 정비 및 v1.2 1차 피드백 대응 완료 | 다수 파일 | 없음 | 완료 | [x] 완료 2026-08-17 |
+| **QA01~03** | QA01/02/03 | 결함 및 실기기, 심층 추적 검수 완료 | 전체 소스 | 없음 | 완료 | [x] 완료 2026-08-17 |
+| **TASK-DEV-07** | DEV01 | [FB-03] 타이틀 모드 카드 선택 UI 아키텍처 구축 & CSS 레이어 분리 | `TitleScreen.tsx`, `TitleScreen.css` | 없음 | 81 PASS / 완료 | [x] 완료 2026-08-17 |
+| **TASK-DEV-08** | DEV01 | [FB-02] 타일 슬라이드 정방형 고정, 빈 슬롯 트랜지션 제거, 대칭 이징 적용 | `PuzzleBoard.css`, `Tile.css`, `PuzzleBoard.tsx` | 없음 | 81 PASS / 완료 | [x] 완료 2026-08-17 |
+| **TASK-DEV-09** | DEV03 | [FB-01] 4x4 AI 힌트 1행 고정 서브골 리덕션 & 사이클 가드 + 시각 넛지 개선 | `aiSolver.ts`, `aiSolver.test.ts`, `Tile.css` | 없음 | 81 PASS / 완료 | [x] 완료 2026-08-17 |
+| **TASK-QA-04** | QA03 | [FB-01~03 재검증] 미해결 3건 재발주 개발 결과물 전수 회귀 검증 | 전체 관련 컴포넌트 | DEV-07~09 후 | 전건 PASS / 완료 | [x] 완료 2026-08-17 |
+| **TASK-DEV-10** | **DEV01** | **[PWA/배포] Service Worker 캐시 무효화 및 HTML Network First 자동 갱신 아키텍처 구축** | `public/sw.js`, `src/main.tsx`, `index.html` | 없음 | 5.5절 상세 | [ ] 발주 대기 |
+| **TASK-DEV-11** | **DEV01** | **[애니메이션] 블록 이동 엔진 근본 개선 (빈 슬롯 DOM 제외, 연타 입력 락, 서브그리드 정밀화)** | `src/components/Board/PuzzleBoard.tsx`, `PuzzleBoard.css`, `usePuzzleGame.ts` | 없음 | 5.5절 상세 | [ ] 발주 대기 |
+| **TASK-QA-05** | **QA03** | **[캐시/애니메이션 검증] 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증** | 전체 관련 컴포넌트 | DEV-10·11 완료 후 | 5.5절 상세 | [ ] 의존 대기 |
 
 ### 5.4 완료 이력
 | 파트/작업 ID | 담당 세션 | 업무 | 완료일 | 비고 |
 | :--- | :---: | :--- | :--- | :---: |
-| DEV01 | DEV01 | CSS 절대경로 5건 검증 완료 (Vite 정상) + vite base 설정 신규 요청 | 2026-08-17 | 정상 종료 |
-| DEV02 | DEV02 | 자동 클리어 버튼 PROD 게이팅 적용 | 2026-08-17 | 정상 종료 |
-| QA01 | QA01 | BUG-00~10 11건 회귀 검증 완료 (전건 PASS, 신규 결함 없음) | 2026-08-17 | 정상 종료 |
-| QA02 | QA02 | 실기기 검수 완료 (360px 렌더링, PWA 캐싱, SW 404 부재 확인) | 2026-08-17 | 정상 종료 |
-| DEV03 | DEV03 | AI 힌트 솔버 1차 개편 (4x4 Weighted A*, 5x5 서브골 리덕션) | 2026-08-17 | 79 PASS |
-| DEV04~06 | DEV01 | 슬라이드 애니메이션 1차 단일화, 카드 배경 1차 통일, vite base 설정 | 2026-08-17 | 정상 종료 |
-| QA03 | QA03 | 피드백 3건 심층 원인 추적 완료 (배경 투과/선택상태 부재, 빈슬롯/종횡비 간섭, 4x4 비허용 휴리스틱 진동) | 2026-08-17 | 7.5절 완료 |
+| DEV01~06 | DEV01/03 | v1.1 정비 및 v1.2 1차 피드백 대응 완료 | 2026-08-17 | 정상 종료 |
+| QA01~03 | QA01/02/03 | 결함 및 실기기, 심층 추적 검수 완료 | 2026-08-17 | 정상 종료 |
 | TASK-DEV-07 | DEV01 | [FB-03] 타이틀 모드 카드 선택 UI 아키텍처(selectedMode) 및 CSS 레이어 분리/선택 하이라이트 구현 | 2026-08-17 | 정상 종료 |
-| TASK-DEV-08 | DEV01 | [FB-02] 타일 슬라이더 정방형 고정(aspect-ratio 1:1), 빈 슬롯 역방향 트랜지션 제거, 대칭 이징(cubic-bezier(0.25, 1, 0.5, 1)) 적용 | 2026-08-17 | 정상 종료 |
+| TASK-DEV-08 | DEV01 | [FB-02] 타일 슬라이더 정방형 고정(aspect-ratio 1:1), 빈 슬롯 역방향 트랜지션 제거, 대칭 이징 적용 | 2026-08-17 | 정상 종료 |
 | TASK-DEV-09 | DEV03 | [FB-01] 4x4 AI 힌트 서브골 리덕션(Row 1/Col 1/3x3), 강제 재탐색 왕복 0회 검증, Tile 2px 시각 넛지 적용 | 2026-08-17 | 81 PASS / 0 Error |
-| TASK-QA-04 | QA03 | [FB-01~03 재검증] 타이틀 모드 선택 UI·타일 애니메이션 속도·4x4 힌트 서브골 리덕션 전수 회귀 검증 완료 (신규 결함 0건, Vitest 81 PASS / tsc 0 / 빌드 성공) | 2026-08-17 | 정상 종료 |
+| TASK-QA-04 | QA03 | [FB-01~03 재검증] 타이틀 모드 선택 UI·타일 애니메이션 속도·4x4 힌트 서브골 리덕션 전수 회귀 검증 완료 | 2026-08-17 | 정상 종료 |
 
 ### 5.5 발주 작업 상세 지시 (Single Instruction)
 
-#### 🚀 TASK-DEV-07 — 타이틀 모드 카드 선택 UI 아키텍처 구축 & CSS 레이어 분리 (담당: DEV01)
-* **배경 & 원인 (7.5절 분석)**:
-  - `TitleScreen.css`에서 `background` shorthand 사용으로 기본 `background-color: var(--bg-surface)`가 `transparent`로 리셋되어 컨테이너 바탕색 투과 및 카드별 틴트 불일치 발생.
-  - `TitleScreen.tsx`에 선택 상태(`selectedMode`)가 없어 카드를 클릭해도 활성화 하이라이트(선택 테두리/배경색 변화) 피드백이 전혀 없음.
+#### 🚀 TASK-DEV-10 — PWA Service Worker 캐시 무효화 및 HTML Network First 자동 갱신 아키텍처 구축 (담당: DEV01)
+* **원인 분석 (PM 확인)**:
+  - `public/sw.js`에서 `CACHE_NAME = 'sliding-puzzle-v1'`로 고정되어 있고, `fetch` 리스너가 **Cache First** 전략으로 `index.html`을 가로챔.
+  - 신규 배포 시 브라우저가 캐시된 구버전 `index.html`을 즉시 반환하여, Vite가 새로 생성한 번들 JS/CSS를 불러오지 못하고 구버전 앱이 영구 잔존함.
+  - SW 등록 시 브라우저 HTTP 캐시 방지 옵션(`updateViaCache: 'none'`) 및 클라이언트 갱신 감지/자동 리로드 로직 부재.
 * **업무 내용**:
-  - [x] `TitleScreen.tsx`에 선택 상태 관리 도입: 사용자가 카드를 클릭하거나 난이도 버튼을 터치할 때 해당 카드가 `.selected` 상태가 되도록 구조화 (기본값: 'standard').
-  - [x] `TitleScreen.css` 배경 선언 레이어 분리:
-    - 기본 베이스: `background-color: var(--bg-surface);`
-    - 모드별 그라디언트: `background-image: linear-gradient(135deg, rgba(...), transparent);` (shorthand `background` 사용 금지)
-  - [x] 선택된 카드(`.mode-card.selected`)에 명확한 시각적 피드백 부여:
-    - 테마 컬러 10~15% 하이라이트 틴트 + 2px 강조 테두리(`border-color: var(--primary-500)`) + 부드러운 글로우(`box-shadow`).
-  - [x] 다크/라이트 테마 전 영역에서 4개 카드의 베이스 표면 일관성 확인.
-* **제약**: 다른 모달 및 컴포넌트 CSS 수정 금지.
-* **DoD**: 공통 DoD + 홈 화면 4개 카드 베이스 색상 일치 및 카드 클릭/선택 시 명확한 활성화 배경·테두리 피드백 동작.
+  - [ ] `public/sw.js`:
+    - `CACHE_NAME`을 `sliding-puzzle-v2.0`으로 승급 (명시적 네임스페이스 분리).
+    - **HTML 및 Navigation 요청은 무조건 Network First 전략 적용**:
+      `event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')`인 경우 네트워크를 최우선으로 fetch하고, 성공 시 캐시를 갱신하며, 네트워크 실패(오프라인) 시에만 `caches.match('./index.html')`로 폴백.
+    - 정적 번들 에셋(해시가 포함된 JS/CSS/이미지/사운드)은 Cache First로 고속 로딩 유지.
+    - `activate` 이벤트에서 현재 `CACHE_NAME`과 일치하지 않는 모든 구버전 캐시(`v1` 등)를 `caches.delete`로 완벽히 삭제.
+    - `install` 시 `self.skipWaiting()`, `activate` 시 `self.clients.claim()` 확실히 보장.
+  - [ ] `src/main.tsx`:
+    - Service Worker 등록 시 `navigator.serviceWorker.register(url, { updateViaCache: 'none' })` 적용하여 `sw.js` 파일 자체의 브라우저 HTTP 캐시 방지.
+    - SW 갱신 리스너 등록: `registration.addEventListener('updatefound', ...)` 및 `navigator.serviceWorker.addEventListener('controllerchange', ...)`를 통해 새 SW 활성화 시 최신 상태로 즉시 연결되도록 처리.
+  - [ ] `npm run build` 후 배포 번들 및 SW 캐시 동작 검증.
+* **제약**: 오프라인 PWA 기본 기능(`manifest.webmanifest`, 오프라인 플레이) 훼손 금지.
+* **DoD**: 공통 DoD + 신규 배포 시 캐시 삭제 및 Network First로 최신 버전 즉시 반영 확인, 오프라인 시 정상 로딩 확인.
 
-#### 🚀 TASK-DEV-08 — 타일 슬라이드 정방형 고정, 빈 슬롯 트랜지션 제거, 대칭 이징 적용 (담당: DEV01)
-* **배경 & 원인 (7.5절 분석)**:
-  - `.puzzle-board` 퍼센트 높이 렌더링 미세 오차로 X축/Y축 실제 이동 픽셀(거리) 차이 발생.
-  - 타일 이동 시 빈 슬롯(`.tile-empty`)도 동일하게 0.16s로 역방향 슬라이드하며 펄스 애니메이션(`emptySlotGlowFade`)과 간섭하여 속도 왜곡 체감.
-  - 비대칭 가속 이징 곡선(`cubic-bezier(0.2, 0.9, 0.3, 1)`)이 수평/수직 시선 흐름과 결합되어 방향별 속도차 가중.
+#### 🚀 TASK-DEV-11 — 블록 이동 애니메이션 엔진 근본 개선 (담당: DEV01)
+* **원인 분석 (PM 확인)**:
+  - `PuzzleBoard.tsx`에서 `tile.isEmpty`인 타일도 `.tile-slider.is-empty`로 렌더링되어 타일 이동 시 리액트 DOM 재배치 스래싱 및 빈 슬롯과의 렌더링 간섭 발생.
+  - 0.16s 슬라이드 애니메이션 도중 타일 연타(Rapid Click/Keydown) 시 `transform` 좌표가 중간 지점에서 덮어씌워지며 뚝뚝 끊기거나 점프하는 현상 발생.
+  - 브라우저 서브픽셀 렌더링에 따른 X/Y축 계산 오차 미세 잔존.
 * **업무 내용**:
-  - [x] `.tile-slider.is-empty` (또는 빈 슬롯 컨테이너)에 `transition: none`을 적용하여 빈 슬롯의 불필요한 역방향 애니메이션 제거.
-  - [x] `.tile-slider`의 정방형 크기 명시적 고정 (`aspect-ratio: 1 / 1`)으로 X축/Y축 이동 거리 완전 일치화.
-  - [x] 슬라이드 이징 곡선을 대칭적인 `cubic-bezier(0.25, 1, 0.5, 1)` 또는 `ease-out`으로 최적화하여 4방향 체감 속도 균일화.
-* **제약**: Sparkle VFX 및 AI 힌트 오버레이 동작 보존.
-* **DoD**: 공통 DoD + PC/모바일에서 상/하/좌/우 4방향 슬라이드 속도 육안 완전 일치.
+  - [ ] `PuzzleBoard.tsx`:
+    - `tile.isEmpty`인 타일은 `.tile-slider` 렌더링에서 완전히 제외 (`board.filter(tile => !tile.isEmpty).map(...)`).
+    - 배경 슬롯(`.grid-background-slot`)이 이미 모든 격자 위치를 안정적으로 렌더링하므로, 불필요한 빈 타일 DOM을 제거하여 렌더링 오버헤드 및 역방향 간섭 원천 박멸.
+  - [ ] `usePuzzleGame.ts` / `PuzzleBoard.tsx`:
+    - 타일 이동 애니메이션 진행 중(0.14~0.16s) 과도한 연타 입력으로 인한 프레임 드랍 및 애니메이션 끊김 방지 가드(애니메이션 락 / Throttling) 도입.
+  - [ ] `PuzzleBoard.css` & `Tile.css`:
+    - `.tile-slider`의 하드웨어 가속 `translate3d` 좌표 계산을 서브픽셀 정밀도로 정렬하여 상/하/좌/우 4방향 이동 거리와 체감 속도를 물리적으로 100% 일치화.
+* **제약**: 키보드/터치 스와이프/클릭 모든 입력 방식 정상 작동 유지, Sparkle VFX 및 AI 힌트 오버레이 보존.
+* **DoD**: 공통 DoD + 연속 연타 시에도 끊김 없는 부드러운 60fps 슬라이드 렌더링 및 4방향 속도 육안 완전 일치.
 
-#### 🚀 TASK-DEV-09 — 4x4 AI 힌트 1행 고정 서브골 리덕션 & 사이클 가드 + 시각 넛지 개선 (담당: DEV03)
-* **배경 & 원인 (7.5절 분석)**:
-  - 4x4 솔버가 단순 Weighted A* ($w=2$) 비허용 탐색에만 의존하여, 캐시 무효화/수동 이동 시 지역 최적점에 빠져 A↔B 왕복 진동(Oscillation) 루프 발생 (QA03 실측 43회 왕복 확인).
-  - 5x5는 1행/1열 고정 서브골 리덕션으로 해결되었으나 4x4는 서브골이 없어 진동 취약.
-  - `.hint-arrow`의 `bounceHint` (`scale(0.9~1.2)`) 0.8s 무한 반복이 타일 위에서 시각적 진동 유발.
+#### 🔍 TASK-QA-05 — 배포 캐시 무효화 및 블록 이동 애니메이션 전수 검증 (담당: QA03)
 * **업무 내용**:
-  - [x] **4x4 서브골 리덕션 도입**: 5x5와 동일한 방식으로 4x4 보드에서 "1행 완성(1,2,3,4 타일 고정)" 서브골 파이프라인 구축 후 하위 3x4 / 3x3 탐색 위임, 또는 엄격한 사이클 가드(직전 상태 스왑 방지 히스토리 가드) 적용.
-  - [x] `aiSolver.ts`의 4x4 솔버에서 캐시 미스/강제 재탐색 시에도 동일 타일 왕복 0회 보장.
-  - [x] `aiSolver.test.ts`에 4x4 강제 재탐색 시 왕복 0회 스트레스 테스트 추가 및 PASS 확인.
-  - [x] `Tile.css`의 `bounceHint` 애니메이션을 과도한 scale 진동 대신 부드러운 위치 넛지(2px 미세 이동)로 교체하여 시각적 피로도 제거.
-* **제약**: `solver.worker.ts` 메시지 계약 유지, 3초 내 응답 목표.
-* **DoD**: 공통 DoD + 4x4 힌트 10회 이상 연속 추적 시 동일 타일 왕복 0회 및 시각 떨림 제거.
-
-#### 🔍 TASK-QA-04 — 미해결 3건 재발주 결과물 전수 회귀 검증 (담당: QA03)
-* **업무 내용**:
-  - [x] [FB-03 검증] 홈 화면 4개 카드 베이스 색상 일치 여부 및 모드 선택 시 활성화 하이라이트(배경/테두리) 동작 검증 (다크/라이트 테마).
-  - [x] [FB-02 검증] 3x3~5x5 전 난이도에서 상/하/좌/우 4방향 슬라이드 속도 육안 균일성 검수 (PC + 모바일).
-  - [x] [FB-01 검증] 4x4 AI 힌트 10회 이상 연속 이동 시 왕복 0회 확인, 수동 이동 후 재호출 시 진동 없음 확인, 시각적 떨림 해소 확인.
-  - [x] 전체 81개 Vitest + `tsc` + 빌드 무결성 확인 및 대시보드 갱신.
-* **제약**: `TASK-DEV-07`, `TASK-DEV-08`, `TASK-DEV-09` 완료 후 수행.
-* **DoD**: 공통 DoD + 검증 보고서 작성 및 대시보드 갱신.
-* **제약**: `TASK-DEV-07`, `TASK-DEV-08`, `TASK-DEV-09` 완료 후 수행.
+  - [ ] [PWA/캐시 검증] `sw.js` Network First 전략 확인, 배포 시 구버전 캐시 무효화 및 최신 번들 즉시 로딩 검증, 오프라인 모드 PWA 정상 작동 확인.
+  - [ ] [애니메이션 검증] 빈 슬롯 DOM 제거 후 타일 이동 안정성 검증, 키보드/터치 연타 시 애니메이션 부드러움(끊김/점프 없음) 검증, 3x3~5x5 전 난이도 4방향 슬라이드 속도 완전 일치 검증.
+  - [ ] 전체 Vitest (81개 이상) PASS + `tsc --noEmit` 0 에러 + 빌드 무결성 확인 후 대시보드 갱신.
+* **제약**: `TASK-DEV-10`, `TASK-DEV-11` 완료 후 수행.
 * **DoD**: 공통 DoD + 검증 보고서 작성 및 대시보드 갱신.
 
 ---
@@ -279,24 +263,15 @@ graph LR
 4. 작업 시작 (docs/ 폴더는 이력 자료이므로 열람만 가능)
 
 ### 6.2 코드 연관성 원칙 (필수 준수)
-A코드를 무심코 고쳐 B코드에서 에러가 나는 사태를 방지하기 위한 공통 원칙:
-
-1. **수정 전 영향 범위 탐색**
-   - 3절 매핑표의 "주요 연관 기능" 열 확인
-   - Grep으로 해당 함수/컴포넌트의 모든 사용처 검색 (예: `usePuzzleGame` 수정 시 이를 소비하는 `App.tsx`, `Controls.tsx`, `Header.tsx` 확인)
-2. **계약(Contract) 보존**
-   - export된 함수의 시그니처, props 인터페이스(`src/types/*`) 변경 금지 (확장은 허용)
-   - `usePuzzleGame`의 반환 객체는 다수 컴포넌트가 소비 — 필드 제거·타입 변경 금지
-3. **테스트 동반 수정**
-   - `utils/*` 로직 수정 시 대응 `*.test.ts` 반드시 함께 갱신
-4. **완료 후 전체 회귀**
-   - 부분 테스트가 아닌 `npm test` 전체 실행으로 타 기능 파손 여부 확인
-   - `npx tsc --noEmit`으로 타입 연쇄 오류 확인
+1. **수정 전 영향 범위 탐색**: 3절 매핑표 확인 및 Grep으로 참조처 전수 확인
+2. **계약(Contract) 보존**: 인터페이스 타입 및 `usePuzzleGame` 반환 필드 무결성 유지
+3. **테스트 동반 수정**: `utils/*` 수정 시 대응 `*.test.ts` 반드시 함께 갱신
+4. **완료 후 전체 회귀**: `npm test` 전체 실행 및 `npx tsc --noEmit` 무결성 검증
 
 ### 6.3 파트 종료 시 (Definition of Done 공통 항목)
 - [ ] `npm test` 전체 PASS 및 `npx tsc --noEmit` 0 에러
-- [ ] `5.3` 현재 배분표의 **본인 파트에 직접 `[x]` 체크 + 완료일 기입** (타 파트 수정 금지)
-- [ ] `7. 진행 상태 대시보드` 갱신 (결함 상태/파트 상태 반영)
+- [ ] `5.3` 현재 배분표의 **본인 파트에 직접 `[x]` 체크 + 완료일 기입**
+- [ ] `7. 진행 상태 대시보드` 갱신
 - [ ] 작업 내역 git 커밋 (메시지에 파트 ID 포함)
 
 ### 6.4 금지 사항
@@ -318,13 +293,14 @@ A코드를 무심코 고쳐 B코드에서 에러가 나는 사태를 방지하�
 | Phase 3 | 반응형 & 모바일 (100dvh, Safe Area) | ✅ 완료 |
 | Phase 4 | v1.0 릴리즈 (프리로더, 에셋 통합) | ✅ 완료 |
 | Phase 5 | 고도화 9대 모듈 (커스텀이미지/AI힌트/Undo/일일챌린지/업적/챌린지모드/PWA/i18n/공유) | ✅ **코드 구현 완료** |
-| v1.1 정비 | BUG-06 잔여·PROD 게이팅 수정 및 회귀 검증 | ✅ 완료 (DEV01·DEV02·QA01·QA02 전 파트 종료 — 회귀 검증 및 실기기 검수 완료) |
-| v1.2 사용자 피드백 대응 | AI 힌트 맴돔 수정, 애니메이션 속도 통일, 타이틀 카드 배경 통일, 서브패스 배포 | ✅ **완료** (TASK-DEV-07·08·09 구현 및 QA03 TASK-QA-04 전수 회귀 검증 완료 — 신규 결함 0건) |
+| v1.1 정비 | BUG-06 잔여·PROD 게이팅 수정 및 회귀 검증 | ✅ 완료 (DEV01·DEV02·QA01·QA02 전 파트 종료) |
+| v1.2 사용자 피드백 대응 | AI 힌트 맴돔 수정, 애니메이션 속도 통일, 타이틀 카드 배경 통일, 서브패스 배포 | ✅ **완료** (TASK-DEV-07·08·09 및 QA03 TASK-QA-04 전수 회귀 검증 완료) |
+| **v1.3 실서비스 갱신 및 체감 고도화** | **배포 캐시 무효화 (PWA Network First) 및 블록 애니메이션 엔진 근본 개선** | 🔄 **진행 중 (TASK-DEV-10·11 발주 완료 → QA03 TASK-QA-05)** |
 
 ### 7.2 결함 현황 (QA_COMPREHENSIVE_DEFECT_REPORT 기준 11건)
 
 | ID | 요약 | 심각도 | 상태 | 담당 파트 |
-| :--- | :--- | :--- | :---: | :--- |
+| :--- | :--- | :---: | :--- | :--- |
 | BUG-00 | 난이도 전환 렌더링 왜곡 | P0 | ✅ 검증 완료 (QA01) | — |
 | BUG-01 | Undo 버튼 누락 | P0 | ✅ 검증 완료 (QA01) | — |
 | BUG-02 | SW 캐시 404 (sfx_snap.mp3) | P0 | ✅ 검증 완료 (QA01) | — |
@@ -337,60 +313,66 @@ A코드를 무심코 고쳐 B코드에서 에러가 나는 사태를 방지하�
 | BUG-09 | SFX WAV 폴백 미적용 | P3 | ✅ 검증 완료 (QA01) | — |
 | BUG-10 | 표준모드 별점 밸런스 | P3 | ✅ 검증 완료 (QA01) | — |
 
-> **✅ 별도 발견 (PM 세션)**: 자동 클리어 버튼의 `import.meta.env.PROD` 게이팅 미적용 → **DEV02** 파트로 발번 → 2026-08-17 수정 완료 (`Controls.tsx`에서 PROD 시 렌더링 제외, 프로덕션 번들에서 제거 확인).
-> **📋 QA01 회귀 검증 결과 (2026-08-17)**: BUG-00~10 전건 코드 반영 확인 — `usePuzzleGame.ts` L130 `setGridSize`, `spriteCalculator.ts` `toFixed(4)`+`border-box`, `Controls.tsx` Undo 버튼, `sw.js` sfx_snap 제거/sfx_blocked·shuffle 등록, `App.tsx` 4개 지점 `localStorage.removeItem`, `dailyChallenge.ts` 스트릭 보정, `isAutoSolved` 치트 가드, `requestId` 대조, `GameOverModal` 닫기 시 `resetGame()`, `audioManager` WAV 폴백, `starCalculator` 하이브리드 기준 — 모두 확인. 동적 테스트: 프로덕션 빌드 성공, preview 서버에서 SW 캐시 목록 34개 에셋 전부 HTTP 200, PROD 번들에서 `btn-autoclear` 완전 제거 확인. `npm test` 71/71 PASS, `npx tsc --noEmit` 0 에러. **신규 결함 없음** (실기기/오프라인 검수는 QA02 담당).
-> **📝 DEV01 검증 결과**: CSS 5건은 Vite 빌드가 public 에셋 URL을 올바르게 재배치하므로 수정 불필요. `/assets/...`→`./assets/...` 변경은 번들 CSS(`dist/assets/index-*.css`) 기준 해석으로 프로덕션 404를 유발하여 미적용. 서브패스 배포의 올바른 조치는 `vite.config.ts` `base` 설정 → **DEV06 완료**.
-> **📱 QA02 실기기 검수 결과 (2026-08-17)**: 사용자 실기기 직접 확인 완료 — 모바일(360px) 3x3/4x4/5x5 보드 렌더링, PWA 오프라인 캐싱(34개 에셋 프리캐시), SW 404 부재 전 항목 이상 없음. **신규 결함 없음** → v1.1 정비 마일스톤 완료.
+> **✅ 별도 발견 (PM 세션)**: 자동 클리어 버튼의 `import.meta.env.PROD` 게이팅 미적용 → **DEV02** 파트로 발번 → 2026-08-17 수정 완료.
+> **📋 QA01 회귀 검증 결과 (2026-08-17)**: BUG-00~10 전건 정상 반영 통과.
+> **📝 DEV01 검증 결과**: CSS 5건 정상, 서브패스 대응 `base: './'` 설정 → **DEV06 완료**.
+> **📱 QA02 실기기 검수 결과 (2026-08-17)**: 모바일(360px) 보드 렌더링, PWA 오프라인 캐싱, SW 404 부재 전 항목 이상 없음.
 
 ### 7.3 문서 이력 자료 현황 (docs/ 폴더 — 수정 금지, 참고용)
 
 | 문서 | 내용 | 현행 상태와의 차이 |
 | :--- | :--- | :--- |
-| docs/MILESTONES.md | 마일스톤 | ⚠️ Phase 5 "0% 준비 완료" 표기 — **구식** (실제 완료, 본 문서 7.1이 정확) |
+| docs/MILESTONES.md | 마일스톤 | ⚠️ Phase 5 "0% 준비 완료" 표기 — **구식** (본 문서 7.1이 정확) |
 | docs/PM/PM_COMPLETION_REPORT.md | v1.0 완료 보고서 | ⚠️ Phase 5 이전 기준 — **구식** |
 | docs/QA/QA_TASKS.md | QA 체크리스트 | ⚠️ "스프린트 3 진행 중" 표기 — **구식** |
-| docs/DEV/DEV_FIX_GUIDE_QA_DEFECTS.md | 11건 수정 가이드 | ⚠️ "진행 대기" 표기 — 수정은 반영됨 (현행: 7.2) |
-| docs/PRD.md | 요구사항 정의서 | ⚠️ 기술스택 표기(Howler.js/Zustand) — 실제는 Web Audio API / React 상태 |
-| 그 외 docs/* | 이력 | 참고용 |
+| docs/DEV/DEV_FIX_GUIDE_QA_DEFECTS.md | 11건 수정 가이드 | ⚠️ "진행 대기" 표기 — 수정 반영됨 |
+| docs/PRD.md | 요구사항 정의서 | ⚠️ 기술스택 표기 — 실제는 Web Audio API / React 상태 |
 
 ### 7.4 사용자 피드백 현황 (2026-08-17 접수)
 
 | 피드백 ID | 내용 | 원인 (PM/QA 확인) | 담당 작업 | 상태 |
 | :--- | :--- | :--- | :---: | :--- |
-| FB-01 | AI 힌트 4x4/5x5 맴돔 및 시각적 진동 | 4x4 Weighted A* ($w=2$) 비허용 휴리스틱 지역 루프 + scale 바운스 떨림 | **TASK-DEV-09** | ✅ 검증 완료 (QA03 - TASK-QA-04) |
-| FB-02 | 블록 이동 시 상/하/좌/우 애니메이션 속도 불일치 | 퍼센트 높이 픽셀 미세 오차 + 빈 슬롯 동시 역방향 슬라이드 + 비대칭 이징 | **TASK-DEV-08** | ✅ 검증 완료 (QA03 - TASK-QA-04) |
-| FB-03 | 홈 화면 4개 모드 카드 배경 불일치 & 선택 피드백 부재 | CSS shorthand 배경 덮어쓰기 + `selectedMode` 상태/스타일링 UI 부재 | **TASK-DEV-07** | ✅ 검증 완료 (QA03 - TASK-QA-04) |
+| FB-01 | AI 힌트 4x4/5x5 맴돔 및 시각적 진동 | 4x4 Weighted A* ($w=2$) 비허용 휴리스틱 지역 루프 + scale 바운스 떨림 | **TASK-DEV-09** | ✅ 검증 완료 (QA03) |
+| FB-02 | 블록 이동 시 상/하/좌/우 애니메이션 속도 불일치 | 퍼센트 높이 픽셀 미세 오차 + 빈 슬롯 동시 역방향 슬라이드 + 비대칭 이징 | **TASK-DEV-08** | ✅ 검증 완료 (QA03) |
+| FB-03 | 홈 화면 4개 모드 카드 배경 불일치 & 선택 피드백 부재 | CSS shorthand 배경 덮어쓰기 + `selectedMode` 상태/스타일링 UI 부재 | **TASK-DEV-07** | ✅ 검증 완료 (QA03) |
 | FB-04 | (DEV01 후속) 서브패스 배포 대응 `base` 설정 | CSS 절대경로는 정상, 서브패스 대응은 `base` 설정이 올바른 조치 | **DEV06** | ✅ 검증 완료 (QA03) |
+| **FB-05** | **새로운 배포 시 기존 사용자 업데이트 미반영 현상 (캐시 고착화)** | **`sw.js` Cache-First의 HTML 가로채기 + CACHE_NAME 고정으로 구버전 index.html 무한 서빙** | **TASK-DEV-10** | ⏳ **발주 대기 (DEV01)** |
+| **FB-06** | **블록 이동 애니메이션 실체감 결함 (연타 시 뚝뚝 끊김/DOM 간섭)** | **빈 슬롯 타일 DOM 불필요 렌더링 + 연타 입력 시 트랜지션 중간 덮어쓰기** | **TASK-DEV-11** | ⏳ **발주 대기 (DEV01)** |
 
 ---
 
-### 7.5 미해결 문제점 심층 원인 분석 및 재발주 명세 (QA03 심층 추적 완료)
+### 7.5 미해결 문제점 심층 원인 분석 및 재발주 명세 (이전 이력 보존)
 
-*(상세 원인 분석 및 권장 조치는 이전 추적 결과 기록 보존 — 7.6절에서 검증 완료 확인)*
+*(FB-01~03 심층 분석 및 TASK-DEV-07~09 완료 기록 보존)*
 
 ---
 
 ### 7.6 TASK-QA-04 재발주 전수 회귀 검증 보고서 (2026-08-17 QA03)
 
-1. **🎨 [FB-03] 타이틀 모드 카드 선택 UI 및 CSS 레이어 분리 검증 (TASK-DEV-07)**:
-   - `TitleScreen.tsx`: `selectedMode` 상태 도입 및 카드 클릭/키보드 선택 시 `.selected` 클래스 정상 부여 확인.
-   - `TitleScreen.css`: `background` shorthand 제거 및 `background-color: var(--bg-surface)` + `background-image: linear-gradient(...)` 레이어 분리 확인. 4개 모드 카드의 기본 베이스 색상 완벽 일치 및 선택 시 테마 컬러 10~15% 하이라이트 + 2px 테두리 + 글로우 박스 섀도우가 다크/라이트 테마에서 모두 선명하게 작동함.
+*(FB-01~03 1차 해결 검증 완료: Vitest 81/81 PASS, tsc 0, build 성공)*
 
-2. **⚡ [FB-02] 타일 슬라이드 애니메이션 4방향 속도 균일성 검증 (TASK-DEV-08)**:
-   - `PuzzleBoard.css`: `.tile-slider.is-empty`에 `transition: none !important` 적용으로 빈 슬롯의 역방향 슬라이드 간섭 완전 제거 확인.
-   - `.tile-slider`에 `aspect-ratio: 1 / 1` 명시적 고정으로 X축/Y축 실제 이동 픽셀 거리 100% 일치화 확인.
-   - 대칭 이징 `cubic-bezier(0.25, 1, 0.5, 1)` 적용으로 상/하/좌/우 4방향 슬라이드 체감 속도가 PC 및 모바일 360px 환경에서 완전 균일함을 확인.
+---
 
-3. **🧩 [FB-01] 4x4 AI 힌트 서브골 리덕션 & 시각 피로도 개선 검증 (TASK-DEV-09)**:
-   - `aiSolver.ts`: 4x4 솔버에 Row 1 (1,2 개별 + 3,4 조인트 페어) $\rightarrow$ Col 1 (5 개별 + 9,13 조인트 페어) $\rightarrow$ 잔여 3x3 블록 최적 A* 리덕션 파이프라인 완벽 구현 확인.
-   - 강제 캐시 무효화 스트레스 테스트(Vitest 81건)에서 왕복 진동(Oscillation) 0회, 힌트 추적 완주율 100% 확인.
-   - `Tile.css`: `.hint-arrow`의 과도한 `scale` 진동을 방향별 2px 위치 넛지(`nudgeUp`, `nudgeDown`, `nudgeLeft`, `nudgeRight`)로 교체하여 시각적 떨림/피로도 완전 해소 확인.
+### 7.7 신규 이슈 심층 분석 및 해결 설계 (FB-05, FB-06)
 
-4. **🚀 종합 무결성**:
-   - Vitest: **81/81 PASS (14개 파일 전건 통과)**
-   - TypeScript: **0 Errors (`npx tsc --noEmit`)**
-   - Production Build: **정상 빌드 완료 (`npm run build`)**
-   - 신규 결함: **0건 (None)**
+#### 1) 🌐 [FB-05] 배포 시 업데이트 미반영 (PWA Service Worker 캐시 고착화)
+* **원인**:
+  - `public/sw.js`에서 `CACHE_NAME = 'sliding-puzzle-v1'`로 하드코딩되어 있고, `fetch` 이벤트 리스너가 모든 요청(HTML 포함)에 대해 Cache First로 응답함.
+  - 새 버전 빌드로 Vite가 새로운 번들 해시(`index-xyz.js`)를 생성하더라도, 브라우저는 캐시된 구버전 `index.html`을 읽어와서 이전 JS 번들을 찾으려 하거나 구버전 화면을 영구히 유지함.
+  - `sw.js` 등록 시 `updateViaCache: 'none'` 부재 및 클라이언트 갱신 감지(`updatefound`, `controllerchange`) 미적용.
+* **해결 설계 (TASK-DEV-10)**:
+  - `sw.js`: Navigation / HTML 요청은 무조건 **Network First**로 처리. 온라인 시 최신 `index.html`을 네트워크에서 가져오고, 오프라인 시에만 캐시 폴백.
+  - `CACHE_NAME` 승급 (`sliding-puzzle-v2.0`) 및 `activate` 이벤트에서 구버전 캐시 일괄 삭제.
+  - `main.tsx`: `navigator.serviceWorker.register(..., { updateViaCache: 'none' })` 설정 및 업데이트 자동 반영/감지 로직 구현.
+
+#### 2) ⚡ [FB-06] 블록 이동 애니메이션 실체감 결함 재검토
+* **원인**:
+  - `PuzzleBoard.tsx`에서 `tile.isEmpty`인 타일도 `<div className="tile-slider is-empty">`로 렌더링되고 있어, 타일 이동 시 DOM 재배치 스래싱 및 배경 슬롯과의 이중 렌더링 간섭 발생.
+  - 사용자가 0.16s 트랜지션 도중에 키보드/터치를 연타할 경우, CSS `transform`이 중간 지점에서 덮어씌워지며 애니메이션이 점프하거나 뚝뚝 끊기는 현상 발생.
+* **해결 설계 (TASK-DEV-11)**:
+  - `isEmpty` 타일은 `.tile-slider` DOM 렌더링에서 아예 제외 (`filter(t => !t.isEmpty)`).
+  - 0.14~0.16s 동안 빠른 연타 입력을 보호하는 애니메이션 락(Animation Lock / Throttling) 도입으로 60fps 부드러운 전환 보장.
+  - 하드웨어 가속 `translate3d` 좌표를 서브픽셀 정밀도로 정렬하여 상하좌우 4방향 체감 속도 물리적 완전 일치.
 
 ---
 
@@ -398,17 +380,10 @@ A코드를 무심코 고쳐 B코드에서 에러가 나는 사태를 방지하�
 
 | 일자 | 버전 | 내용 | 작성 세션 |
 | :--- | :--- | :--- | :--- |
-| 2026-08-17 | v3.2 | QA03: [TASK-QA-04] 미해결 3건 재발주 개발 결과물(TASK-DEV-07~09) 전수 회귀 검증 완료 — 모드 선택 UI/배경 분리, 타일 슬라이드 4방향 속도 균일화, 4x4 힌트 서브골 리덕션 및 2px 시각 넛지 검증. Vitest 81 PASS / tsc 0 / 빌드 성공. 신규 결함 0건 (7.6절 보고서 등록) | QA03 |
-| 2026-08-17 | v3.1 | DEV03: [TASK-DEV-09] 4x4 AI 힌트 서브골 리덕션(Row 1/Col 1/3x3) & 사이클 가드 구현, 강제 재탐색 왕복 0회 Vitest 81건 전건 PASS, Tile 2px 위치 넛지 시각 피로도 개선 완료. QA03(TASK-QA-04) 전수 검증 이관 | DEV03 |
-| 2026-08-17 | v3.0 | DEV01: 재발주 2건 완료 — TASK-DEV-07(타이틀 모드 카드 선택 UI 아키텍처 및 CSS 배경 레이어 분리/선택 하이라이트), TASK-DEV-08(타일 슬라이드 정방형 고정, 빈 슬롯 역방향 트랜지션 제거, 대칭 이징 최적화). Vitest 79 PASS / tsc 0 / build 정상. DEV03(TASK-DEV-09) 이관 | DEV01 |
-| 2026-08-17 | v2.9 | PM01: QA03 심층 분석 기반 재발주 작업 배분 완료 — TASK-DEV-07(카드 선택 UI/배경 레이어 분리), TASK-DEV-08(타일 정방형/빈슬롯 트랜지션 제거/대칭 이징), TASK-DEV-09(4x4 1행 고정 서브골 리덕션/사이클 가드/시각 넛지), TASK-QA-04(전수 재검증) | PM01 |
-| 2026-08-17 | v2.8 | QA03: 사용자 피드백 미해결 3건(FB-01~03) 심층 원인 분석 및 재발주 명세 작성 (7.5절 신설: 모드 카드 배경/선택상태 부재, 타일 애니메이션 종횡비/빈슬롯 간섭, 4x4 Weighted A* 비허용 휴리스틱 진동 루프 및 시각 바운스 진동 규명) | QA03 |
-| 2026-08-17 | v2.7 | QA03: 사용자 피드백 3건(FB-01~03) + DEV06 서브패스 배포 1차 회귀 검증 | QA03 |
-| 2026-08-17 | v2.6 | DEV01: 배치 작업(DEV04, DEV05, DEV06) 1차 완료 | DEV01 |
-| 2026-08-17 | v2.5 | DEV03: AI 힌트 솔버 1차 개편 완료 | DEV03 |
-| 2026-08-17 | v2.4 | 사용자 피드백 파트 발번 | PM |
-| 2026-08-17 | v2.3 | QA02: 실기기 검수 완료 | QA02 |
-| 2026-08-17 | v2.2 | QA01: 결함 회귀 검증 완료 | QA01 |
-| 2026-08-17 | v2.1 | DEV02: 자동 클리어 버튼 PROD 게이팅 완료 | DEV02 |
-| 2026-08-17 | v2.0 | 문서 단일화 개편 | PM |
-| 2026-08-17 | v1.0 | 최초 작성 | PM |
+| 2026-08-17 | v3.3 | PM01: 신규 이슈 2건(FB-05 배포 캐시 고착화, FB-06 블록 이동 연타/DOM 간섭) 심층 분석 및 신규 파트 발주 — TASK-DEV-10(PWA Network First/캐시 무효화), TASK-DEV-11(빈슬롯 DOM 제외/연타 락/서브그리드 정밀화), TASK-QA-05(전수 검증) | PM01 |
+| 2026-08-17 | v3.2 | QA03: [TASK-QA-04] 미해결 3건 재발주 개발 결과물(TASK-DEV-07~09) 전수 회귀 검증 완료 — Vitest 81 PASS / tsc 0 / 빌드 성공 (신규 결함 0건) | QA03 |
+| 2026-08-17 | v3.1 | DEV03: [TASK-DEV-09] 4x4 AI 힌트 서브골 리덕션 & 2px 시각 넛지 완료 | DEV03 |
+| 2026-08-17 | v3.0 | DEV01: 재발주 2건 완료 (TASK-DEV-07 모드 선택 UI, TASK-DEV-08 타일 정방형/이징) | DEV01 |
+| 2026-08-17 | v2.9 | PM01: QA03 심층 분석 기반 재발주 작업 배분 완료 | PM01 |
+| 2026-08-17 | v2.0~2.8 | 세션 풀 체계 정립, 결함 수정 및 사용자 피드백 대응 이력 | DEV/QA/PM |
+| 2026-08-17 | v1.0 | 최초 작성 (통합 참고 문서 신설) | PM |
