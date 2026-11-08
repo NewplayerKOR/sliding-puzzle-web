@@ -35,7 +35,6 @@ dist-ssr/
 .vercel
 
 docs/
-PROJECT_GUIDE.md
 
 # Test coverage
 coverage/

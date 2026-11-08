@@ -1,0 +1,251 @@
+# TASKS.md - Single Source of Tasks
+
+[작성 및 수정 규칙]
+
+- 상태 표기: [ ] 대기 | [-] 진행 중 | [x] 완료 | [!] 블로커/이슈. 상태 변경과 블로커 판단은 AGENTS.md의 공통 기준을 따른다.
+- 우선순위: P0 (긴급) > P1 (중요) > P2 (개선/선택). 결함의 영향과 긴급도는 AGENTS.md의 분류 기준으로 판단한다.
+- 업무 식별: 작업마다 프로젝트 내 고유 작업 ID·Phase·담당·목표·완료 기준(DoD)을 명시한다. 첫 Phase는 01이며 이후 증가시키고, 작업 ID는 보관 후에도 재사용하지 않는다.
+- 검증 및 완료: AGENTS.md의 작업 유형별 검증 기준을 적용하고, DoD·실제 결과·검증 범위·증거·미실행 사항을 확인한 뒤 [x]로 변경한다. 다른 역할의 미완료 작업을 임의로 완료 처리하지 않는다.
+- 활성 작업 단일화: 진행·대기·보류 업무는 본 파일에서만 관리한다. 완료 원문 보관과 정정 절차는 AGENTS.md의 작업 라이프사이클을 따른다.
+- 최근 완료 요약: 완료 작성자가 원문 보관과 링크 확인을 마친 뒤 요약으로 전환한다. 작업 ID·제목·완료일·핵심 결과·검증 범위·원문 링크를 완료 시각 내림차순으로 최대 5개 유지한다. 초과 요약을 제거해도 보관 원문은 유지한다.
+- 보관 위치: 본 파일과 같은 디렉터리의 archive/TASKS_PHASE_01.md 등 해당 Phase 파일에 원문을 보관하고 아래 Phase별 보관 목록에 연결한다. 실제 완료 작업이 없으면 빈 보관 파일이나 링크를 미리 만들지 않는다.
+- 문서 구분: FEATURES.md에는 구현·검증된 사용자 기능의 현재 명세를 반영하고, 작업 원문과 상세 이력은 Phase별 보관 파일에 유지한다.
+
+---
+
+## 1. Active Tasks (진행 중인 작업)
+
+(현재 진행 중인 작업 없음)
+
+---
+
+## 2. Backlog (대기 중인 작업)
+
+### [PM]
+
+(대기 중인 작업 없음)
+
+### [DEV]
+
+#### [ ] TASK-DEV-15 — KO/EN/JA/ZH 잔여 하드코딩 문자열 및 `html lang` 정리
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: 언어 전환 시 사용자에게 노출되는 모든 텍스트와 메타데이터를 4개 언어로 제공하고, 문서 언어(`html lang`)를 선택 언어와 동기화한다.
+- **대상 파일**: `src/i18n/translations.ts`, `src/i18n/useTranslation.ts`, `src/components/**`(Title, Header, Controls, WinModal, DailyModal, ThemeModal, AchievementModal, BgmSelectModal, HintModal, GameOverModal, CustomImageModal, AchievementToast), `src/utils/themeData.ts`, `src/utils/achievementData.ts`, `src/utils/audioManager.ts`(BGM 메타데이터), `src/utils/shareCardGenerator.ts`, `index.html`
+- **재현/증거**: EN 전환 후 업적 도감 12종 설명, 테마 4종 이름·설명, BGM 트랙 장르·설명, 일일 모달의 `년/월/일/완료`, 힌트 모달, 공유 카드의 `25회`·테마명이 한국어로 표시됨. `document.documentElement.lang`은 EN에서도 `ko` 유지. 게임 화면 툴바·일일 모달 캡처와 DOM 텍스트 수집 결과는 `root/archive/TASKS_PHASE_01.md` TASK-QA-07 참조.
+- **DoD**:
+  - EN/JA/ZH에서 사용자 노출 한국어 하드코딩 0건(모달·업적·테마·BGM·단위·공유 카드 포함)
+  - 테마·업적·BGM 메타데이터와 공유 카드 문자열을 번역 키로 이관
+  - 언어 변경 시 `document.documentElement.lang` 갱신
+  - 4개 언어 키 누락·빈 문자열 검사 테스트 보강
+  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-16 — 커스텀 이미지 보존·드래그 앤 드롭·업로드 검증 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 테마 모달을 열기만 해도 커스텀 이미지가 삭제되는 문제를 없애고, 안내 문구와 실제 업로드 동작을 일치시키며, 용량·형식 오류를 사용자에게 알린다.
+- **대상 파일**: `src/App.tsx`(`onOpenThemeModal`, `handleConfirmThemeStart`, `onSelectTheme`), `src/components/Modal/CustomImageModal.tsx`, `src/components/Modal/CustomImageModal.css`
+- **재현/증거**:
+  - 커스텀 이미지 적용 후 `localStorage`에 728,626바이트 저장 확인 → 테마 모달을 열기만 해도 `sliding_puzzle_custom_image`가 0바이트가 되고 보드가 이전 테마로 복귀함.
+  - 모달 문구는 "클릭하거나 이미지를 여기로 드래그"이나 `onDrop`/`onDragOver` 핸들러가 없어 파일 드롭이 무반응.
+  - 10MB 초과 시 한국어 `alert`만 표시하고, `localStorage` quota 초과는 조용히 무시하며, 파일 MIME 검증이 없음.
+- **DoD**:
+  - 테마 모달 열기·닫기만으로 커스텀 이미지를 삭제하지 않고, 테마 확정/변경 시에만 제거
+  - 드래그 앤 드롭 구현 또는 안내 문구 수정
+  - 파일 형식·크기·quota 오류를 현재 언어로 피드백하고 실패 시 적용 상태를 명확히 표시
+  - 관련 브라우저 수동 확인과 회귀 테스트 추가
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-17 — AI 힌트 레이스 컨디션·Worker 실패 처리
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 힌트 계산 중 보드가 바뀌면 이전 보드 기준 결과를 표시하지 않고, Worker 오류·시간 초과·힌트 없음 상태를 사용자에게 알린다.
+- **대상 파일**: `src/App.tsx`(`handleRequestAiHint`, `latestRequestIdRef`), `src/workers/solver.worker.ts`, `src/utils/aiSolver.ts`, `src/App.test.tsx`
+- **재현/증거**: 5x5에서 AI 힌트 요청 8ms 후 타일을 이동했으나 368ms 뒤 이전 보드 기준 힌트 오버레이가 표시됨. Worker `onerror`/`onmessageerror`/시간 초과 처리가 없고, 결과가 `null`이면 아무 안내 없이 3초 쿨다운만 시작됨.
+- **DoD**:
+  - 보드 변경·새 게임·그리드 변경 시 진행 중 요청을 무효화(요청 ID 또는 보드 해시 검증)
+  - Worker 오류·시간 초과·힌트 없음 시 계산 상태 해제와 사용자 안내
+  - 레이스 컨디션·실패 경로 테스트 추가
+  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-18 — 모달 포커스 트랩 및 전역 키보드 입력 충돌 해결
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 모달이 열린 동안 포커스를 모달 내부에 가두고, 보드 키보드 핸들러가 모달·폼 컨트롤 입력을 가로채지 않게 한다.
+- **대상 파일**: `src/components/Board/PuzzleBoard.tsx`, `src/App.tsx`, `src/components/Modal/**`, 공통 모달 컴포넌트(신설 가능)
+- **재현/증거**:
+  - 테마 모달을 연 뒤 Tab을 12회 누르면 포커스가 모두 배경 툴바 버튼으로 이동함.
+  - 테마 모달이 열린 상태에서 ArrowUp을 누르면 뒤 보드 이동 수가 4→5로 증가함.
+  - 언어 `<select>`에 포커스한 뒤 ArrowDown을 누르면 언어는 `ko` 그대로이고 보드 이동 수가 1→2로 증가함.
+- **DoD**:
+  - 모달 열기 시 초기 포커스 이동, Tab/Shift+Tab 순환, 닫기 시 이전 포커스 복원
+  - 배경 콘텐츠 `inert`/`aria-hidden` 처리
+  - 모달 열림 중 보드 키 입력 차단, `SELECT`·`INPUT`·`TEXTAREA` 포커스 시 전역 단축키 무시
+  - 키보드 전용 회귀 테스트 추가
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-19 — ARIA 구조·색 대비·확대 허용·접근성 라벨 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: Lighthouse 접근성 실패 항목을 해소하고, 스크린리더·저시력 사용자가 보드와 모달을 정상 탐색할 수 있게 한다.
+- **대상 파일**: `src/components/Board/PuzzleBoard.tsx`, `src/components/Title/TitleScreen.tsx`, `src/components/Controls/Controls.tsx`, `src/components/Header/Header.tsx`, 관련 CSS, `index.html`
+- **재현/증거**: Lighthouse 접근성 게임 화면 0.79, 타이틀 0.89. `role="grid"` 아래 `role="gridcell"`이 `role="row"` 없이 배치됨, 타이틀에 `main` landmark 없음, 툴바 대비 2.36/1.81, 크기 pill 대비 3.97, `user-scalable=no`, 모드 카드 내부 중첩 버튼, 한국어 `aria-label`/`title`/`alt`가 EN에서도 유지됨.
+- **DoD**:
+  - 보드 그리드 역할 구조를 유효하게 만들거나 단순한 버튼 그룹으로 단순화
+  - 타이틀에 `main` landmark 추가, 중첩 인터랙티브 요소 제거
+  - WCAG AA 대비 충족, `maximum-scale=5` 이상 및 확대 허용
+  - 접근성 라벨·`alt` 4개 언어 적용
+  - Lighthouse 접근성 실패 0건 확인 및 결과 기록
+- **선행 조건**: TASK-DEV-15와 라벨 문구 협의
+
+#### [ ] TASK-DEV-20 — 360px 모바일·1화면 레이아웃 및 터치 처리 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 360px 폭에서 상단 컨트롤이 잘리지 않게 하고, 360×800·1280×800에서 핵심 플레이 화면이 한 화면에 들어오도록 레이아웃을 조정한다.
+- **대상 파일**: `src/components/Title/TitleScreen.css`, `src/components/Header/Header.css`, `src/styles/App.css`, `src/components/Board/PuzzleBoard.css`, `src/components/Board/PuzzleBoard.tsx`
+- **재현/증거**:
+  - 360×800에서 타이틀 상단 바 콘텐츠 폭 392px > 컨테이너 337px, 스트릭 배지 53×81px·업적 배지 51×81px로 세로 줄바꿈, 오디오 컨트롤이 뷰포트 밖으로 잘림.
+  - 같은 뷰포트에서 게임 화면 `bodyScrollHeight` 925px, 보드 하단 812px로 796px 뷰포트를 초과해 스크롤 필요.
+  - 1280×800에서도 게임 화면 `scrollHeight` 959px로 "1화면 레이아웃" 미충족.
+  - 스와이프 시 React passive `touchmove`에서 `preventDefault` 실패 콘솔 오류가 발생(현재는 CSS `touch-action`이 일부 보완).
+- **DoD**:
+  - 360×640·360×800·1280×800에서 가로 클리핑 0, 상단 컨트롤·배지 판독 가능
+  - 360×800에서 보드와 핵심 컨트롤이 스크롤 없이 보이도록 조정하거나, 불가피하면 PM과 FEATURES 문구 조정
+  - 터치 스크롤 차단을 non-passive 리스너 또는 CSS로 일관 처리하고 콘솔 오류 제거
+  - 뷰포트별 스크린샷과 측정값 기록
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-21 — PWA 매니페스트 아이콘·Service Worker 폴백/업데이트 안정화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: PWA 설치 요건을 충족하는 아이콘을 제공하고, 서버 오류·업데이트 시 캐시 폴백과 게임 진행 보호를 강화한다.
+- **대상 파일**: `public/manifest.webmanifest`, `public/assets/icons/**`, `public/sw.js`, `src/main.tsx`
+- **재현/증거**: 매니페스트는 `badge_trophy.png`를 192×192·512×512로 선언하지만 실제 이미지는 224×197이고 maskable·apple-touch 아이콘이 없음. 서버 중단 후 재로드 시 SW가 502 응답을 그대로 반환해 캐시 폴백이 동작하지 않음. `controllerchange`에서 무조건 `location.reload()`를 호출해 업데이트 시 게임이 중단될 수 있음.
+- **DoD**:
+  - 192×192·512×512 정사각형 아이콘과 maskable 아이콘, apple-touch-icon 추가
+  - Navigation Network First에서 `!response.ok`도 캐시 폴백 처리
+  - `cache.addAll` 실패 시 자산별 캐시 또는 설치 실패 처리
+  - 업데이트 시 진행 중 게임을 즉시 새로고침하지 않고 안내 후 반영
+  - 서브패스 배포와 오프라인 재로드 재검증
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-22 — BGM·이미지 에셋 경량화 및 초기 로딩 최적화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 초기 다운로드·SW 프리캐시 용량을 줄이고, 현재 테마·현재 BGM만 우선 로드한다.
+- **대상 파일**: `public/assets/audio/**`, `src/utils/audioManager.ts`, `src/utils/assetPreloader.ts`, `src/hooks/useAssetPreloader.ts`, `public/sw.js`, `scripts/**`
+- **재현/증거**: `dist` 총 20.45MB 중 오디오 13.83MB(4개 WAV 2.01~4.15MB), 스프라이트 2.63MB, 테마 이미지 2.62MB. 초기 리소스 46건의 decodedBodySize 합계 9.9MB(현재 BGM 3.4MB + 프리로드 이미지 약 4.9MB). SW가 4개 BGM 전체를 설치 시 프리캐시.
+- **DoD**:
+  - BGM 4트랙을 MP3/OGG 등 압축 포맷으로 전환하고 원본 WAV는 배포에서 제외
+  - 최초 로드 시 현재 테마 이미지·현재 BGM만 로드하고 나머지는 지연 로드
+  - 스프라이트·아이콘 압축 또는 SVG 전환 검토
+  - SW 프리캐시를 필수 셸과 현재 테마 중심으로 축소
+  - 변경 전후 `dist` 용량·초기 decodedBodySize·테마 전환 깜빡임·오프라인 동작 비교 기록
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-23 — 업적 토스트 다중 달성 큐 및 메타데이터 병합 수정
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 한 번의 승리로 여러 업적이 달성돼도 모두 순차 표시하고, 저장된 업적 데이터가 최신 정의를 덮어쓰지 않게 한다.
+- **대상 파일**: `src/components/Achievement/AchievementToast.tsx`, `src/utils/achievementManager.ts`, `src/utils/achievementData.ts`, 관련 테스트
+- **재현/증거**: 3x3 승리에서 `first_victory`, `speed_demon`, `purist_no_undo` 3건이 동시에 잠금 해제됐지만 토스트는 마지막 `purist_no_undo` 1건만 표시됨. `getStoredAchievements`가 `{ ...init, ...found }` 순서로 병합해 저장된 옛 제목·설명이 최신 정의를 덮어씀.
+- **DoD**:
+  - 다중 달성 시 큐 또는 통합 토스트로 모든 업적 표시, 타이머 정리
+  - 정적 메타데이터는 최신 정의를 사용하고 `unlockedAt`·`progress`만 저장값 유지
+  - 다중 달성·저장 데이터 병합 테스트 추가
+  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-24 — LocalStorage 접근·스키마 방어
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 저장소 접근 차단·손상된 JSON·예상 밖 스키마에서도 앱이 빈 화면으로 죽지 않고 기본값으로 동작하게 한다.
+- **대상 파일**: `src/i18n/useTranslation.ts`, `src/App.tsx`(커스텀 이미지 초기화), `src/utils/recordStorage.ts`, `src/utils/dailyChallenge.ts`, `src/utils/achievementManager.ts`, `src/utils/audioManager.ts`, 공통 storage 유틸(신설 가능)
+- **재현/증거**: `getInitialLanguage`와 `App.tsx` 67~70행이 `localStorage.getItem`을 try/catch 없이 호출하므로 저장소 접근이 차단된 환경에서 모듈 초기화가 실패할 수 있음. 일일 스트릭·기록·업적 JSON은 파싱 후 스키마 검증이 없어 `completedDates` 등 필드가 없으면 `.includes`에서 예외가 발생할 수 있음.
+- **DoD**:
+  - 안전한 storage 래퍼로 읽기·쓰기·파싱 실패를 흡수하고 기본값 반환
+  - 일일 스트릭·기록·업적·오디오 설정 스키마 검증
+  - 저장소 차단·손상 JSON·필드 누락 테스트 추가
+  - 앱 초기 화면이 정상 렌더링됨을 확인
+- **선행 조건**: 없음
+
+### [QA / DevOps]
+
+#### [ ] TASK-QA-08 — CI/CD·테스트 환경·의존성·배포 문서 정비
+
+- **Phase**: 01
+- **담당**: QA_DEVOPS
+- **우선순위**: P2
+- **목표**: PR마다 테스트·타입 검사·빌드·보안 감사를 자동 수행하고, Node 요구사항과 테스트 실행 조건을 정합화하며, 핵심 E2E와 배포 절차를 마련한다.
+- **근거**:
+  - `.github` 워크플로가 없어 `npm test`·`npx tsc --noEmit`·`npm run build`·`npm audit`가 자동 검증되지 않음.
+  - README/AGENTS는 Node.js 18+를 안내하지만 Vitest 4는 Node 20+, jsdom 30은 Node 22.22.2/24.15/26+를 요구함.
+  - Node 26에서 `NODE_OPTIONS=--localstorage-file` 없이 `npm test`를 실행하면 localStorage 관련 테스트가 실패함(제품 결함 아님).
+  - `npm audit` 전체 6건(moderate 2·high 4, sharp/vite/vitest/undici/source-map-js), `npm audit --omit=dev`는 0건.
+  - 공유 카드·모달·모바일 뷰포트·PWA를 포함한 E2E가 없고, `robots.txt`·배포 절차 문서가 없음.
+- **DoD**:
+  - Node 24 LTS(또는 팀 합의 버전) 기준 CI 워크플로에서 `npm ci` → test → tsc → build → `npm audit --omit=dev` 실행
+  - `package.json` `engines`와 README/AGENTS Node 요구사항 정합화(문서는 PM에 전달)
+  - 수동 환경 변수 없이 `npm test`가 통과하도록 setup 파일 또는 스크립트 정비
+  - dev 의존성 취약점 6건 수정 또는 예외 사유 기록, `npm outdated` 주요 항목 갱신 검토
+  - Playwright E2E 스모크(타이틀→테마→게임→이동/Undo→AI 힌트→3x3 승리, 360px 레이아웃, 모달 포커스, EN 전환) 추가
+  - `public/robots.txt`와 배포·캐시 갱신 절차 문서 추가
+  - CI·로컬 실행 결과와 미실행 범위 기록
+- **선행 조건**: 없음 (TASK-DEV-15~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
+
+---
+
+## 3. Recent Completions (최근 완료 요약)
+
+- **TASK-DEV-14** — Time Attack·기록 타이머를 벽시계 기준으로 보정 (완료일: 2026-11-08)
+  - 핵심 결과: 시작 시각 기반 `elapsedTime` 계산으로 메인 스레드 5초 지연 시 `00:45`→`00:40`을 정확히 반영. Time Attack 만료·기록·별점·업적이 동일한 시간 기준을 사용
+  - 검증 범위: Vitest 14개 파일/109개 케이스 PASS(신규 5건 포함), tsc 0 Errors, Vite 빌드 성공, 3×3 Time Attack 브라우저 5초 블로킹 확인. 실제 백그라운드 탭·기기 절전은 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-14--time-attack기록-타이머를-벽시계-기준으로-보정)
+
+- **TASK-QA-07** — v1.4.0 전면 품질·성능·안정성 검토 및 DEV 개선 업무 발주 (완료일: 2026-11-08)
+  - 핵심 결과: 자동 검증·실제 브라우저 검토 완료, P0 0 / P1 2 / P2 17(발주) + P2 5(보고만), `TASK-DEV-14~24`·`TASK-QA-08` 발주
+  - 검증 범위: Vitest 104/104 PASS, tsc 0 Errors, Vite 빌드 성공, `npm audit` prod 0/dev 6, 데스크톱·1280×800·360×800 브라우저 플로우. 실제 모바일 실기기·iOS·완전 오프라인은 미실행 또는 제한
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-07--v140-전면-품질성능안정성-검토-및-dev-개선-업무-발주)
+
+- **TASK-PM-04** — v1.4.0 버전 표기 정렬 (완료일: 2026-11-08)
+  - 핵심 결과: `package.json`·`package-lock.json` 버전을 `1.4.0`으로 정렬
+  - 검증 범위: `npm test` 104/104 PASS, `npm run build` 성공, 실행 출력에서 `sliding-block-puzzle@1.4.0` 확인
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-04--v140-버전-표기-정렬)
+
+- **TASK-PM-03** — Node.js 검증 환경 연결 및 테스트·빌드 실측 (완료일: 2026-11-08)
+  - 핵심 결과: WebStorm 번들 Node.js 26.13.0 연결, Vitest 14개 파일/104개 케이스 PASS, Vite 6.4.3 빌드 성공
+  - 검증 범위: `npm test`(Node 26 `--localstorage-file` 조건), `npm run build`, `dist` 산출물 3종 확인. 브라우저·모바일 수동 검증은 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-03--nodejs-검증-환경-연결-및-테스트빌드-실측)
+
+- **TASK-PM-02** — FEATURES.md v1.4.0 기능 카탈로그 작성 (완료일: 2026-11-08)
+  - 핵심 결과: 16개 도메인/27개 기능 항목, v1.4.0 Changelog 및 검증 기준 등록
+  - 검증 범위: 실제 소스 대조 및 문서 경로·버전 표기 확인
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-02--featuresmd-v140-기능-카탈로그-작성)
+
+---
+
+## 4. Phase Archives (Phase별 보관 목록)
+
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정)

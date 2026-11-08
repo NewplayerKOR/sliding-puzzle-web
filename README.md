@@ -2,7 +2,7 @@
 
 * **참여자**: NewplayerKOR
 * **기술 스택**: React 19, TypeScript, Vite
-* **📌 개발/QA 세션 진입 시**: [PROJECT_GUIDE.md](./PROJECT_GUIDE.md) (통합 참고 문서)를 먼저 읽으세요.
+* **📌 개발/QA 세션 진입 시**: [AGENTS.md](./root/AGENTS.md)와 [TASKS.md](./root/TASKS.md)를 먼저 읽으세요.
 
 React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이딩 퍼즐(N-Puzzle) 웹 애플리케이션입니다. 브라우저 표준 API(Canvas API, Web Audio API, Web Worker, Service Worker)를 활용하여 별도 백엔드 없이 모든 기능이 동작합니다.
 
@@ -101,7 +101,7 @@ npm test
 
 | 항목 | 도구 | 대상 | 결과 |
 | :--- | :--- | :--- | :---: |
-| **유닛 / 통합 테스트** | Vitest | 14개 테스트 파일 (71개 테스트 케이스) | **71 / 71 Passed** |
+| **유닛 / 통합 테스트** | Vitest | 14개 테스트 파일 (104개 테스트 케이스) | **104 / 104 Passed** |
 | **타입 검사** | TypeScript (`tsc --noEmit`) | 전체 소스코드 | **0 Errors** |
 | **프로덕션 빌드** | Vite | 번들링 및 에셋 압축 | **정상 생성** |
 
@@ -110,7 +110,9 @@ npm test
 ## 7. 디렉토리 구조 (Directory Structure)
 
 ```
-sliding-block-puzzle/
+sliding-puzzle-web/
+├── root/                    # 프로젝트 거버넌스 (AGENTS.md, TASKS.md, FEATURES.md)
+├── roles/                   # 역할별 행동 수칙 (PM, DEV, QA_DEVOPS)
 ├── public/                  # 정적 에셋 (아이콘, 오디오, 테마 텍스처, PWA 매니페스트, sw.js)
 ├── src/
 │   ├── components/          # React 컴포넌트 (Board, Controls, Modal, Title 등)
@@ -122,10 +124,6 @@ sliding-block-puzzle/
 │   ├── workers/             # A* 탐색 Web Worker (solver.worker.ts)
 │   ├── App.tsx              # 메인 애플리케이션 컴포넌트
 │   └── main.tsx             # 진입점
-├── docs/                    # 프로젝트 명세서 및 기술 백서
-│   ├── PRD.md               # 요구사항 정의서
-│   ├── MILESTONES.md        # 마일스톤
-│   ├── ROLES.md             # 역할 정의서
-│   └── WRITER/              # 기술 백서 (PROJECT_TECHNICAL_WHITE_PAPER.md)
+├── scripts/                 # 에셋 생성·가공용 Node 스크립트
 └── package.json             # 프로젝트 메타데이터 및 의존성
 ```
