@@ -27,21 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-23 — 업적 토스트 다중 달성 큐 및 메타데이터 병합 수정
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: 한 번의 승리로 여러 업적이 달성돼도 모두 순차 표시하고, 저장된 업적 데이터가 최신 정의를 덮어쓰지 않게 한다.
-- **대상 파일**: `src/components/Achievement/AchievementToast.tsx`, `src/utils/achievementManager.ts`, `src/utils/achievementData.ts`, 관련 테스트
-- **재현/증거**: 3x3 승리에서 `first_victory`, `speed_demon`, `purist_no_undo` 3건이 동시에 잠금 해제됐지만 토스트는 마지막 `purist_no_undo` 1건만 표시됨. `getStoredAchievements`가 `{ ...init, ...found }` 순서로 병합해 저장된 옛 제목·설명이 최신 정의를 덮어씀.
-- **DoD**:
-  - 다중 달성 시 큐 또는 통합 토스트로 모든 업적 표시, 타이머 정리
-  - 정적 메타데이터는 최신 정의를 사용하고 `unlockedAt`·`progress`만 저장값 유지
-  - 다중 달성·저장 데이터 병합 테스트 추가
-  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
-- **선행 조건**: 없음
-
 #### [ ] TASK-DEV-24 — LocalStorage 접근·스키마 방어
 
 - **Phase**: 01
@@ -85,6 +70,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-23** — 업적 토스트 다중 달성 큐 및 메타데이터 병합 수정 (완료일: 2026-11-08)
+  - 핵심 결과: 업적 알림을 큐에 보관해 한 번의 승리로 여러 업적이 달성돼도 4.5초 간격으로 모두 순차 표시하고, 표시 시간 종료·언마운트 시 타이머를 정리. 효과음은 각 토스트가 표시될 때 재생. `getStoredAchievements`는 최신 정적 메타데이터를 쓰고 저장된 `unlockedAt`·`progress`만 유지하며, 초기 정의를 직접 변경하지 않도록 복사본 반환
+  - 검증 범위: Vitest 26개 파일/161개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 데스크톱 Chromium에서 3건 동시 달성 시 `first_victory`→`speed_demon`→`purist_no_undo` 순차 표시·14초 후 소멸·콘솔 오류 0건, 옛 메타데이터 저장값 병합 시 최신 제목·아이콘 유지와 `unlockedAt`·`progress` 보존 확인. 실제 모바일 실기기·스크린리더는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-23--업적-토스트-다중-달성-큐-및-메타데이터-병합-수정)
+
 - **TASK-DEV-22** — BGM·이미지 에셋 경량화 및 초기 로딩 최적화 (완료일: 2026-11-08)
   - 핵심 결과: BGM 4트랙을 192kbps MP3에서 96kbps MP3로 변환하고 원본 `.wav`를 배포에서 제외. 최초 로드에는 코어 이미지+현재 테마+현재 BGM만 로드하고 나머지 테마는 테마 모달에서 지연 로드. 스프라이트·아이콘을 팔레트 PNG로 압축(3.59MB→0.52MB). SW 프리캐시를 필수 셸·코어 UI·기본 테마 30건/1.31MB로 축소하고 현재 BGM은 206 Range 응답 시 전체 파일을 런타임 캐시
   - 검증 범위: Vitest 25개 파일/156개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. dist 20.65→11.04MB, 초기 동일 출처 decodedBodySize 9,222,220→2,716,771바이트(-70.5%), BGM 13.05→6.52MiB. 서브패스 오프라인 재로드·현재 테마/BGM 캐시·미사용 테마 502·테마 모달 지연 로드 확인. 실제 모바일 실기기·Safari/Firefox·청취 품질 평가는 미실행
@@ -105,13 +95,8 @@
   - 검증 범위: Vitest 20개 파일/134개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium Lighthouse 접근성 타이틀·게임·테마 모달·BGM 모달 1.0. 실제 모바일 실기기·스크린리더 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-19--aria-구조색-대비확대-허용접근성-라벨-정비)
 
-- **TASK-DEV-18** — 모달 포커스 트랩 및 전역 키보드 입력 충돌 해결 (완료일: 2026-11-08)
-  - 핵심 결과: 공통 `useModalFocusTrap` Hook으로 8종 모달의 초기 포커스·Tab/Shift+Tab 순환·닫기 후 포커스 복원을 처리하고, 모달 열림 동안 배경 `.app-content`를 `inert`·`aria-hidden` 처리. 보드는 모달 열림 중과 `SELECT`·`INPUT`·`TEXTAREA` 포커스 시 키 입력을 무시
-  - 검증 범위: Vitest 19개 파일/130개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 테마·BGM·커스텀 이미지·승리 모달 포커스 순환과 보드·언어 선택 키 입력 차단 확인. 실제 모바일 실기기·스크린리더는 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-18--모달-포커스-트랩-및-전역-키보드-입력-충돌-해결)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합)

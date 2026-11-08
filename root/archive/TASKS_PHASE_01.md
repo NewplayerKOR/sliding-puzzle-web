@@ -717,3 +717,45 @@
   - 오프라인: 서버 중단 후 재로드해도 타이틀이 캐시에서 렌더링됨. `theme_nature.png` 200, `theme_animal.png` 502(미사용 테마), 현재 BGM `bgm_jazz_cafe.mp3` 200/2,173,327바이트와 메타데이터 181.1초 로드, 미사용 `bgm_zen_nature.mp3`는 오류. 오프라인에서 타이틀→테마 모달→게임 시작이 동작하고 현재 테마 보드가 표시됨. 미캐시 테마 썸네일과 테마 동기화 BGM은 502 콘솔 오류가 발생하는 지연 로드 한계를 확인함.
 - **미실행**: 실제 모바일 실기기·iOS Safari·Android Chrome에서의 초기 로딩·오프라인 재생, Safari/Firefox의 Range 오디오 캐시 동작, 96kbps BGM의 주관적 청취 품질, 실제 정적 호스팅(GitHub Pages 등)의 Range·캐시 헤더 동작은 확인하지 않았음. 테마 이미지 WebP 전환과 미캐시 테마의 오프라인 placeholder UX는 이번 범위에서 제외함.
 - **증거**: `public/assets/audio/bgm_chill.mp3`, `bgm_zen_nature.mp3`, `bgm_cyber_synth.mp3`, `bgm_jazz_cafe.mp3`, 삭제된 `public/assets/audio/bgm_*.wav`, `public/assets/sprites/*.png`, `public/assets/icons/*.png`, `src/utils/audioManager.ts`, `src/utils/assetPreloader.ts`, `src/hooks/useAssetPreloader.ts`, `src/utils/assetPreloader.test.ts`, `src/hooks/useAssetPreloader.test.tsx`, `src/utils/audioManager.test.ts`, `src/utils/serviceWorkerScript.test.ts`, `public/sw.js`, `index.html`, `src/App.tsx`, 터미널 실행 결과, 브라우저 리소스 타이밍·캐시·오프라인 측정 결과
+
+---
+
+## TASK-DEV-23 — 업적 토스트 다중 달성 큐 및 메타데이터 병합 수정
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 한 번의 승리로 여러 업적이 달성돼도 모두 순차 표시하고, 저장된 업적 데이터가 최신 정의를 덮어쓰지 않게 한다.
+- **대상 파일**: `src/components/Achievement/AchievementToast.tsx`, `src/utils/achievementManager.ts`, `src/utils/achievementData.ts`, 관련 테스트
+- **재현/증거**: 3x3 승리에서 `first_victory`, `speed_demon`, `purist_no_undo` 3건이 동시에 잠금 해제됐지만 토스트는 마지막 `purist_no_undo` 1건만 표시됨. `getStoredAchievements`가 `{ ...init, ...found }` 순서로 병합해 저장된 옛 제목·설명이 최신 정의를 덮어씀.
+- **완료 기준(DoD)**:
+  - 다중 달성 시 큐 또는 통합 토스트로 모든 업적 표시, 타이머 정리
+  - 정적 메타데이터는 최신 정의를 사용하고 `unlockedAt`·`progress`만 저장값 유지
+  - 다중 달성·저장 데이터 병합 테스트 추가
+  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
+
+### 진행 결과
+
+- `AchievementToast`가 업적 알림을 큐에 보관하고 큐의 첫 항목만 표시하도록 변경함. 기존에는 동기적으로 3건이 알림되면서 `current`가 마지막 항목으로 덮어써져 1건만 보였음.
+- 각 토스트는 4.5초 표시 후 큐에서 제거되어 다음 업적으로 넘어가며, 표시 시간 종료·언마운트·다음 항목 전환 시 `clearTimeout`으로 타이머를 정리함. `key={current.id}`로 항목마다 슬라이드 애니메이션이 다시 재생되도록 함.
+- 업적 효과음은 기존처럼 알림 시점이 아니라 각 토스트가 실제 표시될 때 `audioManager.playSfx('victory')`로 1회씩 재생하도록 이동함. 3건 동시 달성 시 효과음 3개가 겹쳐 재생되지 않음.
+- `getStoredAchievements`의 `{ ...init, ...found }` 병합은 v1.0.0 초기 코드에 있었으나 TASK-DEV-15 커밋 `b428458`에서 이미 최신 정적 메타데이터 + 저장된 `unlockedAt`·`progress` 구조로 수정돼 있었음. 이번 작업에서는 현재 동작을 회귀 테스트로 고정하고, 저장 데이터가 없을 때 `INITIAL_ACHIEVEMENTS` 원본을 직접 반환해 달성 처리 중 정의가 변경되던 경로를 `cloneInitialAchievements()` 복사본 반환으로 보강함.
+- `achievementData.ts`는 12종 업적의 최신 제목·설명·아이콘 키를 이미 보유하고 있어 변경하지 않음.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - `npm run dev` 개발 서버의 데스크톱 Chromium에서 `checkGameCompletionAchievements()`로 3x3·25초·Undo 0회 승리를 재현하고 `.toast-title`을 1초·5초·9.5초·14초 시점에 관찰
+  - 같은 브라우저에서 옛 제목·설명·아이콘과 알 수 없는 ID를 `sliding_puzzle_achievements`에 저장한 뒤 `getStoredAchievements()` 결과 확인
+- **결과**:
+  - `npm test`: 26개 파일/161개 테스트 PASS. `AchievementToast.test.tsx` 2건 신규, `achievementManager.test.ts` 3건 추가(알림 순서, 메타데이터 병합, 초기 정의 불변).
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - 브라우저 큐: 3건 동시 달성 시 1초 시점 `첫 승리의 기쁨`, 5초 시점 `스피드 데몬`, 9.5초 시점 `완벽한 직관 (No Undo)`가 각각 1개 컨테이너로 표시되고 14초 시점에 모두 사라짐. 콘솔 error 0건.
+  - 브라우저 메타데이터 병합: 저장된 옛 `titleKey`·`descriptionKey`·`iconName`을 무시하고 `achFirstVictoryTitle`·`achFirstVictoryDesc`·`Trophy`, `achStarCollectorTitle`·`Star`를 사용함. 저장된 `unlockedAt`(`2025-01-02T03:04:05.000Z`)과 `progress`(7, 2)는 유지하고 `maxProgress`는 최신 정의(3)를 사용함. 알 수 없는 ID는 12건 목록에 추가되지 않음.
+- **미실행**: 실제 모바일 실기기·iOS Safari·Android Chrome과 스크린리더에서 연속 토스트의 시각·청각 알림, 백그라운드 탭 스로틀링 중 타이머 동작은 확인하지 않았음. 여러 탭이 동시에 업적을 갱신하는 경합과 토스트 표시 중 언어 전환은 이번 범위에서 제외함.
+- **증거**: `src/components/Achievement/AchievementToast.tsx`, `src/components/Achievement/AchievementToast.test.tsx`, `src/utils/achievementManager.ts`, `src/utils/achievementManager.test.ts`, `src/utils/achievementData.ts`, 터미널 실행 결과, 브라우저 토스트 타이틀 시계열·메타데이터 병합 측정 결과
