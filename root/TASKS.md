@@ -27,25 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-20 — 360px 모바일·1화면 레이아웃 및 터치 처리 정비
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: 360px 폭에서 상단 컨트롤이 잘리지 않게 하고, 360×800·1280×800에서 핵심 플레이 화면이 한 화면에 들어오도록 레이아웃을 조정한다.
-- **대상 파일**: `src/components/Title/TitleScreen.css`, `src/components/Header/Header.css`, `src/styles/App.css`, `src/components/Board/PuzzleBoard.css`, `src/components/Board/PuzzleBoard.tsx`
-- **재현/증거**:
-  - 360×800에서 타이틀 상단 바 콘텐츠 폭 392px > 컨테이너 337px, 스트릭 배지 53×81px·업적 배지 51×81px로 세로 줄바꿈, 오디오 컨트롤이 뷰포트 밖으로 잘림.
-  - 같은 뷰포트에서 게임 화면 `bodyScrollHeight` 925px, 보드 하단 812px로 796px 뷰포트를 초과해 스크롤 필요.
-  - 1280×800에서도 게임 화면 `scrollHeight` 959px로 "1화면 레이아웃" 미충족.
-  - 스와이프 시 React passive `touchmove`에서 `preventDefault` 실패 콘솔 오류가 발생(현재는 CSS `touch-action`이 일부 보완).
-- **DoD**:
-  - 360×640·360×800·1280×800에서 가로 클리핑 0, 상단 컨트롤·배지 판독 가능
-  - 360×800에서 보드와 핵심 컨트롤이 스크롤 없이 보이도록 조정하거나, 불가피하면 PM과 FEATURES 문구 조정
-  - 터치 스크롤 차단을 non-passive 리스너 또는 CSS로 일관 처리하고 콘솔 오류 제거
-  - 뷰포트별 스크린샷과 측정값 기록
-- **선행 조건**: 없음
-
 #### [ ] TASK-DEV-21 — PWA 매니페스트 아이콘·Service Worker 폴백/업데이트 안정화
 
 - **Phase**: 01
@@ -136,6 +117,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-20** — 360px 모바일·1화면 레이아웃 및 터치 처리 정비 (완료일: 2026-11-08)
+  - 핵심 결과: 헤더 클래스 불일치를 바로잡고 360px에서 타이틀 상단 바를 2줄로 배치해 배지·오디오 컨트롤 잘림 해소. 400px 이하 툴바를 4열 아이콘으로 압축하고 보드·여백을 높이에 맞춰 축소해 360×800·1280×800 게임 화면을 스크롤 없이 배치. 터치 스크롤 차단을 non-passive 리스너로 전환
+  - 검증 범위: Vitest 21개 파일/136개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 360×640·360×800·1280×800 iframe 뷰포트 측정과 스크린샷 4종, 데스크톱 Chromium 터치 이벤트·콘솔 오류 0건 확인. 실제 모바일 실기기·iOS Safari는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-20--360px-모바일1화면-레이아웃-및-터치-처리-정비)
+
 - **TASK-DEV-19** — ARIA 구조·색 대비·확대 허용·접근성 라벨 정비 (완료일: 2026-11-08)
   - 핵심 결과: 보드를 `role="group"`으로 단순화하고 타이틀에 `main` landmark 추가, 모드 카드 중첩 버튼 역할 제거, 크기 pill `aria-pressed` 추가. `maximum-scale=5.0` 확대 허용, WCAG AA 대비 보정, BGM/SFX 라벨·alt 4개 국어화. Lighthouse 접근성 타이틀·게임 1.0
   - 검증 범위: Vitest 20개 파일/134개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium Lighthouse 접근성 타이틀·게임·테마 모달·BGM 모달 1.0. 실제 모바일 실기기·스크린리더 미실행
@@ -156,13 +142,8 @@
   - 검증 범위: Vitest 17개 파일/123개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 드래그·보존·테마 변경·형식/용량/quota 오류 확인. 실제 모바일 실기기·OS별 파일 드롭은 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-16--커스텀-이미지-보존드래그-앤-드롭업로드-검증-정비)
 
-- **TASK-DEV-15** — KO/EN/JA/ZH 잔여 하드코딩 문자열 및 `html lang` 정리 (완료일: 2026-11-08)
-  - 핵심 결과: 테마·업적·BGM·일일·공유 카드·단위·접근성 라벨을 번역 키로 이관하고 `html lang`을 선택 언어와 동기화. EN 전 화면과 JA/ZH 핵심 화면에서 한국어 잔존 0건 확인
-  - 검증 범위: Vitest 15개 파일/115개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium EN 전 화면·JA/ZH 핵심 화면 및 공유 카드 PNG 확인. 실제 모바일 실기기·OS 언어 자동 감지는 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-15--koenjazh-잔여-하드코딩-문자열-및-html-lang-정리)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리)

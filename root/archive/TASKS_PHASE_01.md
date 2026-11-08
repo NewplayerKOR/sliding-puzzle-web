@@ -568,3 +568,49 @@
   - 브라우저 콘솔 error 0건.
 - **미실행**: 실제 모바일 실기기와 스크린리더(NVDA·VoiceOver) 검증은 수행하지 않음. Firefox·Safari의 landmark·확대 동작 차이는 확인하지 않았고 데스크톱 Chromium에서만 확인함. JA/ZH 화면과 Time Attack·이동 제한의 긴급 상태는 Lighthouse로 각각 감사하지 않았고, Daily·Achievement·CustomImage·Win·GameOver 모달도 개별 Lighthouse 감사 대상에서 제외함(테마·BGM 모달만 확인).
 - **증거**: `index.html`, `src/components/Board/PuzzleBoard.tsx`, `src/components/Title/TitleScreen.tsx`, `src/components/Title/TitleScreen.css`, `src/components/Header/Header.tsx`, `src/components/Header/Header.css`, `src/components/Controls/Controls.css`, `src/styles/index.css`, `src/styles/App.css`, `src/App.accessibility.test.tsx`, Lighthouse JSON/HTML 보고서, 브라우저 DOM 확인 결과
+
+---
+
+## TASK-DEV-20 — 360px 모바일·1화면 레이아웃 및 터치 처리 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 360px 폭에서 상단 컨트롤이 잘리지 않게 하고, 360×800·1280×800에서 핵심 플레이 화면이 한 화면에 들어오도록 레이아웃을 조정한다.
+- **완료 기준(DoD)**:
+  - 360×640·360×800·1280×800에서 가로 클리핑 0, 상단 컨트롤·배지 판독 가능
+  - 360×800에서 보드와 핵심 컨트롤이 스크롤 없이 보이도록 조정하거나, 불가피하면 PM과 FEATURES 문구 조정
+  - 터치 스크롤 차단을 non-passive 리스너 또는 CSS로 일관 처리하고 콘솔 오류 제거
+  - 뷰포트별 스크린샷과 측정값 기록
+
+### 진행 결과
+
+- `Header`의 클래스명이 CSS와 어긋나 상단 컨트롤이 스타일 없이 세로로 쌓이던 문제를 수정함. `btn-home-return`→`home-btn`, `header-top-right`→`header-actions-right`, `daily-streak-btn`→`daily-streak-badge-btn`으로 맞춰 홈·스트릭·언어·오디오 컨트롤이 한 줄 flex 레이아웃을 사용하도록 복구함.
+- 420px 이하에서 타이틀 상단 바를 2줄로 배치하고 좌우 그룹을 중앙 정렬함. 배지에 `white-space: nowrap`을 적용해 스트릭·업적 배지가 세로로 쪼개지지 않게 함.
+- 400px 이하에서 인게임 기능·보조 툴바를 4열 아이콘 전용으로 전환하고 라벨을 숨김. 아이콘만 남아도 접근성 이름이 유지되도록 각 버튼에 `aria-label`을 추가함. 동시에 컨트롤 간격과 버튼 높이를 줄임.
+- 보드 폭을 `calc(100dvh - 470px)` 기반으로 계산해 800px 높이에서 330px로 제한하고, 380px 이하에서는 최대 310px로 축소함. 850px 이하·481px 이상에서는 앱 패딩·게임 간격·카드 패딩을 압축함. 380px 이하에서는 게임 카드 패딩과 간격을 추가로 줄임.
+- `PuzzleBoard`의 React `onTouchMove`를 제거하고 보드 DOM에 `{ passive: false }` 네이티브 `touchmove` 리스너를 등록해 스와이프 중 스크롤·Pull-to-refresh 차단이 콘솔 오류 없이 동작하도록 변경함.
+- `src/components/Board/PuzzleBoard.test.tsx`를 추가해 취소 가능한 `touchmove`가 실제로 `preventDefault`되고, `touchend` 스와이프가 방향 이동 콜백을 호출하는지 검증함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - Vite dev 서버(127.0.0.1:5173)에서 Service Worker를 unregister한 뒤 데스크톱 Chromium에 360×640·360×800·1280×800 iframe 뷰포트를 만들어 CSS viewport·`scrollWidth`·`bodyScrollHeight`·요소 위치를 측정
+- **결과**:
+  - `npm test`: 21개 파일/136개 테스트 PASS. 신규 `PuzzleBoard.test.tsx` 2건 포함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - 수정 전 360×800: 타이틀 상단 바 `scrollWidth` 392px > 컨테이너 341px, 스트릭 배지 53×81px·업적 배지 51×81px, 오디오 컨트롤 우측 398px로 뷰포트 밖. 게임 `bodyScrollHeight` 929px, 보드 하단 816px.
+  - 수정 전 1280×800: 게임 `bodyScrollHeight` 959px, 보드 하단 848px.
+  - 수정 후 360×800: 타이틀 상단 바 `scrollWidth` 341px = 폭 341px, 스트릭 배지 97×30px·업적 배지 86×30px, 오디오 컨트롤 우측 314px. 게임 `bodyScrollHeight` 800px, `scrollWidth` 360px = `clientWidth` 360px, 보드 310×310px(하단 653px), 보드 안내 하단 696px, 푸터 하단 792px.
+  - 수정 후 360×640: 타이틀 상단 바 341px/341px, 배지 높이 30px. 게임 `scrollWidth` 354px = `clientWidth` 354px로 가로 클리핑 없음, 보드 282×282px. 세로 `bodyScrollHeight` 731px로 스크롤이 필요하지만 360×640의 DoD는 가로 클리핑·상단 컨트롤 판독만 요구하므로 충족함.
+  - 수정 후 1280×800: 타이틀 `scrollWidth` 1280px = `clientWidth`, 상단 바 600px. 게임 `bodyScrollHeight` 800px, `scrollWidth` 1280px = `clientWidth`, 보드 330×330px(하단 679px), 보드 안내 하단 706px, 푸터 하단 792px.
+  - 터치: 보드에 취소 가능한 `touchmove`를 전달했을 때 `defaultPrevented=true`, `dispatchEvent` 반환값 `false`로 non-passive 차단이 동작함. 스와이프로 타일이 실제 이동함. 깨끗한 탭에서 콘솔 error 0건.
+  - Lighthouse 접근성은 수정 후에도 타이틀·게임 1.0을 유지함.
+  - 스크린샷: [타이틀 360×800](./assets/task-dev-20/title-360x800.webp), [게임 360×800](./assets/task-dev-20/game-360x800.webp), [게임 360×640](./assets/task-dev-20/game-360x640.webp), [게임 1280×800](./assets/task-dev-20/game-1280x800.webp). 1280×800은 1280×800 iframe을 0.72배로 축소 촬영한 뒤 원해상도로 복원함.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 실제 손가락 스와이프·Pull-to-refresh는 확인하지 않았음. Firefox의 `dvh`·터치 리스너 동작도 미확인. 360×640은 설계상 세로 스크롤을 허용했고 1화면 요구 대상이 아님.
+- **증거**: `src/components/Header/Header.tsx`, `src/components/Header/Header.css`, `src/components/Title/TitleScreen.css`, `src/components/Controls/Controls.tsx`, `src/components/Controls/Controls.css`, `src/components/Board/PuzzleBoard.tsx`, `src/components/Board/PuzzleBoard.css`, `src/components/Board/PuzzleBoard.test.tsx`, `src/styles/App.css`, `root/archive/assets/task-dev-20/*.webp`, 터미널 실행 결과, 브라우저 iframe 측정·스크린샷 결과
