@@ -67,6 +67,9 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
+  /* 줄바꿈: 한국어는 단어 단위(keep-all), 그 외 언어는 기본 규칙을 사용함 */
+  --text-word-break: normal;
+
   /* Spacing: 4px 기준 */
   --space-0: 0;
   --space-1: 4px;
@@ -120,6 +123,10 @@
   --layout-page-max: 960px;
   --gutter-inline: var(--space-4);
   --gutter-block: var(--space-6);
+}
+
+:root:lang(ko) {
+  --text-word-break: keep-all;
 }
 
 /* Global Reset */

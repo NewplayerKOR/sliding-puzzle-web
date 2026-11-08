@@ -28,16 +28,22 @@
 
 .custom-img-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: var(--space-2);
   flex-shrink: 0;
 }
 
 .custom-img-title {
+  flex: 1;
+  min-width: 0;
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
   color: var(--color-ink);
   letter-spacing: -0.01em;
+  line-height: var(--line-height-tight);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .custom-img-close-btn {
@@ -47,6 +53,7 @@
   cursor: pointer;
   width: 36px;
   height: 36px;
+  flex-shrink: 0;
   border-radius: var(--radius-1);
   display: flex;
   align-items: center;
@@ -65,6 +72,8 @@
   color: var(--color-graphite);
   line-height: var(--line-height-normal);
   margin: calc(-1 * var(--space-1)) 0 var(--space-1);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 /* Upload Dropzone */
@@ -118,6 +127,9 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-graphite);
+  line-height: var(--line-height-normal);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 /* Cropper */
@@ -242,6 +254,9 @@
   .custom-img-modal-content {
     padding: var(--space-4);
     gap: var(--space-2);
+  }
+  .custom-img-title {
+    font-size: var(--font-size-lg);
   }
   .upload-dropzone {
     min-height: 180px;

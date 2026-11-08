@@ -28,15 +28,18 @@
 
 .daily-modal-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: var(--space-2);
   flex-shrink: 0;
 }
 
 .daily-title-group {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
 }
 
 .daily-flame-icon {
@@ -49,6 +52,8 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-ink);
   letter-spacing: -0.01em;
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .daily-close-btn {
@@ -58,6 +63,7 @@
   cursor: pointer;
   width: 36px;
   height: 36px;
+  flex-shrink: 0;
   border-radius: var(--radius-1);
   display: flex;
   align-items: center;
@@ -76,6 +82,8 @@
   color: var(--color-graphite);
   line-height: var(--line-height-normal);
   margin: calc(-1 * var(--space-1)) 0 var(--space-1);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 /* Streak Cards */
@@ -87,7 +95,7 @@
 
 .streak-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-2);
   padding: var(--space-2);
   border-radius: var(--radius-1);
@@ -122,12 +130,16 @@
 .streak-info {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .streak-label {
   font-size: var(--font-size-xs);
   color: var(--color-graphite);
   font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-snug);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .streak-value {
@@ -151,10 +163,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--space-2);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-charcoal);
   margin-bottom: var(--space-2);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .calendar-count {
@@ -218,6 +233,7 @@
   justify-content: center;
   gap: var(--space-1);
   min-height: 44px;
+  padding: 0 var(--space-2);
   border-radius: var(--radius-1);
   background: var(--color-signal-600);
   color: var(--color-white);
@@ -226,6 +242,7 @@
   border: 1px solid var(--color-signal-600);
   cursor: pointer;
   box-shadow: none;
+  word-break: var(--text-word-break);
   transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
@@ -242,4 +259,21 @@
 .btn-daily-start.completed-btn:hover {
   background: var(--color-success-strong);
   border-color: var(--color-success-strong);
+}
+
+@media (max-width: 480px) {
+  .daily-modal-content {
+    padding: var(--space-4);
+    gap: var(--space-2);
+  }
+  .daily-modal-title {
+    font-size: var(--font-size-lg);
+  }
+  .streak-card {
+    gap: var(--space-1);
+  }
+  .streak-icon-box {
+    width: 28px;
+    height: 28px;
+  }
 }

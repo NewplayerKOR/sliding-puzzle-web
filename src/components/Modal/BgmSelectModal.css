@@ -29,15 +29,22 @@
 
 .bgm-modal-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: var(--space-2);
   flex-shrink: 0;
 }
 
 .bgm-title-group {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+
+.bgm-title-group > div {
+  min-width: 0;
 }
 
 .bgm-header-icon-box {
@@ -58,12 +65,18 @@
   color: var(--color-ink);
   line-height: var(--line-height-tight);
   letter-spacing: -0.01em;
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .bgm-modal-subtitle {
+  display: block;
   font-size: var(--font-size-xs);
   color: var(--color-graphite);
   font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-snug);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .bgm-close-btn {
@@ -72,6 +85,7 @@
   justify-content: center;
   width: 36px;
   height: 36px;
+  flex-shrink: 0;
   border-radius: var(--radius-1);
   background: transparent;
   border: 1px solid transparent;
@@ -105,6 +119,8 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   color: var(--color-charcoal);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .bgm-volume-controls {
@@ -182,6 +198,7 @@
   margin-top: 2px;
   width: 16px;
   height: 16px;
+  flex-shrink: 0;
   cursor: pointer;
   accent-color: var(--color-signal-600);
 }
@@ -190,15 +207,21 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
+  min-width: 0;
 }
 
 .sync-title {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 4px;
+  min-width: 0;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   color: var(--color-charcoal);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .sync-icon {
@@ -210,6 +233,8 @@
   font-size: var(--font-size-xs);
   color: var(--color-graphite);
   line-height: var(--line-height-snug);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 /* Playlist Section */
@@ -224,6 +249,8 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-charcoal);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .bgm-track-list {
@@ -316,25 +343,29 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  flex: 1;
   min-width: 0;
 }
 
 .track-title-row {
   display: flex;
-  align-items: center;
-  gap: var(--space-1);
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 2px var(--space-1);
 }
 
 .track-name {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   color: var(--color-charcoal);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: var(--line-height-snug);
+  word-break: var(--text-word-break);
+  overflow-wrap: anywhere;
 }
 
 .track-genre-badge {
+  flex-shrink: 0;
+  max-width: 100%;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   padding: 0 4px;
@@ -342,16 +373,22 @@
   background-color: transparent;
   border: 1px solid var(--color-concrete);
   color: var(--color-graphite);
-  white-space: nowrap;
+  white-space: normal;
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
+  line-height: var(--line-height-snug);
 }
 
 .track-description {
   font-size: var(--font-size-xs);
   color: var(--color-graphite);
   line-height: var(--line-height-snug);
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
 }
 
 .track-action-state {
@@ -388,7 +425,20 @@
     padding: var(--space-4);
     gap: var(--space-2);
   }
+  .bgm-modal-title {
+    font-size: var(--font-size-lg);
+  }
   .track-description {
     display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .bgm-track-card {
+    padding: var(--space-2);
+    gap: var(--space-1);
+  }
+  .track-left-info {
+    gap: var(--space-1);
   }
 }
