@@ -113,6 +113,9 @@ export interface Translations {
   achievementsSubtitle: string;
   pwaInstallPrompt: string;
   pwaInstallBtn: string;
+  pwaUpdateAvailable: string;
+  pwaUpdateNow: string;
+  pwaUpdateLater: string;
   boardControlsGuide: string;
 
   // Common & Accessibility
@@ -366,6 +369,9 @@ export const translations: Record<Language, Translations> = {
     achievementsSubtitle: '퍼즐을 풀며 다양한 칭호와 배지를 수집해 보세요.',
     pwaInstallPrompt: '앱으로 설치하여 오프라인에서도 즐겨보세요!',
     pwaInstallBtn: '홈 화면에 설치',
+    pwaUpdateAvailable: '새 버전이 준비되었습니다. 지금 업데이트하면 최신 수정 사항이 적용됩니다.',
+    pwaUpdateNow: '지금 업데이트',
+    pwaUpdateLater: '나중에',
     boardControlsGuide: '💡 마우스 클릭, 터치 스와이프 또는 키보드 방향키(↑↓←→)로 조작할 수 있습니다.',
 
     languageSelect: '언어 선택',
@@ -606,6 +612,9 @@ export const translations: Record<Language, Translations> = {
     achievementsSubtitle: 'Earn badges and unlock titles as you master puzzles.',
     pwaInstallPrompt: 'Install as app to play offline anytime!',
     pwaInstallBtn: 'Install App',
+    pwaUpdateAvailable: 'A new version is ready. Update now to apply the latest fixes.',
+    pwaUpdateNow: 'Update now',
+    pwaUpdateLater: 'Later',
     boardControlsGuide: '💡 Use click, touch swipe, or arrow keys (↑↓←→) to move tiles.',
 
     languageSelect: 'Select language',
@@ -846,6 +855,9 @@ export const translations: Record<Language, Translations> = {
     achievementsSubtitle: 'パズルを解いて称号とバッジを集めよう。',
     pwaInstallPrompt: 'アプリとしてインストールしてオフラインでも楽しもう！',
     pwaInstallBtn: 'ホーム画面に追加',
+    pwaUpdateAvailable: '新しいバージョンの準備ができました。今すぐ更新すると最新の修正が適用されます。',
+    pwaUpdateNow: '今すぐ更新',
+    pwaUpdateLater: '後で',
     boardControlsGuide: '💡 クリック、スワイプ、または方向キー(↑↓←→)で操作できます。',
 
     languageSelect: '言語選択',
@@ -1086,6 +1098,9 @@ export const translations: Record<Language, Translations> = {
     achievementsSubtitle: '在解谜旅程中解锁荣誉称号与勋章。',
     pwaInstallPrompt: '添加至主屏幕，随时离线游玩！',
     pwaInstallBtn: '安装应用',
+    pwaUpdateAvailable: '新版本已就绪，立即更新即可应用最新修复。',
+    pwaUpdateNow: '立即更新',
+    pwaUpdateLater: '稍后',
     boardControlsGuide: '💡 支持鼠标点击、触控滑动或键盘方向键(↑↓←→)控制。',
 
     languageSelect: '选择语言',

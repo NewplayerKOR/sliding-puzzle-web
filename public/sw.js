@@ -1,4 +1,6 @@
-const CACHE_NAME = 'sliding-puzzle-v2.0';
+const CACHE_NAME = 'sliding-puzzle-v2.1';
+// 서브패스 배포에서도 동작하도록 SW 위치 기준으로 셸 URL을 계산함
+const INDEX_URL = new URL('./index.html', self.location.href).href;
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -19,6 +21,11 @@ const ASSETS_TO_CACHE = [
   './assets/sprites/sheet_ui_fx.png',
   './assets/sprites/ui_icons_spritesheet.png',
   './assets/sprites/fx_animations_spritesheet.png',
+  './assets/icons/icon-192.png',
+  './assets/icons/icon-512.png',
+  './assets/icons/icon-maskable-192.png',
+  './assets/icons/icon-maskable-512.png',
+  './assets/icons/apple-touch-icon.png',
   './assets/icons/badge_trophy.png',
   './assets/icons/icon_sound_on.png',
   './assets/icons/icon_sound_off.png',
@@ -34,62 +41,92 @@ const ASSETS_TO_CACHE = [
   './assets/icons/ui_empty_slot_glow.png',
 ];
 
-// Install: Pre-cache core shell & assets and activate immediately
+// addAll이 하나라도 실패하면 전체 프리캐시가 비므로 자산별로 재시도함
+async function precacheAssets() {
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    await cache.addAll(ASSETS_TO_CACHE);
+  } catch (err) {
+    console.warn('[SW] Precache addAll failed, caching assets individually:', err);
+    await Promise.all(
+      ASSETS_TO_CACHE.map(async (asset) => {
+        try {
+          await cache.add(asset);
+        } catch (assetErr) {
+          console.warn('[SW] Failed to cache asset:', asset, assetErr);
+        }
+      })
+    );
+  }
+}
+
+// Install: 셸과 자산을 프리캐시하되 새 버전은 사용자 확인 전까지 대기함
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE).catch((err) => {
-        console.warn('[SW] Cache addAll warning:', err);
-      });
-    })
-  );
-  self.skipWaiting();
+  event.waitUntil(precacheAssets());
 });
 
-// Activate: Purge all stale caches and claim clients immediately
+// Activate: 이전 버전 캐시를 정리하고 열린 클라이언트에 즉시 적용함
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            console.log('[SW] Purging outdated cache:', key);
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches
+      .keys()
+      .then((keys) => {
+        return Promise.all(
+          keys.map((key) => {
+            if (key !== CACHE_NAME) {
+              console.log('[SW] Purging outdated cache:', key);
+              return caches.delete(key);
+            }
+            return Promise.resolve();
+          })
+        );
+      })
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Fetch: Network First for Navigation/HTML, Cache First for hashed static assets
+// 업데이트 배너에서 사용자가 반영을 선택하면 대기 중인 워커를 활성화함
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
+async function cacheNavigationResponse(request, response) {
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    await cache.put(request, response.clone());
+    await cache.put(INDEX_URL, response.clone());
+  } catch (err) {
+    console.warn('[SW] Failed to cache navigation response:', err);
+  }
+}
+
+async function handleNavigation(request) {
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse && networkResponse.ok) {
+      await cacheNavigationResponse(request, networkResponse);
+      return networkResponse;
+    }
+    // 5xx·4xx 등 비정상 응답도 캐시된 셸로 폴백함
+    const cached = (await caches.match(INDEX_URL)) || (await caches.match('./'));
+    return cached || networkResponse;
+  } catch (err) {
+    const cached = (await caches.match(INDEX_URL)) || (await caches.match('./'));
+    return cached || Response.error();
+  }
+}
+
+// Fetch: Navigation은 Network First, 정적 자산은 Cache First
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
-  const isNavigation =
-    event.request.mode === 'navigate' ||
-    (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html'));
+  const accept = event.request.headers.get('accept') || '';
+  const isNavigation = event.request.mode === 'navigate' || accept.includes('text/html');
 
   if (isNavigation) {
-    // Network First Strategy for HTML / Navigation
-    event.respondWith(
-      fetch(event.request)
-        .then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseToCache);
-              cache.put('./index.html', responseToCache.clone());
-            });
-          }
-          return networkResponse;
-        })
-        .catch(() => {
-          // Offline fallback
-          return caches.match('./index.html').then((cached) => cached || caches.match('./'));
-        })
-    );
+    event.respondWith(handleNavigation(event.request));
     return;
   }
 

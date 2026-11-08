@@ -1,0 +1,94 @@
+.sw-update-banner {
+  position: fixed;
+  top: max(1rem, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1600;
+  width: calc(100% - 2rem);
+  max-width: 480px;
+  animation: swUpdateSlideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sw-update-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--primary-500);
+  box-shadow: var(--shadow-xl);
+}
+
+.sw-update-desc {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.sw-update-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.btn-sw-update {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: var(--primary-600);
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.65rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.btn-sw-update:hover {
+  background-color: var(--primary-700);
+}
+
+.btn-sw-dismiss {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes swUpdateSlideDown {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 400px) {
+  .sw-update-card {
+    gap: 0.5rem;
+    padding: 0.55rem 0.65rem;
+  }
+  .sw-update-desc {
+    font-size: 0.7rem;
+  }
+  .btn-sw-update span {
+    display: none;
+  }
+  .btn-sw-update {
+    padding: 0.4rem;
+  }
+}

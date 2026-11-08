@@ -14,6 +14,7 @@ import { GameOverModal } from './components/Modal/GameOverModal';
 import { BgmSelectModal } from './components/Modal/BgmSelectModal';
 import { AchievementToast } from './components/Achievement/AchievementToast';
 import { PwaInstallBanner } from './components/PWA/PwaInstallBanner';
+import { ServiceWorkerUpdateBanner } from './components/PWA/ServiceWorkerUpdateBanner';
 import { GameMode, ThemeId, Theme } from './types/theme';
 import { GameChallengeMode, GridSize } from './types/puzzle';
 import { getLocalizedTheme, DEFAULT_THEME_ID } from './utils/themeData';
@@ -565,6 +566,9 @@ export const App: React.FC = () => {
         {/* PWA 설치 배너 */}
         <PwaInstallBanner />
       </div>
+
+      {/* Service Worker 업데이트 안내 배너 */}
+      <ServiceWorkerUpdateBanner />
 
       {/* 완성본 미리보기 모달 */}
       <HintModal
