@@ -138,7 +138,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <img
                 src={!bgmMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
-                alt="BGM"
+                alt={t.bgm}
                 className="audio-icon-img"
               />
             </button>
@@ -152,7 +152,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <img
                 src={!sfxMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
-                alt="SFX"
+                alt={t.sfx}
                 className="audio-icon-img"
               />
               <span className="audio-btn-label">{t.sfx}</span>

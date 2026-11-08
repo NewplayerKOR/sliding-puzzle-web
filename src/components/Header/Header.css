@@ -61,13 +61,13 @@
 .locked-mode-badge.timeAttack {
   background-color: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.3);
-  color: #dc2626;
+  color: #b91c1c;
 }
 
 .locked-mode-badge.moveLimit {
   background-color: rgba(245, 158, 11, 0.1);
   border-color: rgba(245, 158, 11, 0.3);
-  color: #d97706;
+  color: #92400e;
 }
 
 .header-description {
@@ -120,7 +120,7 @@
   gap: 0.25rem;
   background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(249, 115, 22, 0.05));
   border: 1px solid rgba(249, 115, 22, 0.5);
-  color: #f97316;
+  color: #9a3412;
   font-size: 0.75rem;
   font-weight: 800;
   padding: 0.35rem 0.55rem;
@@ -349,7 +349,7 @@
 }
 
 .stat-card.urgent-time .stat-value {
-  color: #ef4444;
+  color: #b91c1c;
   font-weight: 900;
 }
 
@@ -359,7 +359,7 @@
 }
 
 .stat-card.urgent-limit .stat-value {
-  color: #f59e0b;
+  color: #92400e;
   font-weight: 800;
 }
 

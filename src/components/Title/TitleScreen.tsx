@@ -64,7 +64,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
   };
 
   return (
-    <div className="title-screen-container">
+    <main className="title-screen-container">
       {/* Top Utility Bar */}
       <div className="title-top-bar">
         <div className="title-top-left">
@@ -136,11 +136,11 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 toggleBgmMute();
               }}
               title={bgmMuted ? t.soundOn : t.soundOff}
-              aria-label="BGM"
+              aria-label={t.bgm}
             >
               <img
                 src={!bgmMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
-                alt="BGM"
+                alt={t.bgm}
                 className="title-audio-icon-img"
               />
             </button>
@@ -150,11 +150,11 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               className={`title-audio-btn ${!sfxMuted ? 'active' : 'muted'}`}
               onClick={toggleSfxMute}
               title={sfxMuted ? t.soundOn : t.soundOff}
-              aria-label="SFX"
+              aria-label={t.sfx}
             >
               <img
                 src={!sfxMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
-                alt="SFX"
+                alt={t.sfx}
                 className="title-audio-icon-img"
               />
               <span>{t.sfx}</span>
@@ -181,10 +181,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         <div
           className={`mode-card standard ${selectedMode === 'standard' ? 'selected' : ''}`}
           onClick={() => setSelectedMode('standard')}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMode('standard'); }}
-          aria-pressed={selectedMode === 'standard'}
         >
           <div className="mode-card-header">
             <div className="mode-icon-box standard">
@@ -198,12 +194,13 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
 
           <p className="mode-card-desc">{t.modeStandardDesc}</p>
 
-          <div className="mode-size-pills">
+          <div className="mode-size-pills" role="group" aria-label={t.difficultyLabel}>
             {([3, 4, 5] as GridSize[]).map((sz) => (
               <button
                 key={sz}
                 type="button"
                 className={`size-pill ${standardSize === sz ? 'active' : ''}`}
+                aria-pressed={standardSize === sz}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedMode('standard');
@@ -236,10 +233,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         <div
           className={`mode-card timeattack ${selectedMode === 'timeAttack' ? 'selected' : ''}`}
           onClick={() => setSelectedMode('timeAttack')}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMode('timeAttack'); }}
-          aria-pressed={selectedMode === 'timeAttack'}
         >
           <div className="mode-card-header">
             <div className="mode-icon-box timeattack">
@@ -253,12 +246,13 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
 
           <p className="mode-card-desc">{t.modeTimeAttackDesc}</p>
 
-          <div className="mode-size-pills">
+          <div className="mode-size-pills" role="group" aria-label={t.difficultyLabel}>
             {([3, 4, 5] as GridSize[]).map((sz) => (
               <button
                 key={sz}
                 type="button"
                 className={`size-pill ${timeAttackSize === sz ? 'active' : ''}`}
+                aria-pressed={timeAttackSize === sz}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedMode('timeAttack');
@@ -296,10 +290,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         <div
           className={`mode-card movelimit ${selectedMode === 'moveLimit' ? 'selected' : ''}`}
           onClick={() => setSelectedMode('moveLimit')}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMode('moveLimit'); }}
-          aria-pressed={selectedMode === 'moveLimit'}
         >
           <div className="mode-card-header">
             <div className="mode-icon-box movelimit">
@@ -313,12 +303,13 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
 
           <p className="mode-card-desc">{t.modeMoveLimitDesc}</p>
 
-          <div className="mode-size-pills">
+          <div className="mode-size-pills" role="group" aria-label={t.difficultyLabel}>
             {([3, 4, 5] as GridSize[]).map((sz) => (
               <button
                 key={sz}
                 type="button"
                 className={`size-pill ${moveLimitSize === sz ? 'active' : ''}`}
+                aria-pressed={moveLimitSize === sz}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedMode('moveLimit');
@@ -356,10 +347,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         <div
           className={`mode-card daily ${selectedMode === 'daily' ? 'selected' : ''}`}
           onClick={() => setSelectedMode('daily')}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setSelectedMode('daily'); }}
-          aria-pressed={selectedMode === 'daily'}
         >
           <div className="mode-card-header">
             <div className="mode-icon-box daily">
@@ -407,6 +394,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           <span>📸 {t.cropModalTitle}</span>
         </button>
       </div>
-    </div>
+    </main>
   );
 };

@@ -12,7 +12,7 @@
   --bg-body: hsl(220, 18%, 95%);
 
   --text-main: hsl(222, 47%, 11%);
-  --text-muted: hsl(215, 16%, 47%);
+  --text-muted: hsl(215, 20%, 42%);
   --text-subtle: hsl(215, 16%, 65%);
   --text-inverse: hsl(0, 0%, 100%);
 
@@ -120,7 +120,11 @@ button {
   -webkit-user-select: none;
 }
 
-button:focus-visible {
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible {
   outline: 2px solid var(--primary-500);
   outline-offset: 2px;
 }

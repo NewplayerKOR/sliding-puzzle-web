@@ -178,8 +178,9 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
-        role="grid"
+        role="group"
         aria-label={formatMessage(t.boardLabel, { size: gridSize })}
+        aria-describedby="board-controls-guide"
       >
         {/* Background slot grid for depth */}
         {Array.from({ length: gridSize * gridSize }).map((_, idx) => (
@@ -203,7 +204,6 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
                     '--tile-col': col,
                   } as React.CSSProperties
                 }
-                role="gridcell"
               >
                 <Tile
                   tile={tile}
@@ -220,7 +220,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
             );
           })}
       </div>
-      <p className="board-hint">{t.boardControlsGuide}</p>
+      <p className="board-hint" id="board-controls-guide">{t.boardControlsGuide}</p>
     </div>
   );
 };

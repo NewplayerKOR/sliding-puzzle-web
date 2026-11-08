@@ -39,13 +39,13 @@
 .locked-mode-pill.timeAttack {
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.02));
   border-color: rgba(239, 68, 68, 0.3);
-  color: #dc2626;
+  color: #b91c1c;
 }
 
 .locked-mode-pill.moveLimit {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.02));
   border-color: rgba(245, 158, 11, 0.3);
-  color: #d97706;
+  color: #92400e;
 }
 
 .pill-divider {
@@ -102,11 +102,11 @@
 }
 
 .btn-feature-tool.btn-daily {
-  color: #f97316;
+  color: #9a3412;
 }
 
 .btn-feature-tool.btn-achievement {
-  color: #f59e0b;
+  color: #92400e;
 }
 
 
