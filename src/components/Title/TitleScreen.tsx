@@ -93,7 +93,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
 
         <div className="title-top-right">
           {/* Language Selector */}
-          <div className="title-lang-select-wrapper">
+          <label className="title-lang-select-wrapper">
             <Globe size={14} className="title-lang-icon" />
             <select
               value={language}
@@ -106,7 +106,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               <option value="ja">{t.languageJapanese}</option>
               <option value="zh">{t.languageChinese}</option>
             </select>
-          </div>
+          </label>
 
           {/* Audio Controls */}
           <div className="title-audio-controls" role="group" aria-label={t.audioSettings}>

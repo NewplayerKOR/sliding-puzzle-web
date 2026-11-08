@@ -88,6 +88,7 @@
   border: var(--border-default);
   border-radius: var(--radius-1);
   color: var(--color-graphite);
+  cursor: pointer;
 }
 
 .lang-icon {
@@ -96,6 +97,9 @@
 }
 
 .lang-select {
+  align-self: stretch;
+  min-height: 34px;
+  padding: 0;
   background: transparent;
   border: none;
   color: var(--color-charcoal);

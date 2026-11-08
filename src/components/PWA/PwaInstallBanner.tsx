@@ -44,7 +44,7 @@ export const PwaInstallBanner: React.FC = () => {
 
         <div className="pwa-text-box">
           <span className="pwa-title">Sliding Block Puzzle</span>
-          <span className="pwa-desc">{t.pwaInstallPrompt}</span>
+          <span className="pwa-desc" title={t.pwaInstallPrompt}>{t.pwaInstallPrompt}</span>
         </div>
         <div className="pwa-actions">
           <button type="button" className="btn-pwa-install" onClick={handleInstallClick}>

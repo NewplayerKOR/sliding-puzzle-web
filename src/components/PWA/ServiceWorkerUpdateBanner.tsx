@@ -26,7 +26,12 @@ export const ServiceWorkerUpdateBanner: React.FC = () => {
       <div className="sw-update-card">
         <span className="sw-update-desc">{t.pwaUpdateAvailable}</span>
         <div className="sw-update-actions">
-          <button type="button" className="btn-sw-update" onClick={handleApply}>
+          <button
+            type="button"
+            className="btn-sw-update"
+            onClick={handleApply}
+            aria-label={t.pwaUpdateNow}
+          >
             <RefreshCw size={14} />
             <span>{t.pwaUpdateNow}</span>
           </button>

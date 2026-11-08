@@ -94,7 +94,7 @@ export const Header: React.FC<HeaderProps> = ({
           )}
 
           {/* Language Selector Dropdown */}
-          <div className="lang-select-wrapper">
+          <label className="lang-select-wrapper">
             <Globe size={15} className="lang-icon" />
             <select
               value={language}
@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
               <option value="ja">{t.languageJapanese}</option>
               <option value="zh">{t.languageChinese}</option>
             </select>
-          </div>
+          </label>
 
           {/* Audio Controls */}
           <div className="audio-controls" role="group" aria-label={t.audioSettings}>

@@ -27,7 +27,9 @@ describe('ServiceWorkerUpdateBanner', () => {
     const handleApply = vi.fn();
     window.addEventListener(SW_APPLY_UPDATE_EVENT, handleApply);
 
-    fireEvent.click(screen.getByRole('button', { name: /지금 업데이트/ }));
+    const updateButton = screen.getByRole('button', { name: /지금 업데이트/ });
+    expect(updateButton.getAttribute('aria-label')).toBe('지금 업데이트');
+    fireEvent.click(updateButton);
 
     expect(handleApply).toHaveBeenCalledTimes(1);
     expect(screen.queryByText(/새 버전이 준비되었습니다/)).toBeNull();
