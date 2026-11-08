@@ -66,6 +66,8 @@ describe('AudioManager Unit Tests', () => {
       expect(track.genreKey).toBeTruthy();
       expect(track.descriptionKey).toBeTruthy();
       expect(track.path).toContain('assets/audio/');
+      expect(track.path).toMatch(/\.mp3$/);
+      expect(track.path).not.toMatch(/\.wav$/);
       expect(track.recommendedThemeIds.length).toBeGreaterThan(0);
     });
   });

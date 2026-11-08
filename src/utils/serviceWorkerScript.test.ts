@@ -45,9 +45,12 @@ function createHarness(options: HarnessOptions = {}) {
 
   const caches = {
     open: vi.fn(async () => cache),
-    keys: vi.fn(async () => ['sliding-puzzle-v2.0', 'sliding-puzzle-v2.1']),
+    keys: vi.fn(async () => ['sliding-puzzle-v2.1', 'sliding-puzzle-v2.2']),
     delete: vi.fn(async () => true),
-    match: vi.fn(async (key: string) => cacheStore.get(new URL(key, SW_URL).href)),
+    match: vi.fn(async (key: string | { url: string }) => {
+      const url = typeof key === 'string' ? key : key.url;
+      return cacheStore.get(new URL(url, SW_URL).href);
+    }),
   };
 
   const fetchMock = vi.fn(
@@ -101,14 +104,28 @@ function createNavigationRequest() {
 }
 
 describe('public/sw.js', () => {
-  it('precaches on install without activating immediately to protect the running game', async () => {
+  it('precaches only the core shell, UI assets, and default theme', async () => {
     const harness = createHarness();
 
     await harness.dispatch('install');
 
-    expect(harness.cache.addAll).toHaveBeenCalledWith(
-      expect.arrayContaining(['./', './index.html', './assets/icons/icon-192.png'])
+    const precached = harness.cache.addAll.mock.calls[0][0] as string[];
+    expect(precached).toEqual(
+      expect.arrayContaining([
+        './',
+        './index.html',
+        './manifest.webmanifest',
+        './assets/icons/icon-192.png',
+        './assets/sprites/ui_icons_spritesheet.png',
+        './assets/audio/sfx_slide.mp3',
+        './assets/images/theme_nature.png',
+      ])
     );
+    expect(precached.filter((asset) => asset.includes('/bgm_'))).toHaveLength(0);
+    expect(precached).not.toContain('./assets/images/theme_abstract.png');
+    expect(precached).not.toContain('./assets/images/theme_pixel_art.png');
+    expect(precached).not.toContain('./assets/images/theme_animal.png');
+    expect(precached).not.toContain('./assets/sprites/sheet_ui_fx.png');
     expect(harness.skipWaiting).not.toHaveBeenCalled();
   });
 
@@ -137,9 +154,30 @@ describe('public/sw.js', () => {
 
     await harness.dispatch('activate');
 
-    expect(harness.caches.delete).toHaveBeenCalledWith('sliding-puzzle-v2.0');
-    expect(harness.caches.delete).not.toHaveBeenCalledWith('sliding-puzzle-v2.1');
+    expect(harness.caches.delete).toHaveBeenCalledWith('sliding-puzzle-v2.1');
+    expect(harness.caches.delete).not.toHaveBeenCalledWith('sliding-puzzle-v2.2');
     expect(harness.claim).toHaveBeenCalledTimes(1);
+  });
+
+  it('caches the full audio file when a range request returns 206', async () => {
+    const audioUrl = 'https://example.com/sub/assets/audio/bgm_chill.mp3';
+    const harness = createHarness({
+      fetchImpl: async () => ({ ok: false, status: 206 }),
+    });
+
+    await harness.dispatch('fetch', {
+      request: {
+        method: 'GET',
+        url: audioUrl,
+        headers: { get: () => null },
+        mode: 'cors',
+        destination: 'audio',
+      },
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(harness.cache.add).toHaveBeenCalledWith(audioUrl);
+    expect(harness.addedAssets).toContain(audioUrl);
   });
 
   it('serves the cached shell when the navigation response is not ok', async () => {

@@ -11,7 +11,7 @@ describe('getAssetUrl', () => {
   });
 
   it('handles nested audio, image and sprite paths correctly', () => {
-    expect(getAssetUrl('/assets/audio/bgm_chill.wav')).toBe('/assets/audio/bgm_chill.wav');
+    expect(getAssetUrl('/assets/audio/bgm_chill.mp3')).toBe('/assets/audio/bgm_chill.mp3');
     expect(getAssetUrl('assets/images/theme_nature.png')).toBe('/assets/images/theme_nature.png');
     expect(getAssetUrl('assets/sprites/sheet_ui_fx.css')).toBe('/assets/sprites/sheet_ui_fx.css');
   });

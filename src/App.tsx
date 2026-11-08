@@ -20,6 +20,7 @@ import { GameChallengeMode, GridSize } from './types/puzzle';
 import { getLocalizedTheme, DEFAULT_THEME_ID } from './utils/themeData';
 import { getBestRecords, saveBestRecord } from './utils/recordStorage';
 import { useAssetPreloader } from './hooks/useAssetPreloader';
+import { preloadAllThemeAssets } from './utils/assetPreloader';
 import { audioManager } from './utils/audioManager';
 import { findNextOptimalMove, AISolutionStep } from './utils/aiSolver';
 import { generateDailyBoard, saveDailyCompletion, getDailyStreakData, getTodayDateString } from './utils/dailyChallenge';
@@ -34,9 +35,6 @@ type AiHintErrorKey = 'aiHintUnavailable' | 'aiHintFailed' | 'aiHintTimeout';
 export const App: React.FC = () => {
   // 언어 변경 시 App도 다시 렌더링해 테마명·공유 카드 문자열을 갱신함
   const { t } = useTranslation();
-
-  // 에셋 백그라운드 사전 로드 (테마 변경 시 깜빡임 완전 제거)
-  useAssetPreloader();
 
   // 화면 전환 상태 ('title' | 'game')
   const [currentScreen, setCurrentScreen] = useState<'title' | 'game'>('title');
@@ -72,6 +70,10 @@ export const App: React.FC = () => {
   // 모드 및 테마 상태
   const [gameMode, setGameMode] = useState<GameMode>('image');
   const [themeId, setThemeId] = useState<ThemeId>(DEFAULT_THEME_ID);
+
+  // 최초에는 코어 이미지와 현재 테마만 로드하고 나머지 테마는 지연 로드함
+  useAssetPreloader(themeId);
+
   const [customImageSrc, setCustomImageSrc] = useState<string | null>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('sliding_puzzle_custom_image');
@@ -98,6 +100,13 @@ export const App: React.FC = () => {
     size: GridSize;
     isDaily?: boolean;
   } | null>(null);
+
+  // 테마 모달을 열 때만 나머지 테마 미리보기를 지연 로드해 전환 깜빡임을 방지함
+  useEffect(() => {
+    if (isThemeModalOpen) {
+      preloadAllThemeAssets();
+    }
+  }, [isThemeModalOpen]);
 
   // 어떤 모달이든 열려 있으면 배경 콘텐츠와 보드 입력을 비활성화함
   const isAnyModalOpen =

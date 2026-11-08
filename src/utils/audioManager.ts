@@ -17,7 +17,7 @@ export const BGM_TRACKS: BgmTrack[] = [
   {
     id: 'chill',
     name: 'Lo-Fi Chill',
-    path: getAssetUrl('assets/audio/bgm_chill.wav'),
+    path: getAssetUrl('assets/audio/bgm_chill.mp3'),
     genreKey: 'bgmChillGenre',
     descriptionKey: 'bgmChillDesc',
     recommendedThemeIds: ['abstract'],
@@ -25,7 +25,7 @@ export const BGM_TRACKS: BgmTrack[] = [
   {
     id: 'zen',
     name: 'Zen Nature',
-    path: getAssetUrl('assets/audio/bgm_zen_nature.wav'),
+    path: getAssetUrl('assets/audio/bgm_zen_nature.mp3'),
     genreKey: 'bgmZenGenre',
     descriptionKey: 'bgmZenDesc',
     recommendedThemeIds: ['nature'],
@@ -33,7 +33,7 @@ export const BGM_TRACKS: BgmTrack[] = [
   {
     id: 'synth',
     name: 'Cyber Synth',
-    path: getAssetUrl('assets/audio/bgm_cyber_synth.wav'),
+    path: getAssetUrl('assets/audio/bgm_cyber_synth.mp3'),
     genreKey: 'bgmSynthGenre',
     descriptionKey: 'bgmSynthDesc',
     recommendedThemeIds: ['pixel_art'],
@@ -41,7 +41,7 @@ export const BGM_TRACKS: BgmTrack[] = [
   {
     id: 'jazz',
     name: 'Jazz Lounge',
-    path: getAssetUrl('assets/audio/bgm_jazz_cafe.wav'),
+    path: getAssetUrl('assets/audio/bgm_jazz_cafe.mp3'),
     genreKey: 'bgmJazzGenre',
     descriptionKey: 'bgmJazzDesc',
     recommendedThemeIds: ['animal'],
