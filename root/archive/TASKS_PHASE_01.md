@@ -870,3 +870,61 @@
   - 잔여 마이그레이션 규모: 컴포넌트 CSS의 그라데이션 47건, `backdrop-filter` 14건, `border-radius: 9999px` 5건, 12px 미만 `font-size` 선언 38건(13개 CSS 파일), UI 이모지 19곳. PWA manifest의 `background_color #0f172a`·`theme_color #2563eb`는 SW 캐시 갱신과 함께 TASK-DEV-26에서 처리할 대상으로 남김.
 - **미실행**: 실제 모바일 실기기·Safari/Firefox 렌더링·스크린리더 수동 검증, OS 수준 `prefers-reduced-motion` 에뮬레이션은 수행하지 않았음. 360×800·1280×800 측정은 브라우저 창 크기 변경 대신 동일 출처 iframe 뷰포트로 수행함. 화면별 그라데이션·블러·작은 글자·이모지 제거와 스크린샷 비교는 TASK-DEV-26·TASK-QA-09 범위임.
 - **증거**: `src/styles/index.css`, `src/styles/App.css`, `index.html`, `root/DESIGN_SYSTEM.md`, `root/FEATURES.md`, `README.md`, 터미널 실행 결과, 프로덕션 프리뷰 computed style·네트워크·콘솔 측정 결과, 360×800/1280×800 iframe 레이아웃 측정 결과, 대비 계산 결과
+
+---
+
+## TASK-DEV-26 — 전 화면 심플·어반 UI/UX 적용 및 가독성 개선
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **완료일**: 2026-11-08
+- **목표**: TASK-DEV-25에서 수립한 디자인 시스템을 타이틀·게임 HUD·컨트롤·보드·모달·업적·PWA 화면에 적용해 심플하고 도시적인 UI/UX와 읽기 쉬운 정보 위계를 완성한다.
+- **적용 범위**:
+  - 타이틀: 그라데이션 로고 배지·이모지 히어로·4색 모드 카드를 축소하고 강한 워드마크·명확한 모드 목록·1차 CTA 중심으로 재구성
+  - HUD·컨트롤: 카드·필·그라데이션을 줄이고 1줄 HUD·세그먼트/텍스트 툴바 적용, 타이머·이동 수는 monospace/tabular-nums
+  - 보드: 테마 이미지와 0.12s 타일 슬라이드는 유지하고 빈 슬롯·힌트의 네온 글로우와 text-shadow 축소, 숫자 대비 강화
+  - 모달: solid dim overlay, flat panel, 1px border, 8px radius, 좌측 정렬 제목. 기존 포커스 트랩 유지
+  - 업적·PWA·토스트: 금색 글로우와 과한 그림자를 제거하고 플랫 리스트·보더 중심으로 정리
+  - 문구: UI 이모지(🧩·🎬·💡·🔥·⚡·👣·🛡️)를 제거하고 텍스트 또는 단일 아이콘 체계로 통일
+- **완료 기준(DoD)**:
+  - 전 화면에서 그라데이션·네온 글로우·과도한 radius/shadow·이모지 UI를 제거하거나 최소화
+  - 360px·데스크톱에서 정보 위계·줄바꿈·오버플로·터치 영역 확인
+  - 본문·메타 텍스트 최소 크기와 WCAG AA 대비 충족, 타이머·이동 수 가독성 개선
+  - `prefers-reduced-motion` 대응, 키보드 포커스 가시성 유지
+  - 변경 전·후 360×800·1280×800 스크린샷과 `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
+
+### 진행 결과
+
+- `TitleScreen`: 그라데이션 로고 배지·이모지 히어로·모드별 4색 카드·9999px pill 제거. 좌측 정렬 워드마크, 01~04 모드 인덱스, 단일 신호색 선택 보더, 선택 모드에만 채워지는 신호색 CTA, 1px 보더·8px radius·그림자 없는 모드 카드로 재구성함. 상단 유틸리티와 모드 크기 선택은 텍스트·세그먼트 컨트롤로 정리하고, PNG 트로피·사운드·재생 아이콘을 lucide 아이콘으로 교체함.
+- `Header`: 상단 유틸리티와 3셀 통계 바를 1줄 HUD로 정리함. 이동 수·시간·최고 기록 라벨은 12px, 값은 monospace/tabular-nums로 표시하고, 카드별 그림자·호버 이동을 제거함. 시간 초과/이동 수 부족 상태는 의미색 배경과 inset 보더로만 표시하도록 정리함(당시 `urgent-timer` 클래스와 CSS `urgent-time` 불일치는 기존 동작 보존을 위해 변경하지 않음).
+- `Controls`: 잠금 모드 표시를 평면 보더 바로, AI 힌트·사진·일일·업적·Undo·테마·미리보기·번호 힌트를 lucide 아이콘 텍스트 툴바로 교체함. 주요 툴바·액션 버튼은 44px 터치 영역, 액션 버튼은 선택 모드 신호색/보조 아웃라인으로 정리함.
+- `Board·Tile`: 보드 2px 보더·그림자를 1px 보더·그림자 없음으로 바꾸고 그리드 슬롯의 점선 보더를 단색 보더로 교체함. 빈 슬롯 글로우 PNG·애니메이션과 미사용 스파클 상태를 제거하고, 힌트 방사형 그라데이션·blur·text-shadow를 신호색 2px 보더와 charcoal 화살표 배지로 교체함. 숫자 오버레이는 12px·불투명 charcoal 배경으로 대비를 강화함.
+- `Modal`: 8종 모달의 공통 패턴을 solid dim overlay(`rgba(23, 23, 19, 0.62)`), `backdrop-filter: none`, 평면 패널, 1px 보더, 8px radius, 그림자 없음, 좌측 정렬 제목, 0.18s 표준 easing으로 통일함. 테마·업적·BGM·커스텀 이미지·일일·힌트 모달의 PNG 아이콘을 lucide로 교체하고, 12px 미만 텍스트를 모두 12px 이상으로 올림. WinModal은 트로피 PNG·별 PNG를 lucide Trophy·Star로, GameOverModal은 PNG 버튼 아이콘을 lucide로 교체함. 기존 포커스 트랩·`inert`·Escape 닫기는 유지함.
+- `AchievementToast·PWA`: 업적 토스트의 금색 그라데이션·방사형 글로우·Sparkles를 제거하고 charcoal 평면 카드·신호색 테두리·Trophy 아이콘으로 정리함. PWA 설치/업데이트 배너의 `shadow-xl`·1.5px 강조 보더·trophy PNG를 제거하고 평면 1px 보더·lucide 아이콘·신호색 CTA로 교체함.
+- `i18n·shareCardGenerator`: 번역문의 💡·🏆·🎵·🧩와 TSX의 🔥·⚡·👣·🛡️·🎬·🧩·📸를 제거함. 공유 카드의 다크 그라데이션·파랑/금색 강조·🧩를 off-white·charcoal·signal 팔레트의 평면 카드로 교체하고, 제목을 텍스트 워드마크로 변경함.
+- `index.css`: 사용하지 않는 스프라이트 CSS·`pulseGlow`·`sparklePop` 키프레임과 `--shadow-lg|xl`·`--radius-sm|md|lg|xl`·`--transition-normal|spring` 등 레거시 별칭을 제거함. `--color-board`·`--color-tile`·`--color-tile-text`·`--color-tile-empty`를 1급 토큰으로 승격하고 게임 표면 CSS를 새 토큰으로 교체함.
+- `index.html`·`assetPreloader`: 스프라이트 스타일시트·이미지 프리로드를 제거하고, 코어 PNG 16건 프리로드를 0건으로 줄여 최초 프리로드를 현재 테마 이미지 1건으로 축소함. `public/sw.js` 프리캐시 목록은 TASK-DEV-26 범위 제외로 수정하지 않음.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - 프로덕션 프리뷰(4173)의 데스크톱 Chromium에서 computed style·Google Fonts/스프라이트 요청·콘솔 메시지 확인
+  - 동일 출처 iframe 360×800·1280×800에서 타이틀·게임·주요 모달의 `scrollWidth`/`scrollHeight`·패널 보더·radius·그림자·backdrop-filter·12px 미만 텍스트·오버플로 측정
+  - 헤드리스 Edge로 변경 전·후 타이틀·게임 360×800·1280×800과 Win/GameOver 1280×800 캡처
+  - `dist` CSS/HTML 정적 감사로 그라데이션·backdrop-filter·9999px pill·스프라이트 참조·UI 이모지·800/900 굵기 확인
+- **결과**:
+  - `npm test`: 29개 파일/183개 테스트 PASS. 첫 전체 실행에서 localStorage 병렬 실행 영향으로 `audioManager.test.ts` 1건이 일시 실패했으나 단독 실행과 전체 재실행에서 통과함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공. `sheet_ui_fx.css` 링크 제거로 기존 빌드 시점 경고도 해소됨. `dist/index.html` 2.27KB, CSS 73.65KB(gzip 9.86KB), JS 360.74KB(gzip 112.10KB).
+  - 정적 감사: 컴포넌트/빌드 CSS의 그라데이션 0건, `backdrop-filter` 0건, `border-radius: 9999px` 0건, 12px 미만 `font-size` 0건, 800·900 굵기 0건. 빌드 HTML의 스프라이트 CSS·프리로드 0건, UI 문구 이모지 0건.
+  - 타이틀: 360×800 가로 오버플로 0건·4개 모드 카드·좌측 정렬 48px 워드마크·`img` 요소 0건. 1280×800에서 2×2 모드 그리드와 선택 모드 신호색 CTA 확인.
+  - 게임: 360×800 `bodyScrollHeight`/`documentElement.scrollHeight` 800px, 가로 오버플로 0건, 보드 310×310, 툴바·액션 버튼 44px, 상단 유틸리티 36px, 푸터 12px. 1280×800 `bodyScrollHeight` 800px, 가로 오버플로 0건, 게임 카드 1px 보더·8px radius·그림자 없음.
+  - 모달: 360×800·1280×800에서 업적·일일·BGM·커스텀 이미지·테마·힌트 모달의 overlay가 `rgba(23, 23, 19, 0.62)`·`backdrop-filter: none`, 패널이 1px 보더·8px radius·`box-shadow: none`, 12px 미만 텍스트 0건, 가로 오버플로 0건임을 확인. Win/GameOver는 1280×800 스크린샷과 CSS 검사로 확인.
+  - 접근성 테스트: PNG `alt` 검증을 lucide 아이콘을 포함한 버튼의 접근성 이름 검증으로 대체함. 버튼 `aria-label`과 내부 SVG 존재를 확인해 동등한 접근성 계약을 유지함.
+  - reduced motion: `prefers-reduced-motion: reduce` 전역 규칙이 빌드 CSS에 포함됨을 확인. 실제 OS 설정 에뮬레이션은 미실행.
+- **미실행**: 실제 모바일 실기기·Safari/Firefox 렌더링·스크린리더 수동 검증, OS 수준 `prefers-reduced-motion` 에뮬레이션, 공유 카드의 실제 공유 시트·다운로드 이미지, PWA manifest 색상(`#0f172a`/`#2563eb`)과 SW 프리캐시 목록 갱신은 확인하지 않았음. 360×800·1280×800 측정은 브라우저 창 크기 변경 대신 동일 출처 iframe/헤드리스 뷰포트로 수행함. 시각 회귀·잔여 문제 발주는 TASK-QA-09 범위임.
+- **증거**: `src/components/Title/**`, `src/components/Header/**`, `src/components/Controls/**`, `src/components/Board/**`, `src/components/Modal/**`, `src/components/Achievement/**`, `src/components/PWA/**`, `src/i18n/translations.ts`, `src/utils/shareCardGenerator.ts`, `src/utils/assetPreloader.ts`, `src/styles/index.css`, `src/styles/App.css`, `index.html`, `root/DESIGN_SYSTEM.md`, `root/archive/assets/task-dev-26/title-before-360x800.webp`, `title-after-360x800.webp`, `game-before-360x800.webp`, `game-after-360x800.webp`, `title-before-1280x800.webp`, `title-after-1280x800.webp`, `game-before-1280x800.webp`, `game-after-1280x800.webp`, `win-after-1280x800.webp`, `gameover-after-1280x800.webp`, 터미널 실행 결과, 브라우저 computed style·레이아웃 측정 결과
