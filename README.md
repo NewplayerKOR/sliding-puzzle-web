@@ -28,10 +28,10 @@ React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이�
 | **Themes** | 4종 테마 및 숫자 모드 | 자연, 픽셀아트, 기하학 패턴, 동물 테마 프리셋 및 숫자 모드 전환 |
 | **Custom Image** | 이미지 업로드 및 크롭 | 로컬 이미지(JPG, PNG, WebP, GIF) 드래그 앤 드롭·형식/용량 검증 및 Canvas 기반 1:1 크롭 |
 | **Daily Puzzle** | 일일 챌린지 | Mulberry32 PRNG 기반 날짜별 시드 퍼즐 및 출석 스트릭 기록 |
-| **Audio System** | 오디오 매니저 | 4종 BGM 트랙(크로스페이드) 및 3채널 SFX 풀링 |
+| **Audio System** | 오디오 매니저 | 4종 BGM 트랙(96kbps MP3, 크로스페이드) 및 3채널 SFX 풀링. 최초에는 현재 트랙만 로드 |
 | **Action / Undo** | 되돌리기 및 리플레이 | 1수 되돌리기(Undo) 및 클리어 후 타임랩스 리플레이 |
 | **Gamification** | 12종 업적 | 업적 달성 검사, 토스트 알림, 트로피 도감 및 3성 별점 |
-| **PWA & Mobile** | PWA 및 햅틱 | 웹 앱 설치 지원, maskable·apple-touch 아이콘, 오프라인 캐싱, 업데이트 안내, 15ms 조작 진동 |
+| **PWA & Mobile** | PWA 및 햅틱 | 웹 앱 설치 지원, maskable·apple-touch 아이콘, 필수 셸 중심 오프라인 캐싱과 현재 테마·BGM 런타임 캐시, 업데이트 안내, 15ms 조작 진동 |
 | **Localization** | 다국어 지원 (i18n) | 한국어(KO), 영어(EN), 일본어(JA), 중국어(ZH) 지원 |
 | **SNS Share** | 결과 카드 생성 | Canvas 기반 1000x1000 결과 이미지 생성 및 공유 API 연동 |
 
@@ -49,7 +49,7 @@ React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이�
 | **Styling** | Vanilla CSS | Standard | CSS Grid/Flexbox 및 100dvh 레이아웃 |
 | **Audio** | Web Audio API | Standard | 브라우저 내장 오디오 제어 |
 | **Worker** | Web Worker | Standard | AI 힌트 탐색 연산 분리 |
-| **PWA** | Service Worker | Standard | 정적 에셋 캐싱 |
+| **PWA** | Service Worker | Standard | 셸·코어 자산 프리캐시 및 현재 테마·BGM 런타임 캐싱 |
 
 ---
 
@@ -101,9 +101,10 @@ npm test
 
 | 항목 | 도구 | 대상 | 결과 |
 | :--- | :--- | :--- | :---: |
-| **유닛 / 통합 테스트** | Vitest | 24개 테스트 파일 (152개 테스트 케이스) | **152 / 152 Passed** |
+| **유닛 / 통합 테스트** | Vitest | 25개 테스트 파일 (156개 테스트 케이스) | **156 / 156 Passed** |
 | **타입 검사** | TypeScript (`tsc --noEmit`) | 전체 소스코드 | **0 Errors** |
 | **프로덕션 빌드** | Vite | 번들링 및 에셋 압축 | **정상 생성** |
+| **에셋 최적화** | Vitest·브라우저 측정 | dist 용량 및 초기 로딩 | **20.65→11.04MB / 9,222,220→2,716,771바이트 (-70.5%)** |
 
 ---
 

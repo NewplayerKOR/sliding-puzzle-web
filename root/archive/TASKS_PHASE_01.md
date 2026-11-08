@@ -667,3 +667,53 @@
   - 브라우저 콘솔 error 0건.
 - **미실행**: 실제 모바일 실기기·iOS Safari의 홈 화면 아이콘 적용, Firefox의 SW 업데이트 동작, 실제 정적 호스팅(GitHub Pages 등) 배포 환경은 확인하지 않았음. Chrome 설치 프롬프트 UI와 Lighthouse PWA 카테고리 감사도 실행하지 않았음(제공 도구는 접근성·SEO·모범 사례만 지원).
 - **증거**: `public/manifest.webmanifest`, `public/sw.js`, `public/assets/icons/icon-192.png`, `public/assets/icons/icon-512.png`, `public/assets/icons/icon-maskable-192.png`, `public/assets/icons/icon-maskable-512.png`, `public/assets/icons/apple-touch-icon.png`, `index.html`, `src/main.tsx`, `src/App.tsx`, `src/utils/swUpdateManager.ts`, `src/components/PWA/ServiceWorkerUpdateBanner.tsx`, `src/components/PWA/ServiceWorkerUpdateBanner.css`, `src/utils/serviceWorkerScript.test.ts`, `src/utils/swUpdateManager.test.ts`, `src/components/PWA/ServiceWorkerUpdateBanner.test.tsx`, 터미널 실행 결과, 브라우저 등록·캐시·업데이트 측정 결과
+
+---
+
+## TASK-DEV-22 — BGM·이미지 에셋 경량화 및 초기 로딩 최적화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 초기 다운로드·SW 프리캐시 용량을 줄이고, 현재 테마·현재 BGM만 우선 로드한다.
+- **대상 파일**: `public/assets/audio/**`, `src/utils/audioManager.ts`, `src/utils/assetPreloader.ts`, `src/hooks/useAssetPreloader.ts`, `public/sw.js`, `scripts/**`
+- **재현/증거**: `dist` 총 20.45MB 중 오디오 13.83MB(4개 WAV 2.01~4.15MB), 스프라이트 2.63MB, 테마 이미지 2.62MB. 초기 리소스 46건의 decodedBodySize 합계 9.9MB(현재 BGM 3.4MB + 프리로드 이미지 약 4.9MB). SW가 4개 BGM 전체를 설치 시 프리캐시.
+- **완료 기준(DoD)**:
+  - BGM 4트랙을 MP3/OGG 등 압축 포맷으로 전환하고 원본 WAV는 배포에서 제외
+  - 최초 로드 시 현재 테마 이미지·현재 BGM만 로드하고 나머지는 지연 로드
+  - 스프라이트·아이콘 압축 또는 SVG 전환 검토
+  - SW 프리캐시를 필수 셸과 현재 테마 중심으로 축소
+  - 변경 전후 `dist` 용량·초기 decodedBodySize·테마 전환 깜빡임·오프라인 동작 비교 기록
+
+### 진행 결과
+
+- BGM 4트랙이 실제로는 192kbps MP3 데이터를 `.wav` 확장자로 배포하고 있음을 확인함. ffmpeg(libmp3lame)로 96kbps stereo MP3(`.mp3`)로 변환하고 44.1kHz·2ch·길이를 유지함. 원본 `bgm_*.wav` 4개는 배포에서 제거함.
+- `src/utils/audioManager.ts`의 BGM 경로를 `.mp3`로 변경함. 현재 트랙만 `preload='auto'`로 로드하는 기존 동작은 유지함.
+- `public/assets/sprites/*.png` 3종과 PWA 아이콘을 제외한 `public/assets/icons/*.png` 14종을 sharp 팔레트 PNG(compressionLevel 9, palette, quality 90, effort 10)로 재압축함. 스프라이트·아이콘 합계 3,680KB → 534KB(-85%). 알파를 배경색으로 합성한 SSIM은 0.989~0.996으로 확인함. 테마 이미지는 일러스트 화질 보존을 위해 원본 PNG를 유지함.
+- `assetPreloader`를 코어 이미지(스프라이트 2 + 아이콘 14)와 테마 이미지로 분리함. `preloadCoreAssets(themeId)`는 코어 + 현재 테마만 로드하고, `preloadAllThemeAssets()`는 테마 모달을 열 때만 호출함. 사용하지 않는 `sheet_ui_fx.png`는 코어/프리캐시 목록에서 제외함.
+- `useAssetPreloader(themeId)`가 현재 테마를 인자로 받아 테마 변경 시 해당 이미지를 추가 로드하도록 변경함. `App`은 테마 모달이 열릴 때만 `preloadAllThemeAssets()`를 호출해 썸네일 전환 깜빡임을 방지함.
+- `index.html`에서 사용 빈도가 낮은 `fx_animations_spritesheet.png` preload를 제거하고, 코어 UI 스프라이트와 기본 테마(`theme_nature.png`) preload만 유지함.
+- `public/sw.js`를 v2.2로 올리고 프리캐시를 필수 셸·PWA 아이콘·SFX MP3·코어 스프라이트/아이콘·기본 테마 30건/1.31MB로 축소함. 4개 BGM과 나머지 3개 테마는 프리캐시에서 제외하고 첫 사용 시 런타임 캐시에 저장함.
+- 오디오가 Range 요청으로 206 응답을 받는 경우 `cache.add(url)`로 전체 파일을 별도 캐시해 오프라인 재생을 보장함. 정적 자산 Cache First와 Navigation 폴백은 유지함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - `dist`를 `http://127.0.0.1:4174/sliding-puzzle/` 서브패스로 서빙하는 Node 정적 서버에서 데스크톱 Chromium으로 초기 로딩·테마 지연 로드·오프라인 재로드를 측정
+  - 초기 로딩 비교는 SW 프리캐시 간섭을 막기 위해 빈 stub `sw.js`를 서빙한 상태에서 `performance.getEntriesByType('resource')`의 `decodedBodySize`를 합산함
+- **결과**:
+  - `npm test`: 25개 파일/156개 테스트 PASS. 신규 `useAssetPreloader.test.tsx` 1건과 `assetPreloader.test.ts` 보강 2건, `serviceWorkerScript.test.ts` 보강 1건 포함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - `dist`: 20.65MB → 11.04MB(-46.5%). 오디오 13.83→7.29MB, 스프라이트 2.63→0.31MB, 아이콘 1.14→0.38MB, 테마 이미지 2.62MB 유지.
+  - BGM: 13.05MiB(13,685,294바이트) → 6.52MiB(6,833,181바이트, -50.1%). 4곡 모두 96kbps·44.1kHz·2ch, 길이 87.4·148.7·152.0·181.1초를 유지하고 ffmpeg 디코딩 오류가 없음. 배포 `dist`에 `bgm_*.wav` 0건.
+  - 초기 동일 출처 리소스: 41건/9,222,220바이트 → 37건/2,716,771바이트(-70.5%). 최초 로드 테마는 `theme_nature.png` 1종, BGM은 `bgm_chill.mp3` 1곡만 확인됨. 이전에 로드하던 `sheet_ui_fx.png` 276KB와 나머지 3개 테마 2.08MB, 나머지 BGM 3곡이 제외됨.
+  - SW 프리캐시: 37건/19.47MB → 30건/1.31MB(-93.3%). 등록 후 캐시 30건에 기본 테마만 포함되고 BGM은 설치 시 포함되지 않음.
+  - 테마 지연 로드: 테마 모달을 열면 4개 테마가 모두 로드되고 썸네일 `naturalWidth=1024`로 완료된 뒤 선택·게임 시작이 가능함. 선택한 `theme_animal`이 보드 타일 배경에 적용됐고 콘솔 error 0건.
+  - 오프라인: 서버 중단 후 재로드해도 타이틀이 캐시에서 렌더링됨. `theme_nature.png` 200, `theme_animal.png` 502(미사용 테마), 현재 BGM `bgm_jazz_cafe.mp3` 200/2,173,327바이트와 메타데이터 181.1초 로드, 미사용 `bgm_zen_nature.mp3`는 오류. 오프라인에서 타이틀→테마 모달→게임 시작이 동작하고 현재 테마 보드가 표시됨. 미캐시 테마 썸네일과 테마 동기화 BGM은 502 콘솔 오류가 발생하는 지연 로드 한계를 확인함.
+- **미실행**: 실제 모바일 실기기·iOS Safari·Android Chrome에서의 초기 로딩·오프라인 재생, Safari/Firefox의 Range 오디오 캐시 동작, 96kbps BGM의 주관적 청취 품질, 실제 정적 호스팅(GitHub Pages 등)의 Range·캐시 헤더 동작은 확인하지 않았음. 테마 이미지 WebP 전환과 미캐시 테마의 오프라인 placeholder UX는 이번 범위에서 제외함.
+- **증거**: `public/assets/audio/bgm_chill.mp3`, `bgm_zen_nature.mp3`, `bgm_cyber_synth.mp3`, `bgm_jazz_cafe.mp3`, 삭제된 `public/assets/audio/bgm_*.wav`, `public/assets/sprites/*.png`, `public/assets/icons/*.png`, `src/utils/audioManager.ts`, `src/utils/assetPreloader.ts`, `src/hooks/useAssetPreloader.ts`, `src/utils/assetPreloader.test.ts`, `src/hooks/useAssetPreloader.test.tsx`, `src/utils/audioManager.test.ts`, `src/utils/serviceWorkerScript.test.ts`, `public/sw.js`, `index.html`, `src/App.tsx`, 터미널 실행 결과, 브라우저 리소스 타이밍·캐시·오프라인 측정 결과

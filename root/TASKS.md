@@ -27,36 +27,6 @@
 
 ### [DEV]
 
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: PWA 설치 요건을 충족하는 아이콘을 제공하고, 서버 오류·업데이트 시 캐시 폴백과 게임 진행 보호를 강화한다.
-- **대상 파일**: `public/manifest.webmanifest`, `public/assets/icons/**`, `public/sw.js`, `src/main.tsx`
-- **재현/증거**: 매니페스트는 `badge_trophy.png`를 192×192·512×512로 선언하지만 실제 이미지는 224×197이고 maskable·apple-touch 아이콘이 없음. 서버 중단 후 재로드 시 SW가 502 응답을 그대로 반환해 캐시 폴백이 동작하지 않음. `controllerchange`에서 무조건 `location.reload()`를 호출해 업데이트 시 게임이 중단될 수 있음.
-- **DoD**:
-  - 192×192·512×512 정사각형 아이콘과 maskable 아이콘, apple-touch-icon 추가
-  - Navigation Network First에서 `!response.ok`도 캐시 폴백 처리
-  - `cache.addAll` 실패 시 자산별 캐시 또는 설치 실패 처리
-  - 업데이트 시 진행 중 게임을 즉시 새로고침하지 않고 안내 후 반영
-  - 서브패스 배포와 오프라인 재로드 재검증
-- **선행 조건**: 없음
-
-#### [ ] TASK-DEV-22 — BGM·이미지 에셋 경량화 및 초기 로딩 최적화
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: 초기 다운로드·SW 프리캐시 용량을 줄이고, 현재 테마·현재 BGM만 우선 로드한다.
-- **대상 파일**: `public/assets/audio/**`, `src/utils/audioManager.ts`, `src/utils/assetPreloader.ts`, `src/hooks/useAssetPreloader.ts`, `public/sw.js`, `scripts/**`
-- **재현/증거**: `dist` 총 20.45MB 중 오디오 13.83MB(4개 WAV 2.01~4.15MB), 스프라이트 2.63MB, 테마 이미지 2.62MB. 초기 리소스 46건의 decodedBodySize 합계 9.9MB(현재 BGM 3.4MB + 프리로드 이미지 약 4.9MB). SW가 4개 BGM 전체를 설치 시 프리캐시.
-- **DoD**:
-  - BGM 4트랙을 MP3/OGG 등 압축 포맷으로 전환하고 원본 WAV는 배포에서 제외
-  - 최초 로드 시 현재 테마 이미지·현재 BGM만 로드하고 나머지는 지연 로드
-  - 스프라이트·아이콘 압축 또는 SVG 전환 검토
-  - SW 프리캐시를 필수 셸과 현재 테마 중심으로 축소
-  - 변경 전후 `dist` 용량·초기 decodedBodySize·테마 전환 깜빡임·오프라인 동작 비교 기록
-- **선행 조건**: 없음
-
 #### [ ] TASK-DEV-23 — 업적 토스트 다중 달성 큐 및 메타데이터 병합 수정
 
 - **Phase**: 01
@@ -115,6 +85,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-22** — BGM·이미지 에셋 경량화 및 초기 로딩 최적화 (완료일: 2026-11-08)
+  - 핵심 결과: BGM 4트랙을 192kbps MP3에서 96kbps MP3로 변환하고 원본 `.wav`를 배포에서 제외. 최초 로드에는 코어 이미지+현재 테마+현재 BGM만 로드하고 나머지 테마는 테마 모달에서 지연 로드. 스프라이트·아이콘을 팔레트 PNG로 압축(3.59MB→0.52MB). SW 프리캐시를 필수 셸·코어 UI·기본 테마 30건/1.31MB로 축소하고 현재 BGM은 206 Range 응답 시 전체 파일을 런타임 캐시
+  - 검증 범위: Vitest 25개 파일/156개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. dist 20.65→11.04MB, 초기 동일 출처 decodedBodySize 9,222,220→2,716,771바이트(-70.5%), BGM 13.05→6.52MiB. 서브패스 오프라인 재로드·현재 테마/BGM 캐시·미사용 테마 502·테마 모달 지연 로드 확인. 실제 모바일 실기기·Safari/Firefox·청취 품질 평가는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-22--bgm이미지-에셋-경량화-및-초기-로딩-최적화)
+
 - **TASK-DEV-21** — PWA 매니페스트 아이콘·Service Worker 폴백/업데이트 안정화 (완료일: 2026-11-08)
   - 핵심 결과: 192×192·512×512 `any` 아이콘과 maskable 2종, apple-touch-icon(180×180)을 추가하고 매니페스트 `scope`·purpose를 정비. SW Navigation에서 502 등 `!response.ok` 응답도 캐시 셸로 폴백하고, `cache.addAll` 실패 시 자산별 캐시로 전환. 새 워커는 자동 활성화하지 않고 업데이트 배너에서 사용자가 선택할 때만 `SKIP_WAITING` 후 새로고침
   - 검증 범위: Vitest 24개 파일/152개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 서브패스(`/sliding-puzzle/`) 프로덕션 빌드에서 SW scope·캐시 37건·아이콘 4종 규격 확인, 502 응답·서버 중단 재로드에서 캐시 셸 렌더링 확인, 업데이트 배너 표시→나중에(무새로고침)→지금 업데이트(새 워커 활성·1회 새로고침) 확인. 실제 모바일 실기기·Safari는 미실행
@@ -135,13 +110,8 @@
   - 검증 범위: Vitest 19개 파일/130개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 테마·BGM·커스텀 이미지·승리 모달 포커스 순환과 보드·언어 선택 키 입력 차단 확인. 실제 모바일 실기기·스크린리더는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-18--모달-포커스-트랩-및-전역-키보드-입력-충돌-해결)
 
-- **TASK-DEV-17** — AI 힌트 레이스 컨디션·Worker 실패 처리 (완료일: 2026-11-08)
-  - 핵심 결과: 보드·그리드·게임 상태 변경 시 진행 중 힌트 요청을 즉시 무효화하고, Worker 오류·5초 시간 초과·힌트 없음 시 계산 상태 해제와 4개 국어 토스트 안내 추가. 실패한 Worker는 다음 요청에서 재생성
-  - 검증 범위: Vitest 18개 파일/127개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 정상 힌트·보드 변경 무효화·힌트 없음·시간 초과·재시도 확인. 실제 모바일 실기기·Worker 스크립트 로드 실패는 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-17--ai-힌트-레이스-컨디션worker-실패-처리)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화)

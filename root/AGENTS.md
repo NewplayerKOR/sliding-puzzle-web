@@ -89,8 +89,8 @@
   - `src/i18n/`: KO/EN/JA/ZH 번역
   - `public/`: 테마 이미지·오디오·스프라이트·PWA manifest·sw.js
   - `scripts/`: 에셋 생성·가공용 Node 스크립트
-- 검증 기준: Vitest 24개 테스트 파일 전체 PASS + `npx tsc --noEmit` 0 Errors + `npm run build` 성공
-- 최근 검증 (2026-11-08): Vitest 24개 파일/152개 케이스 PASS, tsc 0 Errors, Vite 6.4.3 프로덕션 빌드 성공. Lighthouse 접근성 타이틀·게임·테마·BGM 모달 1.0. 360×800·1280×800 게임 화면 1화면 배치 확인. 서브패스 PWA 오프라인 재로드·업데이트 배너 적용 확인
+- 검증 기준: Vitest 25개 테스트 파일 전체 PASS + `npx tsc --noEmit` 0 Errors + `npm run build` 성공
+- 최근 검증 (2026-11-08): Vitest 25개 파일/156개 케이스 PASS, tsc 0 Errors, Vite 6.4.3 프로덕션 빌드 성공. Lighthouse 접근성 타이틀·게임·테마·BGM 모달 1.0. 360×800·1280×800 게임 화면 1화면 배치 확인. 서브패스 PWA 오프라인 재로드·업데이트 배너 적용 확인. BGM 96kbps MP3 전환·초기 로딩 8.80→2.59MiB·SW 프리캐시 1.31MB 확인
 - 검증 환경: Node.js 26.13.0 / npm 12.2.2. WebStorm 번들 경로(`C:\Users\parkt\AppData\Roaming\JetBrains\WebStorm2026.3\node\versions\26.13.0`)를 사용하며 PATH에는 등록되지 않음. Node.js 26에서는 Vitest 실행 시 `NODE_OPTIONS=--localstorage-file=<임시 파일>` 지정이 필요함.
-- 배포: `dist/` 정적 번들을 정적 호스팅에 배포. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원하고 `public/sw.js` v2.1이 HTML은 Network First(비정상 응답·오프라인 시 캐시 폴백), 정적 자산은 Cache First로 캐싱함. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 반영함.
+- 배포: `dist/` 정적 번들을 정적 호스팅에 배포. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원하고 `public/sw.js` v2.2가 HTML은 Network First(비정상 응답·오프라인 시 캐시 폴백), 정적 자산은 Cache First로 캐싱함. 프리캐시는 필수 셸·코어 UI·기본 테마 30건/1.31MB로 제한하고 현재 BGM·선택 테마는 첫 사용 시 런타임 캐시함. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 반영함.
 - 저장소: https://github.com/NewplayerKOR/sliding-puzzle-web.git (main)

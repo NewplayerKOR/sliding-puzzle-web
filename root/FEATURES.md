@@ -32,14 +32,15 @@
 | Achievements | 12종 업적 | 승리·속도·이동 수·5x5·3성 3회·No Undo·스트릭·테마·커스텀·챌린지·전체 달성 조건 | `checkGameCompletionAchievements()` | `src/utils/achievementManager.ts`, `src/utils/achievementData.ts` | 구현 완료 |
 | Achievements | 업적 토스트·도감 | 달성 즉시 토스트 알림, 도감 모달에서 달성률과 진행도 표시 | `AchievementToast`, `AchievementModal` | `src/components/Achievement/AchievementToast.tsx`, `src/components/Modal/AchievementModal.tsx` | 구현 완료 |
 | Rating | 3성 별점 | 난이도·모드·시간·이동 수 기준 1~3성 산정, 승리 모달에서 조건 피드백 표시 | `calculateStars()` | `src/utils/starCalculator.ts`, `src/components/Modal/WinModal.tsx` | 구현 완료 |
-| Audio | BGM 4트랙 | Lo-Fi Chill·Zen Nature·Cyber Synth·Jazz Lounge, 볼륨·음소거·테마 자동 동기화, 0.3초 페이드 전환 | `audioManager`, `BgmSelectModal`, `useAudio` | `src/utils/audioManager.ts`, `src/components/Modal/BgmSelectModal.tsx`, `src/hooks/useAudio.ts` | 구현 완료 |
+| Audio | BGM 4트랙 | Lo-Fi Chill·Zen Nature·Cyber Synth·Jazz Lounge, 96kbps MP3, 볼륨·음소거·테마 자동 동기화, 0.3초 페이드 전환. 최초에는 현재 트랙만 로드 | `audioManager`, `BgmSelectModal`, `useAudio` | `src/utils/audioManager.ts`, `src/components/Modal/BgmSelectModal.tsx`, `src/hooks/useAudio.ts` | 구현 완료 |
 | Audio | 테마 SFX·콤보 피치 | 5종 SFX와 테마별 4종 음색. 0.6초 내 연속 이동 시 최대 8콤보까지 +6% 피치 상승 | `playThemeMoveSfx()`, `getComboPitchMultiplier()` | `src/utils/audioManager.ts` | 구현 완료 |
 | Undo / Replay | 1수 Undo | 이동 히스토리 기반 1수 되돌리기. 멀티 타일 이동도 1회에 복구하며 Undo 사용 시 이동 수 +1 페널티 | `undoMove()` | `src/hooks/usePuzzleGame.ts`, `src/components/Controls/Controls.tsx` | 구현 완료 |
 | Undo / Replay | 타임랩스 리플레이 | 승리 모달에서 이동 히스토리를 재생·일시정지·리셋하고 1x/2x 속도 전환 | `WinModal` | `src/components/Modal/WinModal.tsx` | 구현 완료 |
 | Records | 난이도별 최고 기록 | 최고 시간·이동 수를 LocalStorage에 저장하고 신기록 여부 표시 | `getBestRecords()`, `saveBestRecord()` | `src/utils/recordStorage.ts`, `src/App.tsx` | 구현 완료 |
 | Sharing | 결과 카드 공유 | Canvas 1000x1000 PNG 생성 후 Web Share API → 클립보드 → 파일 다운로드 순으로 폴백 | `shareOrDownloadResult()` | `src/utils/shareCardGenerator.ts`, `src/components/Modal/WinModal.tsx` | 구현 완료 |
-| PWA / Mobile | PWA 설치·오프라인 | manifest와 Service Worker v2.1로 설치 배너·오프라인 캐싱 지원. 192·512 정사각형 `any` 아이콘과 maskable 2종, apple-touch-icon(180×180) 제공. HTML Network First(비정상 응답·오프라인 시 캐시 폴백), 정적 자산 Cache First, 새 버전은 안내 배너에서 선택할 때만 반영 | `PwaInstallBanner`, `ServiceWorkerUpdateBanner`, `public/sw.js` | `src/components/PWA/PwaInstallBanner.tsx`, `src/components/PWA/ServiceWorkerUpdateBanner.tsx`, `src/utils/swUpdateManager.ts`, `public/sw.js`, `public/manifest.webmanifest`, `public/assets/icons/icon-*.png` | 구현 완료 |
+| PWA / Mobile | PWA 설치·오프라인 | manifest와 Service Worker v2.2로 설치 배너·오프라인 캐싱 지원. 192·512 정사각형 `any` 아이콘과 maskable 2종, apple-touch-icon(180×180) 제공. HTML Network First(비정상 응답·오프라인 시 캐시 폴백), 정적 자산 Cache First, 새 버전은 안내 배너에서 선택할 때만 반영. 필수 셸·코어 UI·기본 테마만 프리캐시(30건/1.31MB)하고 현재 BGM·선택 테마는 첫 사용 시 런타임 캐시(오디오 Range 206 응답은 전체 파일로 보완) | `PwaInstallBanner`, `ServiceWorkerUpdateBanner`, `public/sw.js` | `src/components/PWA/PwaInstallBanner.tsx`, `src/components/PWA/ServiceWorkerUpdateBanner.tsx`, `src/utils/swUpdateManager.ts`, `public/sw.js`, `public/manifest.webmanifest`, `public/assets/icons/icon-*.png` | 구현 완료 |
 | PWA / Mobile | 모바일 제스처·햅틱 | 100dvh·Safe Area 레이아웃, `touch-action: none`, Pull-to-refresh 차단, 이동·승리·에러 진동 피드백 | `PuzzleBoard`, `haptics` | `src/components/Board/PuzzleBoard.tsx`, `src/utils/haptics.ts`, `src/styles/index.css` | 구현 완료 |
+| Performance | 초기 로딩·에셋 최적화 | 최초 로드에 코어 이미지·현재 테마·현재 BGM만 로드하고 나머지 테마는 테마 모달에서 지연 로드. BGM 96kbps MP3, 스프라이트·아이콘 팔레트 PNG 압축(3.59MB→0.52MB). dist 20.65→11.04MB, 초기 동일 출처 decodedBodySize 9,222,220→2,716,771바이트 | `assetPreloader`, `useAssetPreloader`, `audioManager`, SW | `src/utils/assetPreloader.ts`, `src/hooks/useAssetPreloader.ts`, `src/utils/audioManager.ts`, `public/sw.js` | 구현 완료 |
 | Localization | 4개 국어 | KO·EN·JA·ZH 번역, 테마·업적·BGM·일일·공유 카드·접근성 라벨 포함. 언어 선택을 LocalStorage에 저장하고 `html lang` 동기화 | `translations`, `useTranslation`, `formatMessage` | `src/i18n/translations.ts`, `src/i18n/useTranslation.ts`, `src/i18n/format.ts` | 구현 완료 |
 | Persistence | LocalStorage 영속화 | 커스텀 이미지·업적·업적 통계·오디오 설정·언어·일일 스트릭·최고 기록을 브라우저에 저장 | `localStorage` | `src/utils/*`, `src/App.tsx`, `src/i18n/useTranslation.ts` | 구현 완료 |
 | UI / UX | 반응형 UI·애니메이션·접근성 | 타이틀·HUD·툴바·8종 모달·토스트, 0.12s 타일 트랜지션과 60fps 하드웨어 가속. 360px 상단 바 2줄 배치·아이콘 툴바·높이 기반 보드 축소로 360×800·1280×800 1화면 배치, non-passive 터치 스크롤 차단. 모달 포커스 트랩·배경 `inert`·보드 키 입력 차단, `main` landmark·보드 group 역할·확대 허용(`maximum-scale=5.0`)·WCAG AA 대비·`focus-visible` 외곽선 포함 | `App`, `components`, `useModalFocusTrap` | `src/App.tsx`, `src/components/**`, `src/styles/**`, `src/hooks/useModalFocusTrap.ts`, `index.html` | 구현 완료 |
@@ -61,6 +62,7 @@
 - 모바일 확대를 허용(`maximum-scale=5.0`)하고 툴바·크기 pill·강조 텍스트의 WCAG AA 대비를 보정함. BGM·SFX 라벨과 `alt`를 4개 국어로 적용하고 키보드 `focus-visible` 외곽선을 추가함.
 - 360px에서 타이틀 상단 바를 2줄로 배치하고 400px 이하 인게임 툴바를 4열 아이콘으로 압축함. 보드를 화면 높이에 맞춰 축소해 360×800·1280×800 게임 화면을 스크롤 없이 한 화면에 배치함. 터치 스와이프 스크롤 차단을 non-passive 리스너로 전환함.
 - PWA 매니페스트에 192×192·512×512 `any` 아이콘과 maskable 2종, apple-touch-icon을 추가함. Service Worker는 5xx 응답·오프라인 시 캐시된 셸로 폴백하고, 프리캐시 `addAll` 실패 시 자산별 캐시로 전환함. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 적용해 진행 중 게임의 즉시 새로고침을 막음.
+- BGM 4트랙을 192kbps에서 96kbps MP3로 변환하고 원본 WAV를 배포에서 제외함. 최초 로드에는 코어 이미지·현재 테마·현재 BGM만 로드하고 나머지 테마는 테마 모달에서 지연 로드함. 스프라이트·아이콘을 팔레트 PNG로 압축하고 SW 프리캐시를 필수 셸·기본 테마 중심 30건/1.31MB로 축소함. 현재 BGM은 Range 206 응답 시 전체 파일을 런타임 캐시함.
 - v1.4.0 기준 기능 카탈로그를 2026-11-08에 정리.
 
 ### v0.0.0 (초기화)
@@ -71,11 +73,12 @@
 
 ## 3. Verification (검증 기준)
 
-- **단위·통합 테스트**: `npm test` — 24개 테스트 파일 / 152개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
+- **단위·통합 테스트**: `npm test` — 25개 테스트 파일 / 156개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
 - **타입 검사**: `npx tsc --noEmit` — 0 Errors (`npm run build`의 tsc 단계에서 확인).
 - **프로덕션 빌드**: `npm run build` — Vite 6.4.3 빌드 성공 (2026-11-08).
 - **접근성 감사**: 데스크톱 Chromium Lighthouse 접근성 점수는 타이틀·게임 화면·테마 선택 모달·BGM 설정 모달 모두 1.0이다(2026-11-08, TASK-DEV-19). SEO의 `robots.txt` 유효성 항목은 접근성 범위가 아니며 TASK-QA-08에서 다룬다.
 - **반응형 레이아웃**: 360×800과 1280×800 게임 화면은 `bodyScrollHeight`가 각각 800px로 스크롤 없이 배치되고, 360×640은 가로 클리핑 없이 세로 스크롤만 허용한다(2026-11-08, TASK-DEV-20). 360×800 타이틀 상단 바는 341px/341px로 잘림이 없다.
 - **PWA·오프라인**: 2026-11-08 TASK-DEV-21에서 서브패스(`/sliding-puzzle/`) 프로덕션 빌드를 검증했다. SW scope는 `/sliding-puzzle/`, 프리캐시 37건, 매니페스트 아이콘 4종은 192×192·512×512 규격과 200 응답을 확인했다. 서버가 502를 반환하거나 중단된 상태에서도 캐시된 셸로 타이틀 화면이 렌더링됐고, 업데이트는 배너 표시 후 "나중에"에서 새로고침 없이 유지되며 "지금 업데이트"에서 새 워커 활성화와 1회 새로고침이 확인됐다.
-- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 스크린리더 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN 전 화면·JA/ZH 핵심 화면과 공유 카드 PNG를, TASK-DEV-16으로 커스텀 이미지 드래그·보존·검증 오류를, TASK-DEV-17로 AI 힌트 무효화·힌트 없음·시간 초과를, TASK-DEV-18로 모달 포커스 순환·복원과 보드·언어 선택 키 입력 차단을, TASK-DEV-19로 타이틀·게임·테마·BGM 모달의 접근성 감사와 대비·확대·라벨을, TASK-DEV-20으로 360×640·360×800·1280×800 레이아웃과 터치 스크롤 차단을, TASK-DEV-21로 PWA 아이콘·SW 폴백·업데이트 안내를 확인했다. iOS Safari의 apple-touch-icon 적용과 Firefox의 SW 업데이트 동작은 미확인이다.
+- **에셋 최적화**: 2026-11-08 TASK-DEV-22에서 프로덕션 `dist`를 20.65→11.04MB로 줄였다. BGM은 13.05→6.52MiB(192→96kbps MP3)로 변환했고, 스프라이트·아이콘은 3.59→0.52MB(팔레트 PNG, 합성 배경 SSIM 0.989~0.996)로 압축했다. 동일 출처 초기 decodedBodySize는 9,222,220→2,716,771바이트(-70.5%)였고, 최초 로드에는 현재 테마(`theme_nature`)와 현재 BGM만 포함됐다. SW 프리캐시는 37건/19.47MB에서 30건/1.31MB로 축소했으며, 오프라인 재로드에서 현재 테마·현재 BGM(2,173,327바이트, 181.1초)과 게임 시작을 확인했다. 미사용 테마·BGM은 502로 지연 로드 대상에서 제외됐다. 테마 모달을 열면 4개 테마를 모두 지연 로드하고 썸네일이 완료된 뒤 선택해 전환 깜빡임이 없음을 확인했다.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 스크린리더 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN 전 화면·JA/ZH 핵심 화면과 공유 카드 PNG를, TASK-DEV-16으로 커스텀 이미지 드래그·보존·검증 오류를, TASK-DEV-17로 AI 힌트 무효화·힌트 없음·시간 초과를, TASK-DEV-18로 모달 포커스 순환·복원과 보드·언어 선택 키 입력 차단을, TASK-DEV-19로 타이틀·게임·테마·BGM 모달의 접근성 감사와 대비·확대·라벨을, TASK-DEV-20으로 360×640·360×800·1280×800 레이아웃과 터치 스크롤 차단을, TASK-DEV-21로 PWA 아이콘·SW 폴백·업데이트 안내를, TASK-DEV-22로 BGM 변환·초기 로딩·오프라인 캐시를 확인했다. iOS Safari의 apple-touch-icon 적용, Firefox의 SW 업데이트 동작, 96kbps BGM의 주관적 청취 품질, Safari/Firefox의 Range 오디오 캐시 동작은 미확인이다.
 - **Node.js 26 참고**: Vitest 실행 시 jsdom의 `localStorage` 초기화를 위해 `NODE_OPTIONS=--localstorage-file=<임시 파일>` 지정이 필요하다. 지정하지 않으면 localStorage 관련 테스트가 실패한다.
