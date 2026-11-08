@@ -1,0 +1,333 @@
+{
+  "focusTrace": [
+    {
+      "tag": "BUTTON",
+      "cls": "title-badge-btn daily",
+      "text": "0일 스트릭",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "title-badge-btn trophy",
+      "text": "업적 도감",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "SELECT",
+      "cls": "title-lang-select",
+      "text": "한국어English日本語中文",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "title-audio-btn bgm-track-btn",
+      "text": "BGM",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "title-audio-btn active",
+      "text": "",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "title-audio-btn active",
+      "text": "SFX",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "size-pill ",
+      "text": "3×3",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "size-pill active",
+      "text": "4×4",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "size-pill ",
+      "text": "5×5",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "btn-play-mode standard",
+      "text": "게임 시작 (4×4)",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "boxShadow": "none",
+      "focusVisible": true
+    }
+  ],
+  "gameFocusTrace": [
+    {
+      "tag": "BODY",
+      "cls": "",
+      "aria": null,
+      "text": "홈으로0일한국어English日本語中文BGMSFX이동 수0시간00",
+      "outline": "rgb(34, 34, 29) none 3px",
+      "outlineOffset": "0px",
+      "focusVisible": false
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "home-btn",
+      "aria": null,
+      "text": "홈으로",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "daily-streak-badge-btn",
+      "aria": null,
+      "text": "0일",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "SELECT",
+      "cls": "lang-select",
+      "aria": "언어 선택",
+      "text": "한국어English日本語中文",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "audio-btn bgm-track-btn",
+      "aria": "BGM 트랙 설정",
+      "text": "BGM",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "audio-btn active",
+      "aria": "BGM 음소거",
+      "text": "",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "audio-btn active",
+      "aria": "SFX 음소거",
+      "text": "SFX",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "btn-feature-tool btn-ai-hint  ",
+      "aria": "AI 힌트",
+      "text": "AI 힌트",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "btn-feature-tool",
+      "aria": "내 사진",
+      "text": "내 사진",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "btn-feature-tool btn-daily",
+      "aria": "일일 챌린지",
+      "text": "일일 챌린지",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "btn-feature-tool btn-achievement",
+      "aria": "업적 도감",
+      "text": "업적 도감",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    },
+    {
+      "tag": "BUTTON",
+      "cls": "toolbar-btn",
+      "aria": "테마 선택",
+      "text": "테마 선택",
+      "outline": "rgb(187, 62, 11) solid 2px",
+      "outlineOffset": "2px",
+      "focusVisible": true
+    }
+  ],
+  "numberOverlay": {
+    "text": "4",
+    "fontSize": "12px",
+    "fontWeight": "600",
+    "color": "rgb(247, 247, 243)",
+    "background": "rgb(34, 34, 29)",
+    "padding": "1px 5px",
+    "lineHeight": "14.4px",
+    "textShadow": "none",
+    "borderRadius": "4px"
+  },
+  "bgm": {
+    "sliders": [
+      {
+        "x": 516,
+        "y": 265,
+        "w": 274,
+        "h": 4,
+        "aria": "BGM 볼륨 슬라이더",
+        "type": "range"
+      },
+      {
+        "x": 516,
+        "y": 305,
+        "w": 274,
+        "h": 4,
+        "aria": "SFX 볼륨 슬라이더",
+        "type": "range"
+      }
+    ],
+    "checkbox": {
+      "x": 444,
+      "y": 342,
+      "w": 16,
+      "h": 16
+    },
+    "checkboxLabel": {
+      "x": 444,
+      "y": 331,
+      "w": 392,
+      "h": 46
+    },
+    "checkboxAria": null,
+    "titleRect": {
+      "x": 475,
+      "y": 146,
+      "w": 219,
+      "h": 30
+    },
+    "titleText": "BGM & 사운드 설정",
+    "trackNames": [
+      {
+        "text": "Lo-Fi Chill 칠홉 / 어쿠스틱 차분하고 편안한 비트와 어쿠스틱 기타 선율 선택",
+        "nameRect": {
+          "x": 484,
+          "y": 440,
+          "w": 67,
+          "h": 18
+        },
+        "cardRect": {
+          "x": 431,
+          "y": 431,
+          "w": 416,
+          "h": 55
+        }
+      },
+      {
+        "text": "Zen Nature 자연 / 앰비언트 맑은 자연의 숨결과 평온한 명상 앰비언스 재생 중",
+        "nameRect": {
+          "x": 453,
+          "y": 520,
+          "w": 2,
+          "h": 4
+        },
+        "cardRect": {
+          "x": 431,
+          "y": 490,
+          "w": 416,
+          "h": 55
+        }
+      },
+      {
+        "text": "Cyber Synth 신스웨이브 / 일렉트로 미래적인 신시사이저와 레트로 사이버네틱 리듬 선택",
+        "nameRect": {
+          "x": 484,
+          "y": 557,
+          "w": 81,
+          "h": 18
+        },
+        "cardRect": {
+          "x": 431,
+          "y": 548,
+          "w": 416,
+          "h": 55
+        }
+      },
+      {
+        "text": "Jazz Lounge 보사노바 재즈 세련된 카페 무드의 감미로운 피아노 재즈 선율 선택",
+        "nameRect": {
+          "x": 484,
+          "y": 616,
+          "w": 81,
+          "h": 18
+        },
+        "cardRect": {
+          "x": 431,
+          "y": 607,
+          "w": 416,
+          "h": 55
+        }
+      }
+    ]
+  },
+  "lang": {
+    "select": {
+      "x": 671,
+      "y": 22,
+      "w": 64,
+      "h": 16
+    },
+    "wrapper": {
+      "x": 649,
+      "y": 12,
+      "w": 91,
+      "h": 36
+    },
+    "elementAtWrapperRight": "DIV.lang-select-wrapper",
+    "selectAria": "언어 선택"
+  }
+}

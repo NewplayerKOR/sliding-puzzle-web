@@ -17,6 +17,14 @@ vi.mock('../../utils/audioManager', () => ({
 
 const mockedPlaySfx = vi.mocked(audioManager.playSfx);
 
+// jsdom은 localStorage 쓰기 후 storage 이벤트를 0ms 타이머로 전달한다.
+// 업적 토스트 자체 타이머만 남기기 위해 저장소 이벤트 타이머를 먼저 소진한다.
+function flushStorageEventTimers() {
+  act(() => {
+    vi.advanceTimersByTime(0);
+  });
+}
+
 function unlockFastThreeByThreeWin() {
   return checkGameCompletionAchievements({
     gridSize: 3,
@@ -53,6 +61,7 @@ describe('AchievementToast', () => {
     act(() => {
       unlockFastThreeByThreeWin();
     });
+    flushStorageEventTimers();
 
     expect(screen.getByText('첫 승리의 기쁨')).toBeDefined();
     expect(screen.queryByText('스피드 데몬')).toBeNull();
@@ -92,6 +101,7 @@ describe('AchievementToast', () => {
     act(() => {
       unlockFastThreeByThreeWin();
     });
+    flushStorageEventTimers();
 
     expect(vi.getTimerCount()).toBe(1);
 

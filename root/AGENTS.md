@@ -72,15 +72,19 @@
 - 프로젝트명: Sliding Block Puzzle (N-Puzzle 웹 게임)
 - 한 줄 요약: React 19 + TypeScript + Vite 기반의 100% 클라이언트 사이드 슬라이딩 퍼즐 웹 앱. 백엔드 없이 브라우저 표준 API와 LocalStorage로 동작함.
 - 핵심 기술 스택:
-  - Language / Runtime: TypeScript 5.7 (strict), Node.js 18+ / npm 9+
-  - Framework / Library: React 19, Vite 6, Vitest 4 + Testing Library + jsdom, Vanilla CSS
+  - Language / Runtime: TypeScript 5.9 (strict), Node.js 24.15+ (24.x) 또는 26+ / npm 10+
+  - Framework / Library: React 19, Vite 6, Vitest 4 + Testing Library + jsdom, Playwright E2E, Vanilla CSS
   - Database / Infrastructure: 없음 (백엔드·DB 없음, LocalStorage 영속화, Service Worker 기반 PWA 정적 배포)
 - 주요 실행/테스트 명령어:
+  - Install: `npm ci` (lockfile 기준)
   - Run: `npm run dev` (Vite 개발 서버, http://localhost:5173)
-  - Test: `npm test` (Vitest run) / 타입 검사 `npx tsc --noEmit`
+  - Test: `npm test` (Vitest run) / 타입 검사 `npm run typecheck`
+  - E2E: `npm run test:e2e` (최초 1회 `npx playwright install chromium`)
   - Build: `npm run build` (tsc + Vite 프로덕션 빌드) / 빌드 미리보기 `npm run preview`
 - 주요 구조:
-  - `root/`: 거버넌스 문서 (AGENTS.md, TASKS.md, FEATURES.md)
+  - `root/`: 거버넌스 문서 (AGENTS.md, TASKS.md, FEATURES.md, DEPLOYMENT.md, DESIGN_SYSTEM.md)
+  - `.github/workflows/`: CI (quality + e2e)
+  - `e2e/`: Playwright E2E 스모크 테스트
   - `roles/`: 역할별 행동 수칙 (PM, DEV, QA_DEVOPS)
   - `src/App.tsx`: 화면 전환, 모달, AI 힌트, 승리 후처리 오케스트레이션
   - `src/hooks/usePuzzleGame.ts`: 게임 상태 단일 소유자 (보드·타이머·Undo·챌린지)
@@ -88,10 +92,12 @@
   - `src/workers/solver.worker.ts`: A* 힌트 탐색 Web Worker
   - `src/components/`: Board, Controls, Header, Modal, Title, Achievement, PWA UI
   - `src/i18n/`: KO/EN/JA/ZH 번역
-  - `public/`: 테마 이미지·오디오·스프라이트·PWA manifest·sw.js
+  - `src/test/`: Vitest setup
+  - `public/`: 테마 이미지·오디오·스프라이트·PWA manifest·sw.js·robots.txt
   - `scripts/`: 에셋 생성·가공용 Node 스크립트
-- 검증 기준: Vitest 29개 테스트 파일 전체 PASS + `npx tsc --noEmit` 0 Errors + `npm run build` 성공
-- 최근 검증 (2026-11-08): Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 6.4.3 프로덕션 빌드 성공. Lighthouse 접근성 타이틀·게임·테마·BGM 모달 1.0. 360×800·1280×800 게임 화면 1화면 배치 확인. 서브패스 PWA 오프라인 재로드·업데이트 배너 적용 확인. BGM 96kbps MP3 전환·초기 로딩 8.80→2.59MiB·SW 프리캐시 1.31MB 확인. 다중 업적 3건 순차 토스트·최신 메타데이터 병합 확인. 손상 JSON·저장소 차단 시 기본값 폴백·타이틀/모달 렌더링 확인. 전역 디자인 토큰(시스템 폰트·평면 `#EFEFEA` 배경·Google Fonts 제거·WCAG AA 대비)과 360×800/1280×800 게임 1화면 유지 확인. TASK-DEV-26으로 전 화면 평면 UI·주요 모달·Win/GameOver·lucide 아이콘 통일과 그라데이션/블러/9999px pill/12px 미만 폰트/UI 이모지 0건 확인
-- 검증 환경: Node.js 26.13.0 / npm 12.2.2. WebStorm 번들 경로(`C:\Users\parkt\AppData\Roaming\JetBrains\WebStorm2026.3\node\versions\26.13.0`)를 사용하며 PATH에는 등록되지 않음. Node.js 26에서는 Vitest 실행 시 `NODE_OPTIONS=--localstorage-file=<임시 파일>` 지정이 필요함.
-- 배포: `dist/` 정적 번들을 정적 호스팅에 배포. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원하고 `public/sw.js` v2.2가 HTML은 Network First(비정상 응답·오프라인 시 캐시 폴백), 정적 자산은 Cache First로 캐싱함. 프리캐시는 필수 셸·코어 UI·기본 테마 30건/1.31MB로 제한하고 현재 BGM·선택 테마는 첫 사용 시 런타임 캐시함. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 반영함.
+- 검증 기준: Vitest 29개 테스트 파일 전체 PASS + `npm run typecheck` 0 Errors + `npm run build` 성공 + Playwright E2E 4/4 PASS
+- 최근 검증 (2026-11-08): Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 6.4.5 빌드 성공, Playwright E2E 4/4 PASS. 360×800·1280×800 1화면, 서브패스 PWA 오프라인·업데이트 배너, BGM 경량화·SW 프리캐시, 저장소 방어, 전 화면 심플·어반 UI를 확인함.
+- 검증 환경: CI는 `.nvmrc`의 Node.js 24를 사용하고, 로컬 Node.js 26.13.0 / npm 12.2.2도 지원함. WebStorm 번들 경로(`C:\Users\parkt\AppData\Roaming\JetBrains\WebStorm2026.3\node\versions\26.13.0`)는 PATH에 등록되지 않음. Node.js 26에서도 `src/test/setup.ts`가 jsdom Storage를 연결하므로 별도 `NODE_OPTIONS` 없이 `npm test`가 통과함.
+- CI: [.github/workflows/ci.yml](../.github/workflows/ci.yml) — Node.js 24 기준 test·typecheck·build·audit 후 Playwright Chromium E2E를 실행함.
+- 배포: `dist/` 정적 번들을 정적 호스팅에 배포함. 상세 절차는 [DEPLOYMENT.md](./DEPLOYMENT.md)를 따름. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원하고 `public/sw.js` v2.2가 HTML은 Network First(비정상 응답·오프라인 시 캐시 폴백), 정적 자산은 Cache First로 캐싱함. 프리캐시는 필수 셸·코어 UI·기본 테마 30건/1.31MB로 제한하고 현재 BGM·선택 테마는 첫 사용 시 런타임 캐시함. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 반영함. Vercel 프로젝트는 2026-11-08 기준 소유자가 의도적으로 pause한 상태이며 장애가 아님.
 - 저장소: https://github.com/NewplayerKOR/sliding-puzzle-web.git (main)

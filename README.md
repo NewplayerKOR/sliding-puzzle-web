@@ -44,11 +44,13 @@ React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이�
 
 | 분류 | 기술 | 버전 | 비고 |
 | :--- | :--- | :--- | :--- |
-| **Framework** | React | 19.0.0 | UI 컴포넌트 렌더링 및 상태 관리 |
-| **Language** | TypeScript | 5.7.3 | 정적 타입 검사 |
-| **Build Tool** | Vite | 6.2.0 | 개발 서버 및 프로덕션 번들링 |
-| **Testing** | Vitest | 4.1.10 | 유닛 및 통합 테스트 러너 |
+| **Runtime** | Node.js | 24.15.0+ (24.x) 또는 26.0.0+ | `.nvmrc` 24, `package.json` `engines` 기준 |
+| **Framework** | React | 19.2.8 | UI 컴포넌트 렌더링 및 상태 관리 |
+| **Language** | TypeScript | 5.9.3 | 정적 타입 검사 |
+| **Build Tool** | Vite | 6.4.5 | 개발 서버 및 프로덕션 번들링 |
+| **Testing** | Vitest | 4.1.12 | 유닛 및 통합 테스트 러너 |
 | **DOM Testing** | Testing Library | 16.3.2 | React 컴포넌트 렌더링 테스트 |
+| **E2E Testing** | Playwright | 1.65.0 | Chromium 스모크 테스트 |
 | **Styling** | Vanilla CSS | Standard | CSS Grid/Flexbox 및 100dvh 레이아웃 |
 | **Audio** | Web Audio API | Standard | 브라우저 내장 오디오 제어 |
 | **Worker** | Web Worker | Standard | AI 힌트 탐색 연산 분리 |
@@ -76,8 +78,8 @@ $$h(n) = h_{\text{manhattan}}(n) + 2 \times C_{\text{linear}}(n)$$
 ## 5. 실행 방법 (Getting Started)
 
 ### 요구사항
-* Node.js 18.0.0 이상
-* npm 9.0.0 이상
+* Node.js 24.15.0 이상(24.x) 또는 26.0.0 이상 (`.nvmrc`: 24)
+* npm 10.0.0 이상
 
 ### 설치 및 실행
 ```bash
@@ -85,8 +87,8 @@ $$h(n) = h_{\text{manhattan}}(n) + 2 \times C_{\text{linear}}(n)$$
 git clone https://github.com/NewplayerKOR/sliding-puzzle-web.git
 cd sliding-puzzle-web
 
-# 패키지 설치
-npm install
+# 패키지 설치 (lockfile 기준)
+npm ci
 
 # 개발 서버 실행
 npm run dev
@@ -96,11 +98,26 @@ npm run build
 
 # 테스트 실행
 npm test
+
+# 타입 검사
+npm run typecheck
+
+# E2E 테스트 (최초 1회 npx playwright install chromium)
+npm run test:e2e
 ```
 
 ---
 
-## 6. 테스트 및 검증 현황
+## 6. 배포 및 CI
+
+- **배포 절차**: [root/DEPLOYMENT.md](./root/DEPLOYMENT.md) — Vercel 설정, 서브패스 배포, 배포 후 확인, 캐시·업데이트·롤백 절차를 정리했다.
+- **CI**: [.github/workflows/ci.yml](./.github/workflows/ci.yml) — Node 24 기준으로 `npm ci` → 테스트 → 타입 검사 → 빌드 → 프로덕션 의존성 감사를 수행하고, 이어서 Playwright Chromium E2E를 실행한다.
+- **Vercel 상태**: 2026-11-08 기준 Vercel 프로젝트는 소유자가 의도적으로 pause한 상태다. `main` push 자동 배포는 실행되지 않지만 장애가 아니며, resume하면 기존 설정으로 재개된다. 자세한 내용은 배포 문서를 따른다.
+- **robots.txt**: [public/robots.txt](./public/robots.txt)는 전체 크롤링 허용 정책이다. 서브패스 배포에서 도메인 루트 정책이 필요하면 배포 문서를 따른다.
+
+---
+
+## 7. 테스트 및 검증 현황
 
 | 항목 | 도구 | 대상 | 결과 |
 | :--- | :--- | :--- | :---: |
@@ -111,26 +128,32 @@ npm test
 | **업적 토스트** | Vitest·브라우저 측정 | 다중 달성 큐 | **3건 순차 표시·14초 후 소멸 확인** |
 | **저장소 방어** | Vitest·브라우저 측정 | 손상 데이터·차단 | **기본값 폴백·타이틀/모달 정상 렌더링 확인** |
 | **디자인 토큰** | Vitest·브라우저 측정 | 전 화면 심플·어반 UI | **그라데이션·블러·pill·이모지 0건, 360×800/1280×800 1화면 확인** |
+| **E2E 스모크** | Playwright | Chromium 4개 시나리오 | **4 / 4 Passed** |
 
 ---
 
-## 7. 디렉토리 구조 (Directory Structure)
+## 8. 디렉토리 구조 (Directory Structure)
 
 ```
 sliding-puzzle-web/
-├── root/                    # 프로젝트 거버넌스 (AGENTS.md, TASKS.md, FEATURES.md)
+├── .github/workflows/       # CI (quality + e2e)
+├── e2e/                     # Playwright E2E 스모크 테스트
+├── root/                    # 거버넌스 (AGENTS.md, TASKS.md, FEATURES.md, DEPLOYMENT.md, DESIGN_SYSTEM.md)
 ├── roles/                   # 역할별 행동 수칙 (PM, DEV, QA_DEVOPS)
-├── public/                  # 정적 에셋 (아이콘, 오디오, 테마 텍스처, PWA 매니페스트, sw.js)
+├── public/                  # 정적 에셋 (아이콘, 오디오, 테마 텍스처, PWA 매니페스트, sw.js, robots.txt)
 ├── src/
 │   ├── components/          # React 컴포넌트 (Board, Controls, Modal, Title 등)
 │   ├── hooks/               # 커스텀 훅 (usePuzzleGame, useAudio, useAssetPreloader 등)
 │   ├── i18n/                # 4개 국어 딕셔너리 (translations.ts, useTranslation.ts)
-│   ├── styles/              # CSS 스타일시트 (100dvh, CSS Grid, 모바일 스타일)
+│   ├── styles/              # 디자인 토큰·전역/컴포넌트 스타일
+│   ├── test/                # Vitest setup
 │   ├── types/               # TypeScript 인터페이스 및 타입 정의
 │   ├── utils/               # 코어 로직, 알고리즘, 오디오 매니저, 스토리지
 │   ├── workers/             # A* 탐색 Web Worker (solver.worker.ts)
 │   ├── App.tsx              # 메인 애플리케이션 컴포넌트
 │   └── main.tsx             # 진입점
 ├── scripts/                 # 에셋 생성·가공용 Node 스크립트
+├── .nvmrc                   # Node 24
+├── playwright.config.ts     # Playwright 설정
 └── package.json             # 프로젝트 메타데이터 및 의존성
 ```

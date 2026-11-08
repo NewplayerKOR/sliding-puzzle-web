@@ -928,3 +928,258 @@
   - reduced motion: `prefers-reduced-motion: reduce` 전역 규칙이 빌드 CSS에 포함됨을 확인. 실제 OS 설정 에뮬레이션은 미실행.
 - **미실행**: 실제 모바일 실기기·Safari/Firefox 렌더링·스크린리더 수동 검증, OS 수준 `prefers-reduced-motion` 에뮬레이션, 공유 카드의 실제 공유 시트·다운로드 이미지, PWA manifest 색상(`#0f172a`/`#2563eb`)과 SW 프리캐시 목록 갱신은 확인하지 않았음. 360×800·1280×800 측정은 브라우저 창 크기 변경 대신 동일 출처 iframe/헤드리스 뷰포트로 수행함. 시각 회귀·잔여 문제 발주는 TASK-QA-09 범위임.
 - **증거**: `src/components/Title/**`, `src/components/Header/**`, `src/components/Controls/**`, `src/components/Board/**`, `src/components/Modal/**`, `src/components/Achievement/**`, `src/components/PWA/**`, `src/i18n/translations.ts`, `src/utils/shareCardGenerator.ts`, `src/utils/assetPreloader.ts`, `src/styles/index.css`, `src/styles/App.css`, `index.html`, `root/DESIGN_SYSTEM.md`, `root/archive/assets/task-dev-26/title-before-360x800.webp`, `title-after-360x800.webp`, `game-before-360x800.webp`, `game-after-360x800.webp`, `title-before-1280x800.webp`, `title-after-1280x800.webp`, `game-before-1280x800.webp`, `game-after-1280x800.webp`, `win-after-1280x800.webp`, `gameover-after-1280x800.webp`, 터미널 실행 결과, 브라우저 computed style·레이아웃 측정 결과
+
+---
+
+## TASK-QA-08 — CI/CD·테스트 환경·의존성·배포 문서 정비
+
+- **Phase**: 01
+- **담당**: QA_DEVOPS
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: PR마다 테스트·타입 검사·빌드·보안 감사를 자동 수행하고, Node 요구사항과 테스트 실행 조건을 정합화하며, 핵심 E2E와 배포 절차를 마련한다.
+- **완료 기준(DoD)**:
+  - [x] Node 24 LTS 기준 CI 워크플로에서 `npm ci` → test → tsc → build → `npm audit --omit=dev` 실행
+  - [x] `package.json` `engines`와 README/AGENTS Node 요구사항 정합화(문서는 PM에 전달)
+  - [x] 수동 환경 변수 없이 `npm test`가 통과하도록 setup 파일 또는 스크립트 정비
+  - [x] dev 의존성 취약점 6건 수정 또는 예외 사유 기록, `npm outdated` 주요 항목 갱신 검토
+  - [x] Playwright E2E 스모크(타이틀→테마→게임→이동/Undo→AI 힌트→3×3 승리, 360px 레이아웃, 모달 포커스, EN 전환) 추가
+  - [x] `public/robots.txt`와 배포·캐시 갱신 절차 문서 추가
+  - [x] CI·로컬 실행 결과와 미실행 범위 기록
+
+### 1. 진행 결과
+
+- **CI 워크플로 추가**: `.github/workflows/ci.yml`에 `quality`·`e2e` 두 job을 구성함.
+  - `quality`: `npm ci` → `npm test` → `npm run typecheck` → `npm run build` → `npm audit --omit=dev --audit-level=moderate`
+  - `e2e`: `npm ci` → `npx playwright install --with-deps chromium` → `npm run test:e2e`, 실패 시 `playwright-report/`·`test-results/` 아티팩트 업로드
+  - `push`·`pull_request`(main)와 수동 실행을 트리거로 설정하고, 동시 실행 취소·읽기 전용 권한·job 타임아웃을 지정함.
+- **Node 요구사항 정합화**: `package.json`에 `engines.node` `^24.15.0 || >=26.0.0`, `engines.npm` `>=10`을 추가하고 `.nvmrc`를 `24`로 추가함. CI는 `.nvmrc`를 사용함.
+- **테스트 환경 정비**: `src/test/setup.ts`를 추가하고 `vite.config.ts`의 `test.setupFiles`에 연결함. Node 26에서 Vitest jsdom 환경이 전역 `localStorage`를 복사하지 못하는 문제를 `globalThis.jsdom.window.localStorage`·`sessionStorage` 바인딩으로 해결해 `NODE_OPTIONS=--localstorage-file` 없이 `npm test`가 통과하게 함. Vitest 수집 범위는 `src/**/*.{test,spec}.{ts,tsx}`로 제한해 Playwright E2E 파일이 Vitest에 중복 수집되지 않게 함.
+- **의존성 보안 수정**: `npm audit fix`로 `vite` 6.4.5, `vitest` 4.1.12, `sharp` 0.35.5, `undici` 8.12.4, `source-map-js` 1.2.2 등 15개 패키지를 갱신함. 전체 감사·배포 의존성 감사 모두 0건이 됨.
+- **E2E 스모크 추가**: `playwright.config.ts`와 `e2e/smoke.spec.ts`를 추가함. Playwright Chromium 158.0.8127.18을 로컬에 설치해 4개 시나리오를 실행함.
+  - 타이틀 → 테마 모달 → 3×3 시작 → 이동 → Undo(이동 수 패널티 포함) → AI 힌트 → BFS 25수급 실제 클릭 승리 → 신기록·업적 저장 확인
+  - 테마 모달 포커스 트랩(Tab 15회)과 Escape 후 시작 버튼 포커스 복원
+  - EN 전환 시 `html lang="en"`·영어 UI·새로고침 후 언어 유지
+  - 360×800에서 가로 오버플로 0건·보드가 뷰포트 안에 표시
+- **배포 문서·robots 추가**: `root/DEPLOYMENT.md`에 로컬 검증, Vercel 설정, 서브패스, 배포 후 확인, 캐시·업데이트, 롤백, CI 실패 대응을 정리함. `public/robots.txt`를 추가하고 빌드 산출물 `dist/robots.txt` 포함을 확인함.
+- **PM 전달**: README·AGENTS의 Node 18+ 안내, 기술 스택 버전 표, 배포 문서 링크 정합화를 `TASK-PM-05`로 등록함.
+- **Vercel 상태**: GitHub→Vercel 자동 배포 연결은 유지돼 있으나 사용자가 Vercel 프로젝트를 pause해 현재 배포가 실행되지 않음. 의도된 운영 상태이므로 결함으로 보고하지 않고 `root/DEPLOYMENT.md`에만 기록함.
+
+### 2. 변경 파일
+
+- 추가: `.github/workflows/ci.yml`, `.nvmrc`, `playwright.config.ts`, `e2e/smoke.spec.ts`, `src/test/setup.ts`, `public/robots.txt`, `root/DEPLOYMENT.md`
+- 수정: `package.json`, `package-lock.json`, `vite.config.ts`, `.gitignore`, `src/components/Achievement/AchievementToast.test.tsx`, `root/TASKS.md`
+- 제품 비즈니스 로직은 수정하지 않음.
+
+### 3. 검증 결과
+
+| 검증 | 환경 | 결과 |
+| :--- | :--- | :--- |
+| `npm ci` | Node.js 26.13.0 / npm 12.2.2 | 173 packages, 취약점 0건, exit 0 |
+| `npm ci` | Node.js 24.15.0 / npm 12.2.2 | 173 packages, 취약점 0건, exit 0 |
+| `npm test` | Node.js 26.13.0, 수동 환경 변수 없음 | **29 files / 183 tests PASS**, exit 0 |
+| `npm test` | Node.js 24.15.0, 수동 환경 변수 없음 | **29 files / 183 tests PASS**, exit 0 |
+| `npm run typecheck` | Node.js 26.13.0 | 0 Errors, exit 0 |
+| `tsc --noEmit` | Node.js 24.15.0 | 0 Errors, exit 0 |
+| `npm run build` | Node.js 26.13.0 / Vite 6.4.5 | 성공, exit 0 |
+| `vite build` | Node.js 24.15.0 / Vite 6.4.5 | 성공, exit 0 |
+| `npm audit` | npm 12.2.2 | 0 vulnerabilities |
+| `npm audit --omit=dev` | npm 12.2.2 | 0 vulnerabilities |
+| Playwright E2E | Node.js 26.13.0 / Chromium 158 | **4 passed (13.7s)** |
+| Playwright E2E | Node.js 24.15.0 / Chromium 158 | **4 passed (4.4s)** |
+| CI YAML 파싱 | `npx js-yaml .github/workflows/ci.yml` | exit 0, 유효한 YAML |
+
+- 빌드 산출물: `dist/index.html` 2.27KB, `dist/assets/index-Bl2M3K-o.css` 73.67KB(gzip 9.87KB), `dist/assets/index-3KcVD9w5.js` 360.74KB(gzip 112.10KB), `dist/assets/solver.worker-DT22KFGs.js` 9.09KB. `dist/robots.txt` 45바이트 포함.
+- `npm outdated` 확인: React 19.2.8→19.3.1, Vite 6.4.5→8.3.6, Vitest 4.1.12→5.1.0, TypeScript 5.9.3→7.0.2, lucide-react 1.31.0→1.70.0, jsdom 30.0.1→31.0.0, `@vitejs/plugin-react` 4.7.0→6.2.1 등이 확인됨.
+  - 이번 업무에서는 보안 수정에 필요한 패치 버전만 적용함. Vite 8·Vitest 5·TypeScript 7·plugin-react 6은 메이저 업그레이드로 별도 회귀 검증이 필요해 적용하지 않음. React 19.3·lucide 1.70·jsdom 31 등도 기능 변경 영향 검토가 필요해 후속 검토 대상으로 남김.
+- 로컬 npm 12의 install-scripts 정책으로 `esbuild@0.25.12` postinstall이 차단된다는 경고가 출력됐으나, 플랫폼별 optional binary로 테스트·빌드·E2E가 모두 정상 동작함. GitHub Actions의 Node 24 기본 npm 환경에는 해당 정책이 적용되지 않을 수 있음.
+
+### 4. 실패·판단 이력
+
+- 첫 setup 파일은 `window.localStorage`를 사용했으나 Vitest jsdom 환경에서 `window === globalThis`이고 전역 `localStorage`가 undefined라 효과가 없었음. 실제 jsdom 인스턴스인 `globalThis.jsdom.window.localStorage`에 연결해 해결함.
+- Vitest 4.1.12와 jsdom 조합에서 `localStorage` 쓰기 후 storage 이벤트가 0ms 타이머로 잡혀 `AchievementToast.test.tsx`의 `vi.getTimerCount()`가 토스트 외 타이머까지 셈. 검사 의도를 약화하지 않고, 저장소 이벤트 타이머를 먼저 소진하는 `flushStorageEventTimers()`를 테스트에 추가해 토스트 타이머 1개를 검증하도록 유지함.
+- Vite 6.4.5·Vitest 4.1.12가 `npm audit fix --dry-run`에서 제시돼 메이저 업그레이드 없이 보안 취약점 6건을 모두 해소할 수 있음을 확인하고 적용함.
+
+### 5. 미실행·제한
+
+- GitHub Actions 원격 실행은 저장소 push 전이라 미실행. 워크플로 YAML 파싱과 Node 24.15.0 로컬 동일 명령 시퀀스(`npm ci`→test→tsc→build→audit)로 대체 검증함.
+- Vercel 실제 배포·재개·롤백은 프로젝트 pause 상태라 미실행. 배포 설정과 절차 문서만 확인함.
+- 실제 모바일 실기기·Safari/Firefox·스크린리더·실제 PWA 설치 플로우는 미실행. E2E는 Chromium 360×800 뷰포트로 대체함.
+- Playwright E2E는 Chromium 단일 브라우저만 실행함. WebKit·Firefox 프로젝트는 추가하지 않음.
+- `npm outdated`의 메이저 업그레이드는 보안 이슈가 아니며 이번 작업 범위에서 적용하지 않음.
+
+### 6. DoD 확인
+
+- [x] CI 워크플로 구성 및 Node 24.15.0 로컬 동일 시퀀스 PASS (원격 GitHub Actions 실행은 미실행으로 기록)
+- [x] `package.json` engines·`.nvmrc` 정비, README/AGENTS 문서 수정은 `TASK-PM-05`로 PM에 전달
+- [x] 수동 환경 변수 없이 `npm test` PASS
+- [x] dev 취약점 6건 수정, `npm audit` 0건, `npm outdated` 갱신 검토 기록
+- [x] Playwright E2E 4개 시나리오 추가·PASS
+- [x] `public/robots.txt`·`root/DEPLOYMENT.md` 추가, 빌드 산출물 포함 확인
+- [x] CI·로컬 실행 결과와 미실행 범위 기록
+
+### 7. 증거
+
+- CI·설정: `.github/workflows/ci.yml`, `.nvmrc`, `playwright.config.ts`, `e2e/smoke.spec.ts`, `src/test/setup.ts`, `vite.config.ts`, `package.json`, `package-lock.json`, `.gitignore`
+- 배포: `public/robots.txt`, `root/DEPLOYMENT.md`, `dist/robots.txt`
+- 테스트 보정: `src/components/Achievement/AchievementToast.test.tsx`
+- 실행 결과: Node.js 26.13.0·24.15.0 Vitest 29/183 PASS, `tsc --noEmit` 0 Errors, Vite 6.4.5 빌드 성공, Playwright 4/4 PASS, `npm audit` 0건, `js-yaml` 파싱 exit 0
+- 작업 상태·PM 전달: `root/TASKS.md`의 TASK-QA-08 완료 요약, `TASK-PM-05`
+
+---
+
+## TASK-QA-09 — 심플·어반 UI/UX·가독성·시각 회귀 검증
+
+- **Phase**: 01
+- **담당**: QA_DEVOPS
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **검증 대상**: 현재 working tree (TASK-DEV-25·26 적용, TASK-QA-08 완료 후), 프로덕션 빌드 `dist`
+- **목표**: TASK-DEV-26 적용 결과를 360×640·360×800·1280×800에서 검증하고, 가독성·일관성·접근성·AI 디자인 잔재를 확인해 잔여 문제를 DEV 업무로 발주한다.
+- **완료 기준(DoD)**:
+  - [x] 화면별 스크린샷과 발견 항목(P0/P1/P2) 기록
+  - [x] 문제 항목을 `TASK-DEV-27` 이후 ID로 DEV Backlog에 등록
+  - [x] `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
+  - [x] 실제 모바일 실기기 미실행 시 명시
+
+### 1. 진행 결과
+
+- 360×640·360×800·1280×800에서 타이틀·게임·HUD·컨트롤·보드·8종 모달·업적·PWA 배너·업데이트 배너·토스트·Win/GameOver를 확인함.
+- 8종 모달: 테마, BGM, 일일 챌린지, 업적, 커스텀 이미지, 힌트 미리보기, Win, GameOver.
+- **P0 0건 / P1 0건 / P2 2건(DEV 발주) + 보고만 한 항목 4건**.
+- `TASK-DEV-27`(360px 모달 텍스트 줄바꿈·잘림)과 `TASK-DEV-28`(모바일 터치 타깃·PWA 배너 접근성)을 발주함.
+- 기존 기능 회귀: 테마 시작, 모달 열기/닫기, 키보드 포커스, 이동, Undo, AI 힌트, 3×3 승리, Move Limit 게임오버, EN 전환을 확인함.
+
+### 2. 검증 환경·방법
+
+- **앱**: `npm run build` 산출물(`dist`)을 `vite preview` 127.0.0.1:4173에서 서빙.
+- **브라우저**: Playwright Chromium 158.0.8127.18, headless, viewport 360×640·360×800·1280×800, deviceScaleFactor 1.
+- **절차**: 각 뷰포트마다 새 BrowserContext로 진입해 `localStorage`를 초기화하고, 타이틀→모달→게임→모달→회귀 동작 순서로 캡처·측정함.
+- **PWA 배너**: 실제 설치 프롬프트 대신 `beforeinstallprompt`와 `sliding-puzzle:sw-update-available` 이벤트를 주입해 UI를 표시함.
+- **접근성**: Lighthouse는 인앱 브라우저에서 타이틀·게임·테마·BGM·커스텀 이미지·일일·업적·힌트 화면을 감사함.
+- **스크린샷·측정 원문**: `root/archive/assets/task-qa-09/`의 18개 WebP와 `metrics.json`, `focus.json`.
+
+### 3. 화면별 결과
+
+| 화면·항목 | 결과 |
+| :--- | :--- |
+| 타이틀 360×640·360×800 | 가로 오버플로 0건, 12px 미만 텍스트 0건, 그라데이션·blur·9999px pill·UI 이모지 0건. 360×800 문서 높이 1287px로 세로 스크롤은 발생하나 4개 모드·푸터가 잘리지 않고 스크롤 가능 |
+| 타이틀 1280×800 | 가로 오버플로 0건, 2×2 모드 그리드·CTA·커스텀 사진 버튼 정상. 문서 높이 850px로 푸터가 50px 아래에 있으나 핵심 조작은 모두 뷰포트 안에 표시됨 |
+| 게임 360×640 | 보드 282×282·하단 634px로 뷰포트 640px 안에 들어옴. HUD·툴바·액션 버튼 정상. 문서 높이 740px로 푸터·보드 힌트는 스크롤 필요 |
+| 게임 360×800 | 문서 높이 800px, 보드 310×310·하단 662px, 푸터 792px로 1화면 유지. 가로 오버플로 0건 |
+| 게임 1280×800 | 문서 높이 800px, 보드 330×330, HUD·툴바·보드·푸터 모두 1화면. 가로 오버플로 0건 |
+| HUD·숫자 | 이동 수·시간 값 16~18px monospace + `tabular-nums`, 최고 기록 12px. 숫자 잘림·흔들림 없음 |
+| 보드·숫자 오버레이 | 숫자 오버레이 12px, `rgb(247,247,243)`/`rgb(34,34,29)`, `text-shadow: none`; 이미지 위에서도 판독 가능 |
+| 8종 모달 공통 | 모든 모달이 `rgba(23,23,19,0.62)` solid overlay, `backdrop-filter: none`, 1px 보더, 8px radius, `box-shadow: none`; 360×640·360×800·1280×800에서 패널이 가로로 잘리지 않음. 12px 미만 텍스트 0건 |
+| 모달 텍스트 | 360px에서 BGM·커스텀 이미지·힌트 제목과 테마·BGM 카드명, 일일 스트릭 라벨이 단어 중간에서 끊기거나 ellipsis로 잘림. F-01로 발주 |
+| Win·GameOver·토스트 | 360×800 Win 패널 475px·GameOver 217px로 뷰포트 안에 표시. 업적 토스트 320px, 폰트 12~16px, Win 모달과 겹치지 않음 |
+| PWA 설치·업데이트 배너 | 평면 1px 보더·solid 표면으로 다른 UI와 일관됨. 360px에서 업데이트 버튼이 아이콘만 남아 접근성 이름이 없고, 설치 CTA 높이 40px·설명 ellipsis 확인. F-02로 발주 |
+| 포커스 | 키보드 Tab으로 10개 타이틀 컨트롤과 게임 툴바를 순회했을 때 `2px solid #BB3E0B`, `outline-offset: 2px`, `:focus-visible` 적용 확인 |
+| reduced motion | `prefers-reduced-motion: reduce`에서 모드 카드·모달 overlay/패널의 animation·transition duration이 `1e-05s`로 감소 |
+| 정적 감사 | computed 기준 그라데이션 0건, `backdrop-filter` 0건, 9999px pill 0건, UI 이모지 0건. box-shadow는 선택 카드의 3px inset 신호색 표시 1건만 존재(장식 그림자 아님) |
+| Lighthouse | 타이틀·게임·테마·BGM·커스텀 이미지·일일·업적·힌트 접근성·Best Practices·SEO 모두 **1.0**, 실패 0건 |
+| 콘솔 | 3개 뷰포트 전체 플로우에서 console error·page error 0건 |
+
+### 4. 발견 항목 및 발주
+
+| ID | 우선순위 | 항목 | 재현·실제 결과 | 기대 결과 | 영향 파일 | 발주 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| F-01 | P2 | 360px 모달 텍스트 줄바꿈·잘림 | BGM 제목 `BGM & 사운드 설/정`, 커스텀 이미지 `내 사진으로 퍼즐 만들/기`, 힌트 `완성본 미리보기: 자연 & 풍/경`으로 단어 중간 분리. 테마명 `레트로 픽…`, BGM 트랙명 `Lo-Fi...`·`Zen Na...`·`C...`·`Jazz Lou...`, 일일 스트릭 `현재 연속 스트/릭` 확인 | 360×640·360×800에서 단어 중간 줄바꿈 없이 제목·라벨 표시, 테마·BGM 전체 이름 식별 가능 | `BgmSelectModal.css`, `CustomImageModal.css`, `HintModal.css`, `ThemeModal.css`, `DailyModal.css` | `TASK-DEV-27` |
+| F-02 | P2 | 모바일 터치 타깃·PWA 배너 접근성 | 언어 select 실제 영역 64×16px(래퍼 36px), 래퍼 오른쪽 클릭 시 DIV가 잡힘. BGM 볼륨 슬라이더 150×4px(360)/274×4px(1280). PWA 설치 116×40px, SW 업데이트 36×40px. 400px 이하에서 업데이트 버튼 텍스트가 숨겨져 `ariaSnapshot`이 `- button`이고 aria-label 없음. PWA 설명 ellipsis | select·슬라이더 히트 영역 24×24px 이상, 주요 CTA 44px, 업데이트 버튼에 접근 가능한 이름 제공, 배너 설명 전체 표시 또는 접근성 이름 제공 | `TitleScreen.css`, `Header.css`, `BgmSelectModal.css`, `PwaInstallBanner.css`, `ServiceWorkerUpdateBanner.css`, `ServiceWorkerUpdateBanner.tsx` | `TASK-DEV-28` |
+
+### 5. 보고만 한 항목 (발주 제외)
+
+- **R-01 타이틀 세로 스크롤**: 360×640·360×800 타이틀 문서 높이 1287px, 1280×800 850px. 360px에서는 4개 모드 카드 전체를 보려면 스크롤이 필요하고, 1280×800에서는 푸터만 50px 아래에 위치함. 핵심 모드 선택·CTA는 모두 뷰포트 안에 있어 결함으로 보지 않음.
+- **R-02 360×640 게임 스크롤**: 문서 높이 740px지만 보드 하단 634px·컨트롤 하단 344px로 핵심 플레이는 640px 안에 들어옴. 푸터·보드 힌트만 스크롤 대상임.
+- **R-03 360px 테마 설명 숨김**: 테마 카드 설명문이 360px에서 숨겨지지만 이미지·이름·카테고리로 선택할 수 있어 의도된 축약으로 판단함.
+- **R-04 BGM 이퀄라이저 애니메이션**: 재생 상태를 나타내는 기능성 모션이며 `prefers-reduced-motion`에서 0.01ms·1회로 제한됨. 장식 애니메이션으로 보지 않음.
+- PWA 설치 배너 설명 ellipsis는 F-02에 포함해 발주함.
+
+### 6. 자동 검증 결과
+
+| 검증 | 환경 | 결과 |
+| :--- | :--- | :--- |
+| `npm test` | Node.js 26.13.0, 수동 환경 변수 없음 | **29 files / 183 tests PASS**, exit 0 |
+| `npm run typecheck` | Node.js 26.13.0 | **0 Errors**, exit 0 |
+| `npm run build` | Vite 6.4.5 | 성공, exit 0. `dist` JS 360.74KB(gzip 112.10KB), CSS 73.67KB(gzip 9.87KB) |
+| Playwright E2E | Chromium 158 / 4 workers | **4 passed (5.4s)**: 핵심 플레이·모달 포커스·EN 전환·360px 레이아웃 |
+| Lighthouse | 인앱 Chromium, 8개 화면 | 접근성·Best Practices·SEO 모두 1.0, 실패 0건 |
+
+### 7. 미실행·제한
+
+- 실제 모바일 실기기(iOS Safari·Android Chrome), Safari/Firefox 렌더링, 스크린리더 수동 검증은 미실행.
+- OS 수준 `prefers-reduced-motion` 설정 대신 Playwright `reducedMotion: 'reduce'` 에뮬레이션으로 확인.
+- PWA 설치 프롬프트·Service Worker 업데이트 이벤트는 실제 설치·업데이트가 아니라 이벤트 주입으로 UI를 확인.
+- Win/GameOver 모달의 Lighthouse 감사는 실행하지 않았고, 스크린샷·DOM 측정·E2E 승리/게임오버 플로우로 대체.
+- 실제 공유 시트·클립보드 권한·다운로드 이미지 품질은 미확인. 공유 카드 자체는 TASK-QA-07에서 1000×1000 PNG로 확인한 이력이 있음.
+
+### 8. DoD 확인
+
+- [x] 화면별 스크린샷과 발견 항목(P0 0 / P1 0 / P2 2)을 기록했다.
+- [x] 문제 항목을 `TASK-DEV-27`·`TASK-DEV-28`로 DEV Backlog에 등록했다.
+- [x] `npm test`, `npx tsc --noEmit`, `npm run build` 결과를 기록했다.
+- [x] 실제 모바일 실기기 미실행 사실과 대체 검증 범위를 명시했다.
+
+### 9. 증거
+
+- **스크린샷**: `root/archive/assets/task-qa-09/`
+  - 타이틀: `title-360x640.webp`, `title-1280x800.webp`
+  - 게임: `game-360x640.webp`, `game-360x800.webp`, `game-1280x800.webp`
+  - 모달: `theme-360x640.webp`, `bgm-360x640.webp`, `daily-360x640.webp`, `achievement-360x640.webp`, `custom-image-360x640.webp`, `hint-360x640.webp`, `1280x800-bgm.webp`
+  - 상태: `win-360x800.webp`, `win-toast-360x800.webp`, `gameover-360x800.webp`, `pwa-install-360x640.webp`, `sw-update-360x640.webp`
+  - 포커스: `focus-title-1280x800.webp`
+- **측정 원문**: `root/archive/assets/task-qa-09/metrics.json`, `focus.json`
+- **소스**: `src/components/Title/**`, `Header/**`, `Controls/**`, `Board/**`, `Modal/**`, `Achievement/**`, `PWA/**`, `src/styles/index.css`, `src/styles/App.css`
+- **실행 결과**: Node.js 26.13.0 Vitest 29/183 PASS, tsc 0 Errors, Vite 6.4.5 빌드 성공, Playwright 4/4 PASS, Lighthouse 8개 화면 1.0
+- **작업 상태**: `root/TASKS.md`의 TASK-QA-09 완료 요약, `TASK-DEV-27`·`TASK-DEV-28` 발주
+
+---
+
+## TASK-PM-05 — Node.js 요구사항·배포 문서 링크 정합화
+
+- **Phase**: 01
+- **담당**: PM
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: README·AGENTS의 실행 환경 안내를 실제 `package.json` `engines`·`.nvmrc`·CI 기준과 맞추고, TASK-QA-08에서 추가한 배포 문서·robots 정책을 프로젝트 문서에 연결한다.
+- **완료 기준(DoD)**:
+  - [x] Node.js·npm 요구사항을 `engines`·`.nvmrc`·CI와 일치하게 수정
+  - [x] README 기술 스택 버전 표를 lockfile 기준으로 갱신
+  - [x] 배포 절차는 `root/DEPLOYMENT.md`, CI는 `.github/workflows/ci.yml`을 가리키도록 안내 추가
+  - [x] Vercel 프로젝트 pause는 의도된 운영 상태이며 장애가 아님을 배포 문서와 일관되게 기록
+
+### 1. 진행 결과
+
+- `README.md`
+  - 3장 기술 스택 표를 lockfile 설치본 기준으로 갱신: Node.js 24.15.0+ (24.x) 또는 26.0.0+, React 19.2.8, TypeScript 5.9.3, Vite 6.4.5, Vitest 4.1.12, Testing Library 16.3.2, Playwright 1.65.0.
+  - 5장 요구사항을 `engines`·`.nvmrc`와 일치하도록 수정: Node.js 24.15.0 이상(24.x) 또는 26.0.0 이상, npm 10.0.0 이상.
+  - 설치 명령을 `npm ci`로 바꾸고 `npm run typecheck`, `npm run test:e2e`를 추가.
+  - 6장 "배포 및 CI"를 신설해 `root/DEPLOYMENT.md`, `.github/workflows/ci.yml`, `public/robots.txt`를 연결하고 Vercel pause가 의도된 상태임을 명시.
+  - 7장 테스트 현황에 Playwright E2E 4/4 PASS 행을 추가하고, 8장 디렉터리 구조에 `.github/`, `e2e/`, `src/test/`, `.nvmrc`, `playwright.config.ts`, `DEPLOYMENT.md`, `DESIGN_SYSTEM.md`를 반영.
+- `root/AGENTS.md`
+  - 4장 기술 스택을 TypeScript 5.9, Node.js 24.15+ (24.x) 또는 26+, npm 10+, Playwright E2E로 갱신.
+  - 명령어에 `npm ci`, `npm run typecheck`, `npm run test:e2e`를 추가.
+  - 구조에 `.github/workflows/`, `e2e/`, `src/test/`, `DEPLOYMENT.md`, `DESIGN_SYSTEM.md`, `robots.txt`를 반영.
+  - 검증 기준에 Playwright E2E 4/4를 추가하고, 최근 검증을 Vite 6.4.5·E2E 4/4 기준으로 갱신.
+  - Node 26에서 `NODE_OPTIONS` 없이 `npm test`가 통과하는 `src/test/setup.ts` 기준을 기록.
+  - CI·배포 문서 링크와 Vercel pause 상태를 추가.
+- `root/DEPLOYMENT.md`
+  - Node.js 요구사항 표기를 `24.15 이상(24.x) 또는 26.0.0 이상`으로 맞춰 `engines`와 일치시킴.
+
+### 2. 검증
+
+- **링크·경로 확인**:
+  - `README.md`의 `root/DEPLOYMENT.md`, `.github/workflows/ci.yml`, `public/robots.txt` 링크 대상 존재 확인.
+  - `root/AGENTS.md`의 `DEPLOYMENT.md`, `../.github/workflows/ci.yml` 링크 대상 존재 확인.
+  - 문서 내 로컬 링크 누락 0건.
+- **실행 검증** (Node.js 26.13.0 / npm 12.2.2, 수동 `NODE_OPTIONS` 없음):
+  - `npm test` → 29개 파일 / 183개 케이스 PASS, exit 0
+  - `npm run typecheck` → 0 Errors, exit 0
+  - `npm run build` → Vite 6.4.5 성공, exit 0
+- **미실행**: GitHub Actions 원격 실행, Vercel 실제 배포·재개, 실제 모바일 실기기·Safari/Firefox. TASK-QA-08·QA-09 기록으로 대체함.
+- **증거**: `README.md`, `root/AGENTS.md`, `root/DEPLOYMENT.md`, `.github/workflows/ci.yml`, `.nvmrc`, `package.json`
+
+### 3. 판단·제한
+
+- `root/DEPLOYMENT.md`는 TASK-QA-08 산출물로, Node.js 24.15 이상(24.x) 또는 26.0.0 이상·npm 10 이상을 안내하도록 표현을 맞췄다. TASK-PM-05는 README/AGENTS를 `engines` 기준으로 정확히 맞추고 배포 문서로 연결하는 범위로 완료함.
+- Vercel pause는 장애가 아닌 의도된 운영 상태로 README·AGENTS·DEPLOYMENT에 일관되게 기록함.

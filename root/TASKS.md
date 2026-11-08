@@ -15,7 +15,19 @@
 
 ## 1. Active Tasks (진행 중인 작업)
 
-(현재 진행 중인 작업 없음)
+#### [-] TASK-DEV-27 — 360px 모달 텍스트 줄바꿈·잘림 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 360px 폭에서 모달 제목·테마명·BGM 트랙명·일일 스트릭 라벨이 단어 중간에서 끊기거나 핵심 정보가 잘리지 않도록 반응형 텍스트 레이아웃을 정비한다.
+- **대상 파일**: `src/components/Modal/BgmSelectModal.css`, `CustomImageModal.css`, `HintModal.css`, `ThemeModal.css`, `DailyModal.css`, 필요한 경우 각 컴포넌트의 헤더·카드 마크업
+- **DoD**:
+  - 360×640·360×800에서 모달 제목과 라벨이 단어 중간에서 끊기지 않음(`word-break: keep-all`·반응형 제목 크기·헤더 배치 조정 등)
+  - 테마·BGM 카드의 이름과 장르/카테고리를 2줄 허용 또는 명확한 축약 표기로 제공하고, 화면만 보고 전체 이름을 식별할 수 있게 함
+  - 일일 스트릭 라벨이 카드 폭 안에서 자연스럽게 표시됨
+  - 360×640·360×800·1280×800 회귀 스크린샷과 `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
+- **선행 조건**: 없음
 
 ---
 
@@ -27,52 +39,48 @@
 
 ### [DEV]
 
+#### [ ] TASK-DEV-28 — 모바일 터치 타깃·PWA 배너 접근성 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 360px에서 작은 인터랙티브 타깃을 WCAG 2.5.8(24×24px) 이상으로 확대하고, 주요 PWA CTA를 44px로 맞추며, Service Worker 업데이트 아이콘 버튼에 접근 가능한 이름을 제공한다.
+- **대상 파일**: `src/components/Title/TitleScreen.css`, `src/components/Header/Header.css`, `src/components/Modal/BgmSelectModal.css`, `src/components/PWA/PwaInstallBanner.css`, `src/components/PWA/ServiceWorkerUpdateBanner.css`, `src/components/PWA/ServiceWorkerUpdateBanner.tsx`
+- **재현/증거**:
+  - 언어 선택 `<select>`의 실제 클릭 영역이 64×16px이고, 36px 높이의 래퍼 오른쪽 여백을 클릭하면 `DIV.lang-select-wrapper`가 잡혀 select에 포커스가 가지 않음.
+  - BGM 볼륨 슬라이더의 input 박스가 360에서 150×4px, 1280에서 274×4px로 터치·드래그 영역이 매우 얇음.
+  - 360px에서 PWA 설치 버튼 116×40px, 업데이트 버튼 36×40px로 주요 CTA가 44px 기준에 미달함.
+  - 400px 이하에서 `.btn-sw-update span`이 `display: none`이 되어 업데이트 버튼의 `ariaSnapshot`이 `- button`으로 나오고, `aria-label`도 없어 스크린리더가 동작을 알 수 없음.
+  - PWA 설치 배너의 설명 문구가 360px에서 `text-overflow: ellipsis`로 잘림.
+  - 증거: `root/archive/assets/task-qa-09/`의 `pwa-install-360x640.webp`, `sw-update-360x640.webp`, `bgm-360x640.webp` 및 QA 측정 결과.
+- **DoD**:
+  - 언어 select·볼륨 슬라이더의 실제 히트 영역을 최소 24×24px 이상(가능하면 32~44px)으로 확대
+  - PWA 설치·업데이트 주요 CTA를 모바일에서 최소 44px 높이로 조정
+  - 400px 이하에서도 업데이트 버튼에 텍스트 또는 `aria-label`로 접근 가능한 이름 제공
+  - PWA 설치 배너 설명을 2줄 허용 또는 축약 문구와 전체 접근성 이름으로 제공
+  - 360×640·360×800·1280×800 회귀 스크린샷과 `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
+- **선행 조건**: 없음
+
 ### [QA / DevOps]
-
-#### [ ] TASK-QA-08 — CI/CD·테스트 환경·의존성·배포 문서 정비
-
-- **Phase**: 01
-- **담당**: QA_DEVOPS
-- **우선순위**: P2
-- **목표**: PR마다 테스트·타입 검사·빌드·보안 감사를 자동 수행하고, Node 요구사항과 테스트 실행 조건을 정합화하며, 핵심 E2E와 배포 절차를 마련한다.
-- **근거**:
-  - `.github` 워크플로가 없어 `npm test`·`npx tsc --noEmit`·`npm run build`·`npm audit`가 자동 검증되지 않음.
-  - README/AGENTS는 Node.js 18+를 안내하지만 Vitest 4는 Node 20+, jsdom 30은 Node 22.22.2/24.15/26+를 요구함.
-  - Node 26에서 `NODE_OPTIONS=--localstorage-file` 없이 `npm test`를 실행하면 localStorage 관련 테스트가 실패함(제품 결함 아님).
-  - `npm audit` 전체 6건(moderate 2·high 4, sharp/vite/vitest/undici/source-map-js), `npm audit --omit=dev`는 0건.
-  - 공유 카드·모달·모바일 뷰포트·PWA를 포함한 E2E가 없고, `robots.txt`·배포 절차 문서가 없음.
-- **DoD**:
-  - Node 24 LTS(또는 팀 합의 버전) 기준 CI 워크플로에서 `npm ci` → test → tsc → build → `npm audit --omit=dev` 실행
-  - `package.json` `engines`와 README/AGENTS Node 요구사항 정합화(문서는 PM에 전달)
-  - 수동 환경 변수 없이 `npm test`가 통과하도록 setup 파일 또는 스크립트 정비
-  - dev 의존성 취약점 6건 수정 또는 예외 사유 기록, `npm outdated` 주요 항목 갱신 검토
-  - Playwright E2E 스모크(타이틀→테마→게임→이동/Undo→AI 힌트→3x3 승리, 360px 레이아웃, 모달 포커스, EN 전환) 추가
-  - `public/robots.txt`와 배포·캐시 갱신 절차 문서 추가
-  - CI·로컬 실행 결과와 미실행 범위 기록
-- **선행 조건**: 없음 (TASK-DEV-18~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
-
-#### [ ] TASK-QA-09 — 심플·어반 UI/UX·가독성·시각 회귀 검증
-
-- **Phase**: 01
-- **담당**: QA_DEVOPS
-- **우선순위**: P2
-- **목표**: TASK-DEV-26 적용 결과를 360px·데스크톱에서 검증하고, 가독성·일관성·접근성·AI 디자인 잔재를 확인해 잔여 문제를 DEV 업무로 발주한다.
-- **검증 범위**:
-  - 타이틀·HUD·컨트롤·보드·8종 모달·업적·PWA·토스트의 시각 일관성
-  - 360×640·360×800·1280×800에서 오버플로·잘림·터치 영역·스크롤
-  - 본문·메타 폰트 크기, 대비, 숫자 가독성, 포커스 가시성, `prefers-reduced-motion`
-  - 그라데이션·글로우·이모지·과도한 radius/shadow 잔재
-  - 기존 기능 회귀(테마·모달·키보드·Undo·AI 힌트·PWA)
-- **DoD**:
-  - 화면별 스크린샷과 발견 항목(P0/P1/P2) 기록
-  - 문제 항목을 `TASK-DEV-27` 이후 ID로 DEV Backlog에 등록
-  - `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
-  - 실제 모바일 실기기 미실행 시 명시
-- **선행 조건**: TASK-DEV-26 완료 후
 
 ---
 
 ## 3. Recent Completions (최근 완료 요약)
+
+- **TASK-PM-05** — Node.js 요구사항·배포 문서 링크 정합화 (완료일: 2026-11-08)
+  - 핵심 결과: README·AGENTS의 Node/npm 요구사항을 `engines`·`.nvmrc`·CI 기준으로 맞추고, 기술 스택을 lockfile 버전(React 19.2.8·Vite 6.4.5 등)으로 갱신. `DEPLOYMENT.md`·CI·`robots.txt` 링크와 Vercel pause 상태를 문서에 연결
+  - 검증 범위: 문서 링크 누락 0건, Node 26.13.0에서 `npm test` 29개 파일/183개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 6.4.5 성공. GitHub Actions 원격 실행·Vercel 실제 배포·실기기 검증은 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-05--nodejs-요구사항배포-문서-링크-정합화)
+
+- **TASK-QA-09** — 심플·어반 UI/UX·가독성·시각 회귀 검증 (완료일: 2026-11-08)
+  - 핵심 결과: 360×640·360×800·1280×800에서 타이틀·게임·HUD·보드·8종 모달·Win/GameOver·토스트·PWA 배너를 검증함. 가로 오버플로·12px 미만 텍스트·그라데이션·blur·9999px pill·UI 이모지 0건, 모달 공통 평면 스타일·포커스 링·숫자 가독성·reduced motion 확인. 360px 모달 제목/카드명 줄바꿈·잘림과 언어 select·볼륨 슬라이더·PWA CTA 터치 타깃/업데이트 버튼 접근성 문제를 `TASK-DEV-27`·`TASK-DEV-28`로 발주함
+  - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, Playwright E2E 4/4 PASS, Lighthouse 8개 화면 접근성·Best Practices·SEO 1.0. P0 0/P1 0/P2 2. 실제 모바일 실기기·Safari/Firefox·스크린리더·OS 수준 reduced-motion은 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-09--심플어반-uiux가독성시각-회귀-검증)
+
+- **TASK-QA-08** — CI/CD·테스트 환경·의존성·배포 문서 정비 (완료일: 2026-11-08)
+  - 핵심 결과: GitHub Actions CI(`quality`·`e2e`)와 Node 24 기준 `.nvmrc`·`engines`를 추가하고, Node 26에서도 수동 환경 변수 없이 `npm test`가 통과하도록 jsdom Storage setup을 보정함. `npm audit fix`로 Vite 6.4.5·Vitest 4.1.12·sharp 0.35.5 등을 갱신해 전체 취약점 0건을 달성하고, Playwright E2E 4개 시나리오·`robots.txt`·배포 절차 문서를 추가함. README/AGENTS 문서 정합화는 `TASK-PM-05`로 PM에 전달함
+  - 검증 범위: Node 24.15.0·26.13.0에서 `npm ci`·Vitest 29개 파일/183개 케이스 PASS·tsc 0 Errors·Vite 6.4.5 빌드 성공·Playwright 4/4 PASS, `npm audit` prod/전체 0건, CI YAML 파싱 성공. GitHub Actions 원격 실행·Vercel 실제 배포·실제 모바일 실기기는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-08--cicd테스트-환경의존성배포-문서-정비)
 
 - **TASK-DEV-26** — 전 화면 심플·어반 UI/UX 적용 및 가독성 개선 (완료일: 2026-11-08)
   - 핵심 결과: 타이틀을 좌측 워드마크·01~04 모드 목록·선택 모드 신호색 CTA로 재구성하고, HUD를 3셀 통계 바·monospace 숫자로 정리함. 보드의 빈 슬롯 글로우·힌트 방사형 글로우를 제거하고, 8종 모달을 solid overlay·1px 보더·8px radius·좌측 제목으로 통일함. 업적·PWA·토스트의 금색 글로우를 제거하고, 번역문·TSX의 UI 이모지와 PNG 아이콘을 lucide 단일 아이콘으로 교체함. 공유 카드도 평면 팔레트로 변경하고 사용하지 않는 스프라이트 CSS·코어 PNG 프리로드 16건을 제거함
@@ -84,23 +92,8 @@
   - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 프로덕션 프리뷰에서 시스템 폰트 16px/24px·`tabular-nums`·평면 `#EFEFEA` 배경·Google Fonts 요청 0건·콘솔 오류 0건, 포커스 링 2px `#BB3E0B` 확인. 360×800·1280×800 게임 화면은 스크롤·가로 오버플로 없이 1화면 유지. 주요 텍스트·신호색 조합 WCAG AA 4.5:1 이상. 실제 모바일 실기기·Safari/Firefox·OS 수준 reduced-motion은 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-25--심플어반-디자인-시스템-및-가독성-기준-수립)
 
-- **TASK-DEV-24** — LocalStorage 접근·스키마 방어 (완료일: 2026-11-08)
-  - 핵심 결과: `readStorageItem`·`writeStorageItem`·`readStorageJson` 공통 래퍼로 저장소 접근 차단·쓰기 실패·손상 JSON을 흡수. 일일 스트릭은 날짜 배열·정수 필드를 검증하고, 최고 기록은 시간·이동 수가 유한한 음이 아닌 수인지 확인. 업적은 배열·ID·`unlockedAt`·`progress`만 정규화하고 통계의 3성 횟수·클리어 테마도 검증. 오디오 설정은 boolean·0~1 볼륨·존재하는 BGM ID만 반영. 커스텀 이미지는 `data:image/` 값만 복원하고 언어는 지원 4개 국어만 허용
-  - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 데스크톱 Chromium에서 손상 JSON·문자열 필드·잘못된 타입을 넣고도 타이틀 렌더링·콘솔 오류 0건 확인, `Storage.prototype` 접근을 강제로 예외 처리한 상태에서 타이틀·업적 모달(0/12)·저장 함수·언어 전환·오디오 설정 변경이 예외 없이 동작함을 확인. 유효한 저장값은 재로드 후 그대로 복원됨. 실제 모바일 실기기·시크릿 모드 저장소 차단은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-24--localstorage-접근스키마-방어)
-
-- **TASK-DEV-23** — 업적 토스트 다중 달성 큐 및 메타데이터 병합 수정 (완료일: 2026-11-08)
-  - 핵심 결과: 업적 알림을 큐에 보관해 한 번의 승리로 여러 업적이 달성돼도 4.5초 간격으로 모두 순차 표시하고, 표시 시간 종료·언마운트 시 타이머를 정리. 효과음은 각 토스트가 표시될 때 재생. `getStoredAchievements`는 최신 정적 메타데이터를 쓰고 저장된 `unlockedAt`·`progress`만 유지하며, 초기 정의를 직접 변경하지 않도록 복사본 반환
-  - 검증 범위: Vitest 26개 파일/161개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 데스크톱 Chromium에서 3건 동시 달성 시 `first_victory`→`speed_demon`→`purist_no_undo` 순차 표시·14초 후 소멸·콘솔 오류 0건, 옛 메타데이터 저장값 병합 시 최신 제목·아이콘 유지와 `unlockedAt`·`progress` 보존 확인. 실제 모바일 실기기·스크린리더는 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-23--업적-토스트-다중-달성-큐-및-메타데이터-병합-수정)
-
-- **TASK-DEV-22** — BGM·이미지 에셋 경량화 및 초기 로딩 최적화 (완료일: 2026-11-08)
-  - 핵심 결과: BGM 4트랙을 192kbps MP3에서 96kbps MP3로 변환하고 원본 `.wav`를 배포에서 제외. 최초 로드에는 코어 이미지+현재 테마+현재 BGM만 로드하고 나머지 테마는 테마 모달에서 지연 로드. 스프라이트·아이콘을 팔레트 PNG로 압축(3.59MB→0.52MB). SW 프리캐시를 필수 셸·코어 UI·기본 테마 30건/1.31MB로 축소하고 현재 BGM은 206 Range 응답 시 전체 파일을 런타임 캐시
-  - 검증 범위: Vitest 25개 파일/156개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. dist 20.65→11.04MB, 초기 동일 출처 decodedBodySize 9,222,220→2,716,771바이트(-70.5%), BGM 13.05→6.52MiB. 서브패스 오프라인 재로드·현재 테마/BGM 캐시·미사용 테마 502·테마 모달 지연 로드 확인. 실제 모바일 실기기·Safari/Firefox·청취 품질 평가는 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-22--bgm이미지-에셋-경량화-및-초기-로딩-최적화)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)

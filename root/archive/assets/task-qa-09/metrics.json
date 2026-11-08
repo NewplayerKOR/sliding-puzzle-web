@@ -1,0 +1,4369 @@
+{
+  "capturedAt": "2026-11-08T09:12:16.921Z",
+  "viewports": {
+    "360x640": {
+      "viewport": {
+        "name": "360x640",
+        "width": 360,
+        "height": 640
+      },
+      "consoleErrors": [],
+      "title": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-title.png",
+        "metrics": {
+          "viewport": {
+            "width": 360,
+            "height": 640
+          },
+          "document": {
+            "scrollWidth": 360,
+            "scrollHeight": 1287,
+            "bodyScrollHeight": 1287,
+            "horizontalOverflow": false
+          },
+          "smallText": [],
+          "gradients": [],
+          "blurs": [],
+          "pills": [],
+          "shadows": [
+            {
+              "tag": "div",
+              "cls": "mode-card standard selected",
+              "shadow": "rgb(187, 62, 11) 3px 0px 0px 0px inset"
+            }
+          ],
+          "tinyTargets": [
+            {
+              "tag": "select",
+              "cls": "title-lang-select",
+              "text": "한국어English日本語中文",
+              "aria": "언어 선택",
+              "disabled": false,
+              "x": 31,
+              "y": 64,
+              "w": 64,
+              "h": 16,
+              "right": 95,
+              "bottom": 80
+            }
+          ],
+          "primarySmall": [],
+          "horizontalOverflow": [],
+          "clipped": [],
+          "emoji": [],
+          "buttons": 20
+        }
+      },
+      "titleModals": {
+        "theme": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-title-theme.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 92,
+              "w": 328,
+              "h": 457,
+              "right": 344,
+              "bottom": 548
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 455,
+              "scrollHeight": 455,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "theme-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 109,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 145
+              },
+              {
+                "cls": "mode-toggle-btn active",
+                "text": "이미지 모드",
+                "aria": null,
+                "x": 36,
+                "y": 200,
+                "w": 143,
+                "h": 36,
+                "right": 179,
+                "bottom": 236
+              },
+              {
+                "cls": "mode-toggle-btn ",
+                "text": "숫자 모드",
+                "aria": null,
+                "x": 181,
+                "y": 200,
+                "w": 143,
+                "h": 36,
+                "right": 324,
+                "bottom": 236
+              },
+              {
+                "cls": "theme-card selected",
+                "text": "자연 & 풍경풍경풍부하고 다채로운 색감의 숲과 산 풍경",
+                "aria": null,
+                "x": 33,
+                "y": 255,
+                "w": 144,
+                "h": 109,
+                "right": 177,
+                "bottom": 363
+              },
+              {
+                "cls": "theme-card ",
+                "text": "레트로 픽셀픽셀아트선명한 도트 그래픽의 따뜻한 마을 일러스트",
+                "aria": null,
+                "x": 181,
+                "y": 255,
+                "w": 144,
+                "h": 109,
+                "right": 325,
+                "bottom": 363
+              },
+              {
+                "cls": "theme-card ",
+                "text": "기하학 추상패턴고난도 퍼즐 매니아를 위한 모던 기하학 패턴",
+                "aria": null,
+                "x": 33,
+                "y": 367,
+                "w": 144,
+                "h": 108,
+                "right": 177,
+                "bottom": 475
+              },
+              {
+                "cls": "theme-card ",
+                "text": "귀여운 동물캐릭터사랑스럽고 친근한 동물 캐릭터 일러스트",
+                "aria": null,
+                "x": 181,
+                "y": 367,
+                "w": 144,
+                "h": 108,
+                "right": 325,
+                "bottom": 475
+              },
+              {
+                "cls": "btn-theme-start-game",
+                "text": "이 테마로 게임 시작",
+                "aria": null,
+                "x": 33,
+                "y": 487,
+                "w": 294,
+                "h": 44,
+                "right": 327,
+                "bottom": 531
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "bgm": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-title-bgm.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 38,
+              "w": 328,
+              "h": 563,
+              "right": 344,
+              "bottom": 602
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 561,
+              "scrollHeight": 561,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "bgm-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 292,
+                "y": 79,
+                "w": 35,
+                "h": 36,
+                "right": 327,
+                "bottom": 115
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "BGM",
+                "aria": null,
+                "x": 46,
+                "y": 186,
+                "w": 64,
+                "h": 32,
+                "right": 110,
+                "bottom": 218
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 118,
+                "y": 200,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 204
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "SFX",
+                "aria": null,
+                "x": 46,
+                "y": 226,
+                "w": 64,
+                "h": 32,
+                "right": 110,
+                "bottom": 258
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 118,
+                "y": 240,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 244
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 46,
+                "y": 277,
+                "w": 13,
+                "h": 16,
+                "right": 59,
+                "bottom": 293
+              },
+              {
+                "cls": "bgm-track-card selected",
+                "text": "Lo-Fi Chill칠홉 / 어쿠스틱차분하고 편안한 비트와 어쿠스틱 기타",
+                "aria": null,
+                "x": 33,
+                "y": 379,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 429
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Zen Nature자연 / 앰비언트맑은 자연의 숨결과 평온한 명상 앰비언",
+                "aria": null,
+                "x": 33,
+                "y": 433,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 483
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Cyber Synth신스웨이브 / 일렉트로미래적인 신시사이저와 레트로 사",
+                "aria": null,
+                "x": 33,
+                "y": 487,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 537
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Jazz Lounge보사노바 재즈세련된 카페 무드의 감미로운 피아노 재즈",
+                "aria": null,
+                "x": 33,
+                "y": 541,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 591
+              }
+            ],
+            "tinyTargets": [
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 118,
+                "y": 200,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 204
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 118,
+                "y": 240,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 244
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 46,
+                "y": 277,
+                "w": 13,
+                "h": 16,
+                "right": 59,
+                "bottom": 293
+              }
+            ],
+            "horizontalOverflow": false
+          }
+        },
+        "daily": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-title-daily.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 56,
+              "w": 328,
+              "h": 529,
+              "right": 344,
+              "bottom": 584
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 527,
+              "scrollHeight": 527,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "auto"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "daily-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 287,
+                "y": 77,
+                "w": 36,
+                "h": 36,
+                "right": 323,
+                "bottom": 113
+              },
+              {
+                "cls": "btn-daily-start ",
+                "text": "오늘의 퍼즐 도전하기",
+                "aria": null,
+                "x": 37,
+                "y": 519,
+                "w": 286,
+                "h": 44,
+                "right": 323,
+                "bottom": 563
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "achievement": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-title-achievement.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 57,
+              "w": 328,
+              "h": 526,
+              "right": 344,
+              "bottom": 583
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 524,
+              "scrollHeight": 524,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "achieve-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 83,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 119
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "customImage": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-title-customImage.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 148,
+              "w": 328,
+              "h": 344,
+              "right": 344,
+              "bottom": 492
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 342,
+              "scrollHeight": 342,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "custom-img-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 183,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 219
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        }
+      },
+      "pwaInstall": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-pwa-install.png",
+        "metrics": {
+          "card": {
+            "x": 16,
+            "y": 546,
+            "width": 328,
+            "height": 78,
+            "top": 546,
+            "right": 344,
+            "bottom": 624,
+            "left": 16
+          },
+          "text": "Sliding Block Puzzle\n앱으로 설치하여 오프라인에서도 즐겨보세요!\n홈 화면에 설치",
+          "buttons": [
+            {
+              "cls": "btn-pwa-install",
+              "text": "홈 화면에 설치",
+              "aria": null,
+              "w": 116,
+              "h": 40
+            },
+            {
+              "cls": "btn-pwa-close",
+              "text": "",
+              "aria": "닫기",
+              "w": 36,
+              "h": 36
+            }
+          ],
+          "descClipped": true,
+          "viewport": {
+            "width": 360,
+            "height": 640
+          }
+        }
+      },
+      "swUpdate": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-sw-update.png",
+        "metrics": {
+          "card": {
+            "x": 16,
+            "y": 16,
+            "width": 328,
+            "height": 58,
+            "top": 16,
+            "right": 344,
+            "bottom": 74,
+            "left": 16
+          },
+          "text": "새 버전이 준비되었습니다. 지금 업데이트하면 최신 수정 사항이 적용됩니다.",
+          "buttonTextContent": "지금 업데이트",
+          "buttonInnerText": "",
+          "buttonAria": null,
+          "buttonRect": {
+            "w": 36,
+            "h": 40
+          },
+          "viewport": {
+            "width": 360,
+            "height": 640
+          }
+        },
+        "ariaSnapshot": "- button"
+      },
+      "game": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game.png",
+        "fullPageScreenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game-full.png",
+        "metrics": {
+          "viewport": {
+            "width": 360,
+            "height": 640
+          },
+          "document": {
+            "scrollWidth": 360,
+            "scrollHeight": 740,
+            "bodyScrollHeight": 740,
+            "horizontalOverflow": false
+          },
+          "smallText": [],
+          "gradients": [],
+          "blurs": [],
+          "pills": [],
+          "shadows": [],
+          "tinyTargets": [
+            {
+              "tag": "select",
+              "cls": "lang-select",
+              "text": "한국어English日本語中文",
+              "aria": "언어 선택",
+              "disabled": false,
+              "x": 140,
+              "y": 62,
+              "w": 64,
+              "h": 16,
+              "right": 204,
+              "bottom": 78
+            }
+          ],
+          "primarySmall": [],
+          "horizontalOverflow": [],
+          "clipped": [],
+          "emoji": [],
+          "buttons": 24
+        },
+        "specific": {
+          "header": {
+            "x": 4,
+            "y": 8,
+            "w": 352,
+            "h": 147,
+            "bottom": 155
+          },
+          "board": {
+            "x": 39,
+            "y": 352,
+            "w": 282,
+            "h": 282,
+            "bottom": 634
+          },
+          "controls": {
+            "x": 13,
+            "y": 172,
+            "w": 334,
+            "h": 172,
+            "bottom": 344
+          },
+          "footer": {
+            "x": 4,
+            "y": 680,
+            "w": 352,
+            "h": 52,
+            "bottom": 732
+          },
+          "gameCard": {
+            "x": 4,
+            "y": 163,
+            "w": 352,
+            "h": 517,
+            "bottom": 680
+          },
+          "statValues": [
+            {
+              "text": "0",
+              "font": "16px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            },
+            {
+              "text": "00:00",
+              "font": "16px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            },
+            {
+              "text": "-",
+              "font": "12px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            }
+          ]
+        }
+      },
+      "gameNumber": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game-number.png",
+        "numberOverlay": []
+      },
+      "gameModals": {
+        "theme": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game-theme.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 127,
+              "w": 328,
+              "h": 386,
+              "right": 344,
+              "bottom": 513
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 384,
+              "scrollHeight": 384,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "theme-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 144,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 180
+              },
+              {
+                "cls": "mode-toggle-btn active",
+                "text": "이미지 모드",
+                "aria": null,
+                "x": 36,
+                "y": 220,
+                "w": 143,
+                "h": 36,
+                "right": 179,
+                "bottom": 256
+              },
+              {
+                "cls": "mode-toggle-btn ",
+                "text": "숫자 모드",
+                "aria": null,
+                "x": 181,
+                "y": 220,
+                "w": 143,
+                "h": 36,
+                "right": 324,
+                "bottom": 256
+              },
+              {
+                "cls": "theme-card selected",
+                "text": "자연 & 풍경풍경풍부하고 다채로운 색감의 숲과 산 풍경",
+                "aria": null,
+                "x": 33,
+                "y": 275,
+                "w": 144,
+                "h": 109,
+                "right": 177,
+                "bottom": 384
+              },
+              {
+                "cls": "theme-card ",
+                "text": "레트로 픽셀픽셀아트선명한 도트 그래픽의 따뜻한 마을 일러스트",
+                "aria": null,
+                "x": 181,
+                "y": 275,
+                "w": 144,
+                "h": 109,
+                "right": 325,
+                "bottom": 384
+              },
+              {
+                "cls": "theme-card ",
+                "text": "기하학 추상패턴고난도 퍼즐 매니아를 위한 모던 기하학 패턴",
+                "aria": null,
+                "x": 33,
+                "y": 388,
+                "w": 144,
+                "h": 108,
+                "right": 177,
+                "bottom": 496
+              },
+              {
+                "cls": "theme-card ",
+                "text": "귀여운 동물캐릭터사랑스럽고 친근한 동물 캐릭터 일러스트",
+                "aria": null,
+                "x": 181,
+                "y": 388,
+                "w": 144,
+                "h": 108,
+                "right": 325,
+                "bottom": 496
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "hint": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game-hint.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 99,
+              "w": 328,
+              "h": 442,
+              "right": 344,
+              "bottom": 541
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 440,
+              "scrollHeight": 440,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "hint-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 289,
+                "y": 129,
+                "w": 34,
+                "h": 36,
+                "right": 323,
+                "bottom": 165
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "daily": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game-daily.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 56,
+              "w": 328,
+              "h": 529,
+              "right": 344,
+              "bottom": 584
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 527,
+              "scrollHeight": 527,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "auto"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "daily-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 287,
+                "y": 77,
+                "w": 36,
+                "h": 36,
+                "right": 323,
+                "bottom": 113
+              },
+              {
+                "cls": "btn-daily-start ",
+                "text": "오늘의 퍼즐 도전하기",
+                "aria": null,
+                "x": 37,
+                "y": 519,
+                "w": 286,
+                "h": 44,
+                "right": 323,
+                "bottom": 563
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "achievement": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game-achievement.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 57,
+              "w": 328,
+              "h": 526,
+              "right": 344,
+              "bottom": 583
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 524,
+              "scrollHeight": 524,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "achieve-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 83,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 119
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "customImage": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game-customImage.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 148,
+              "w": 328,
+              "h": 344,
+              "right": 344,
+              "bottom": 492
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 342,
+              "scrollHeight": 342,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "custom-img-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 183,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 219
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "bgm": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x640-game-bgm.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 38,
+              "w": 328,
+              "h": 563,
+              "right": 344,
+              "bottom": 602
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 640,
+              "right": 360,
+              "bottom": 640
+            },
+            "viewport": {
+              "width": 360,
+              "height": 640
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 561,
+              "scrollHeight": 561,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "bgm-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 292,
+                "y": 79,
+                "w": 35,
+                "h": 36,
+                "right": 327,
+                "bottom": 115
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "BGM",
+                "aria": null,
+                "x": 46,
+                "y": 186,
+                "w": 64,
+                "h": 32,
+                "right": 110,
+                "bottom": 218
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 118,
+                "y": 200,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 204
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "SFX",
+                "aria": null,
+                "x": 46,
+                "y": 226,
+                "w": 64,
+                "h": 32,
+                "right": 110,
+                "bottom": 258
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 118,
+                "y": 240,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 244
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 46,
+                "y": 277,
+                "w": 13,
+                "h": 16,
+                "right": 59,
+                "bottom": 293
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Lo-Fi Chill칠홉 / 어쿠스틱차분하고 편안한 비트와 어쿠스틱 기타",
+                "aria": null,
+                "x": 33,
+                "y": 379,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 429
+              },
+              {
+                "cls": "bgm-track-card selected",
+                "text": "Zen Nature자연 / 앰비언트맑은 자연의 숨결과 평온한 명상 앰비언",
+                "aria": null,
+                "x": 33,
+                "y": 433,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 483
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Cyber Synth신스웨이브 / 일렉트로미래적인 신시사이저와 레트로 사",
+                "aria": null,
+                "x": 33,
+                "y": 487,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 537
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Jazz Lounge보사노바 재즈세련된 카페 무드의 감미로운 피아노 재즈",
+                "aria": null,
+                "x": 33,
+                "y": 541,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 591
+              }
+            ],
+            "tinyTargets": [
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 118,
+                "y": 200,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 204
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 118,
+                "y": 240,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 244
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 46,
+                "y": 277,
+                "w": 13,
+                "h": 16,
+                "right": 59,
+                "bottom": 293
+              }
+            ],
+            "horizontalOverflow": false
+          }
+        }
+      },
+      "regression": {
+        "afterMove": "1",
+        "afterUndo": "2",
+        "undoRestored": true,
+        "aiHintVisible": true
+      },
+      "focusRing": {
+        "outline": "rgb(34, 34, 29) none 3px",
+        "outlineOffset": "0px",
+        "activeClass": ""
+      }
+    },
+    "360x800": {
+      "viewport": {
+        "name": "360x800",
+        "width": 360,
+        "height": 800
+      },
+      "consoleErrors": [],
+      "title": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-title.png",
+        "metrics": {
+          "viewport": {
+            "width": 360,
+            "height": 800
+          },
+          "document": {
+            "scrollWidth": 360,
+            "scrollHeight": 1287,
+            "bodyScrollHeight": 1287,
+            "horizontalOverflow": false
+          },
+          "smallText": [],
+          "gradients": [],
+          "blurs": [],
+          "pills": [],
+          "shadows": [
+            {
+              "tag": "div",
+              "cls": "mode-card standard selected",
+              "shadow": "rgb(187, 62, 11) 3px 0px 0px 0px inset"
+            }
+          ],
+          "tinyTargets": [
+            {
+              "tag": "select",
+              "cls": "title-lang-select",
+              "text": "한국어English日本語中文",
+              "aria": "언어 선택",
+              "disabled": false,
+              "x": 31,
+              "y": 64,
+              "w": 64,
+              "h": 16,
+              "right": 95,
+              "bottom": 80
+            }
+          ],
+          "primarySmall": [],
+          "horizontalOverflow": [],
+          "clipped": [],
+          "emoji": [],
+          "buttons": 20
+        }
+      },
+      "titleModals": {
+        "theme": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-title-theme.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 172,
+              "w": 328,
+              "h": 457,
+              "right": 344,
+              "bottom": 628
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 455,
+              "scrollHeight": 455,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "theme-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 189,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 225
+              },
+              {
+                "cls": "mode-toggle-btn active",
+                "text": "이미지 모드",
+                "aria": null,
+                "x": 36,
+                "y": 280,
+                "w": 143,
+                "h": 36,
+                "right": 179,
+                "bottom": 316
+              },
+              {
+                "cls": "mode-toggle-btn ",
+                "text": "숫자 모드",
+                "aria": null,
+                "x": 181,
+                "y": 280,
+                "w": 143,
+                "h": 36,
+                "right": 324,
+                "bottom": 316
+              },
+              {
+                "cls": "theme-card selected",
+                "text": "자연 & 풍경풍경풍부하고 다채로운 색감의 숲과 산 풍경",
+                "aria": null,
+                "x": 33,
+                "y": 335,
+                "w": 144,
+                "h": 109,
+                "right": 177,
+                "bottom": 443
+              },
+              {
+                "cls": "theme-card ",
+                "text": "레트로 픽셀픽셀아트선명한 도트 그래픽의 따뜻한 마을 일러스트",
+                "aria": null,
+                "x": 181,
+                "y": 335,
+                "w": 144,
+                "h": 109,
+                "right": 325,
+                "bottom": 443
+              },
+              {
+                "cls": "theme-card ",
+                "text": "기하학 추상패턴고난도 퍼즐 매니아를 위한 모던 기하학 패턴",
+                "aria": null,
+                "x": 33,
+                "y": 447,
+                "w": 144,
+                "h": 108,
+                "right": 177,
+                "bottom": 555
+              },
+              {
+                "cls": "theme-card ",
+                "text": "귀여운 동물캐릭터사랑스럽고 친근한 동물 캐릭터 일러스트",
+                "aria": null,
+                "x": 181,
+                "y": 447,
+                "w": 144,
+                "h": 108,
+                "right": 325,
+                "bottom": 555
+              },
+              {
+                "cls": "btn-theme-start-game",
+                "text": "이 테마로 게임 시작",
+                "aria": null,
+                "x": 33,
+                "y": 567,
+                "w": 294,
+                "h": 44,
+                "right": 327,
+                "bottom": 611
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "bgm": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-title-bgm.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 115,
+              "w": 328,
+              "h": 570,
+              "right": 344,
+              "bottom": 685
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 568,
+              "scrollHeight": 568,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "bgm-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 292,
+                "y": 156,
+                "w": 35,
+                "h": 36,
+                "right": 327,
+                "bottom": 192
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "BGM",
+                "aria": null,
+                "x": 46,
+                "y": 263,
+                "w": 64,
+                "h": 32,
+                "right": 110,
+                "bottom": 295
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 118,
+                "y": 277,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 281
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "SFX",
+                "aria": null,
+                "x": 46,
+                "y": 303,
+                "w": 64,
+                "h": 32,
+                "right": 110,
+                "bottom": 335
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 118,
+                "y": 317,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 321
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 46,
+                "y": 354,
+                "w": 13,
+                "h": 16,
+                "right": 59,
+                "bottom": 370
+              },
+              {
+                "cls": "bgm-track-card selected",
+                "text": "Lo-Fi Chill칠홉 / 어쿠스틱차분하고 편안한 비트와 어쿠스틱 기타",
+                "aria": null,
+                "x": 33,
+                "y": 456,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 506
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Zen Nature자연 / 앰비언트맑은 자연의 숨결과 평온한 명상 앰비언",
+                "aria": null,
+                "x": 33,
+                "y": 510,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 560
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Cyber Synth신스웨이브 / 일렉트로미래적인 신시사이저와 레트로 사",
+                "aria": null,
+                "x": 33,
+                "y": 564,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 614
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Jazz Lounge보사노바 재즈세련된 카페 무드의 감미로운 피아노 재즈",
+                "aria": null,
+                "x": 33,
+                "y": 618,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 668
+              }
+            ],
+            "tinyTargets": [
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 118,
+                "y": 277,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 281
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 118,
+                "y": 317,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 321
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 46,
+                "y": 354,
+                "w": 13,
+                "h": 16,
+                "right": 59,
+                "bottom": 370
+              }
+            ],
+            "horizontalOverflow": false
+          }
+        },
+        "daily": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-title-daily.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 136,
+              "w": 328,
+              "h": 529,
+              "right": 344,
+              "bottom": 664
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 527,
+              "scrollHeight": 527,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "auto"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "daily-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 287,
+                "y": 157,
+                "w": 36,
+                "h": 36,
+                "right": 323,
+                "bottom": 193
+              },
+              {
+                "cls": "btn-daily-start ",
+                "text": "오늘의 퍼즐 도전하기",
+                "aria": null,
+                "x": 37,
+                "y": 599,
+                "w": 286,
+                "h": 44,
+                "right": 323,
+                "bottom": 643
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "achievement": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-title-achievement.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 89,
+              "w": 328,
+              "h": 622,
+              "right": 344,
+              "bottom": 711
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 620,
+              "scrollHeight": 620,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "achieve-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 115,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 151
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "customImage": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-title-customImage.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 228,
+              "w": 328,
+              "h": 344,
+              "right": 344,
+              "bottom": 572
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 342,
+              "scrollHeight": 342,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "custom-img-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 263,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 299
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        }
+      },
+      "pwaInstall": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-pwa-install.png",
+        "metrics": {
+          "card": {
+            "x": 16,
+            "y": 706,
+            "width": 328,
+            "height": 78,
+            "top": 706,
+            "right": 344,
+            "bottom": 784,
+            "left": 16
+          },
+          "text": "Sliding Block Puzzle\n앱으로 설치하여 오프라인에서도 즐겨보세요!\n홈 화면에 설치",
+          "buttons": [
+            {
+              "cls": "btn-pwa-install",
+              "text": "홈 화면에 설치",
+              "aria": null,
+              "w": 116,
+              "h": 40
+            },
+            {
+              "cls": "btn-pwa-close",
+              "text": "",
+              "aria": "닫기",
+              "w": 36,
+              "h": 36
+            }
+          ],
+          "descClipped": true,
+          "viewport": {
+            "width": 360,
+            "height": 800
+          }
+        }
+      },
+      "swUpdate": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-sw-update.png",
+        "metrics": {
+          "card": {
+            "x": 16,
+            "y": 16,
+            "width": 328,
+            "height": 58,
+            "top": 16,
+            "right": 344,
+            "bottom": 74,
+            "left": 16
+          },
+          "text": "새 버전이 준비되었습니다. 지금 업데이트하면 최신 수정 사항이 적용됩니다.",
+          "buttonTextContent": "지금 업데이트",
+          "buttonInnerText": "",
+          "buttonAria": null,
+          "buttonRect": {
+            "w": 36,
+            "h": 40
+          },
+          "viewport": {
+            "width": 360,
+            "height": 800
+          }
+        },
+        "ariaSnapshot": "- button"
+      },
+      "game": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game.png",
+        "fullPageScreenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game-full.png",
+        "metrics": {
+          "viewport": {
+            "width": 360,
+            "height": 800
+          },
+          "document": {
+            "scrollWidth": 360,
+            "scrollHeight": 800,
+            "bodyScrollHeight": 800,
+            "horizontalOverflow": false
+          },
+          "smallText": [],
+          "gradients": [],
+          "blurs": [],
+          "pills": [],
+          "shadows": [],
+          "tinyTargets": [
+            {
+              "tag": "select",
+              "cls": "lang-select",
+              "text": "한국어English日本語中文",
+              "aria": "언어 선택",
+              "disabled": false,
+              "x": 140,
+              "y": 62,
+              "w": 64,
+              "h": 16,
+              "right": 204,
+              "bottom": 78
+            }
+          ],
+          "primarySmall": [],
+          "horizontalOverflow": [],
+          "clipped": [],
+          "emoji": [],
+          "buttons": 24
+        },
+        "specific": {
+          "header": {
+            "x": 4,
+            "y": 8,
+            "w": 352,
+            "h": 147,
+            "bottom": 155
+          },
+          "board": {
+            "x": 25,
+            "y": 352,
+            "w": 310,
+            "h": 310,
+            "bottom": 662
+          },
+          "controls": {
+            "x": 13,
+            "y": 172,
+            "w": 334,
+            "h": 172,
+            "bottom": 344
+          },
+          "footer": {
+            "x": 4,
+            "y": 740,
+            "w": 352,
+            "h": 52,
+            "bottom": 792
+          },
+          "gameCard": {
+            "x": 4,
+            "y": 163,
+            "w": 352,
+            "h": 550,
+            "bottom": 713
+          },
+          "statValues": [
+            {
+              "text": "0",
+              "font": "16px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            },
+            {
+              "text": "00:00",
+              "font": "16px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            },
+            {
+              "text": "-",
+              "font": "12px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            }
+          ]
+        }
+      },
+      "gameNumber": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game-number.png",
+        "numberOverlay": []
+      },
+      "gameModals": {
+        "theme": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game-theme.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 207,
+              "w": 328,
+              "h": 386,
+              "right": 344,
+              "bottom": 593
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 384,
+              "scrollHeight": 384,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "theme-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 224,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 260
+              },
+              {
+                "cls": "mode-toggle-btn active",
+                "text": "이미지 모드",
+                "aria": null,
+                "x": 36,
+                "y": 300,
+                "w": 143,
+                "h": 36,
+                "right": 179,
+                "bottom": 336
+              },
+              {
+                "cls": "mode-toggle-btn ",
+                "text": "숫자 모드",
+                "aria": null,
+                "x": 181,
+                "y": 300,
+                "w": 143,
+                "h": 36,
+                "right": 324,
+                "bottom": 336
+              },
+              {
+                "cls": "theme-card selected",
+                "text": "자연 & 풍경풍경풍부하고 다채로운 색감의 숲과 산 풍경",
+                "aria": null,
+                "x": 33,
+                "y": 355,
+                "w": 144,
+                "h": 109,
+                "right": 177,
+                "bottom": 464
+              },
+              {
+                "cls": "theme-card ",
+                "text": "레트로 픽셀픽셀아트선명한 도트 그래픽의 따뜻한 마을 일러스트",
+                "aria": null,
+                "x": 181,
+                "y": 355,
+                "w": 144,
+                "h": 109,
+                "right": 325,
+                "bottom": 464
+              },
+              {
+                "cls": "theme-card ",
+                "text": "기하학 추상패턴고난도 퍼즐 매니아를 위한 모던 기하학 패턴",
+                "aria": null,
+                "x": 33,
+                "y": 468,
+                "w": 144,
+                "h": 108,
+                "right": 177,
+                "bottom": 576
+              },
+              {
+                "cls": "theme-card ",
+                "text": "귀여운 동물캐릭터사랑스럽고 친근한 동물 캐릭터 일러스트",
+                "aria": null,
+                "x": 181,
+                "y": 468,
+                "w": 144,
+                "h": 108,
+                "right": 325,
+                "bottom": 576
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "hint": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game-hint.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 179,
+              "w": 328,
+              "h": 442,
+              "right": 344,
+              "bottom": 621
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 440,
+              "scrollHeight": 440,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "hint-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 289,
+                "y": 209,
+                "w": 34,
+                "h": 36,
+                "right": 323,
+                "bottom": 245
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "daily": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game-daily.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 136,
+              "w": 328,
+              "h": 529,
+              "right": 344,
+              "bottom": 664
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 527,
+              "scrollHeight": 527,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "auto"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "daily-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 287,
+                "y": 157,
+                "w": 36,
+                "h": 36,
+                "right": 323,
+                "bottom": 193
+              },
+              {
+                "cls": "btn-daily-start ",
+                "text": "오늘의 퍼즐 도전하기",
+                "aria": null,
+                "x": 37,
+                "y": 599,
+                "w": 286,
+                "h": 44,
+                "right": 323,
+                "bottom": 643
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "achievement": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game-achievement.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 89,
+              "w": 328,
+              "h": 622,
+              "right": 344,
+              "bottom": 711
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 620,
+              "scrollHeight": 620,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "achieve-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 115,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 151
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "customImage": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game-customImage.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 228,
+              "w": 328,
+              "h": 344,
+              "right": 344,
+              "bottom": 572
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 342,
+              "scrollHeight": 342,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "custom-img-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 291,
+                "y": 263,
+                "w": 36,
+                "h": 36,
+                "right": 327,
+                "bottom": 299
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "bgm": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-game-bgm.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 16,
+              "y": 115,
+              "w": 328,
+              "h": 570,
+              "right": 344,
+              "bottom": 685
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 360,
+              "h": 800,
+              "right": 360,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 360,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 568,
+              "scrollHeight": 568,
+              "clientWidth": 326,
+              "scrollWidth": 326
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "bgm-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 292,
+                "y": 156,
+                "w": 35,
+                "h": 36,
+                "right": 327,
+                "bottom": 192
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "BGM",
+                "aria": null,
+                "x": 46,
+                "y": 263,
+                "w": 64,
+                "h": 32,
+                "right": 110,
+                "bottom": 295
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 118,
+                "y": 277,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 281
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "SFX",
+                "aria": null,
+                "x": 46,
+                "y": 303,
+                "w": 64,
+                "h": 32,
+                "right": 110,
+                "bottom": 335
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 118,
+                "y": 317,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 321
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 46,
+                "y": 354,
+                "w": 13,
+                "h": 16,
+                "right": 59,
+                "bottom": 370
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Lo-Fi Chill칠홉 / 어쿠스틱차분하고 편안한 비트와 어쿠스틱 기타",
+                "aria": null,
+                "x": 33,
+                "y": 456,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 506
+              },
+              {
+                "cls": "bgm-track-card selected",
+                "text": "Zen Nature자연 / 앰비언트맑은 자연의 숨결과 평온한 명상 앰비언",
+                "aria": null,
+                "x": 33,
+                "y": 510,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 560
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Cyber Synth신스웨이브 / 일렉트로미래적인 신시사이저와 레트로 사",
+                "aria": null,
+                "x": 33,
+                "y": 564,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 614
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Jazz Lounge보사노바 재즈세련된 카페 무드의 감미로운 피아노 재즈",
+                "aria": null,
+                "x": 33,
+                "y": 618,
+                "w": 292,
+                "h": 50,
+                "right": 325,
+                "bottom": 668
+              }
+            ],
+            "tinyTargets": [
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 118,
+                "y": 277,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 281
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 118,
+                "y": 317,
+                "w": 150,
+                "h": 4,
+                "right": 268,
+                "bottom": 321
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 46,
+                "y": 354,
+                "w": 13,
+                "h": 16,
+                "right": 59,
+                "bottom": 370
+              }
+            ],
+            "horizontalOverflow": false
+          }
+        }
+      },
+      "regression": {
+        "afterMove": "1",
+        "afterUndo": "2",
+        "undoRestored": true,
+        "aiHintVisible": true
+      },
+      "focusRing": {
+        "outline": "rgb(34, 34, 29) none 3px",
+        "outlineOffset": "0px",
+        "activeClass": ""
+      }
+    },
+    "1280x800": {
+      "viewport": {
+        "name": "1280x800",
+        "width": 1280,
+        "height": 800
+      },
+      "consoleErrors": [],
+      "title": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-title.png",
+        "metrics": {
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "document": {
+            "scrollWidth": 1280,
+            "scrollHeight": 850,
+            "bodyScrollHeight": 850,
+            "horizontalOverflow": false
+          },
+          "smallText": [],
+          "gradients": [],
+          "blurs": [],
+          "pills": [],
+          "shadows": [
+            {
+              "tag": "div",
+              "cls": "mode-card standard selected",
+              "shadow": "rgb(187, 62, 11) 3px 0px 0px 0px inset"
+            }
+          ],
+          "tinyTargets": [
+            {
+              "tag": "select",
+              "cls": "title-lang-select",
+              "text": "한국어English日本語中文",
+              "aria": "언어 선택",
+              "disabled": false,
+              "x": 736,
+              "y": 28,
+              "w": 64,
+              "h": 16,
+              "right": 800,
+              "bottom": 44
+            }
+          ],
+          "primarySmall": [],
+          "horizontalOverflow": [],
+          "clipped": [],
+          "emoji": [],
+          "buttons": 20
+        }
+      },
+      "titleModals": {
+        "theme": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-title-theme.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 400,
+              "y": 83,
+              "w": 480,
+              "h": 635,
+              "right": 880,
+              "bottom": 717
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 633,
+              "scrollHeight": 633,
+              "clientWidth": 478,
+              "scrollWidth": 478
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "theme-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 823,
+                "y": 104,
+                "w": 36,
+                "h": 36,
+                "right": 859,
+                "bottom": 140
+              },
+              {
+                "cls": "mode-toggle-btn active",
+                "text": "이미지 모드",
+                "aria": null,
+                "x": 424,
+                "y": 195,
+                "w": 215,
+                "h": 36,
+                "right": 639,
+                "bottom": 231
+              },
+              {
+                "cls": "mode-toggle-btn ",
+                "text": "숫자 모드",
+                "aria": null,
+                "x": 641,
+                "y": 195,
+                "w": 215,
+                "h": 36,
+                "right": 856,
+                "bottom": 231
+              },
+              {
+                "cls": "theme-card selected",
+                "text": "자연 & 풍경풍경풍부하고 다채로운 색감의 숲과 산 풍경",
+                "aria": null,
+                "x": 421,
+                "y": 250,
+                "w": 214,
+                "h": 192,
+                "right": 635,
+                "bottom": 441
+              },
+              {
+                "cls": "theme-card ",
+                "text": "레트로 픽셀픽셀아트선명한 도트 그래픽의 따뜻한 마을 일러스트",
+                "aria": null,
+                "x": 643,
+                "y": 250,
+                "w": 214,
+                "h": 192,
+                "right": 857,
+                "bottom": 441
+              },
+              {
+                "cls": "theme-card ",
+                "text": "기하학 추상패턴고난도 퍼즐 매니아를 위한 모던 기하학 패턴",
+                "aria": null,
+                "x": 421,
+                "y": 449,
+                "w": 214,
+                "h": 191,
+                "right": 635,
+                "bottom": 640
+              },
+              {
+                "cls": "theme-card ",
+                "text": "귀여운 동물캐릭터사랑스럽고 친근한 동물 캐릭터 일러스트",
+                "aria": null,
+                "x": 643,
+                "y": 449,
+                "w": 214,
+                "h": 191,
+                "right": 857,
+                "bottom": 640
+              },
+              {
+                "cls": "btn-theme-start-game",
+                "text": "이 테마로 게임 시작",
+                "aria": null,
+                "x": 421,
+                "y": 652,
+                "w": 438,
+                "h": 44,
+                "right": 859,
+                "bottom": 696
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "bgm": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-title-bgm.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 410,
+              "y": 121,
+              "w": 460,
+              "h": 558,
+              "right": 870,
+              "bottom": 679
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 556,
+              "scrollHeight": 556,
+              "clientWidth": 458,
+              "scrollWidth": 458
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "bgm-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 813,
+                "y": 151,
+                "w": 36,
+                "h": 36,
+                "right": 849,
+                "bottom": 187
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "BGM",
+                "aria": null,
+                "x": 444,
+                "y": 247,
+                "w": 64,
+                "h": 32,
+                "right": 508,
+                "bottom": 279
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 516,
+                "y": 261,
+                "w": 274,
+                "h": 4,
+                "right": 790,
+                "bottom": 265
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "SFX",
+                "aria": null,
+                "x": 444,
+                "y": 287,
+                "w": 64,
+                "h": 32,
+                "right": 508,
+                "bottom": 319
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 516,
+                "y": 301,
+                "w": 274,
+                "h": 4,
+                "right": 790,
+                "bottom": 305
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 444,
+                "y": 338,
+                "w": 16,
+                "h": 16,
+                "right": 460,
+                "bottom": 354
+              },
+              {
+                "cls": "bgm-track-card selected",
+                "text": "Lo-Fi Chill칠홉 / 어쿠스틱차분하고 편안한 비트와 어쿠스틱 기타",
+                "aria": null,
+                "x": 431,
+                "y": 427,
+                "w": 416,
+                "h": 55,
+                "right": 847,
+                "bottom": 482
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Zen Nature자연 / 앰비언트맑은 자연의 숨결과 평온한 명상 앰비언",
+                "aria": null,
+                "x": 431,
+                "y": 486,
+                "w": 416,
+                "h": 55,
+                "right": 847,
+                "bottom": 540
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Cyber Synth신스웨이브 / 일렉트로미래적인 신시사이저와 레트로 사",
+                "aria": null,
+                "x": 431,
+                "y": 544,
+                "w": 416,
+                "h": 55,
+                "right": 847,
+                "bottom": 599
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Jazz Lounge보사노바 재즈세련된 카페 무드의 감미로운 피아노 재즈",
+                "aria": null,
+                "x": 431,
+                "y": 603,
+                "w": 416,
+                "h": 55,
+                "right": 847,
+                "bottom": 658
+              }
+            ],
+            "tinyTargets": [
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 516,
+                "y": 261,
+                "w": 274,
+                "h": 4,
+                "right": 790,
+                "bottom": 265
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 516,
+                "y": 301,
+                "w": 274,
+                "h": 4,
+                "right": 790,
+                "bottom": 305
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 444,
+                "y": 338,
+                "w": 16,
+                "h": 16,
+                "right": 460,
+                "bottom": 354
+              }
+            ],
+            "horizontalOverflow": false
+          }
+        },
+        "daily": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-title-daily.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 420,
+              "y": 115,
+              "w": 440,
+              "h": 570,
+              "right": 860,
+              "bottom": 685
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 568,
+              "scrollHeight": 568,
+              "clientWidth": 438,
+              "scrollWidth": 438
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "auto"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "daily-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 803,
+                "y": 136,
+                "w": 36,
+                "h": 36,
+                "right": 839,
+                "bottom": 172
+              },
+              {
+                "cls": "btn-daily-start ",
+                "text": "오늘의 퍼즐 도전하기",
+                "aria": null,
+                "x": 441,
+                "y": 620,
+                "w": 398,
+                "h": 44,
+                "right": 839,
+                "bottom": 664
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "achievement": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-title-achievement.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 380,
+              "y": 92,
+              "w": 520,
+              "h": 617,
+              "right": 900,
+              "bottom": 709
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 615,
+              "scrollHeight": 615,
+              "clientWidth": 518,
+              "scrollWidth": 518
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "achieve-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 843,
+                "y": 122,
+                "w": 36,
+                "h": 36,
+                "right": 879,
+                "bottom": 158
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "customImage": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-title-customImage.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 420,
+              "y": 229,
+              "w": 440,
+              "h": 343,
+              "right": 860,
+              "bottom": 572
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 341,
+              "scrollHeight": 341,
+              "clientWidth": 438,
+              "scrollWidth": 438
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "custom-img-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 803,
+                "y": 250,
+                "w": 36,
+                "h": 36,
+                "right": 839,
+                "bottom": 286
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        }
+      },
+      "pwaInstall": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-pwa-install.png",
+        "metrics": {
+          "card": {
+            "x": 400,
+            "y": 726,
+            "width": 480,
+            "height": 58,
+            "top": 726,
+            "right": 880,
+            "bottom": 784,
+            "left": 400
+          },
+          "text": "Sliding Block Puzzle\n앱으로 설치하여 오프라인에서도 즐겨보세요!\n홈 화면에 설치",
+          "buttons": [
+            {
+              "cls": "btn-pwa-install",
+              "text": "홈 화면에 설치",
+              "aria": null,
+              "w": 116,
+              "h": 40
+            },
+            {
+              "cls": "btn-pwa-close",
+              "text": "",
+              "aria": "닫기",
+              "w": 36,
+              "h": 36
+            }
+          ],
+          "descClipped": false,
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          }
+        }
+      },
+      "swUpdate": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-sw-update.png",
+        "metrics": {
+          "card": {
+            "x": 400,
+            "y": 16,
+            "width": 480,
+            "height": 58,
+            "top": 16,
+            "right": 880,
+            "bottom": 74,
+            "left": 400
+          },
+          "text": "새 버전이 준비되었습니다. 지금 업데이트하면 최신 수정 사항이 적용됩니다.\n지금 업데이트",
+          "buttonTextContent": "지금 업데이트",
+          "buttonInnerText": "지금 업데이트",
+          "buttonAria": null,
+          "buttonRect": {
+            "w": 112,
+            "h": 40
+          },
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          }
+        },
+        "ariaSnapshot": "- button \"지금 업데이트\""
+      },
+      "game": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game.png",
+        "fullPageScreenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game-full.png",
+        "metrics": {
+          "viewport": {
+            "width": 1280,
+            "height": 800
+          },
+          "document": {
+            "scrollWidth": 1280,
+            "scrollHeight": 800,
+            "bodyScrollHeight": 800,
+            "horizontalOverflow": false
+          },
+          "smallText": [],
+          "gradients": [],
+          "blurs": [],
+          "pills": [],
+          "shadows": [],
+          "tinyTargets": [
+            {
+              "tag": "select",
+              "cls": "lang-select",
+              "text": "한국어English日本語中文",
+              "aria": "언어 선택",
+              "disabled": false,
+              "x": 671,
+              "y": 22,
+              "w": 64,
+              "h": 16,
+              "right": 735,
+              "bottom": 38
+            }
+          ],
+          "primarySmall": [],
+          "horizontalOverflow": [],
+          "clipped": [],
+          "emoji": [],
+          "buttons": 24
+        },
+        "specific": {
+          "header": {
+            "x": 390,
+            "y": 12,
+            "w": 500,
+            "h": 106,
+            "bottom": 118
+          },
+          "board": {
+            "x": 475,
+            "y": 343,
+            "w": 330,
+            "h": 330,
+            "bottom": 673
+          },
+          "controls": {
+            "x": 407,
+            "y": 147,
+            "w": 466,
+            "h": 184,
+            "bottom": 331
+          },
+          "footer": {
+            "x": 16,
+            "y": 750,
+            "w": 1248,
+            "h": 42,
+            "bottom": 792
+          },
+          "gameCard": {
+            "x": 390,
+            "y": 130,
+            "w": 500,
+            "h": 585,
+            "bottom": 714
+          },
+          "statValues": [
+            {
+              "text": "0",
+              "font": "18px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            },
+            {
+              "text": "00:00",
+              "font": "18px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            },
+            {
+              "text": "-",
+              "font": "12px",
+              "family": "ui-monospace, SFMono-Regular, \"Cascadia Mono\", \"Roboto Mono\", Consolas, monospace",
+              "numeric": "tabular-nums"
+            }
+          ]
+        }
+      },
+      "gameNumber": {
+        "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game-number.png",
+        "numberOverlay": []
+      },
+      "gameModals": {
+        "theme": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game-theme.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 400,
+              "y": 118,
+              "w": 480,
+              "h": 564,
+              "right": 880,
+              "bottom": 682
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 562,
+              "scrollHeight": 562,
+              "clientWidth": 478,
+              "scrollWidth": 478
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "theme-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 823,
+                "y": 139,
+                "w": 36,
+                "h": 36,
+                "right": 859,
+                "bottom": 175
+              },
+              {
+                "cls": "mode-toggle-btn active",
+                "text": "이미지 모드",
+                "aria": null,
+                "x": 424,
+                "y": 215,
+                "w": 215,
+                "h": 36,
+                "right": 639,
+                "bottom": 251
+              },
+              {
+                "cls": "mode-toggle-btn ",
+                "text": "숫자 모드",
+                "aria": null,
+                "x": 641,
+                "y": 215,
+                "w": 215,
+                "h": 36,
+                "right": 856,
+                "bottom": 251
+              },
+              {
+                "cls": "theme-card selected",
+                "text": "자연 & 풍경풍경풍부하고 다채로운 색감의 숲과 산 풍경",
+                "aria": null,
+                "x": 421,
+                "y": 270,
+                "w": 214,
+                "h": 192,
+                "right": 635,
+                "bottom": 462
+              },
+              {
+                "cls": "theme-card ",
+                "text": "레트로 픽셀픽셀아트선명한 도트 그래픽의 따뜻한 마을 일러스트",
+                "aria": null,
+                "x": 643,
+                "y": 270,
+                "w": 214,
+                "h": 192,
+                "right": 857,
+                "bottom": 462
+              },
+              {
+                "cls": "theme-card ",
+                "text": "기하학 추상패턴고난도 퍼즐 매니아를 위한 모던 기하학 패턴",
+                "aria": null,
+                "x": 421,
+                "y": 470,
+                "w": 214,
+                "h": 191,
+                "right": 635,
+                "bottom": 661
+              },
+              {
+                "cls": "theme-card ",
+                "text": "귀여운 동물캐릭터사랑스럽고 친근한 동물 캐릭터 일러스트",
+                "aria": null,
+                "x": 643,
+                "y": 470,
+                "w": 214,
+                "h": 191,
+                "right": 857,
+                "bottom": 661
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "hint": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game-hint.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 430,
+              "y": 151,
+              "w": 420,
+              "h": 498,
+              "right": 850,
+              "bottom": 649
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 496,
+              "scrollHeight": 496,
+              "clientWidth": 418,
+              "scrollWidth": 418
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "hint-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 793,
+                "y": 172,
+                "w": 36,
+                "h": 36,
+                "right": 829,
+                "bottom": 208
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "daily": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game-daily.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 420,
+              "y": 115,
+              "w": 440,
+              "h": 570,
+              "right": 860,
+              "bottom": 685
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 568,
+              "scrollHeight": 568,
+              "clientWidth": 438,
+              "scrollWidth": 438
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "auto"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "daily-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 803,
+                "y": 136,
+                "w": 36,
+                "h": 36,
+                "right": 839,
+                "bottom": 172
+              },
+              {
+                "cls": "btn-daily-start ",
+                "text": "오늘의 퍼즐 도전하기",
+                "aria": null,
+                "x": 441,
+                "y": 620,
+                "w": 398,
+                "h": 44,
+                "right": 839,
+                "bottom": 664
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "achievement": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game-achievement.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 380,
+              "y": 92,
+              "w": 520,
+              "h": 617,
+              "right": 900,
+              "bottom": 709
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 615,
+              "scrollHeight": 615,
+              "clientWidth": 518,
+              "scrollWidth": 518
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "achieve-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 843,
+                "y": 122,
+                "w": 36,
+                "h": 36,
+                "right": 879,
+                "bottom": 158
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "customImage": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game-customImage.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 420,
+              "y": 229,
+              "w": 440,
+              "h": 343,
+              "right": 860,
+              "bottom": 572
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 341,
+              "scrollHeight": 341,
+              "clientWidth": 438,
+              "scrollWidth": 438
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "custom-img-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 803,
+                "y": 250,
+                "w": 36,
+                "h": 36,
+                "right": 839,
+                "bottom": 286
+              }
+            ],
+            "tinyTargets": [],
+            "horizontalOverflow": false
+          }
+        },
+        "bgm": {
+          "file": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-game-bgm.png",
+          "metrics": {
+            "found": true,
+            "panel": {
+              "x": 410,
+              "y": 121,
+              "w": 460,
+              "h": 558,
+              "right": 870,
+              "bottom": 679
+            },
+            "overlay": {
+              "x": 0,
+              "y": 0,
+              "w": 1280,
+              "h": 800,
+              "right": 1280,
+              "bottom": 800
+            },
+            "viewport": {
+              "width": 1280,
+              "height": 800
+            },
+            "panelWithinViewport": false,
+            "overlayWithinViewport": false,
+            "panelScroll": {
+              "clientHeight": 556,
+              "scrollHeight": 556,
+              "clientWidth": 458,
+              "scrollWidth": 458
+            },
+            "style": {
+              "backgroundColor": "rgb(247, 247, 243)",
+              "border": "1px solid rgb(210, 210, 201)",
+              "borderRadius": "8px",
+              "boxShadow": "none",
+              "backdropFilter": "none",
+              "overflowY": "hidden"
+            },
+            "overlayStyle": {
+              "backgroundColor": "rgba(23, 23, 19, 0.62)",
+              "backdropFilter": "none"
+            },
+            "smallText": [],
+            "buttons": [
+              {
+                "cls": "bgm-close-btn",
+                "text": "",
+                "aria": "닫기",
+                "x": 813,
+                "y": 151,
+                "w": 36,
+                "h": 36,
+                "right": 849,
+                "bottom": 187
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "BGM",
+                "aria": null,
+                "x": 444,
+                "y": 247,
+                "w": 64,
+                "h": 32,
+                "right": 508,
+                "bottom": 279
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 516,
+                "y": 261,
+                "w": 274,
+                "h": 4,
+                "right": 790,
+                "bottom": 265
+              },
+              {
+                "cls": "btn-vol-mute active",
+                "text": "SFX",
+                "aria": null,
+                "x": 444,
+                "y": 287,
+                "w": 64,
+                "h": 32,
+                "right": 508,
+                "bottom": 319
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 516,
+                "y": 301,
+                "w": 274,
+                "h": 4,
+                "right": 790,
+                "bottom": 305
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 444,
+                "y": 338,
+                "w": 16,
+                "h": 16,
+                "right": 460,
+                "bottom": 354
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Lo-Fi Chill칠홉 / 어쿠스틱차분하고 편안한 비트와 어쿠스틱 기타",
+                "aria": null,
+                "x": 431,
+                "y": 427,
+                "w": 416,
+                "h": 55,
+                "right": 847,
+                "bottom": 482
+              },
+              {
+                "cls": "bgm-track-card selected",
+                "text": "Zen Nature자연 / 앰비언트맑은 자연의 숨결과 평온한 명상 앰비언",
+                "aria": null,
+                "x": 431,
+                "y": 486,
+                "w": 416,
+                "h": 55,
+                "right": 847,
+                "bottom": 540
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Cyber Synth신스웨이브 / 일렉트로미래적인 신시사이저와 레트로 사",
+                "aria": null,
+                "x": 431,
+                "y": 544,
+                "w": 416,
+                "h": 55,
+                "right": 847,
+                "bottom": 599
+              },
+              {
+                "cls": "bgm-track-card ",
+                "text": "Jazz Lounge보사노바 재즈세련된 카페 무드의 감미로운 피아노 재즈",
+                "aria": null,
+                "x": 431,
+                "y": 603,
+                "w": 416,
+                "h": 55,
+                "right": 847,
+                "bottom": 658
+              }
+            ],
+            "tinyTargets": [
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "BGM 볼륨 슬라이더",
+                "x": 516,
+                "y": 261,
+                "w": 274,
+                "h": 4,
+                "right": 790,
+                "bottom": 265
+              },
+              {
+                "cls": "volume-slider",
+                "text": "",
+                "aria": "SFX 볼륨 슬라이더",
+                "x": 516,
+                "y": 301,
+                "w": 274,
+                "h": 4,
+                "right": 790,
+                "bottom": 305
+              },
+              {
+                "cls": "theme-sync-checkbox",
+                "text": "",
+                "aria": null,
+                "x": 444,
+                "y": 338,
+                "w": 16,
+                "h": 16,
+                "right": 460,
+                "bottom": 354
+              }
+            ],
+            "horizontalOverflow": false
+          }
+        }
+      },
+      "regression": {
+        "afterMove": "1",
+        "afterUndo": "2",
+        "undoRestored": true,
+        "aiHintVisible": true
+      },
+      "focusRing": {
+        "outline": "rgb(34, 34, 29) none 3px",
+        "outlineOffset": "0px",
+        "activeClass": ""
+      }
+    }
+  },
+  "reducedMotion": {
+    "matches": true,
+    "transitionDuration": "1e-05s",
+    "animationDuration": "1e-05s",
+    "modal": {
+      "panelAnimation": "1e-05s",
+      "panelTransition": "1e-05s",
+      "overlayAnimation": "1e-05s",
+      "overlayTransition": "1e-05s"
+    }
+  },
+  "win-360x800": {
+    "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-win.png",
+    "metrics": {
+      "found": true,
+      "panel": {
+        "x": 16,
+        "y": 162,
+        "w": 328,
+        "h": 475,
+        "right": 344,
+        "bottom": 638
+      },
+      "overlay": {
+        "x": 0,
+        "y": 0,
+        "w": 360,
+        "h": 800,
+        "right": 360,
+        "bottom": 800
+      },
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "panelWithinViewport": false,
+      "overlayWithinViewport": false,
+      "panelScroll": {
+        "clientHeight": 473,
+        "scrollHeight": 473,
+        "clientWidth": 326,
+        "scrollWidth": 326
+      },
+      "style": {
+        "backgroundColor": "rgb(247, 247, 243)",
+        "border": "1px solid rgb(210, 210, 201)",
+        "borderRadius": "8px",
+        "boxShadow": "none",
+        "backdropFilter": "none",
+        "overflowY": "auto"
+      },
+      "overlayStyle": {
+        "backgroundColor": "rgba(23, 23, 19, 0.62)",
+        "backdropFilter": "none"
+      },
+      "smallText": [],
+      "buttons": [
+        {
+          "cls": "btn-open-replay",
+          "text": "풀이 타임랩스 (25수 재생)",
+          "aria": null,
+          "x": 33,
+          "y": 477,
+          "w": 294,
+          "h": 40,
+          "right": 327,
+          "bottom": 517
+        },
+        {
+          "cls": "btn-share-result",
+          "text": "결과 카드 공유",
+          "aria": null,
+          "x": 33,
+          "y": 525,
+          "w": 294,
+          "h": 44,
+          "right": 327,
+          "bottom": 569
+        },
+        {
+          "cls": "modal-btn btn-retry",
+          "text": "다시 플레이",
+          "aria": null,
+          "x": 33,
+          "y": 577,
+          "w": 143,
+          "h": 44,
+          "right": 176,
+          "bottom": 621
+        },
+        {
+          "cls": "modal-btn btn-next",
+          "text": "4×4 다음 단계 도전",
+          "aria": null,
+          "x": 184,
+          "y": 577,
+          "w": 143,
+          "h": 44,
+          "right": 327,
+          "bottom": 621
+        }
+      ],
+      "tinyTargets": [],
+      "horizontalOverflow": false
+    },
+    "toastScreenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-win-toast.png",
+    "toast": {
+      "text": "업적 달성! (ACHIEVEMENT UNLOCKED)\n첫 승리의 기쁨\n\n어떤 난이도든 처음으로 슬라이딩 퍼즐을 완성하세요.",
+      "rect": {
+        "x": 20,
+        "y": 16,
+        "width": 320,
+        "height": 129.1875,
+        "top": 16,
+        "right": 340,
+        "bottom": 145.1875,
+        "left": 20
+      },
+      "fontSizes": [
+        "16px",
+        "16px",
+        "12px",
+        "16px",
+        "14px"
+      ]
+    }
+  },
+  "win-1280x800": {
+    "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-win.png",
+    "metrics": {
+      "found": true,
+      "panel": {
+        "x": 430,
+        "y": 139,
+        "w": 420,
+        "h": 523,
+        "right": 850,
+        "bottom": 661
+      },
+      "overlay": {
+        "x": 0,
+        "y": 0,
+        "w": 1280,
+        "h": 800,
+        "right": 1280,
+        "bottom": 800
+      },
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "panelWithinViewport": false,
+      "overlayWithinViewport": false,
+      "panelScroll": {
+        "clientHeight": 521,
+        "scrollHeight": 521,
+        "clientWidth": 418,
+        "scrollWidth": 418
+      },
+      "style": {
+        "backgroundColor": "rgb(247, 247, 243)",
+        "border": "1px solid rgb(210, 210, 201)",
+        "borderRadius": "8px",
+        "boxShadow": "none",
+        "backdropFilter": "none",
+        "overflowY": "auto"
+      },
+      "overlayStyle": {
+        "backgroundColor": "rgba(23, 23, 19, 0.62)",
+        "backdropFilter": "none"
+      },
+      "smallText": [],
+      "buttons": [
+        {
+          "cls": "btn-open-replay",
+          "text": "풀이 타임랩스 (18수 재생)",
+          "aria": null,
+          "x": 451,
+          "y": 488,
+          "w": 378,
+          "h": 40,
+          "right": 829,
+          "bottom": 528
+        },
+        {
+          "cls": "btn-share-result",
+          "text": "결과 카드 공유",
+          "aria": null,
+          "x": 451,
+          "y": 540,
+          "w": 378,
+          "h": 44,
+          "right": 829,
+          "bottom": 584
+        },
+        {
+          "cls": "modal-btn btn-retry",
+          "text": "다시 플레이",
+          "aria": null,
+          "x": 451,
+          "y": 596,
+          "w": 185,
+          "h": 44,
+          "right": 636,
+          "bottom": 640
+        },
+        {
+          "cls": "modal-btn btn-next",
+          "text": "4×4 다음 단계 도전",
+          "aria": null,
+          "x": 644,
+          "y": 596,
+          "w": 185,
+          "h": 44,
+          "right": 829,
+          "bottom": 640
+        }
+      ],
+      "tinyTargets": [],
+      "horizontalOverflow": false
+    },
+    "toastScreenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\1280x800-win-toast.png",
+    "toast": {
+      "text": "업적 달성! (ACHIEVEMENT UNLOCKED)\n첫 승리의 기쁨\n\n어떤 난이도든 처음으로 슬라이딩 퍼즐을 완성하세요.",
+      "rect": {
+        "x": 429.1640625,
+        "y": 16,
+        "width": 421.671875,
+        "height": 91.59375,
+        "top": 16,
+        "right": 850.8359375,
+        "bottom": 107.59375,
+        "left": 429.1640625
+      },
+      "fontSizes": [
+        "16px",
+        "16px",
+        "12px",
+        "16px",
+        "14px"
+      ]
+    }
+  },
+  "gameover-360x800": {
+    "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\qa09\\360x800-gameover.png",
+    "metrics": {
+      "found": true,
+      "panel": {
+        "x": 16,
+        "y": 292,
+        "w": 328,
+        "h": 217,
+        "right": 344,
+        "bottom": 509
+      },
+      "overlay": {
+        "x": 0,
+        "y": 0,
+        "w": 360,
+        "h": 800,
+        "right": 360,
+        "bottom": 800
+      },
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "panelWithinViewport": false,
+      "overlayWithinViewport": false,
+      "panelScroll": {
+        "clientHeight": 215,
+        "scrollHeight": 215,
+        "clientWidth": 326,
+        "scrollWidth": 326
+      },
+      "style": {
+        "backgroundColor": "rgb(247, 247, 243)",
+        "border": "1px solid rgb(198, 58, 47)",
+        "borderRadius": "8px",
+        "boxShadow": "none",
+        "backdropFilter": "none",
+        "overflowY": "visible"
+      },
+      "overlayStyle": {
+        "backgroundColor": "rgba(23, 23, 19, 0.62)",
+        "backdropFilter": "none"
+      },
+      "smallText": [],
+      "buttons": [
+        {
+          "cls": "btn-gameover-retry",
+          "text": "다시 도전",
+          "aria": null,
+          "x": 37,
+          "y": 444,
+          "w": 139,
+          "h": 44,
+          "right": 176,
+          "bottom": 488
+        },
+        {
+          "cls": "btn-gameover-solution",
+          "text": "정답 보기",
+          "aria": null,
+          "x": 184,
+          "y": 444,
+          "w": 139,
+          "h": 44,
+          "right": 323,
+          "bottom": 488
+        }
+      ],
+      "tinyTargets": [],
+      "horizontalOverflow": false
+    },
+    "text": "게임 오버!\n\n이동 가능 횟수를 모두 소진하였습니다.\n\n다시 도전\n정답 보기"
+  }
+}
