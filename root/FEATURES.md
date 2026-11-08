@@ -24,7 +24,7 @@
 | Game Modes | Standard | 제한 없이 플레이하고 시간·이동 수를 기록 | `usePuzzleGame`, `Header` | `src/hooks/usePuzzleGame.ts`, `src/components/Header/Header.tsx` | 구현 완료 |
 | Game Modes | Time Attack | 난이도별 제한 시간 적용: 3x3 45초, 4x4 120초, 5x5 300초. 시작 시각 기반 실제 경과 시간으로 만료 판정 | `TIME_LIMITS` | `src/hooks/usePuzzleGame.ts` | 구현 완료 |
 | Game Modes | Move Limit | 난이도별 이동 수 제한 적용: 3x3 35회, 4x4 80회, 5x5 220회 | `MOVE_LIMITS` | `src/hooks/usePuzzleGame.ts` | 구현 완료 |
-| AI Solver | AI 스마트 힌트 | Manhattan + Linear Conflict A*, 4x4 서브골 리덕션, 5x5 폴백. Web Worker 비동기 처리와 3초 쿨다운 | `findNextOptimalMove()`, `solver.worker.ts` | `src/utils/aiSolver.ts`, `src/workers/solver.worker.ts`, `src/App.tsx` | 구현 완료 |
+| AI Solver | AI 스마트 힌트 | Manhattan + Linear Conflict A*, 4x4 서브골 리덕션, 5x5 폴백. Web Worker 비동기 처리와 3초 쿨다운. 보드·그리드·게임 상태 변경 시 요청 무효화, Worker 오류·5초 시간 초과·힌트 없음 안내 | `findNextOptimalMove()`, `solver.worker.ts` | `src/utils/aiSolver.ts`, `src/workers/solver.worker.ts`, `src/App.tsx` | 구현 완료 |
 | Themes | 4종 테마·숫자 모드 | 자연·픽셀아트·기하학·동물 테마와 이미지/숫자 모드 전환, 완성본 미리보기 | `ThemeModal`, `HintModal`, `themeData` | `src/components/Modal/ThemeModal.tsx`, `src/components/Modal/HintModal.tsx`, `src/utils/themeData.ts` | 구현 완료 |
 | Custom Image | 내 사진 퍼즐 | JPG·PNG·WebP·GIF 업로드(10MB 이하, MIME 검증), 클릭·드래그 앤 드롭, 512x512 Canvas 1:1 크롭, 1~3배 줌·드래그, LocalStorage 저장. 테마 모달 열기·닫기·모드 전환에는 유지하고 테마 적용 시 제거 | `CustomImageModal` | `src/components/Modal/CustomImageModal.tsx`, `src/App.tsx` | 구현 완료 |
 | Daily Challenge | 일일 챌린지 | 날짜 기반 Mulberry32 시드로 4x4 보드를 결정적으로 생성하고 하루 1회 완료 기록 | `generateDailyBoard()` | `src/utils/dailyChallenge.ts`, `src/utils/prng.ts` | 구현 완료 |
@@ -55,6 +55,7 @@
 - Time Attack·기록 타이머를 시작 시각 기반으로 보정해 메인 스레드 지연·백그라운드 스로틀링에서도 실제 경과 시간을 반영.
 - 테마·업적·BGM·일일 캘린더·공유 카드·단위·접근성 라벨의 잔여 하드코딩을 4개 국어 번역 키로 이관하고 `html lang`을 선택 언어와 동기화.
 - 커스텀 이미지가 테마 모달 열기·닫기와 이미지/숫자 모드 전환에서 유지되고 테마 적용 시에만 제거되도록 수정. 드래그 앤 드롭과 MIME·10MB·저장 공간 오류 피드백 추가.
+- AI 힌트 계산 중 보드·그리드·게임 상태가 바뀌면 이전 요청 결과를 무시하고, Worker 오류·시간 초과·힌트 없음 상태를 4개 국어로 안내.
 - v1.4.0 기준 기능 카탈로그를 2026-11-08에 정리.
 
 ### v0.0.0 (초기화)
@@ -65,8 +66,8 @@
 
 ## 3. Verification (검증 기준)
 
-- **단위·통합 테스트**: `npm test` — 17개 테스트 파일 / 123개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
+- **단위·통합 테스트**: `npm test` — 18개 테스트 파일 / 127개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
 - **타입 검사**: `npx tsc --noEmit` — 0 Errors (`npm run build`의 tsc 단계에서 확인).
 - **프로덕션 빌드**: `npm run build` — Vite 6.4.3 빌드 성공 (2026-11-08).
-- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome) 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN 전 화면·JA/ZH 핵심 화면과 공유 카드 PNG를, TASK-DEV-16으로 커스텀 이미지 드래그·보존·검증 오류를 확인했다.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome) 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN 전 화면·JA/ZH 핵심 화면과 공유 카드 PNG를, TASK-DEV-16으로 커스텀 이미지 드래그·보존·검증 오류를, TASK-DEV-17로 AI 힌트 무효화·힌트 없음·시간 초과를 확인했다.
 - **Node.js 26 참고**: Vitest 실행 시 jsdom의 `localStorage` 초기화를 위해 `NODE_OPTIONS=--localstorage-file=<임시 파일>` 지정이 필요하다. 지정하지 않으면 localStorage 관련 테스트가 실패한다.

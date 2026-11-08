@@ -27,21 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-17 — AI 힌트 레이스 컨디션·Worker 실패 처리
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: 힌트 계산 중 보드가 바뀌면 이전 보드 기준 결과를 표시하지 않고, Worker 오류·시간 초과·힌트 없음 상태를 사용자에게 알린다.
-- **대상 파일**: `src/App.tsx`(`handleRequestAiHint`, `latestRequestIdRef`), `src/workers/solver.worker.ts`, `src/utils/aiSolver.ts`, `src/App.test.tsx`
-- **재현/증거**: 5x5에서 AI 힌트 요청 8ms 후 타일을 이동했으나 368ms 뒤 이전 보드 기준 힌트 오버레이가 표시됨. Worker `onerror`/`onmessageerror`/시간 초과 처리가 없고, 결과가 `null`이면 아무 안내 없이 3초 쿨다운만 시작됨.
-- **DoD**:
-  - 보드 변경·새 게임·그리드 변경 시 진행 중 요청을 무효화(요청 ID 또는 보드 해시 검증)
-  - Worker 오류·시간 초과·힌트 없음 시 계산 상태 해제와 사용자 안내
-  - 레이스 컨디션·실패 경로 테스트 추가
-  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
-- **선행 조건**: 없음
-
 #### [ ] TASK-DEV-18 — 모달 포커스 트랩 및 전역 키보드 입력 충돌 해결
 
 - **Phase**: 01
@@ -179,11 +164,16 @@
   - Playwright E2E 스모크(타이틀→테마→게임→이동/Undo→AI 힌트→3x3 승리, 360px 레이아웃, 모달 포커스, EN 전환) 추가
   - `public/robots.txt`와 배포·캐시 갱신 절차 문서 추가
   - CI·로컬 실행 결과와 미실행 범위 기록
-- **선행 조건**: 없음 (TASK-DEV-17~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
+- **선행 조건**: 없음 (TASK-DEV-18~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
 
 ---
 
 ## 3. Recent Completions (최근 완료 요약)
+
+- **TASK-DEV-17** — AI 힌트 레이스 컨디션·Worker 실패 처리 (완료일: 2026-11-08)
+  - 핵심 결과: 보드·그리드·게임 상태 변경 시 진행 중 힌트 요청을 즉시 무효화하고, Worker 오류·5초 시간 초과·힌트 없음 시 계산 상태 해제와 4개 국어 토스트 안내 추가. 실패한 Worker는 다음 요청에서 재생성
+  - 검증 범위: Vitest 18개 파일/127개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 정상 힌트·보드 변경 무효화·힌트 없음·시간 초과·재시도 확인. 실제 모바일 실기기·Worker 스크립트 로드 실패는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-17--ai-힌트-레이스-컨디션worker-실패-처리)
 
 - **TASK-DEV-16** — 커스텀 이미지 보존·드래그 앤 드롭·업로드 검증 정비 (완료일: 2026-11-08)
   - 핵심 결과: 테마 모달 열기·닫기와 모드 전환에서 커스텀 이미지를 유지하고 테마 적용 시에만 제거. 드래그 앤 드롭, MIME·10MB·quota 오류의 4개 국어 피드백 추가
@@ -205,13 +195,8 @@
   - 검증 범위: Vitest 104/104 PASS, tsc 0 Errors, Vite 빌드 성공, `npm audit` prod 0/dev 6, 데스크톱·1280×800·360×800 브라우저 플로우. 실제 모바일 실기기·iOS·완전 오프라인은 미실행 또는 제한
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-07--v140-전면-품질성능안정성-검토-및-dev-개선-업무-발주)
 
-- **TASK-PM-04** — v1.4.0 버전 표기 정렬 (완료일: 2026-11-08)
-  - 핵심 결과: `package.json`·`package-lock.json` 버전을 `1.4.0`으로 정렬
-  - 검증 범위: `npm test` 104/104 PASS, `npm run build` 성공, 실행 출력에서 `sliding-block-puzzle@1.4.0` 확인
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-04--v140-버전-표기-정렬)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리)

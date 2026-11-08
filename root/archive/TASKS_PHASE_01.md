@@ -429,3 +429,49 @@
   - 브라우저 콘솔 uncaught error 0건.
 - **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 OS별 파일 드래그, 실제 저장소 한도 소진(quota는 `Storage.prototype.setItem` 예외로 재현)은 수행하지 않음. 데스크톱 Chromium에서만 확인함.
 - **증거**: `src/components/Modal/CustomImageModal.tsx`, `src/components/Modal/CustomImageModal.css`, `src/components/Modal/CustomImageModal.test.tsx`, `src/components/Modal/ThemeModal.tsx`, `src/App.tsx`, `src/App.customImage.test.tsx`, `src/i18n/translations.ts`, 터미널 실행 결과, 브라우저 확인 결과
+
+---
+
+## TASK-DEV-17 — AI 힌트 레이스 컨디션·Worker 실패 처리
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 힌트 계산 중 보드가 바뀌면 이전 보드 기준 결과를 표시하지 않고, Worker 오류·시간 초과·힌트 없음 상태를 사용자에게 알린다.
+- **완료 기준(DoD)**:
+  - 보드 변경·새 게임·그리드 변경 시 진행 중 요청을 무효화(요청 ID 또는 보드 해시 검증)
+  - Worker 오류·시간 초과·힌트 없음 시 계산 상태 해제와 사용자 안내
+  - 레이스 컨디션·실패 경로 테스트 추가
+  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
+
+### 진행 결과
+
+- 힌트 요청마다 단조 증가하는 `requestSequenceRef` ID를 부여하고 `latestRequestIdRef`·`pendingRequestIdRef`로 현재 요청만 유효하게 처리하도록 변경함.
+- `board`·`gridSize`·`status` 변경 시 `useLayoutEffect`에서 진행 중 요청 ID를 무효화하고 타이머·계산 상태·힌트 오버레이를 즉시 해제함. 보드가 바뀐 뒤 도착한 이전 요청 응답은 무시됨.
+- Worker `onerror`·`onmessageerror` 처리 추가. 오류 시 계산 상태를 해제하고 3초 쿨다운과 함께 사용자 안내를 표시하며, 오류가 난 Worker는 종료하고 다음 요청에서 새 Worker를 생성함.
+- 5초(`AI_HINT_TIMEOUT_MS`) 시간 초과 처리 추가. 시간 초과 시 요청을 무효화하고 Worker를 종료하며, 다음 요청에서 새 Worker를 생성함.
+- Worker 결과가 `null`이면 힌트 없음 안내를 표시하고 계산 상태를 해제함.
+- Worker를 생성할 수 없는 환경의 동기 계산 폴백에도 결과 없음·예외 처리와 요청 ID 검증을 적용함.
+- 안내 문구 `aiHintUnavailable`·`aiHintFailed`·`aiHintTimeout`을 KO/EN/JA/ZH에 추가하고 기존 글로벌 토스트로 표시함.
+- `src/App.aiHint.test.tsx`를 추가해 보드 변경 후 오래된 응답 무시, 힌트 없음, Worker 오류, 시간 초과 후 늦은 응답 무시를 검증함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - Vite dev 서버(127.0.0.1:5173)에서 Service Worker를 unregister한 뒤 데스크톱 Chromium으로 AI 힌트 시나리오 확인
+- **결과**:
+  - `npm test`: 18개 파일/127개 테스트 PASS. 신규 `App.aiHint.test.tsx` 4건 포함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - 브라우저 정상 경로: 3×3에서 AI 힌트 요청 후 힌트 오버레이 1개 표시, 버튼 `3s` 쿨다운, 오류 토스트 없음.
+  - 브라우저 레이스 컨디션: `Worker.prototype.postMessage`를 700ms 지연시킨 뒤 힌트 요청 직후 새 게임을 실행했고, 1초 후 힌트 오버레이 0개·버튼 `AI 힌트`·오류 토스트 없음 확인.
+  - 브라우저 힌트 없음: Worker 응답을 `result: null`로 대체했을 때 `이동 가능한 힌트를 찾지 못했습니다...` 토스트, 오버레이 0개, 버튼 `3s` 확인.
+  - 브라우저 시간 초과: `postMessage`를 무응답으로 대체했을 때 5초 후 `AI 힌트 계산 시간이 초과되었습니다...` 토스트, 오버레이 0개, 버튼 `3s` 확인.
+  - 브라우저 재시도: 시간 초과 후 쿨다운이 끝난 뒤 다시 요청해 힌트 오버레이 1개가 표시되어 Worker 재생성 경로가 동작함을 확인.
+  - 브라우저 콘솔 uncaught error 0건.
+- **미실행**: 실제 Worker 스크립트 로드 실패(네트워크·번들 오류)와 실제 5×5 장시간 탐색으로 인한 시간 초과는 직접 재현하지 않았고, 시간 초과는 `postMessage` 무응답으로 재현함. 실제 모바일 실기기 검증도 수행하지 않음. 데스크톱 Chromium에서만 확인함.
+- **증거**: `src/App.tsx`, `src/App.aiHint.test.tsx`, `src/i18n/translations.ts`, 터미널 실행 결과, 브라우저 확인 결과
