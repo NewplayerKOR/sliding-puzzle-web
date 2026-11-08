@@ -45,6 +45,9 @@ export interface Translations {
   aiHint: string;
   aiHintCalculating: string;
   aiHintCooldown: string;
+  aiHintUnavailable: string;
+  aiHintFailed: string;
+  aiHintTimeout: string;
 
   // Actions & Sizes
   newGame: string;
@@ -300,6 +303,9 @@ export const translations: Record<Language, Translations> = {
     aiHint: 'AI 힌트',
     aiHintCalculating: '탐색 중...',
     aiHintCooldown: '힌트 대기',
+    aiHintUnavailable: '이동 가능한 힌트를 찾지 못했습니다. 보드를 섞은 뒤 다시 시도해 주세요.',
+    aiHintFailed: 'AI 힌트 계산에 실패했습니다. 다시 시도해 주세요.',
+    aiHintTimeout: 'AI 힌트 계산 시간이 초과되었습니다. 다시 시도해 주세요.',
 
     newGame: '새 게임 (셔플)',
     resetBoard: '정답 보기 (리셋)',
@@ -537,6 +543,9 @@ export const translations: Record<Language, Translations> = {
     aiHint: 'AI Hint',
     aiHintCalculating: 'Solving...',
     aiHintCooldown: 'Hint Ready in',
+    aiHintUnavailable: 'No available hint was found. Shuffle the board and try again.',
+    aiHintFailed: 'AI hint calculation failed. Please try again.',
+    aiHintTimeout: 'AI hint calculation timed out. Please try again.',
 
     newGame: 'New Game',
     resetBoard: 'Reset Board',
@@ -774,6 +783,9 @@ export const translations: Record<Language, Translations> = {
     aiHint: 'AIヒント',
     aiHintCalculating: '探索中...',
     aiHintCooldown: 'ヒント待機',
+    aiHintUnavailable: '利用可能なヒントが見つかりませんでした。ボードをシャッフルして再試行してください。',
+    aiHintFailed: 'AIヒントの計算に失敗しました。もう一度お試しください。',
+    aiHintTimeout: 'AIヒントの計算がタイムアウトしました。もう一度お試しください。',
 
     newGame: '新規ゲーム',
     resetBoard: '正解表示',
@@ -1011,6 +1023,9 @@ export const translations: Record<Language, Translations> = {
     aiHint: 'AI提示',
     aiHintCalculating: '计算中...',
     aiHintCooldown: '提示冷却',
+    aiHintUnavailable: '未找到可用的提示。请重新洗牌后再试。',
+    aiHintFailed: 'AI 提示计算失败，请重试。',
+    aiHintTimeout: 'AI 提示计算超时，请重试。',
 
     newGame: '新游戏',
     resetBoard: '查看原样',

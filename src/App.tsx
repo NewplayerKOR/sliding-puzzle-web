@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { usePuzzleGame } from './hooks/usePuzzleGame';
 import { Header } from './components/Header/Header';
 import { Controls } from './components/Controls/Controls';
@@ -26,6 +26,9 @@ import { checkGameCompletionAchievements } from './utils/achievementManager';
 import { calculateStars } from './utils/starCalculator';
 import { useTranslation } from './i18n/useTranslation';
 import './styles/App.css';
+
+const AI_HINT_TIMEOUT_MS = 5000;
+type AiHintErrorKey = 'aiHintUnavailable' | 'aiHintFailed' | 'aiHintTimeout';
 
 export const App: React.FC = () => {
   // 언어 변경 시 App도 다시 렌더링해 테마명·공유 카드 문자열을 갱신함
@@ -99,37 +102,116 @@ export const App: React.FC = () => {
   const [aiHint, setAiHint] = useState<AISolutionStep | null>(null);
   const [isAiCalculating, setIsAiCalculating] = useState<boolean>(false);
   const [aiCooldown, setAiCooldown] = useState<number>(0);
+  const [aiHintError, setAiHintError] = useState<AiHintErrorKey | null>(null);
   const solverWorkerRef = useRef<Worker | null>(null);
   const latestRequestIdRef = useRef<number>(0);
+  const requestSequenceRef = useRef<number>(0);
+  const pendingRequestIdRef = useRef<number | null>(null);
+  const aiHintTimerRef = useRef<number | null>(null);
 
   // 최고 기록 및 토스트 알림 상태
   const [bestRecords, setBestRecords] = useState(() => getBestRecords());
   const [isNewRecord, setIsNewRecord] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Web Worker 초기화
-  useEffect(() => {
+  const clearAiHintTimer = useCallback(() => {
+    if (aiHintTimerRef.current !== null) {
+      window.clearTimeout(aiHintTimerRef.current);
+      aiHintTimerRef.current = null;
+    }
+  }, []);
+
+  // 진행 중인 요청을 무효화하고 오류 상태를 사용자 안내로 전환함
+  const markAiHintFailure = useCallback(
+    (errorKey: AiHintErrorKey) => {
+      latestRequestIdRef.current += 1;
+      pendingRequestIdRef.current = null;
+      clearAiHintTimer();
+      setIsAiCalculating(false);
+      setAiCooldown(3);
+      setAiHint(null);
+      setAiHintError(errorKey);
+    },
+    [clearAiHintTimer]
+  );
+
+  const createSolverWorker = useCallback((): Worker | null => {
     try {
-      solverWorkerRef.current = new Worker(
+      const worker = new Worker(
         new URL('./workers/solver.worker.ts', import.meta.url),
         { type: 'module' }
       );
-      solverWorkerRef.current.onmessage = (e) => {
+
+      worker.onmessage = (e: MessageEvent<{ result: AISolutionStep | null; requestId: number }>) => {
         const { result, requestId } = e.data;
-        if (requestId === latestRequestIdRef.current) {
-          setAiHint(result);
+        if (requestId !== latestRequestIdRef.current) return;
+
+        if (result) {
+          pendingRequestIdRef.current = null;
+          clearAiHintTimer();
           setIsAiCalculating(false);
           setAiCooldown(3);
+          setAiHint(result);
+        } else {
+          markAiHintFailure('aiHintUnavailable');
         }
       };
+
+      const handleFailure = () => {
+        const hadPendingRequest = pendingRequestIdRef.current !== null;
+        // 오류가 난 Worker는 진행 중인 요청이 없어도 폐기해 다음 요청에서 새로 생성함
+        worker.terminate();
+        if (solverWorkerRef.current === worker) {
+          solverWorkerRef.current = null;
+        }
+        if (hadPendingRequest) {
+          markAiHintFailure('aiHintFailed');
+        }
+      };
+
+      worker.onerror = () => handleFailure();
+      worker.onmessageerror = () => handleFailure();
+
+      return worker;
     } catch {
-      solverWorkerRef.current = null;
+      return null;
+    }
+  }, [clearAiHintTimer, markAiHintFailure]);
+
+  // Web Worker 초기화 (요청 시점에 이미 생성된 Worker는 덮어쓰지 않음)
+  useEffect(() => {
+    if (!solverWorkerRef.current) {
+      solverWorkerRef.current = createSolverWorker();
     }
 
     return () => {
+      clearAiHintTimer();
       solverWorkerRef.current?.terminate();
+      solverWorkerRef.current = null;
     };
-  }, []);
+  }, [createSolverWorker, clearAiHintTimer]);
+
+  // 보드·그리드·게임 상태가 바뀌면 진행 중인 힌트 요청과 표시를 즉시 무효화함
+  useLayoutEffect(() => {
+    latestRequestIdRef.current += 1;
+    pendingRequestIdRef.current = null;
+    clearAiHintTimer();
+    setIsAiCalculating(false);
+    setAiHint(null);
+  }, [board, gridSize, status, clearAiHintTimer]);
+
+  // 힌트 실패 사유를 현재 언어의 토스트로 표시함
+  useEffect(() => {
+    if (!aiHintError) return;
+
+    setToastMessage(t[aiHintError]);
+    const timer = window.setTimeout(() => {
+      setToastMessage(null);
+      setAiHintError(null);
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [aiHintError, t]);
 
   // AI 힌트 쿨다운 타이머
   useEffect(() => {
@@ -163,29 +245,81 @@ export const App: React.FC = () => {
 
   // AI 힌트 요청
   const handleRequestAiHint = useCallback(() => {
-    if (aiCooldown > 0 || isAiCalculating || status === 'won' || status === 'gameover') return;
-    setIsAiCalculating(true);
-    const reqId = Date.now();
-    latestRequestIdRef.current = reqId;
-
-    if (solverWorkerRef.current) {
-      solverWorkerRef.current.postMessage({
-        board,
-        gridSize,
-        requestId: reqId,
-      });
-    } else {
-      // Fallback: Synchronous calculation
-      setTimeout(() => {
-        if (latestRequestIdRef.current === reqId) {
-          const step = findNextOptimalMove(board, gridSize);
-          setAiHint(step);
-          setIsAiCalculating(false);
-          setAiCooldown(3);
-        }
-      }, 30);
+    if (
+      aiCooldown > 0 ||
+      pendingRequestIdRef.current !== null ||
+      status === 'won' ||
+      status === 'gameover'
+    ) {
+      return;
     }
-  }, [aiCooldown, isAiCalculating, status, board, gridSize]);
+
+    const requestId = ++requestSequenceRef.current;
+    latestRequestIdRef.current = requestId;
+    pendingRequestIdRef.current = requestId;
+    setIsAiCalculating(true);
+    setAiHint(null);
+    clearAiHintTimer();
+
+    aiHintTimerRef.current = window.setTimeout(() => {
+      if (latestRequestIdRef.current !== requestId) return;
+      markAiHintFailure('aiHintTimeout');
+      // 응답이 멈춘 Worker는 폐기하고 다음 요청에서 새로 생성함
+      solverWorkerRef.current?.terminate();
+      solverWorkerRef.current = null;
+    }, AI_HINT_TIMEOUT_MS);
+
+    let worker = solverWorkerRef.current;
+    if (!worker) {
+      worker = createSolverWorker();
+      solverWorkerRef.current = worker;
+    }
+
+    if (worker) {
+      try {
+        worker.postMessage({
+          board,
+          gridSize,
+          requestId,
+        });
+      } catch {
+        markAiHintFailure('aiHintFailed');
+        worker.terminate();
+        if (solverWorkerRef.current === worker) {
+          solverWorkerRef.current = null;
+        }
+      }
+      return;
+    }
+
+    // Worker를 생성할 수 없는 환경에서는 동기 계산으로 폴백함
+    aiHintTimerRef.current = window.setTimeout(() => {
+      if (latestRequestIdRef.current !== requestId) return;
+      pendingRequestIdRef.current = null;
+      clearAiHintTimer();
+      setIsAiCalculating(false);
+      setAiCooldown(3);
+
+      try {
+        const step = findNextOptimalMove(board, gridSize);
+        if (step) {
+          setAiHint(step);
+        } else {
+          markAiHintFailure('aiHintUnavailable');
+        }
+      } catch {
+        markAiHintFailure('aiHintFailed');
+      }
+    }, 30);
+  }, [
+    aiCooldown,
+    status,
+    board,
+    gridSize,
+    clearAiHintTimer,
+    createSolverWorker,
+    markAiHintFailure,
+  ]);
 
   // 현재 테마 객체 결정 (커스텀 이미지 우선)
   const currentTheme: Theme = customImageSrc
