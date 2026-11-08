@@ -19,6 +19,7 @@ interface ThemeModalProps {
   currentGameMode: GameMode;
   pendingModeInfo?: PendingModeInfo | null;
   onSelectTheme: (id: ThemeId, mode: GameMode) => void;
+  onModeChange?: (mode: GameMode) => void;
   onConfirmStart?: (id: ThemeId, mode: GameMode) => void;
   onClose: () => void;
 }
@@ -29,6 +30,7 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
   currentGameMode,
   pendingModeInfo,
   onSelectTheme,
+  onModeChange,
   onConfirmStart,
   onClose,
 }) => {
@@ -59,16 +61,23 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
 
   const handleCardClick = (id: ThemeId) => {
     setSelectedThemeId(id);
-    onSelectTheme(id, selectedGameMode);
-    // If not pending pre-game start, close on select
+    // 게임 중 즉시 테마를 바꿀 때만 적용하고, 시작 전 선택은 확정 시 반영함
     if (!pendingModeInfo) {
+      onSelectTheme(id, selectedGameMode);
       onClose();
     }
   };
 
   const handleModeToggle = (mode: GameMode) => {
     setSelectedGameMode(mode);
-    onSelectTheme(selectedThemeId, mode);
+    // 게임 중 모드 전환은 테마·커스텀 이미지를 유지함
+    if (!pendingModeInfo) {
+      if (onModeChange) {
+        onModeChange(mode);
+      } else {
+        onSelectTheme(selectedThemeId, mode);
+      }
+    }
   };
 
   const handleStartGame = () => {

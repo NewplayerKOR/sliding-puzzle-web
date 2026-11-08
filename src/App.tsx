@@ -375,10 +375,7 @@ export const App: React.FC = () => {
               onSelectChallengeMode={changeChallengeMode}
               onToggleNumberOverlay={() => setShowNumberOverlay((prev) => !prev)}
               onOpenThemeModal={() => {
-                try {
-                  localStorage.removeItem('sliding_puzzle_custom_image');
-                } catch {}
-                setCustomImageSrc(null);
+                // 모달을 열기만 해서는 커스텀 이미지를 유지하고, 테마 확정·변경 시에만 제거함
                 setPendingGameStart(null);
                 setIsThemeModalOpen(true);
               }}
@@ -439,6 +436,7 @@ export const App: React.FC = () => {
           setGameMode(newMode);
           audioManager.syncThemeBgm(newTheme);
         }}
+        onModeChange={(newMode) => setGameMode(newMode)}
         onConfirmStart={handleConfirmThemeStart}
         onClose={() => {
           setPendingGameStart(null);

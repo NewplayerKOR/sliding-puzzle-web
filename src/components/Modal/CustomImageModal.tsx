@@ -10,6 +10,8 @@ interface CustomImageModalProps {
 }
 
 const CUSTOM_IMAGE_STORAGE_KEY = 'sliding_puzzle_custom_image';
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+const SUPPORTED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
 
 export const CustomImageModal: React.FC<CustomImageModalProps> = ({
   isOpen,
@@ -22,6 +24,8 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
   const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDragActive, setIsDragActive] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageObjRef = useRef<HTMLImageElement | null>(null);
@@ -50,14 +54,20 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
     if (!imageSrc) return;
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = imageSrc;
     img.onload = () => {
       imageObjRef.current = img;
       setOffset({ x: 0, y: 0 });
       setZoom(1);
       drawCanvas();
     };
-  }, [imageSrc]);
+    img.onerror = () => {
+      imageObjRef.current = null;
+      setErrorMessage(t.imageLoadFailed);
+    };
+    img.src = imageSrc;
+    // drawCanvas는 imageSrc 변경 시점의 초기 렌더링에만 사용하므로 의존성에서 제외함
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageSrc, t.imageLoadFailed]);
 
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -94,22 +104,61 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
     drawCanvas();
   }, [drawCanvas]);
 
+  const processSelectedFile = useCallback(
+    (file: File) => {
+      if (!SUPPORTED_IMAGE_TYPES.includes(file.type)) {
+        setErrorMessage(t.imageUnsupportedType);
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        setErrorMessage(t.imageTooLarge);
+        return;
+      }
+
+      setErrorMessage(null);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          setImageSrc(event.target.result as string);
+        } else {
+          setErrorMessage(t.imageLoadFailed);
+        }
+      };
+      reader.onerror = () => setErrorMessage(t.imageLoadFailed);
+      reader.readAsDataURL(file);
+    },
+    [t]
+  );
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    // 같은 파일을 다시 선택해도 change 이벤트가 발생하도록 초기화함
+    e.target.value = '';
     if (!file) return;
+    processSelectedFile(file);
+  };
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert(t.imageTooLarge);
-      return;
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = () => setIsDragActive(false);
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragActive(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processSelectedFile(file);
+  };
+
+  const handleDropzoneKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInputRef.current?.click();
     }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target?.result) {
-        setImageSrc(event.target.result as string);
-      }
-    };
-    reader.readAsDataURL(file);
   };
 
   // Drag pan handlers
@@ -151,12 +200,24 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
   const handleApply = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dataUrl = canvas.toDataURL('image/png');
+
+    let dataUrl: string;
+    try {
+      dataUrl = canvas.toDataURL('image/png');
+    } catch {
+      setErrorMessage(t.imageLoadFailed);
+      return;
+    }
+
     try {
       localStorage.setItem(CUSTOM_IMAGE_STORAGE_KEY, dataUrl);
     } catch {
-      // quota exceeded fallback
+      // 저장 실패 시 이전 이미지를 유지하고 모달을 닫지 않아 적용 상태를 명확히 함
+      setErrorMessage(t.imageStorageQuotaExceeded);
+      return;
     }
+
+    setErrorMessage(null);
     onApplyCustomImage(dataUrl);
     onClose();
   };
@@ -196,10 +257,20 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
           style={{ display: 'none' }}
         />
 
+        {errorMessage && (
+          <p className="custom-img-error" role="alert">
+            {errorMessage}
+          </p>
+        )}
+
         {!imageSrc ? (
           <div
-            className="upload-dropzone"
+            className={`upload-dropzone ${isDragActive ? 'drag-active' : ''}`}
             onClick={() => fileInputRef.current?.click()}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onKeyDown={handleDropzoneKeyDown}
             role="button"
             tabIndex={0}
           >

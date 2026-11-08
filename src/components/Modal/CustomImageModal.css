@@ -82,9 +82,31 @@
   transition: all var(--transition-fast);
 }
 
-.upload-dropzone:hover {
+.upload-dropzone:hover,
+.upload-dropzone.drag-active {
   border-color: var(--primary-500);
   background-color: var(--primary-50);
+}
+
+.upload-dropzone.drag-active {
+  border-style: solid;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+/* 드롭 이벤트가 자식 요소에서 끊기지 않도록 클릭·드래그 판정을 dropzone에 위임함 */
+.upload-dropzone > * {
+  pointer-events: none;
+}
+
+.custom-img-error {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  border-radius: var(--radius-md);
+  background-color: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .upload-icon {

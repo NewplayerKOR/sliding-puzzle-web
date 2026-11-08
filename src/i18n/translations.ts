@@ -128,6 +128,9 @@ export interface Translations {
   playing: string;
   selectedMuted: string;
   imageTooLarge: string;
+  imageUnsupportedType: string;
+  imageStorageQuotaExceeded: string;
+  imageLoadFailed: string;
 
   // Title Templates
   timePillTemplate: string;
@@ -374,6 +377,9 @@ export const translations: Record<Language, Translations> = {
     playing: '재생 중',
     selectedMuted: '선택됨 (음소거)',
     imageTooLarge: '이미지 파일 크기는 10MB 이하만 가능합니다.',
+    imageUnsupportedType: '지원하지 않는 이미지 형식입니다. PNG, JPEG, WebP, GIF 파일을 선택해 주세요.',
+    imageStorageQuotaExceeded: '이미지를 저장할 공간이 부족해 적용하지 못했습니다. 더 작은 이미지로 다시 시도해 주세요.',
+    imageLoadFailed: '이미지를 불러오지 못했습니다. 다른 파일을 선택해 주세요.',
 
     timePillTemplate: '{size}×{size} ({seconds}초)',
     movePillTemplate: '{size}×{size} ({moves}회)',
@@ -608,6 +614,9 @@ export const translations: Record<Language, Translations> = {
     playing: 'Playing',
     selectedMuted: 'Selected (Muted)',
     imageTooLarge: 'Image files must be 10MB or smaller.',
+    imageUnsupportedType: 'Unsupported image format. Please choose a PNG, JPEG, WebP, or GIF file.',
+    imageStorageQuotaExceeded: 'Not enough storage to save the image, so it was not applied. Try a smaller image.',
+    imageLoadFailed: 'Could not load the image. Please choose another file.',
 
     timePillTemplate: '{size}×{size} ({seconds}s)',
     movePillTemplate: '{size}×{size} ({moves} moves)',
@@ -842,6 +851,9 @@ export const translations: Record<Language, Translations> = {
     playing: '再生中',
     selectedMuted: '選択済み（ミュート）',
     imageTooLarge: '画像ファイルは10MB以下にしてください。',
+    imageUnsupportedType: '対応していない画像形式です。PNG、JPEG、WebP、GIFファイルを選択してください。',
+    imageStorageQuotaExceeded: '画像を保存する容量が不足しているため適用できませんでした。より小さい画像でお試しください。',
+    imageLoadFailed: '画像を読み込めませんでした。別のファイルを選択してください。',
 
     timePillTemplate: '{size}×{size}（{seconds}秒）',
     movePillTemplate: '{size}×{size}（{moves}手）',
@@ -1076,6 +1088,9 @@ export const translations: Record<Language, Translations> = {
     playing: '播放中',
     selectedMuted: '已选择（静音）',
     imageTooLarge: '图片文件大小不能超过10MB。',
+    imageUnsupportedType: '不支持此图片格式。请选择 PNG、JPEG、WebP 或 GIF 文件。',
+    imageStorageQuotaExceeded: '存储空间不足，图片未应用。请尝试更小的图片。',
+    imageLoadFailed: '无法加载图片。请选择其他文件。',
 
     timePillTemplate: '{size}×{size}（{seconds}秒）',
     movePillTemplate: '{size}×{size}（{moves}步）',
