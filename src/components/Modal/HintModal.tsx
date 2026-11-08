@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import { ThemeInfo } from '../../types/theme';
 import { getAssetUrl } from '../../utils/assetPath';
 import { useTranslation } from '../../i18n/useTranslation';
 import { formatMessage } from '../../i18n/format';
+import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './HintModal.css';
 
 interface HintModalProps {
@@ -14,6 +15,9 @@ interface HintModalProps {
 
 export const HintModal: React.FC<HintModalProps> = ({ isOpen, theme, onClose }) => {
   const { t } = useTranslation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useModalFocusTrap(isOpen, contentRef);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -31,7 +35,12 @@ export const HintModal: React.FC<HintModalProps> = ({ isOpen, theme, onClose }) 
 
   return (
     <div className="hint-modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="hint-title">
-      <div className="hint-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={contentRef}
+        className="hint-modal-content"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="hint-modal-header">
           <div className="hint-title-group">
             <img src={getAssetUrl('assets/icons/icon_hint.png')} alt={t.previewHint} className="modal-header-icon-img" />

@@ -98,6 +98,17 @@ export const App: React.FC = () => {
     isDaily?: boolean;
   } | null>(null);
 
+  // 어떤 모달이든 열려 있으면 배경 콘텐츠와 보드 입력을 비활성화함
+  const isAnyModalOpen =
+    isHintOpen ||
+    isThemeModalOpen ||
+    isCustomImageModalOpen ||
+    isDailyModalOpen ||
+    isAchievementModalOpen ||
+    isBgmModalOpen ||
+    isWon ||
+    isGameOver;
+
   // AI 힌트 상태
   const [aiHint, setAiHint] = useState<AISolutionStep | null>(null);
   const [isAiCalculating, setIsAiCalculating] = useState<boolean>(false);
@@ -449,104 +460,111 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {currentScreen === 'title' ? (
-        /* 메인 타이틀 화면 */
-        <TitleScreen
-          currentTheme={currentTheme}
-          onSelectTheme={(newTheme) => {
-            try {
-              localStorage.removeItem('sliding_puzzle_custom_image');
-            } catch {}
-            setCustomImageSrc(null);
-            setThemeId(newTheme);
-            audioManager.syncThemeBgm(newTheme);
-          }}
-          onStartGame={handleRequestModeWithTheme}
-          onStartDaily={handleRequestDailyWithTheme}
-          onOpenCustomImageModal={() => setIsCustomImageModalOpen(true)}
-          onOpenDailyModal={() => setIsDailyModalOpen(true)}
-          onOpenAchievementModal={() => setIsAchievementModalOpen(true)}
-          onOpenThemeModal={() => {
-            setPendingGameStart(null);
-            setIsThemeModalOpen(true);
-          }}
-          onOpenBgmModal={() => setIsBgmModalOpen(true)}
-        />
-      ) : (
-        /* 게임 플레이 화면 */
-        <main className="game-main">
-          <Header
-            moveCount={moveCount}
-            elapsedTime={elapsedTime}
-            remainingTime={remainingTime}
-            remainingMoves={remainingMoves}
-            status={status}
-            challengeMode={challengeMode}
-            gridSize={gridSize}
-            bestRecord={bestRecords[gridSize]}
-            onOpenDaily={() => setIsDailyModalOpen(true)}
-            onOpenBgmModal={() => setIsBgmModalOpen(true)}
-            onReturnHome={() => {
-              resetGame();
-              setCurrentScreen('title');
+      <div
+        className="app-content"
+        inert={isAnyModalOpen}
+        aria-hidden={isAnyModalOpen ? true : undefined}
+      >
+        {currentScreen === 'title' ? (
+          /* 메인 타이틀 화면 */
+          <TitleScreen
+            currentTheme={currentTheme}
+            onSelectTheme={(newTheme) => {
+              try {
+                localStorage.removeItem('sliding_puzzle_custom_image');
+              } catch {}
+              setCustomImageSrc(null);
+              setThemeId(newTheme);
+              audioManager.syncThemeBgm(newTheme);
             }}
+            onStartGame={handleRequestModeWithTheme}
+            onStartDaily={handleRequestDailyWithTheme}
+            onOpenCustomImageModal={() => setIsCustomImageModalOpen(true)}
+            onOpenDailyModal={() => setIsDailyModalOpen(true)}
+            onOpenAchievementModal={() => setIsAchievementModalOpen(true)}
+            onOpenThemeModal={() => {
+              setPendingGameStart(null);
+              setIsThemeModalOpen(true);
+            }}
+            onOpenBgmModal={() => setIsBgmModalOpen(true)}
           />
-
-          <div className="game-card">
-            <Controls
-              gridSize={gridSize}
+        ) : (
+          /* 게임 플레이 화면 */
+          <main className="game-main">
+            <Header
+              moveCount={moveCount}
+              elapsedTime={elapsedTime}
+              remainingTime={remainingTime}
+              remainingMoves={remainingMoves}
+              status={status}
               challengeMode={challengeMode}
-              showNumberOverlay={showNumberOverlay}
-              isAiCalculating={isAiCalculating}
-              aiCooldown={aiCooldown}
-              canUndo={canUndo}
-              usedUndoCount={usedUndoCount}
-              onUndo={undoMove}
-              onSelectGridSize={(s) => {
-                setIsDailyGameActive(false);
-                changeGridSize(s);
-              }}
-              onSelectChallengeMode={changeChallengeMode}
-              onToggleNumberOverlay={() => setShowNumberOverlay((prev) => !prev)}
-              onOpenThemeModal={() => {
-                // 모달을 열기만 해서는 커스텀 이미지를 유지하고, 테마 확정·변경 시에만 제거함
-                setPendingGameStart(null);
-                setIsThemeModalOpen(true);
-              }}
-              onOpenHintModal={() => setIsHintOpen(true)}
-              onOpenCustomImageModal={() => setIsCustomImageModalOpen(true)}
-              onOpenDailyModal={() => setIsDailyModalOpen(true)}
-              onOpenAchievementModal={() => setIsAchievementModalOpen(true)}
-              onRequestAiHint={handleRequestAiHint}
-              onShuffle={() => {
-                setIsDailyGameActive(false);
-                startNewGame();
-              }}
-              onReset={resetGame}
-              onAutoSolve={autoSolveGame}
-            />
-
-            <PuzzleBoard
               gridSize={gridSize}
-              board={board}
-              gameMode={gameMode}
-              themeImagePath={currentTheme.imagePath}
-              showNumberOverlay={showNumberOverlay}
-              aiHint={aiHint}
-              isTileMovable={isTileMovable}
-              onTileClick={handleTileClick}
-              onMoveByDirection={handleMoveByDirection}
+              bestRecord={bestRecords[gridSize]}
+              onOpenDaily={() => setIsDailyModalOpen(true)}
+              onOpenBgmModal={() => setIsBgmModalOpen(true)}
+              onReturnHome={() => {
+                resetGame();
+                setCurrentScreen('title');
+              }}
             />
-          </div>
-        </main>
-      )}
 
-      <footer className="app-footer">
-        <p>Sliding Block Puzzle • 100% Serverless Web App • A* Engine & PWA</p>
-      </footer>
+            <div className="game-card">
+              <Controls
+                gridSize={gridSize}
+                challengeMode={challengeMode}
+                showNumberOverlay={showNumberOverlay}
+                isAiCalculating={isAiCalculating}
+                aiCooldown={aiCooldown}
+                canUndo={canUndo}
+                usedUndoCount={usedUndoCount}
+                onUndo={undoMove}
+                onSelectGridSize={(s) => {
+                  setIsDailyGameActive(false);
+                  changeGridSize(s);
+                }}
+                onSelectChallengeMode={changeChallengeMode}
+                onToggleNumberOverlay={() => setShowNumberOverlay((prev) => !prev)}
+                onOpenThemeModal={() => {
+                  // 모달을 열기만 해서는 커스텀 이미지를 유지하고, 테마 확정·변경 시에만 제거함
+                  setPendingGameStart(null);
+                  setIsThemeModalOpen(true);
+                }}
+                onOpenHintModal={() => setIsHintOpen(true)}
+                onOpenCustomImageModal={() => setIsCustomImageModalOpen(true)}
+                onOpenDailyModal={() => setIsDailyModalOpen(true)}
+                onOpenAchievementModal={() => setIsAchievementModalOpen(true)}
+                onRequestAiHint={handleRequestAiHint}
+                onShuffle={() => {
+                  setIsDailyGameActive(false);
+                  startNewGame();
+                }}
+                onReset={resetGame}
+                onAutoSolve={autoSolveGame}
+              />
 
-      {/* PWA 설치 배너 */}
-      <PwaInstallBanner />
+              <PuzzleBoard
+                gridSize={gridSize}
+                board={board}
+                gameMode={gameMode}
+                themeImagePath={currentTheme.imagePath}
+                showNumberOverlay={showNumberOverlay}
+                aiHint={aiHint}
+                isInputBlocked={isAnyModalOpen}
+                isTileMovable={isTileMovable}
+                onTileClick={handleTileClick}
+                onMoveByDirection={handleMoveByDirection}
+              />
+            </div>
+          </main>
+        )}
+
+        <footer className="app-footer">
+          <p>Sliding Block Puzzle • 100% Serverless Web App • A* Engine & PWA</p>
+        </footer>
+
+        {/* PWA 설치 배너 */}
+        <PwaInstallBanner />
+      </div>
 
       {/* 완성본 미리보기 모달 */}
       <HintModal

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   X,
   Music2,
@@ -12,6 +12,7 @@ import {
 import { useAudio } from '../../hooks/useAudio';
 import { useTranslation } from '../../i18n/useTranslation';
 import { formatMessage } from '../../i18n/format';
+import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './BgmSelectModal.css';
 
 interface BgmSelectModalProps {
@@ -21,6 +22,9 @@ interface BgmSelectModalProps {
 
 export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useModalFocusTrap(isOpen, contentRef);
 
   const {
     bgmTracks,
@@ -66,7 +70,12 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
       aria-modal="true"
       aria-labelledby="bgm-modal-title"
     >
-      <div className="bgm-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={contentRef}
+        className="bgm-modal-content"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Modal Header */}
         <div className="bgm-modal-header">
           <div className="bgm-title-group">

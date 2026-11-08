@@ -13,6 +13,7 @@ interface PuzzleBoardProps {
   themeImagePath: string;
   showNumberOverlay: boolean;
   aiHint?: { tileValue: number; direction: string } | null;
+  isInputBlocked?: boolean;
   isTileMovable: (index: number) => boolean;
   onTileClick: (index: number) => void;
   onMoveByDirection: (direction: MoveDirection) => void;
@@ -28,6 +29,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
   themeImagePath,
   showNumberOverlay,
   aiHint = null,
+  isInputBlocked = false,
   isTileMovable,
   onTileClick,
   onMoveByDirection,
@@ -38,6 +40,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
 
   const handleThrottledMoveByDirection = useCallback(
     (direction: MoveDirection) => {
+      if (isInputBlocked) return;
       const now = performance.now();
       if (now - lastInputTimeRef.current < INPUT_THROTTLE_MS) {
         return;
@@ -45,11 +48,12 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
       lastInputTimeRef.current = now;
       onMoveByDirection(direction);
     },
-    [onMoveByDirection]
+    [isInputBlocked, onMoveByDirection]
   );
 
   const handleThrottledTileClick = useCallback(
     (index: number) => {
+      if (isInputBlocked) return;
       const now = performance.now();
       if (now - lastInputTimeRef.current < INPUT_THROTTLE_MS) {
         return;
@@ -57,16 +61,23 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
       lastInputTimeRef.current = now;
       onTileClick(index);
     },
-    [onTileClick]
+    [isInputBlocked, onTileClick]
   );
 
   // 키보드 방향키 및 WASD 조작 이벤트 바인딩
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // 폼 입력 요소 포커스 중일 때는 무시
+      // 모달이 열려 있거나 폼 입력 요소에 포커스가 있으면 보드 조작을 가로채지 않음
+      if (isInputBlocked || e.defaultPrevented || e.metaKey || e.ctrlKey || e.altKey) {
+        return;
+      }
+
+      const activeElement = document.activeElement;
       if (
-        document.activeElement?.tagName === 'INPUT' ||
-        document.activeElement?.tagName === 'TEXTAREA'
+        activeElement?.tagName === 'INPUT' ||
+        activeElement?.tagName === 'TEXTAREA' ||
+        activeElement?.tagName === 'SELECT' ||
+        (activeElement instanceof HTMLElement && activeElement.isContentEditable)
       ) {
         return;
       }
@@ -106,7 +117,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleThrottledMoveByDirection]);
+  }, [handleThrottledMoveByDirection, isInputBlocked]);
 
   // 터치 스와이프 제스처 핸들링
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);

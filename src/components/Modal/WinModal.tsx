@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { Timer, Footprints, Sparkles, Play, Pause, RotateCcw, Share2 } from 'lucide-react';
 import { Board, GridSize, GameChallengeMode } from '../../types/puzzle';
@@ -7,6 +7,7 @@ import { useTranslation } from '../../i18n/useTranslation';
 import { calculateStars } from '../../utils/starCalculator';
 import { getAssetUrl } from '../../utils/assetPath';
 import { formatMessage } from '../../i18n/format';
+import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './WinModal.css';
 
 interface WinModalProps {
@@ -40,6 +41,9 @@ export const WinModal: React.FC<WinModalProps> = ({
 }) => {
 
   const { t } = useTranslation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useModalFocusTrap(isOpen, contentRef);
 
   // Replay timelapse state
   const [showReplay, setShowReplay] = useState<boolean>(false);
@@ -139,7 +143,7 @@ export const WinModal: React.FC<WinModalProps> = ({
 
   return (
     <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <div className="modal-content">
+      <div ref={contentRef} className="modal-content" tabIndex={-1}>
         {/* 황금 트로피 뱃지 */}
         <div className="modal-trophy-wrapper">
           <img

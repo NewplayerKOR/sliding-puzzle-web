@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { X, Check } from 'lucide-react';
 import { ThemeId, GameMode } from '../../types/theme';
 import { GameChallengeMode, GridSize } from '../../types/puzzle';
 import { THEME_LIST, localizeTheme } from '../../utils/themeData';
 import { getAssetUrl } from '../../utils/assetPath';
 import { useTranslation } from '../../i18n/useTranslation';
+import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './ThemeModal.css';
 
 export interface PendingModeInfo {
@@ -35,8 +36,11 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
+  const contentRef = useRef<HTMLDivElement>(null);
   const [selectedThemeId, setSelectedThemeId] = useState<ThemeId>(currentThemeId);
   const [selectedGameMode, setSelectedGameMode] = useState<GameMode>(currentGameMode);
+
+  useModalFocusTrap(isOpen, contentRef);
 
   useEffect(() => {
     if (isOpen) {
@@ -112,7 +116,12 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
       aria-modal="true"
       aria-labelledby="theme-modal-title"
     >
-      <div className="theme-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={contentRef}
+        className="theme-modal-content"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="theme-modal-header">
           <div className="theme-title-group">
             <img

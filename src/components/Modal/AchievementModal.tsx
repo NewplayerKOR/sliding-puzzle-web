@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, Trophy, Lock, CheckCircle2, Zap, Compass, Crown, Star, ShieldCheck, Flame, Palette, Camera, Clock, Footprints, Medal } from 'lucide-react';
 import { getStoredAchievements } from '../../utils/achievementManager';
 import { useTranslation } from '../../i18n/useTranslation';
 import { formatMessage } from '../../i18n/format';
 import { getAssetUrl } from '../../utils/assetPath';
+import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './AchievementModal.css';
 
 interface AchievementModalProps {
@@ -28,6 +29,10 @@ const iconMap: Record<string, React.FC<{ size?: number; className?: string }>> =
 
 export const AchievementModal: React.FC<AchievementModalProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useModalFocusTrap(isOpen, contentRef);
+
   const achievements = getStoredAchievements();
   const unlockedCount = achievements.filter((a) => a.unlockedAt).length;
 
@@ -49,7 +54,12 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ isOpen, onCl
       aria-modal="true"
       aria-labelledby="achieve-modal-title"
     >
-      <div className="achieve-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={contentRef}
+        className="achieve-modal-content"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="achieve-modal-header">
           <div className="achieve-title-group">
             <img

@@ -9,6 +9,15 @@
   box-sizing: border-box;
 }
 
+/* 모달이 열렸을 때 배경 콘텐츠를 감싸 inert/aria-hidden 대상으로 사용함 */
+.app-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
 .global-toast-banner {
   position: fixed;
   top: 1.25rem;

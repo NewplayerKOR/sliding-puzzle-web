@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AlertOctagon } from 'lucide-react';
 import { GameChallengeMode } from '../../types/puzzle';
 import { useTranslation } from '../../i18n/useTranslation';
 import { getAssetUrl } from '../../utils/assetPath';
+import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './GameOverModal.css';
 
 interface GameOverModalProps {
@@ -21,6 +22,9 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useModalFocusTrap(isOpen, contentRef);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -43,7 +47,12 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
       aria-modal="true"
       aria-labelledby="gameover-title"
     >
-      <div className="gameover-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={contentRef}
+        className="gameover-modal-content"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="gameover-icon-box">
           <AlertOctagon size={48} className="gameover-icon" />
         </div>

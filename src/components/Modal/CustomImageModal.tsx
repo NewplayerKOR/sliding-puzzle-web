@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Upload, ZoomIn, ZoomOut, Check, RefreshCw } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
+import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './CustomImageModal.css';
 
 interface CustomImageModalProps {
@@ -19,6 +20,10 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
   onApplyCustomImage,
 }) => {
   const { t } = useTranslation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useModalFocusTrap(isOpen, contentRef);
+
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [zoom, setZoom] = useState<number>(1);
   const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -232,7 +237,12 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
       aria-modal="true"
       aria-labelledby="crop-modal-title"
     >
-      <div className="custom-img-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={contentRef}
+        className="custom-img-modal-content"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="custom-img-header">
           <h3 id="crop-modal-title" className="custom-img-title">
             {t.cropModalTitle}

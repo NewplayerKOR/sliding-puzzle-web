@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { X, Flame, CheckCircle, Trophy } from 'lucide-react';
 import { getDailyStreakData, getTodayDateString } from '../../utils/dailyChallenge';
 import { useTranslation } from '../../i18n/useTranslation';
 import { formatMessage } from '../../i18n/format';
+import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './DailyModal.css';
 
 interface DailyModalProps {
@@ -17,6 +18,10 @@ export const DailyModal: React.FC<DailyModalProps> = ({
   onStartDaily,
 }) => {
   const { t } = useTranslation();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useModalFocusTrap(isOpen, contentRef);
+
   const streakData = getDailyStreakData();
   const todayStr = getTodayDateString();
   const isTodayDone = streakData.completedDates.includes(todayStr);
@@ -54,7 +59,12 @@ export const DailyModal: React.FC<DailyModalProps> = ({
       aria-modal="true"
       aria-labelledby="daily-modal-title"
     >
-      <div className="daily-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={contentRef}
+        className="daily-modal-content"
+        tabIndex={-1}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="daily-modal-header">
           <div className="daily-title-group">
             <Flame className="daily-flame-icon" size={24} />
