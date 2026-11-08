@@ -27,6 +27,29 @@
 
 ### [DEV]
 
+#### [ ] TASK-DEV-26 — 전 화면 심플·어반 UI/UX 적용 및 가독성 개선
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: TASK-DEV-25에서 수립한 디자인 시스템을 타이틀·게임 HUD·컨트롤·보드·모달·업적·PWA 화면에 적용해 심플하고 도시적인 UI/UX와 읽기 쉬운 정보 위계를 완성한다.
+- **적용 범위**:
+  - 타이틀: 그라데이션 로고 배지·이모지 히어로·4색 모드 카드를 축소하고, 강한 워드마크와 명확한 모드 목록·1차 CTA 중심으로 재구성
+  - HUD·컨트롤: 카드·필·그라데이션 남발을 줄이고 1줄 HUD와 세그먼트/텍스트 툴바 적용, 타이머·이동 수는 monospace/tabular-nums
+  - 보드: 테마 이미지와 0.12s 타일 슬라이드는 유지하고, 빈 슬롯·힌트의 네온 글로우와 text-shadow를 축소하며 숫자 대비를 강화
+  - 모달: solid dim overlay, flat panel, 1px border, 8px radius, 좌측 정렬 제목. 기존 포커스 트랩은 유지
+  - 업적·PWA·토스트: 금색 글로우와 과한 그림자를 제거하고 플랫 리스트·보더 중심으로 정리
+  - 문구: UI 이모지(🧩·🎬·💡·🔥·⚡·👣·🛡️)를 제거하고 텍스트 또는 단일 아이콘 체계로 통일
+- **대상 파일**: `src/components/Title/**`, `src/components/Header/**`, `src/components/Controls/**`, `src/components/Board/**`, `src/components/Modal/**`, `src/components/Achievement/**`, `src/components/PWA/**`, `src/i18n/translations.ts`, 관련 CSS, 필요 시 `src/App.tsx`
+- **DoD**:
+  - 전 화면에서 그라데이션·네온 글로우·과도한 radius/shadow·이모지 UI를 제거하거나 최소화
+  - 360px·데스크톱에서 정보 위계·줄바꿈·오버플로·터치 영역 확인
+  - 본문·메타 텍스트 최소 크기와 WCAG AA 대비 충족, 타이머·이동 수 가독성 개선
+  - `prefers-reduced-motion` 대응, 키보드 포커스 가시성 유지
+  - 변경 전·후 360×800·1280×800 스크린샷과 `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
+- **선행 조건**: TASK-DEV-25 완료 후
+- **참고**: 현재 완료된 TASK-DEV-21~24와 파일이 겹치지 않도록 `public/sw.js`, `audioManager.ts`, 저장소 유틸은 수정하지 않는다.
+
 ### [QA / DevOps]
 
 #### [ ] TASK-QA-08 — CI/CD·테스트 환경·의존성·배포 문서 정비
@@ -51,9 +74,33 @@
   - CI·로컬 실행 결과와 미실행 범위 기록
 - **선행 조건**: 없음 (TASK-DEV-18~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
 
+#### [ ] TASK-QA-09 — 심플·어반 UI/UX·가독성·시각 회귀 검증
+
+- **Phase**: 01
+- **담당**: QA_DEVOPS
+- **우선순위**: P2
+- **목표**: TASK-DEV-26 적용 결과를 360px·데스크톱에서 검증하고, 가독성·일관성·접근성·AI 디자인 잔재를 확인해 잔여 문제를 DEV 업무로 발주한다.
+- **검증 범위**:
+  - 타이틀·HUD·컨트롤·보드·8종 모달·업적·PWA·토스트의 시각 일관성
+  - 360×640·360×800·1280×800에서 오버플로·잘림·터치 영역·스크롤
+  - 본문·메타 폰트 크기, 대비, 숫자 가독성, 포커스 가시성, `prefers-reduced-motion`
+  - 그라데이션·글로우·이모지·과도한 radius/shadow 잔재
+  - 기존 기능 회귀(테마·모달·키보드·Undo·AI 힌트·PWA)
+- **DoD**:
+  - 화면별 스크린샷과 발견 항목(P0/P1/P2) 기록
+  - 문제 항목을 `TASK-DEV-27` 이후 ID로 DEV Backlog에 등록
+  - `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
+  - 실제 모바일 실기기 미실행 시 명시
+- **선행 조건**: TASK-DEV-26 완료 후
+
 ---
 
 ## 3. Recent Completions (최근 완료 요약)
+
+- **TASK-DEV-25** — 심플·어반 디자인 시스템 및 가독성 기준 수립 (완료일: 2026-11-08)
+  - 핵심 결과: `src/styles/index.css`에 off-white·concrete·charcoal 중립 팔레트와 단일 신호색, 시스템 grotesk·monospace 숫자, 4px 간격, 0/4/8px radius, 1px 보더, 최소 그림자, 기능성 모션 토큰을 정의함. `App.css`의 전역 셸을 평면 배경·1px 보더·토큰 여백으로 교체하고, `index.html`에서 Google Fonts와 이모지 파비콘을 제거함. pulse·bounce·spring 장식을 줄이고 `prefers-reduced-motion` 전역 규칙을 추가함. `root/DESIGN_SYSTEM.md`에 금지·지양 목록과 화면별 TASK-DEV-26 마이그레이션 기준을 작성함
+  - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 프로덕션 프리뷰에서 시스템 폰트 16px/24px·`tabular-nums`·평면 `#EFEFEA` 배경·Google Fonts 요청 0건·콘솔 오류 0건, 포커스 링 2px `#BB3E0B` 확인. 360×800·1280×800 게임 화면은 스크롤·가로 오버플로 없이 1화면 유지. 주요 텍스트·신호색 조합 WCAG AA 4.5:1 이상. 실제 모바일 실기기·Safari/Firefox·OS 수준 reduced-motion은 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-25--심플어반-디자인-시스템-및-가독성-기준-수립)
 
 - **TASK-DEV-24** — LocalStorage 접근·스키마 방어 (완료일: 2026-11-08)
   - 핵심 결과: `readStorageItem`·`writeStorageItem`·`readStorageJson` 공통 래퍼로 저장소 접근 차단·쓰기 실패·손상 JSON을 흡수. 일일 스트릭은 날짜 배열·정수 필드를 검증하고, 최고 기록은 시간·이동 수가 유한한 음이 아닌 수인지 확인. 업적은 배열·ID·`unlockedAt`·`progress`만 정규화하고 통계의 3성 횟수·클리어 테마도 검증. 오디오 설정은 boolean·0~1 볼륨·존재하는 BGM ID만 반영. 커스텀 이미지는 `data:image/` 값만 복원하고 언어는 지원 4개 국어만 허용
@@ -75,13 +122,8 @@
   - 검증 범위: Vitest 24개 파일/152개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 서브패스(`/sliding-puzzle/`) 프로덕션 빌드에서 SW scope·캐시 37건·아이콘 4종 규격 확인, 502 응답·서버 중단 재로드에서 캐시 셸 렌더링 확인, 업데이트 배너 표시→나중에(무새로고침)→지금 업데이트(새 워커 활성·1회 새로고침) 확인. 실제 모바일 실기기·Safari는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-21--pwa-매니페스트-아이콘service-worker-폴백업데이트-안정화)
 
-- **TASK-DEV-20** — 360px 모바일·1화면 레이아웃 및 터치 처리 정비 (완료일: 2026-11-08)
-  - 핵심 결과: 헤더 클래스 불일치를 바로잡고 360px에서 타이틀 상단 바를 2줄로 배치해 배지·오디오 컨트롤 잘림 해소. 400px 이하 툴바를 4열 아이콘으로 압축하고 보드·여백을 높이에 맞춰 축소해 360×800·1280×800 게임 화면을 스크롤 없이 배치. 터치 스크롤 차단을 non-passive 리스너로 전환
-  - 검증 범위: Vitest 21개 파일/136개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 360×640·360×800·1280×800 iframe 뷰포트 측정과 스크린샷 4종, 데스크톱 Chromium 터치 이벤트·콘솔 오류 0건 확인. 실제 모바일 실기기·iOS Safari는 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-20--360px-모바일1화면-레이아웃-및-터치-처리-정비)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준)

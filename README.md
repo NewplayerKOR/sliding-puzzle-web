@@ -14,6 +14,7 @@ React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이�
 * **텍스처 분할 렌더링**: 단일 텍스처를 CSS `background-position` 연산으로 분할 표시
 * **비동기 AI 힌트**: 맨해튼 거리 및 선형 충돌 휴리스틱 기반 A* 알고리즘 (Web Worker 분리)
 * **반응형 레이아웃**: `100dvh` 및 Safe Area 인셋을 적용한 1화면 레이아웃
+* **심플·어반 디자인 시스템**: off-white·concrete·charcoal 중립 팔레트, 단일 신호색, 시스템 폰트·monospace 숫자, 1px 보더·0/4/8px radius·기능성 모션. 상세 기준은 [DESIGN_SYSTEM.md](./root/DESIGN_SYSTEM.md)
 * **PWA 오프라인 지원**: Service Worker 캐싱을 통한 오프라인 구동
 
 ---
@@ -33,6 +34,7 @@ React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이�
 | **Gamification** | 12종 업적 | 업적 달성 검사, 다중 달성 순차 토스트, 트로피 도감 및 3성 별점 |
 | **PWA & Mobile** | PWA 및 햅틱 | 웹 앱 설치 지원, maskable·apple-touch 아이콘, 필수 셸 중심 오프라인 캐싱과 현재 테마·BGM 런타임 캐시, 업데이트 안내, 15ms 조작 진동 |
 | **Storage Resilience** | LocalStorage 방어 | 손상 JSON·잘못된 타입·저장소 차단 시 기본값 폴백, 일일·기록·업적·오디오·언어 스키마 검증 |
+| **Design System** | 심플·어반 디자인 토큰 | off-white·concrete·charcoal 중립 팔레트, 단일 신호색, 시스템 grotesk·monospace 숫자, 1px 보더·0/4/8px radius·최소 그림자·기능성 모션·`prefers-reduced-motion` 대응 |
 | **Localization** | 다국어 지원 (i18n) | 한국어(KO), 영어(EN), 일본어(JA), 중국어(ZH) 지원 |
 | **SNS Share** | 결과 카드 생성 | Canvas 기반 1000x1000 결과 이미지 생성 및 공유 API 연동 |
 
@@ -108,6 +110,7 @@ npm test
 | **에셋 최적화** | Vitest·브라우저 측정 | dist 용량 및 초기 로딩 | **20.65→11.04MB / 9,222,220→2,716,771바이트 (-70.5%)** |
 | **업적 토스트** | Vitest·브라우저 측정 | 다중 달성 큐 | **3건 순차 표시·14초 후 소멸 확인** |
 | **저장소 방어** | Vitest·브라우저 측정 | 손상 데이터·차단 | **기본값 폴백·타이틀/모달 정상 렌더링 확인** |
+| **디자인 토큰** | Vitest·브라우저 측정 | 전역 토큰·가독성 | **토큰 해석·AA 대비·360×800/1280×800 게임 1화면 확인** |
 
 ---
 

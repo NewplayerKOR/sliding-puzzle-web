@@ -806,3 +806,67 @@
   - 유효 데이터 브라우저 검증: 재로드 후 `currentStreak 3`·`maxStreak 5`·오늘 완료일, 3×3 기록 45초/20수, `first_victory.unlockedAt`, `star_collector.progress 2`, `bgmVolume 0.6`·`currentBgmTrackId zen`·`lang en`이 그대로 복원됨.
 - **미실행**: 실제 모바일 실기기·iOS Safari·Android Chrome의 시크릿 모드·쿠키 차단 환경, 실제 저장 용량 초과(QuotaExceededError) 상황, 여러 탭의 동시 저장 경합은 확인하지 않았음. 저장소 차단은 브라우저에서 `Storage.prototype` 예외와 테스트의 메서드 예외로만 재현함.
 - **증거**: `src/utils/storage.ts`, `src/utils/storage.test.ts`, `src/utils/dailyChallenge.ts`, `src/utils/dailyChallenge.test.ts`, `src/utils/recordStorage.ts`, `src/utils/recordStorage.test.ts`, `src/utils/achievementManager.ts`, `src/utils/achievementManager.test.ts`, `src/utils/audioManager.ts`, `src/utils/audioManager.test.ts`, `src/i18n/useTranslation.ts`, `src/i18n/i18n.test.ts`, `src/App.tsx`, `src/components/Modal/CustomImageModal.tsx`, `src/App.storage.test.tsx`, 터미널 실행 결과, 브라우저 손상·차단·복원 측정 결과
+
+---
+
+## TASK-DEV-25 — 심플·어반 디자인 시스템 및 가독성 기준 수립
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **완료일**: 2026-11-08
+- **목표**: 현재의 그라데이션·글로우·파스텔 카드 중심 UI에서 벗어나 심플하고 도시적인 디자인 토큰과 가독성 기준을 수립한다.
+- **디자인 방향**:
+  - 도시적 유틸리티(교통 표지판·건축 도면·편집 디자인)를 참고해 장식보다 정보 구조와 여백으로 위계를 만든다.
+  - off-white·concrete·charcoal 중립 팔레트에 단일 신호색 1개를 사용하고, 의미색은 경고·성공·오류에만 제한한다.
+  - Plus Jakarta Sans·Google Fonts 의존을 제거하고 시스템 grotesk + monospace 숫자 조합을 사용한다.
+  - 1px 보더 중심, radius 0/4/8px, shadow-xl·네온 글로우·backdrop-filter 최소화.
+  - 기능성 타일 슬라이드만 유지하고 pulse·bounce·spring 장식은 제거하며 `prefers-reduced-motion`에 대응한다.
+  - 이모지·PNG 스프라이트·lucide 혼용을 줄이고 단일 라인 아이콘 또는 텍스트 라벨로 통일한다.
+- **AI 디자인 금지·지양 목록**:
+  - 보라·파랑 그라데이션, glassmorphism/backdrop blur, 네온 글로우
+  - 9999px pill, 큰 둥근 카드, 모든 요소의 그림자+둥근 모서리
+  - 이모지 스파클(✨), 의미 없는 중앙 정렬 히어로, 무작위 강조색
+  - 모드별 4색 카드, 과도한 spring/bounce, 장식 목적의 애니메이션
+- **대상 파일**: `src/styles/index.css`, `src/styles/App.css`, `index.html`, 필요 시 디자인 토큰 주석/문서
+- **완료 기준(DoD)**:
+  - 색상·타이포·간격·radius·보더·그림자·모션 토큰을 CSS 변수로 정의
+  - AI 디자인 금지·지양 목록과 화면별 마이그레이션 기준 작성
+  - 전역 배경·앱 셸·공통 버튼/표면에 토큰 적용
+  - 최소 폰트 크기·대비·line-height·tabular-nums 기준 명시
+  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
+
+### 진행 결과
+
+- `src/styles/index.css`의 `:root`를 심플·어반 디자인 토큰으로 교체함. `--color-*`(중립 10종·신호색 7종·의미색 9종), `--font-*`(시스템 grotesk·monospace·12~40px 크기·행간·굵기), `--space-*`(4px 기준 11단계), `--radius-0|1|2`, `--border-*`, `--focus-ring-*`, `--shadow-*`, `--motion-*`, `--z-*`, `--layout-*`를 정의함.
+- 기존 화면과의 호환을 위해 `--bg-*`, `--text-*`, `--primary-*`, `--success-*`, `--amber-*`, `--radius-sm|md|lg|xl`, `--shadow-lg|xl`, `--transition-*`를 새 토큰의 별칭으로 매핑함. `--radius-xl`은 8px, `--transition-spring`은 표준 easing으로 바꿔 spring 장식을 제거함. 레거시 별칭은 TASK-DEV-26에서 화면별 CSS와 함께 제거할 예정임.
+- `html`/`body`에 시스템 폰트, `#EFEFEA` 평면 배경, `#22221D` 기본 텍스트, `line-height: 1.5`, `font-variant-numeric: tabular-nums`를 적용함. 타이머·이동 수용 `.u-numeric` 유틸리티(monospace + tabular-nums)를 추가함.
+- `App.css`의 `.app-container` radial-gradient를 단색 `--color-canvas`로 교체하고, `.game-card`를 1px 보더·8px radius·그림자 없음으로 정리함. `.global-toast-banner`는 신호색 700 배경·4px radius·최소 그림자로, `.app-footer`는 12px 메타 텍스트로 토큰화함. 480px·380px·낮은 높이 미디어 쿼리의 여백도 `--space-*`로 통일함.
+- `index.html`에서 Google Fonts preconnect·stylesheet 3건을 제거하고 `theme-color`를 `#EFEFEA`, `color-scheme`을 `light`로 설정함. 이모지 파비콘을 흑백 격자 + 신호색 타일 SVG로 교체함.
+- 전역 키프레임 `fadeIn`의 scale, `pulseGlow`의 파란 box-shadow, `popIn`의 1.04배 overshoot를 제거해 opacity·짧은 translateY 기반으로 바꿈. `@media (prefers-reduced-motion: reduce)`에서 애니메이션·트랜지션 시간을 0.01ms, 반복을 1회로 제한하는 전역 규칙을 추가함.
+- `root/DESIGN_SYSTEM.md`를 신설해 토큰 표, 가독성 기준(최소 12px·행간·굵기·tabular-nums·WCAG AA 대비·포커스·44px 터치), 금지·지양·허용 예외 목록, 화면별 마이그레이션 기준과 DEV-26 잔여 항목을 기록함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - `npm run preview` 프로덕션 프리뷰의 데스크톱 Chromium에서 computed style·CSS 변수·Google Fonts 요청·콘솔 메시지 확인
+  - 360×800·1280×800 iframe 뷰포트에서 타이틀·게임 화면의 `scrollWidth`/`scrollHeight`, 보드·게임 카드·모달 스타일 측정
+  - 키보드 Tab으로 타이틀 버튼에 포커스한 뒤 `outline` computed style 확인
+  - WCAG 2.1 상대 휘도 공식으로 주요 전경·배경 조합의 대비 계산
+- **결과**:
+  - `npm test`: 29개 파일/183개 테스트 PASS. CSS 변경만 있어 테스트 추가·수정은 없음.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - 토큰 해석: `--color-canvas #EFEFEA`, `--color-paper #F7F7F3`, `--color-signal-600 #BB3E0B`, `--radius-xl 8px`, `--shadow-xl 0 8px 24px rgba(23, 23, 19, .12)`, `--transition-spring 180ms cubic-bezier(0.2, 0, 0, 1)` 확인.
+  - 전역 렌더링: `body` `font-family`가 시스템 스택, `font-size 16px`·`line-height 24px`·`font-variant-numeric tabular-nums`, 배경 `rgb(239, 239, 234)`, `.app-container` `background-image: none`. Google Fonts 스타일시트·폰트 요청 0건, 콘솔 error·warning 0건. `theme-color #EFEFEA`, `color-scheme light` 확인.
+  - 포커스: `outline: 2px solid #BB3E0B`, `outline-offset: 2px` 확인.
+  - 360×800 타이틀: 가로 오버플로 0건, 상단 바 좌우 4~350px. 세로 스크롤은 허용됨.
+  - 360×800 게임: `bodyScrollHeight`/`documentElement.scrollHeight` 800px, 가로 오버플로 0건, 보드 310×310, 게임 카드 1px 보더·4px radius·그림자 없음(380px 이하 규칙).
+  - 1280×800 게임: `bodyScrollHeight` 800px, 가로 오버플로 0건, 게임 카드 1px 보더·8px radius·그림자 없음. 테마 모달 패널 1px 보더·8px radius·축소 그림자·0.18s 표준 easing. `backdrop-filter: blur(4px)`는 TASK-DEV-26 제거 대상으로 남음.
+  - 대비: charcoal/paper 14.87:1, graphite/paper 7.81:1, steel/paper 5.73:1, signal-600/paper 5.14:1, white/signal-600 5.52:1, success-strong/success-subtle 5.79:1, warning/warning-subtle 5.27:1, danger-strong/danger-subtle 6.17:1, border-strong/paper 3.61:1. 일반 텍스트 4.5:1, UI 경계 3:1 기준 충족.
+  - 잔여 마이그레이션 규모: 컴포넌트 CSS의 그라데이션 47건, `backdrop-filter` 14건, `border-radius: 9999px` 5건, 12px 미만 `font-size` 선언 38건(13개 CSS 파일), UI 이모지 19곳. PWA manifest의 `background_color #0f172a`·`theme_color #2563eb`는 SW 캐시 갱신과 함께 TASK-DEV-26에서 처리할 대상으로 남김.
+- **미실행**: 실제 모바일 실기기·Safari/Firefox 렌더링·스크린리더 수동 검증, OS 수준 `prefers-reduced-motion` 에뮬레이션은 수행하지 않았음. 360×800·1280×800 측정은 브라우저 창 크기 변경 대신 동일 출처 iframe 뷰포트로 수행함. 화면별 그라데이션·블러·작은 글자·이모지 제거와 스크린샷 비교는 TASK-DEV-26·TASK-QA-09 범위임.
+- **증거**: `src/styles/index.css`, `src/styles/App.css`, `index.html`, `root/DESIGN_SYSTEM.md`, `root/FEATURES.md`, `README.md`, 터미널 실행 결과, 프로덕션 프리뷰 computed style·네트워크·콘솔 측정 결과, 360×800/1280×800 iframe 레이아웃 측정 결과, 대비 계산 결과
