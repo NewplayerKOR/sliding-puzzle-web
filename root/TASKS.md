@@ -204,8 +204,8 @@
 ## 3. Recent Completions (최근 완료 요약)
 
 - **TASK-DEV-15** — KO/EN/JA/ZH 잔여 하드코딩 문자열 및 `html lang` 정리 (완료일: 2026-11-08)
-  - 핵심 결과: 테마·업적·BGM·일일·공유 카드·단위·접근성 라벨을 번역 키로 이관하고 `html lang`을 선택 언어와 동기화. EN/JA/ZH 전 화면에서 한국어 잔존 0건 확인
-  - 검증 범위: Vitest 15개 파일/115개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium EN/JA/ZH 전 화면 및 공유 카드 PNG 확인. 실제 모바일 실기기·OS 언어 자동 감지는 미실행
+  - 핵심 결과: 테마·업적·BGM·일일·공유 카드·단위·접근성 라벨을 번역 키로 이관하고 `html lang`을 선택 언어와 동기화. EN 전 화면과 JA/ZH 핵심 화면에서 한국어 잔존 0건 확인
+  - 검증 범위: Vitest 15개 파일/115개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium EN 전 화면·JA/ZH 핵심 화면 및 공유 카드 PNG 확인. 실제 모바일 실기기·OS 언어 자동 감지는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-15--koenjazh-잔여-하드코딩-문자열-및-html-lang-정리)
 
 - **TASK-DEV-14** — Time Attack·기록 타이머를 벽시계 기준으로 보정 (완료일: 2026-11-08)
