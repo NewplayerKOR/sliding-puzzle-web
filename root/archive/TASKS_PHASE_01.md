@@ -759,3 +759,50 @@
   - 브라우저 메타데이터 병합: 저장된 옛 `titleKey`·`descriptionKey`·`iconName`을 무시하고 `achFirstVictoryTitle`·`achFirstVictoryDesc`·`Trophy`, `achStarCollectorTitle`·`Star`를 사용함. 저장된 `unlockedAt`(`2025-01-02T03:04:05.000Z`)과 `progress`(7, 2)는 유지하고 `maxProgress`는 최신 정의(3)를 사용함. 알 수 없는 ID는 12건 목록에 추가되지 않음.
 - **미실행**: 실제 모바일 실기기·iOS Safari·Android Chrome과 스크린리더에서 연속 토스트의 시각·청각 알림, 백그라운드 탭 스로틀링 중 타이머 동작은 확인하지 않았음. 여러 탭이 동시에 업적을 갱신하는 경합과 토스트 표시 중 언어 전환은 이번 범위에서 제외함.
 - **증거**: `src/components/Achievement/AchievementToast.tsx`, `src/components/Achievement/AchievementToast.test.tsx`, `src/utils/achievementManager.ts`, `src/utils/achievementManager.test.ts`, `src/utils/achievementData.ts`, 터미널 실행 결과, 브라우저 토스트 타이틀 시계열·메타데이터 병합 측정 결과
+
+---
+
+## TASK-DEV-24 — LocalStorage 접근·스키마 방어
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 저장소 접근 차단·손상된 JSON·예상 밖 스키마에서도 앱이 빈 화면으로 죽지 않고 기본값으로 동작하게 한다.
+- **대상 파일**: `src/i18n/useTranslation.ts`, `src/App.tsx`(커스텀 이미지 초기화), `src/utils/recordStorage.ts`, `src/utils/dailyChallenge.ts`, `src/utils/achievementManager.ts`, `src/utils/audioManager.ts`, 공통 storage 유틸(신설 가능)
+- **재현/증거**: `getInitialLanguage`와 `App.tsx` 67~70행이 `localStorage.getItem`을 try/catch 없이 호출하므로 저장소 접근이 차단된 환경에서 모듈 초기화가 실패할 수 있음. 일일 스트릭·기록·업적 JSON은 파싱 후 스키마 검증이 없어 `completedDates` 등 필드가 없으면 `.includes`에서 예외가 발생할 수 있음.
+- **완료 기준(DoD)**:
+  - 안전한 storage 래퍼로 읽기·쓰기·파싱 실패를 흡수하고 기본값 반환
+  - 일일 스트릭·기록·업적·오디오 설정 스키마 검증
+  - 저장소 차단·손상 JSON·필드 누락 테스트 추가
+  - 앱 초기 화면이 정상 렌더링됨을 확인
+
+### 진행 결과
+
+- `src/utils/storage.ts`를 신설해 `readStorageItem`·`writeStorageItem`·`removeStorageItem`·`readStorageJson`·`writeStorageJson`·`isRecord`를 제공함. `window.localStorage` 접근, `getItem`·`setItem`·`removeItem` 호출, `JSON.parse`, 스키마 normalizer 실행을 각각 try/catch로 감싸 실패 시 `null`·`false` 또는 no-op으로 흡수함.
+- `useTranslation`: `getInitialLanguage`가 래퍼와 지원 언어 목록(`ko`·`en`·`ja`·`zh`)으로 값 검증. 저장소 차단·미지원 언어 값(`fr`)은 `ko`로 폴백하고 `setGlobalLanguage` 쓰기 실패도 무시함.
+- `App`: 커스텀 이미지 초기화를 래퍼로 전환하고 `data:image/` 접두사가 있는 값만 복원. 테마 적용·선택 시 직접 호출하던 `localStorage.removeItem` 3곳을 `removeStorageItem`으로 통일.
+- `CustomImageModal`: 저장된 이미지 읽기를 래퍼로 전환하고 `data:image/` 값만 로드. 적용 시 저장 실패(`writeStorageItem`이 `false`)면 기존처럼 용량 초과 오류를 표시하고 모달을 닫지 않음.
+- `dailyChallenge`: `completedDates`는 `YYYY-MM-DD` 문자열만 중복 제거해 보존하고, `currentStreak`·`maxStreak`는 음이 아닌 정수로, `lastCompletedDate`는 유효한 날짜 문자열 또는 `null`로 정규화함. 객체가 아닌 JSON·손상 JSON은 빈 스트릭으로 폴백하고 `maxStreak`는 최소 `currentStreak` 이상으로 보정함.
+- `recordStorage`: 3·4·5 난이도별 기록에서 `bestTime`·`bestMoves`가 유한한 음이 아닌 수인지 검증하고 `clearedAt` 문자열만 유지함. 손상된 개별 기록은 `null`로 버리고, 기본값을 매 호출마다 새 객체로 생성해 저장 실패 시 모듈 기본값이 변경되지 않게 함.
+- `achievementManager`: 저장된 업적은 배열·문자열 `id`·문자열 `unlockedAt`·음이 아닌 숫자 `progress`만 인정하고 나머지 항목은 무시함. 통계는 `threeStarCount`를 음이 아닌 정수로, `clearedThemes`를 실제 테마 ID 4종으로 제한해 중복 제거하고, `hasUsedUndoInGame`은 `true`일 때만 인정함.
+- `audioManager`: 저장된 boolean은 `'true'`·`'false'`만 인정하고, 볼륨은 유한한 수를 0~1로 clamp하며, BGM ID는 `BGM_TRACKS`에 존재하는 값만 반영함. `normalizeStoredAudioConfig()`를 분리해 단위 테스트 가능하게 하고, `loadSettings`·`saveSettings`를 래퍼 기반으로 전환함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - `npm run dev` 개발 서버의 데스크톱 Chromium에서 일일·기록·업적·통계·오디오·언어 키에 손상 JSON과 잘못된 타입을 넣고 새로고침해 타이틀 렌더링·모듈 반환값·콘솔 오류 확인
+  - 같은 브라우저에서 `Storage.prototype.getItem`·`setItem`·`removeItem`·`clear`가 강제로 예외를 던지도록 덮은 뒤 업적 모달·저장 함수·언어 전환·오디오 설정 변경 확인 후 원복
+  - 유효한 일일·기록·업적·오디오·언어 값을 저장하고 새로고침해 정상 복원 확인
+- **결과**:
+  - `npm test`: 29개 파일/183개 테스트 PASS. `storage.test.ts` 5건, `dailyChallenge.test.ts` 5건, `App.storage.test.tsx` 1건 신규. `recordStorage.test.ts` 3건, `achievementManager.test.ts` 4건, `audioManager.test.ts` 2건, `i18n.test.ts` 2건 추가.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - 손상 데이터 브라우저 검증: 타이틀 렌더링, 콘솔 error 0건. `currentStreak: '3'`은 0, `maxStreak: 2.9`는 2, `completedDates: 'broken'`은 `[]`로 정규화. 기록 3번의 문자열 `bestTime`은 제거되고 4번은 `bestTime: 20`·`bestMoves: 30`·`clearedAt: ''`로 유지. 업적은 12건으로 복구되고 `first_victory`의 숫자 `unlockedAt`은 `null`, `star_collector`의 문자열 `unlockedAt`은 유지·음수 `progress`는 0으로 정규화. 오디오는 `sfxVolume 0.8`·`bgmVolume 1`·`currentBgmTrackId chill`로 폴백. 언어는 `ko`.
+  - 저장소 차단 브라우저 검증: 타이틀 렌더링과 업적 모달 `달성률: 0 / 12 (0%)` 표시. `getDailyStreakData`·`getBestRecords`·`getStoredAchievements`·`saveDailyCompletion`·`saveBestRecord`·`saveStoredAchievements`·`setGlobalLanguage`·`setBgmVolume`·`toggleBgmMute` 모두 예외 없이 실행됨. `saveDailyCompletion`은 메모리상 `currentStreak 1`을 반환하고 `saveBestRecord`는 신기록 객체를 반환함. 콘솔 error 0건.
+  - 유효 데이터 브라우저 검증: 재로드 후 `currentStreak 3`·`maxStreak 5`·오늘 완료일, 3×3 기록 45초/20수, `first_victory.unlockedAt`, `star_collector.progress 2`, `bgmVolume 0.6`·`currentBgmTrackId zen`·`lang en`이 그대로 복원됨.
+- **미실행**: 실제 모바일 실기기·iOS Safari·Android Chrome의 시크릿 모드·쿠키 차단 환경, 실제 저장 용량 초과(QuotaExceededError) 상황, 여러 탭의 동시 저장 경합은 확인하지 않았음. 저장소 차단은 브라우저에서 `Storage.prototype` 예외와 테스트의 메서드 예외로만 재현함.
+- **증거**: `src/utils/storage.ts`, `src/utils/storage.test.ts`, `src/utils/dailyChallenge.ts`, `src/utils/dailyChallenge.test.ts`, `src/utils/recordStorage.ts`, `src/utils/recordStorage.test.ts`, `src/utils/achievementManager.ts`, `src/utils/achievementManager.test.ts`, `src/utils/audioManager.ts`, `src/utils/audioManager.test.ts`, `src/i18n/useTranslation.ts`, `src/i18n/i18n.test.ts`, `src/App.tsx`, `src/components/Modal/CustomImageModal.tsx`, `src/App.storage.test.tsx`, 터미널 실행 결과, 브라우저 손상·차단·복원 측정 결과

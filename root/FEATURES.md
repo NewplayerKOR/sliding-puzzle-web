@@ -42,7 +42,7 @@
 | PWA / Mobile | 모바일 제스처·햅틱 | 100dvh·Safe Area 레이아웃, `touch-action: none`, Pull-to-refresh 차단, 이동·승리·에러 진동 피드백 | `PuzzleBoard`, `haptics` | `src/components/Board/PuzzleBoard.tsx`, `src/utils/haptics.ts`, `src/styles/index.css` | 구현 완료 |
 | Performance | 초기 로딩·에셋 최적화 | 최초 로드에 코어 이미지·현재 테마·현재 BGM만 로드하고 나머지 테마는 테마 모달에서 지연 로드. BGM 96kbps MP3, 스프라이트·아이콘 팔레트 PNG 압축(3.59MB→0.52MB). dist 20.65→11.04MB, 초기 동일 출처 decodedBodySize 9,222,220→2,716,771바이트 | `assetPreloader`, `useAssetPreloader`, `audioManager`, SW | `src/utils/assetPreloader.ts`, `src/hooks/useAssetPreloader.ts`, `src/utils/audioManager.ts`, `public/sw.js` | 구현 완료 |
 | Localization | 4개 국어 | KO·EN·JA·ZH 번역, 테마·업적·BGM·일일·공유 카드·접근성 라벨 포함. 언어 선택을 LocalStorage에 저장하고 `html lang` 동기화 | `translations`, `useTranslation`, `formatMessage` | `src/i18n/translations.ts`, `src/i18n/useTranslation.ts`, `src/i18n/format.ts` | 구현 완료 |
-| Persistence | LocalStorage 영속화 | 커스텀 이미지·업적·업적 통계·오디오 설정·언어·일일 스트릭·최고 기록을 브라우저에 저장 | `localStorage` | `src/utils/*`, `src/App.tsx`, `src/i18n/useTranslation.ts` | 구현 완료 |
+| Persistence | LocalStorage 영속화 | 커스텀 이미지·업적·업적 통계·오디오 설정·언어·일일 스트릭·최고 기록을 브라우저에 저장. 공통 storage 래퍼로 접근 차단·쓰기 실패·손상 JSON을 흡수하고, 일일 스트릭·기록·업적·오디오·언어·커스텀 이미지 값을 스키마 검증 후 기본값으로 폴백 | `localStorage`, `storage` | `src/utils/storage.ts`, `src/utils/*`, `src/App.tsx`, `src/i18n/useTranslation.ts` | 구현 완료 |
 | UI / UX | 반응형 UI·애니메이션·접근성 | 타이틀·HUD·툴바·8종 모달·토스트, 0.12s 타일 트랜지션과 60fps 하드웨어 가속. 360px 상단 바 2줄 배치·아이콘 툴바·높이 기반 보드 축소로 360×800·1280×800 1화면 배치, non-passive 터치 스크롤 차단. 모달 포커스 트랩·배경 `inert`·보드 키 입력 차단, `main` landmark·보드 group 역할·확대 허용(`maximum-scale=5.0`)·WCAG AA 대비·`focus-visible` 외곽선 포함 | `App`, `components`, `useModalFocusTrap` | `src/App.tsx`, `src/components/**`, `src/styles/**`, `src/hooks/useModalFocusTrap.ts`, `index.html` | 구현 완료 |
 
 ---
@@ -64,6 +64,7 @@
 - PWA 매니페스트에 192×192·512×512 `any` 아이콘과 maskable 2종, apple-touch-icon을 추가함. Service Worker는 5xx 응답·오프라인 시 캐시된 셸로 폴백하고, 프리캐시 `addAll` 실패 시 자산별 캐시로 전환함. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 적용해 진행 중 게임의 즉시 새로고침을 막음.
 - BGM 4트랙을 192kbps에서 96kbps MP3로 변환하고 원본 WAV를 배포에서 제외함. 최초 로드에는 코어 이미지·현재 테마·현재 BGM만 로드하고 나머지 테마는 테마 모달에서 지연 로드함. 스프라이트·아이콘을 팔레트 PNG로 압축하고 SW 프리캐시를 필수 셸·기본 테마 중심 30건/1.31MB로 축소함. 현재 BGM은 Range 206 응답 시 전체 파일을 런타임 캐시함.
 - 한 번의 승리로 여러 업적이 달성돼도 토스트를 큐에 보관해 4.5초 간격으로 모두 순차 표시하고, 표시 종료·언마운트 시 타이머를 정리함. 업적 효과음은 각 토스트가 표시될 때 재생함. 저장된 업적 데이터는 최신 제목·설명·아이콘 정의를 덮어쓰지 않고 `unlockedAt`·`progress`만 유지하도록 병합함.
+- LocalStorage 접근·JSON 파싱·스키마 검증 실패를 흡수하는 공통 storage 래퍼를 추가함. 일일 스트릭·최고 기록·업적·업적 통계·오디오 설정의 잘못된 타입과 누락 필드를 정규화하고, 지원하지 않는 언어와 `data:image/`가 아닌 커스텀 이미지 값은 기본값으로 폴백함. 저장소가 차단돼도 타이틀·모달과 저장 함수가 예외 없이 동작함.
 - v1.4.0 기준 기능 카탈로그를 2026-11-08에 정리.
 
 ### v0.0.0 (초기화)
@@ -74,7 +75,7 @@
 
 ## 3. Verification (검증 기준)
 
-- **단위·통합 테스트**: `npm test` — 26개 테스트 파일 / 161개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
+- **단위·통합 테스트**: `npm test` — 29개 테스트 파일 / 183개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
 - **타입 검사**: `npx tsc --noEmit` — 0 Errors (`npm run build`의 tsc 단계에서 확인).
 - **프로덕션 빌드**: `npm run build` — Vite 6.4.3 빌드 성공 (2026-11-08).
 - **접근성 감사**: 데스크톱 Chromium Lighthouse 접근성 점수는 타이틀·게임 화면·테마 선택 모달·BGM 설정 모달 모두 1.0이다(2026-11-08, TASK-DEV-19). SEO의 `robots.txt` 유효성 항목은 접근성 범위가 아니며 TASK-QA-08에서 다룬다.
@@ -82,5 +83,6 @@
 - **PWA·오프라인**: 2026-11-08 TASK-DEV-21에서 서브패스(`/sliding-puzzle/`) 프로덕션 빌드를 검증했다. SW scope는 `/sliding-puzzle/`, 프리캐시 37건, 매니페스트 아이콘 4종은 192×192·512×512 규격과 200 응답을 확인했다. 서버가 502를 반환하거나 중단된 상태에서도 캐시된 셸로 타이틀 화면이 렌더링됐고, 업데이트는 배너 표시 후 "나중에"에서 새로고침 없이 유지되며 "지금 업데이트"에서 새 워커 활성화와 1회 새로고침이 확인됐다.
 - **에셋 최적화**: 2026-11-08 TASK-DEV-22에서 프로덕션 `dist`를 20.65→11.04MB로 줄였다. BGM은 13.05→6.52MiB(192→96kbps MP3)로 변환했고, 스프라이트·아이콘은 3.59→0.52MB(팔레트 PNG, 합성 배경 SSIM 0.989~0.996)로 압축했다. 동일 출처 초기 decodedBodySize는 9,222,220→2,716,771바이트(-70.5%)였고, 최초 로드에는 현재 테마(`theme_nature`)와 현재 BGM만 포함됐다. SW 프리캐시는 37건/19.47MB에서 30건/1.31MB로 축소했으며, 오프라인 재로드에서 현재 테마·현재 BGM(2,173,327바이트, 181.1초)과 게임 시작을 확인했다. 미사용 테마·BGM은 502로 지연 로드 대상에서 제외됐다. 테마 모달을 열면 4개 테마를 모두 지연 로드하고 썸네일이 완료된 뒤 선택해 전환 깜빡임이 없음을 확인했다.
 - **업적 알림·데이터 병합**: 2026-11-08 TASK-DEV-23에서 데스크톱 Chromium으로 3x3 30초 이내·Undo 0회 승리를 재현해 `first_victory`→`speed_demon`→`purist_no_undo`가 4.5초 간격으로 순차 표시되고 마지막 토스트 종료 후 14초 시점에 모두 사라지는 것을 확인했다(콘솔 오류 0건). 저장소에 옛 제목·설명·아이콘을 넣어도 최신 정의가 표시되고 `unlockedAt`·`progress`는 보존되며, 알 수 없는 ID는 목록에 추가되지 않았다. 초기 정의를 반환할 때도 복사본을 사용해 원본이 변경되지 않는다.
-- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 스크린리더 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN 전 화면·JA/ZH 핵심 화면과 공유 카드 PNG를, TASK-DEV-16으로 커스텀 이미지 드래그·보존·검증 오류를, TASK-DEV-17로 AI 힌트 무효화·힌트 없음·시간 초과를, TASK-DEV-18로 모달 포커스 순환·복원과 보드·언어 선택 키 입력 차단을, TASK-DEV-19로 타이틀·게임·테마·BGM 모달의 접근성 감사와 대비·확대·라벨을, TASK-DEV-20으로 360×640·360×800·1280×800 레이아웃과 터치 스크롤 차단을, TASK-DEV-21로 PWA 아이콘·SW 폴백·업데이트 안내를, TASK-DEV-22로 BGM 변환·초기 로딩·오프라인 캐시를, TASK-DEV-23으로 다중 업적 토스트 큐와 메타데이터 병합을 확인했다. iOS Safari의 apple-touch-icon 적용, Firefox의 SW 업데이트 동작, 96kbps BGM의 주관적 청취 품질, Safari/Firefox의 Range 오디오 캐시 동작, 모바일·스크린리더의 연속 토스트 알림은 미확인이다.
+- **저장소 방어**: 2026-11-08 TASK-DEV-24에서 데스크톱 Chromium으로 손상 JSON·문자열 숫자·잘못된 타입을 저장한 뒤 새로고침해 타이틀 렌더링과 콘솔 오류 0건을 확인했다. 일일 스트릭은 빈 배열·0으로, 기록은 유효한 4×4 항목만, 업적은 12건 기본 목록과 유효한 `unlockedAt`만, 오디오는 기본 볼륨·BGM으로 폴백했다. `Storage.prototype` 접근을 강제로 예외 처리한 상태에서도 타이틀·업적 모달(0/12)·저장 함수·언어 전환·오디오 설정 변경이 예외 없이 동작했고, 유효한 저장값은 재로드 후 그대로 복원됐다.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 스크린리더 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN 전 화면·JA/ZH 핵심 화면과 공유 카드 PNG를, TASK-DEV-16으로 커스텀 이미지 드래그·보존·검증 오류를, TASK-DEV-17로 AI 힌트 무효화·힌트 없음·시간 초과를, TASK-DEV-18로 모달 포커스 순환·복원과 보드·언어 선택 키 입력 차단을, TASK-DEV-19로 타이틀·게임·테마·BGM 모달의 접근성 감사와 대비·확대·라벨을, TASK-DEV-20으로 360×640·360×800·1280×800 레이아웃과 터치 스크롤 차단을, TASK-DEV-21로 PWA 아이콘·SW 폴백·업데이트 안내를, TASK-DEV-22로 BGM 변환·초기 로딩·오프라인 캐시를, TASK-DEV-23으로 다중 업적 토스트 큐와 메타데이터 병합을, TASK-DEV-24로 손상 데이터·저장소 차단 폴백을 확인했다. iOS Safari의 apple-touch-icon 적용, Firefox의 SW 업데이트 동작, 96kbps BGM의 주관적 청취 품질, Safari/Firefox의 Range 오디오 캐시 동작, 모바일·스크린리더의 연속 토스트 알림, 실제 시크릿 모드·쿠키 차단·저장 용량 초과 상황은 미확인이다.
 - **Node.js 26 참고**: Vitest 실행 시 jsdom의 `localStorage` 초기화를 위해 `NODE_OPTIONS=--localstorage-file=<임시 파일>` 지정이 필요하다. 지정하지 않으면 localStorage 관련 테스트가 실패한다.

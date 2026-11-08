@@ -27,21 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-24 — LocalStorage 접근·스키마 방어
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: 저장소 접근 차단·손상된 JSON·예상 밖 스키마에서도 앱이 빈 화면으로 죽지 않고 기본값으로 동작하게 한다.
-- **대상 파일**: `src/i18n/useTranslation.ts`, `src/App.tsx`(커스텀 이미지 초기화), `src/utils/recordStorage.ts`, `src/utils/dailyChallenge.ts`, `src/utils/achievementManager.ts`, `src/utils/audioManager.ts`, 공통 storage 유틸(신설 가능)
-- **재현/증거**: `getInitialLanguage`와 `App.tsx` 67~70행이 `localStorage.getItem`을 try/catch 없이 호출하므로 저장소 접근이 차단된 환경에서 모듈 초기화가 실패할 수 있음. 일일 스트릭·기록·업적 JSON은 파싱 후 스키마 검증이 없어 `completedDates` 등 필드가 없으면 `.includes`에서 예외가 발생할 수 있음.
-- **DoD**:
-  - 안전한 storage 래퍼로 읽기·쓰기·파싱 실패를 흡수하고 기본값 반환
-  - 일일 스트릭·기록·업적·오디오 설정 스키마 검증
-  - 저장소 차단·손상 JSON·필드 누락 테스트 추가
-  - 앱 초기 화면이 정상 렌더링됨을 확인
-- **선행 조건**: 없음
-
 ### [QA / DevOps]
 
 #### [ ] TASK-QA-08 — CI/CD·테스트 환경·의존성·배포 문서 정비
@@ -70,6 +55,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-24** — LocalStorage 접근·스키마 방어 (완료일: 2026-11-08)
+  - 핵심 결과: `readStorageItem`·`writeStorageItem`·`readStorageJson` 공통 래퍼로 저장소 접근 차단·쓰기 실패·손상 JSON을 흡수. 일일 스트릭은 날짜 배열·정수 필드를 검증하고, 최고 기록은 시간·이동 수가 유한한 음이 아닌 수인지 확인. 업적은 배열·ID·`unlockedAt`·`progress`만 정규화하고 통계의 3성 횟수·클리어 테마도 검증. 오디오 설정은 boolean·0~1 볼륨·존재하는 BGM ID만 반영. 커스텀 이미지는 `data:image/` 값만 복원하고 언어는 지원 4개 국어만 허용
+  - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 데스크톱 Chromium에서 손상 JSON·문자열 필드·잘못된 타입을 넣고도 타이틀 렌더링·콘솔 오류 0건 확인, `Storage.prototype` 접근을 강제로 예외 처리한 상태에서 타이틀·업적 모달(0/12)·저장 함수·언어 전환·오디오 설정 변경이 예외 없이 동작함을 확인. 유효한 저장값은 재로드 후 그대로 복원됨. 실제 모바일 실기기·시크릿 모드 저장소 차단은 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-24--localstorage-접근스키마-방어)
+
 - **TASK-DEV-23** — 업적 토스트 다중 달성 큐 및 메타데이터 병합 수정 (완료일: 2026-11-08)
   - 핵심 결과: 업적 알림을 큐에 보관해 한 번의 승리로 여러 업적이 달성돼도 4.5초 간격으로 모두 순차 표시하고, 표시 시간 종료·언마운트 시 타이머를 정리. 효과음은 각 토스트가 표시될 때 재생. `getStoredAchievements`는 최신 정적 메타데이터를 쓰고 저장된 `unlockedAt`·`progress`만 유지하며, 초기 정의를 직접 변경하지 않도록 복사본 반환
   - 검증 범위: Vitest 26개 파일/161개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 데스크톱 Chromium에서 3건 동시 달성 시 `first_victory`→`speed_demon`→`purist_no_undo` 순차 표시·14초 후 소멸·콘솔 오류 0건, 옛 메타데이터 저장값 병합 시 최신 제목·아이콘 유지와 `unlockedAt`·`progress` 보존 확인. 실제 모바일 실기기·스크린리더는 미실행
@@ -90,13 +80,8 @@
   - 검증 범위: Vitest 21개 파일/136개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 360×640·360×800·1280×800 iframe 뷰포트 측정과 스크린샷 4종, 데스크톱 Chromium 터치 이벤트·콘솔 오류 0건 확인. 실제 모바일 실기기·iOS Safari는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-20--360px-모바일1화면-레이아웃-및-터치-처리-정비)
 
-- **TASK-DEV-19** — ARIA 구조·색 대비·확대 허용·접근성 라벨 정비 (완료일: 2026-11-08)
-  - 핵심 결과: 보드를 `role="group"`으로 단순화하고 타이틀에 `main` landmark 추가, 모드 카드 중첩 버튼 역할 제거, 크기 pill `aria-pressed` 추가. `maximum-scale=5.0` 확대 허용, WCAG AA 대비 보정, BGM/SFX 라벨·alt 4개 국어화. Lighthouse 접근성 타이틀·게임 1.0
-  - 검증 범위: Vitest 20개 파일/134개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium Lighthouse 접근성 타이틀·게임·테마 모달·BGM 모달 1.0. 실제 모바일 실기기·스크린리더 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-19--aria-구조색-대비확대-허용접근성-라벨-정비)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어)
