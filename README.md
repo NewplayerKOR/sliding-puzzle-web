@@ -44,12 +44,12 @@ React와 TypeScript로 만든 클라이언트 사이드 슬라이딩 퍼즐(N-Pu
 
 | 분류 | 기술 | 버전 | 비고 |
 | :--- | :--- | :--- | :--- |
-| **Runtime** | Node.js | 24.15.0+ (24.x) 또는 26.0.0+ | `.nvmrc` 24, `package.json` `engines` |
-| **Framework** | React | 19.2.8 | UI 컴포넌트·상태 관리 |
-| **Language** | TypeScript | 5.9.3 | strict 모드 |
-| **Build** | Vite | 6.4.5 | 개발 서버·프로덕션 번들 |
-| **Test** | Vitest | 4.1.12 | 유닛·통합 테스트 |
-| **DOM Test** | Testing Library | 16.3.2 | React 컴포넌트 테스트 |
+| **Runtime** | Node.js | 24.15.0+ (24.x) 또는 26.0.0+ | `.nvmrc` 26.13.0, `package.json` `engines` |
+| **Framework** | React | 19.3.1 | UI 컴포넌트·상태 관리 |
+| **Language** | TypeScript | 7.0.2 | strict 모드 |
+| **Build** | Vite | 8.3.6 | Rolldown 기반 개발 서버·프로덕션 번들 |
+| **Test** | Vitest | 5.1.0 | 유닛·통합 테스트 |
+| **DOM Test** | Testing Library | 16.3.3 | React 컴포넌트 테스트 |
 | **E2E** | Playwright | 1.65.0 | Chromium 스모크 테스트 |
 | **Styling** | Vanilla CSS | - | CSS Grid/Flexbox, 디자인 토큰 |
 | **Browser API** | Canvas, Web Audio, Web Worker, Service Worker, Vibration, Web Share | - | 클라이언트 기능 구현 |
@@ -131,7 +131,7 @@ src/
 | :--- | :--- |
 | 유닛·통합 테스트 | **29개 파일 / 183개 케이스 PASS** |
 | 타입 검사 | **0 Errors** |
-| 프로덕션 빌드 | **Vite 6.4.5 성공** |
+| 프로덕션 빌드 | **Vite 8.3.6 성공** |
 | E2E | **Playwright Chromium 4/4 PASS** |
 | Lighthouse | 8개 화면 접근성·Best Practices·SEO **1.0** |
 

@@ -10,7 +10,7 @@
 
 ## 2. 로컬 검증
 
-요구사항: Node.js 24.15 이상(24.x) 또는 26.0.0 이상, npm 10 이상(`package.json` `engines`).
+요구사항: Node.js 24.15 이상(24.x) 또는 26.0.0 이상, npm 10 이상(`package.json` `engines`). CI와 Vercel은 `.nvmrc`의 Node.js 26.13.0을 기준으로 한다.
 
 ```bash
 npm ci
@@ -35,7 +35,7 @@ Vercel 프로젝트가 pause 상태에서 재개될 때 아래 설정을 유지�
 | Install Command | `npm ci` |
 | Build Command | `npm run build` |
 | Output Directory | `dist` |
-| Node.js Version | 24.x (`.nvmrc` 기준) |
+| Node.js Version | 26.x (`.nvmrc` 26.13.0 기준) |
 | Environment Variables | 없음 |
 
 - Vercel은 `dist/`를 정적 호스팅하고, `public/`의 `manifest.webmanifest`·`sw.js`·`robots.txt`·에셋을 함께 배포한다.

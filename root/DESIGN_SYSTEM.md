@@ -336,3 +336,16 @@ npm run build
 - 터치 타깃 감사: 타이틀·게임 헤더·BGM 모달에서 24px 미만 인터랙티브 요소 0건. BGM 자동 연동 체크박스는 16×16px에서 24×24px로 확대함
 - 다국어: EN·JA·ZH 360×640에서 select·슬라이더·PWA 설치/업데이트 CTA·배너 오버플로 이슈 0건. JA PWA 설치 배너는 설명 2줄로 카드 125px, SW 업데이트 카드는 68px로 뷰포트 안에 표시됨
 - 스크린샷·측정 원문: `root/archive/assets/task-dev-28/`의 before 6건·after 15건 WebP와 `metrics.json`, `language-metrics.json`
+
+### 6.6 최신 도구체인 검증 (2026-11-08)
+
+- Node.js 26.13.0(최신 안정 LTS) 기준으로 `.nvmrc`를 26.13.0으로 갱신함. `package.json` `engines`는 Node 24.15+ 또는 26+ 호환 범위를 유지함.
+- 의존성: React·React DOM 19.3.1, Vite 8.3.6, `@vitejs/plugin-react` 6.2.1, Vitest 5.1.0, TypeScript 7.0.2, jsdom 31.0.0, lucide-react 1.70.0, Testing Library 16.3.3, `@types/react`·`@types/react-dom` 19.3.0.
+- TypeScript 7은 `@types/node` 자동 포함이 달라져 `@types/node`를 devDependency에 추가하고 `tsconfig.json`에 `"types": ["node"]`를 명시함.
+- `npm ci`: lockfile 기준 설치 성공, `npm audit` 전체 0건, `npm outdated` 0건.
+- `npm test`: 29개 파일/183개 케이스 PASS.
+- `npm run typecheck`: 0 Errors.
+- `npm run build`: Vite 8.3.6 프로덕션 빌드 성공. CSS 76.64KB(gzip 10.33KB), JS 380.38KB(gzip 118.88KB), solver worker 8.73KB.
+- `npm run test:e2e`: Playwright Chromium 4/4 PASS.
+- Vite 6.4.5 대비 JS 번들은 360.80→380.38KB(gzip 112.12→118.88KB)로 증가했으나 기능·레이아웃 회귀는 확인되지 않음.
+- 미실행: 실제 모바일 실기기·Safari/Firefox·스크린리더, GitHub Actions 원격 실행, Vercel 재배포.
