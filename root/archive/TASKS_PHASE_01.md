@@ -475,3 +475,49 @@
   - 브라우저 콘솔 uncaught error 0건.
 - **미실행**: 실제 Worker 스크립트 로드 실패(네트워크·번들 오류)와 실제 5×5 장시간 탐색으로 인한 시간 초과는 직접 재현하지 않았고, 시간 초과는 `postMessage` 무응답으로 재현함. 실제 모바일 실기기 검증도 수행하지 않음. 데스크톱 Chromium에서만 확인함.
 - **증거**: `src/App.tsx`, `src/App.aiHint.test.tsx`, `src/i18n/translations.ts`, 터미널 실행 결과, 브라우저 확인 결과
+
+---
+
+## TASK-DEV-18 — 모달 포커스 트랩 및 전역 키보드 입력 충돌 해결
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 모달이 열린 동안 포커스를 모달 내부에 가두고, 보드 키보드 핸들러가 모달·폼 컨트롤 입력을 가로채지 않게 한다.
+- **완료 기준(DoD)**:
+  - 모달 열기 시 초기 포커스 이동, Tab/Shift+Tab 순환, 닫기 시 이전 포커스 복원
+  - 배경 콘텐츠 `inert`/`aria-hidden` 처리
+  - 모달 열림 중 보드 키 입력 차단, `SELECT`·`INPUT`·`TEXTAREA` 포커스 시 전역 단축키 무시
+  - 키보드 전용 회귀 테스트 추가
+
+### 진행 결과
+
+- 공통 `useModalFocusTrap` Hook을 신설함. 모달이 열리면 이전 포커스를 저장하고 첫 번째 포커스 가능 요소(없으면 컨테이너)로 이동하며, Tab/Shift+Tab 입력을 직접 계산해 모달 내부에서 순환시킴. 닫히면 이전 포커스가 DOM에 연결되어 있을 때 복원함.
+- 숨겨진 `input[type="file"]`, `hidden`·`aria-hidden`·`inert` 하위 요소를 포커스 후보에서 제외해 커스텀 이미지 모달의 숨김 파일 입력으로 포커스가 이동하지 않게 함.
+- Hint·Theme·CustomImage·Daily·Achievement·Bgm·GameOver·Win 8종 모달 콘텐츠 컨테이너에 Hook과 `tabIndex={-1}`을 적용함.
+- `App`에서 타이틀·게임 화면·푸터·PWA 배너를 `.app-content`로 감싸고, 모달이 하나라도 열려 있으면 `inert`와 `aria-hidden`을 적용함. 배경 레이아웃 유지를 위한 `.app-content` flex 스타일을 추가함.
+- `PuzzleBoard`에 `isInputBlocked` prop을 추가해 모달 열림 동안 키보드·터치·클릭 이동을 차단함. 키보드 핸들러는 `SELECT`·`INPUT`·`TEXTAREA`·`contentEditable` 포커스, 수정 키 조합, 이미 처리된 이벤트에서도 동작하지 않음.
+- `src/App.keyboard.test.tsx`를 추가해 테마 모달 Tab/Shift+Tab 순환과 포커스 복원, 모달 열림 중 보드 이동 차단, 언어 `<select>` 포커스 중 보드 이동 차단을 검증함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - Vite dev 서버(127.0.0.1:5173)에서 Service Worker를 unregister한 뒤 데스크톱 Chromium으로 포커스·키 입력 시나리오 확인
+- **결과**:
+  - `npm test`: 19개 파일/130개 테스트 PASS. 신규 `App.keyboard.test.tsx` 3건 포함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - 브라우저 테마 모달: 열기 직후 포커스가 닫기 버튼으로 이동하고 `.app-content`에 `inert`·`aria-hidden`이 적용됨. 실제 Tab 30회가 모두 모달 내부에서 순환했고 Shift+Tab은 마지막 버튼으로 역순 이동함.
+  - 브라우저 포커스 복원: Escape로 모달을 닫은 뒤 포커스가 `게임 시작 (4×4)` 트리거 버튼으로 복원되고 `inert`·`aria-hidden`이 해제됨.
+  - 브라우저 보드 차단: 정답 보기로 이동 수 0인 3×3 보드에서 테마 모달을 연 뒤 ArrowDown을 눌러도 이동 수 0 유지, 모달을 닫은 뒤 같은 키로 1 증가함.
+  - 브라우저 언어 선택: 게임 화면 언어 `<select>`에 포커스한 뒤 ArrowDown을 누르면 선택 언어가 `ko`→`en`으로 바뀌고 보드 이동 수는 1로 유지됨(전역 단축키 미가로채기).
+  - 브라우저 BGM 모달: Tab 12회가 모두 모달 내부(볼륨 슬라이더·체크박스·트랙 카드 포함)에서 순환하고 Escape 후 BGM 트리거로 포커스가 복원됨.
+  - 브라우저 커스텀 이미지 모달: 초기 포커스가 숨김 파일 입력이 아닌 닫기 버튼으로 이동하고 Escape 후 사진 버튼으로 복원됨.
+  - 브라우저 승리 모달: Tab 8회가 공유·다시 플레이·다음 단계 버튼 사이에서만 순환함.
+  - 브라우저 콘솔 error 0건. `aria-hidden` 적용에 따른 포커스 경고도 발생하지 않음.
+- **미실행**: 실제 모바일 실기기와 스크린리더(NVDA·VoiceOver) 검증은 수행하지 않음. Firefox·Safari의 `inert` 지원 차이는 확인하지 않았고, 데스크톱 Chromium에서만 확인함. 두 개 이상 모달이 동시에 열리는 중첩 시나리오는 현재 UI에서 발생하지 않아 검증하지 않음.
+- **증거**: `src/hooks/useModalFocusTrap.ts`, `src/components/Modal/*.tsx`, `src/App.tsx`, `src/components/Board/PuzzleBoard.tsx`, `src/styles/App.css`, `src/App.keyboard.test.tsx`, 터미널 실행 결과, 브라우저 확인 결과

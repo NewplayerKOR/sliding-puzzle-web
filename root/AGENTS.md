@@ -89,8 +89,8 @@
   - `src/i18n/`: KO/EN/JA/ZH 번역
   - `public/`: 테마 이미지·오디오·스프라이트·PWA manifest·sw.js
   - `scripts/`: 에셋 생성·가공용 Node 스크립트
-- 검증 기준: Vitest 18개 테스트 파일 전체 PASS + `npx tsc --noEmit` 0 Errors + `npm run build` 성공
-- 최근 검증 (2026-11-08): Vitest 18개 파일/127개 케이스 PASS, tsc 0 Errors, Vite 6.4.3 프로덕션 빌드 성공
+- 검증 기준: Vitest 19개 테스트 파일 전체 PASS + `npx tsc --noEmit` 0 Errors + `npm run build` 성공
+- 최근 검증 (2026-11-08): Vitest 19개 파일/130개 케이스 PASS, tsc 0 Errors, Vite 6.4.3 프로덕션 빌드 성공
 - 검증 환경: Node.js 26.13.0 / npm 12.2.2. WebStorm 번들 경로(`C:\Users\parkt\AppData\Roaming\JetBrains\WebStorm2026.3\node\versions\26.13.0`)를 사용하며 PATH에는 등록되지 않음. Node.js 26에서는 Vitest 실행 시 `NODE_OPTIONS=--localstorage-file=<임시 파일>` 지정이 필요함.
 - 배포: `dist/` 정적 번들을 정적 호스팅에 배포. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원하고 `public/sw.js` v2.0이 HTML은 Network First, 정적 자산은 Cache First로 캐싱함.
 - 저장소: https://github.com/NewplayerKOR/sliding-puzzle-web.git (main)

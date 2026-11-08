@@ -27,24 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-18 — 모달 포커스 트랩 및 전역 키보드 입력 충돌 해결
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: 모달이 열린 동안 포커스를 모달 내부에 가두고, 보드 키보드 핸들러가 모달·폼 컨트롤 입력을 가로채지 않게 한다.
-- **대상 파일**: `src/components/Board/PuzzleBoard.tsx`, `src/App.tsx`, `src/components/Modal/**`, 공통 모달 컴포넌트(신설 가능)
-- **재현/증거**:
-  - 테마 모달을 연 뒤 Tab을 12회 누르면 포커스가 모두 배경 툴바 버튼으로 이동함.
-  - 테마 모달이 열린 상태에서 ArrowUp을 누르면 뒤 보드 이동 수가 4→5로 증가함.
-  - 언어 `<select>`에 포커스한 뒤 ArrowDown을 누르면 언어는 `ko` 그대로이고 보드 이동 수가 1→2로 증가함.
-- **DoD**:
-  - 모달 열기 시 초기 포커스 이동, Tab/Shift+Tab 순환, 닫기 시 이전 포커스 복원
-  - 배경 콘텐츠 `inert`/`aria-hidden` 처리
-  - 모달 열림 중 보드 키 입력 차단, `SELECT`·`INPUT`·`TEXTAREA` 포커스 시 전역 단축키 무시
-  - 키보드 전용 회귀 테스트 추가
-- **선행 조건**: 없음
-
 #### [ ] TASK-DEV-19 — ARIA 구조·색 대비·확대 허용·접근성 라벨 정비
 
 - **Phase**: 01
@@ -170,6 +152,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-18** — 모달 포커스 트랩 및 전역 키보드 입력 충돌 해결 (완료일: 2026-11-08)
+  - 핵심 결과: 공통 `useModalFocusTrap` Hook으로 8종 모달의 초기 포커스·Tab/Shift+Tab 순환·닫기 후 포커스 복원을 처리하고, 모달 열림 동안 배경 `.app-content`를 `inert`·`aria-hidden` 처리. 보드는 모달 열림 중과 `SELECT`·`INPUT`·`TEXTAREA` 포커스 시 키 입력을 무시
+  - 검증 범위: Vitest 19개 파일/130개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 테마·BGM·커스텀 이미지·승리 모달 포커스 순환과 보드·언어 선택 키 입력 차단 확인. 실제 모바일 실기기·스크린리더는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-18--모달-포커스-트랩-및-전역-키보드-입력-충돌-해결)
+
 - **TASK-DEV-17** — AI 힌트 레이스 컨디션·Worker 실패 처리 (완료일: 2026-11-08)
   - 핵심 결과: 보드·그리드·게임 상태 변경 시 진행 중 힌트 요청을 즉시 무효화하고, Worker 오류·5초 시간 초과·힌트 없음 시 계산 상태 해제와 4개 국어 토스트 안내 추가. 실패한 Worker는 다음 요청에서 재생성
   - 검증 범위: Vitest 18개 파일/127개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 정상 힌트·보드 변경 무효화·힌트 없음·시간 초과·재시도 확인. 실제 모바일 실기기·Worker 스크립트 로드 실패는 미실행
@@ -190,13 +177,8 @@
   - 검증 범위: Vitest 14개 파일/109개 케이스 PASS(신규 5건 포함), tsc 0 Errors, Vite 빌드 성공, 3×3 Time Attack 브라우저 5초 블로킹 확인. 실제 백그라운드 탭·기기 절전은 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-14--time-attack기록-타이머를-벽시계-기준으로-보정)
 
-- **TASK-QA-07** — v1.4.0 전면 품질·성능·안정성 검토 및 DEV 개선 업무 발주 (완료일: 2026-11-08)
-  - 핵심 결과: 자동 검증·실제 브라우저 검토 완료, P0 0 / P1 2 / P2 17(발주) + P2 5(보고만), `TASK-DEV-14~24`·`TASK-QA-08` 발주
-  - 검증 범위: Vitest 104/104 PASS, tsc 0 Errors, Vite 빌드 성공, `npm audit` prod 0/dev 6, 데스크톱·1280×800·360×800 브라우저 플로우. 실제 모바일 실기기·iOS·완전 오프라인은 미실행 또는 제한
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-07--v140-전면-품질성능안정성-검토-및-dev-개선-업무-발주)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결)
