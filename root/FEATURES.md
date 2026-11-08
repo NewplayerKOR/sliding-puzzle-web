@@ -40,7 +40,7 @@
 | Sharing | 결과 카드 공유 | Canvas 1000x1000 PNG 생성 후 Web Share API → 클립보드 → 파일 다운로드 순으로 폴백 | `shareOrDownloadResult()` | `src/utils/shareCardGenerator.ts`, `src/components/Modal/WinModal.tsx` | 구현 완료 |
 | PWA / Mobile | PWA 설치·오프라인 | manifest와 Service Worker v2.0으로 설치 배너·오프라인 캐싱 지원. HTML Network First, 정적 자산 Cache First | `PwaInstallBanner`, `public/sw.js` | `src/components/PWA/PwaInstallBanner.tsx`, `public/sw.js`, `public/manifest.webmanifest` | 구현 완료 |
 | PWA / Mobile | 모바일 제스처·햅틱 | 100dvh·Safe Area 레이아웃, `touch-action: none`, Pull-to-refresh 차단, 이동·승리·에러 진동 피드백 | `PuzzleBoard`, `haptics` | `src/components/Board/PuzzleBoard.tsx`, `src/utils/haptics.ts`, `src/styles/index.css` | 구현 완료 |
-| Localization | 4개 국어 | KO·EN·JA·ZH 번역, 언어 선택을 LocalStorage에 저장하고 전역 반영 | `translations`, `useTranslation` | `src/i18n/translations.ts`, `src/i18n/useTranslation.ts` | 구현 완료 |
+| Localization | 4개 국어 | KO·EN·JA·ZH 번역, 테마·업적·BGM·일일·공유 카드·접근성 라벨 포함. 언어 선택을 LocalStorage에 저장하고 `html lang` 동기화 | `translations`, `useTranslation`, `formatMessage` | `src/i18n/translations.ts`, `src/i18n/useTranslation.ts`, `src/i18n/format.ts` | 구현 완료 |
 | Persistence | LocalStorage 영속화 | 커스텀 이미지·업적·업적 통계·오디오 설정·언어·일일 스트릭·최고 기록을 브라우저에 저장 | `localStorage` | `src/utils/*`, `src/App.tsx`, `src/i18n/useTranslation.ts` | 구현 완료 |
 | UI / UX | 반응형 UI·애니메이션 | 타이틀·HUD·툴바·8종 모달·토스트, 0.12s 타일 트랜지션과 60fps 하드웨어 가속 | `App`, `components` | `src/App.tsx`, `src/components/**`, `src/styles/**` | 구현 완료 |
 
@@ -53,6 +53,7 @@
 - 멀티 타일 슬라이드(Multi-Tile Push) 엔진과 1회 Undo 복구 지원.
 - 테마별 4종 특화 SFX(Classic/Wood/Neon/Nature)와 0.6초 연속 이동 콤보 피치 시스템 추가.
 - Time Attack·기록 타이머를 시작 시각 기반으로 보정해 메인 스레드 지연·백그라운드 스로틀링에서도 실제 경과 시간을 반영.
+- 테마·업적·BGM·일일 캘린더·공유 카드·단위·접근성 라벨의 잔여 하드코딩을 4개 국어 번역 키로 이관하고 `html lang`을 선택 언어와 동기화.
 - v1.4.0 기준 기능 카탈로그를 2026-11-08에 정리.
 
 ### v0.0.0 (초기화)
@@ -63,8 +64,8 @@
 
 ## 3. Verification (검증 기준)
 
-- **단위·통합 테스트**: `npm test` — 14개 테스트 파일 / 109개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
+- **단위·통합 테스트**: `npm test` — 15개 테스트 파일 / 115개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
 - **타입 검사**: `npx tsc --noEmit` — 0 Errors (`npm run build`의 tsc 단계에서 확인).
 - **프로덕션 빌드**: `npm run build` — Vite 6.4.3 빌드 성공 (2026-11-08).
-- **미실행**: 실제 브라우저·모바일 실기기 수동 검증은 이번 세션에서 수행하지 않았다. UI 동작 검증은 별도 QA 작업으로 분리한다.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome) 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN/JA/ZH 전 화면과 공유 카드 PNG를 확인했다.
 - **Node.js 26 참고**: Vitest 실행 시 jsdom의 `localStorage` 초기화를 위해 `NODE_OPTIONS=--localstorage-file=<임시 파일>` 지정이 필요하다. 지정하지 않으면 localStorage 관련 테스트가 실패한다.

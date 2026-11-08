@@ -27,22 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-15 — KO/EN/JA/ZH 잔여 하드코딩 문자열 및 `html lang` 정리
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P1
-- **목표**: 언어 전환 시 사용자에게 노출되는 모든 텍스트와 메타데이터를 4개 언어로 제공하고, 문서 언어(`html lang`)를 선택 언어와 동기화한다.
-- **대상 파일**: `src/i18n/translations.ts`, `src/i18n/useTranslation.ts`, `src/components/**`(Title, Header, Controls, WinModal, DailyModal, ThemeModal, AchievementModal, BgmSelectModal, HintModal, GameOverModal, CustomImageModal, AchievementToast), `src/utils/themeData.ts`, `src/utils/achievementData.ts`, `src/utils/audioManager.ts`(BGM 메타데이터), `src/utils/shareCardGenerator.ts`, `index.html`
-- **재현/증거**: EN 전환 후 업적 도감 12종 설명, 테마 4종 이름·설명, BGM 트랙 장르·설명, 일일 모달의 `년/월/일/완료`, 힌트 모달, 공유 카드의 `25회`·테마명이 한국어로 표시됨. `document.documentElement.lang`은 EN에서도 `ko` 유지. 게임 화면 툴바·일일 모달 캡처와 DOM 텍스트 수집 결과는 `root/archive/TASKS_PHASE_01.md` TASK-QA-07 참조.
-- **DoD**:
-  - EN/JA/ZH에서 사용자 노출 한국어 하드코딩 0건(모달·업적·테마·BGM·단위·공유 카드 포함)
-  - 테마·업적·BGM 메타데이터와 공유 카드 문자열을 번역 키로 이관
-  - 언어 변경 시 `document.documentElement.lang` 갱신
-  - 4개 언어 키 누락·빈 문자열 검사 테스트 보강
-  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
-- **선행 조건**: 없음
-
 #### [ ] TASK-DEV-16 — 커스텀 이미지 보존·드래그 앤 드롭·업로드 검증 정비
 
 - **Phase**: 01
@@ -213,11 +197,16 @@
   - Playwright E2E 스모크(타이틀→테마→게임→이동/Undo→AI 힌트→3x3 승리, 360px 레이아웃, 모달 포커스, EN 전환) 추가
   - `public/robots.txt`와 배포·캐시 갱신 절차 문서 추가
   - CI·로컬 실행 결과와 미실행 범위 기록
-- **선행 조건**: 없음 (TASK-DEV-15~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
+- **선행 조건**: 없음 (TASK-DEV-16~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
 
 ---
 
 ## 3. Recent Completions (최근 완료 요약)
+
+- **TASK-DEV-15** — KO/EN/JA/ZH 잔여 하드코딩 문자열 및 `html lang` 정리 (완료일: 2026-11-08)
+  - 핵심 결과: 테마·업적·BGM·일일·공유 카드·단위·접근성 라벨을 번역 키로 이관하고 `html lang`을 선택 언어와 동기화. EN/JA/ZH 전 화면에서 한국어 잔존 0건 확인
+  - 검증 범위: Vitest 15개 파일/115개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium EN/JA/ZH 전 화면 및 공유 카드 PNG 확인. 실제 모바일 실기기·OS 언어 자동 감지는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-15--koenjazh-잔여-하드코딩-문자열-및-html-lang-정리)
 
 - **TASK-DEV-14** — Time Attack·기록 타이머를 벽시계 기준으로 보정 (완료일: 2026-11-08)
   - 핵심 결과: 시작 시각 기반 `elapsedTime` 계산으로 메인 스레드 5초 지연 시 `00:45`→`00:40`을 정확히 반영. Time Attack 만료·기록·별점·업적이 동일한 시간 기준을 사용
@@ -239,13 +228,8 @@
   - 검증 범위: `npm test`(Node 26 `--localstorage-file` 조건), `npm run build`, `dist` 산출물 3종 확인. 브라우저·모바일 수동 검증은 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-03--nodejs-검증-환경-연결-및-테스트빌드-실측)
 
-- **TASK-PM-02** — FEATURES.md v1.4.0 기능 카탈로그 작성 (완료일: 2026-11-08)
-  - 핵심 결과: 16개 도메인/27개 기능 항목, v1.4.0 Changelog 및 검증 기준 등록
-  - 검증 범위: 실제 소스 대조 및 문서 경로·버전 표기 확인
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-02--featuresmd-v140-기능-카탈로그-작성)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리)

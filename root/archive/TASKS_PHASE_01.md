@@ -334,3 +334,51 @@
 - **미실행**: 실제 백그라운드 탭 장시간 방치, 기기 절전, OS 시계 변경은 직접 재현하지 않음. 단위 테스트의 시스템 시각 점프와 `visibilitychange` 시뮬레이션으로 대체함.
 - **증거**: `src/hooks/usePuzzleGame.ts`, `src/hooks/usePuzzleGame.test.ts`, `src/App.tsx`, 터미널 실행 결과, 브라우저 127.0.0.1:5173 확인 결과
 - **PM 전달**: `README.md`, `root/AGENTS.md`의 테스트 수치가 104건으로 남아 있어 109건으로 갱신 필요.
+
+---
+
+## TASK-DEV-15 — KO/EN/JA/ZH 잔여 하드코딩 문자열 및 `html lang` 정리
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **완료일**: 2026-11-08
+- **목표**: 언어 전환 시 사용자에게 노출되는 모든 텍스트와 메타데이터를 4개 언어로 제공하고, 문서 언어(`html lang`)를 선택 언어와 동기화한다.
+- **완료 기준(DoD)**:
+  - EN/JA/ZH에서 사용자 노출 한국어 하드코딩 0건(모달·업적·테마·BGM·단위·공유 카드 포함)
+  - 테마·업적·BGM 메타데이터와 공유 카드 문자열을 번역 키로 이관
+  - 언어 변경 시 `document.documentElement.lang` 갱신
+  - 4개 언어 키 누락·빈 문자열 검사 테스트 보강
+  - `npm test`, `npx tsc --noEmit`, `npm run build` PASS
+
+### 진행 결과
+
+- `translations.ts`에 테마 4종·업적 12종·BGM 4트랙 메타데이터, 일일 캘린더, 공유 카드, 단위, 접근성 라벨, 템플릿 문구를 4개 언어로 추가함.
+- `ThemeDefinition`·`Achievement`·`BgmTrack`이 번역 키(`nameKey`, `titleKey`, `genreKey` 등)를 보관하고, 표시 시점에 현재 언어로 해석하도록 변경함.
+- `themeData`에 `localizeTheme`·`getLocalizedTheme`를 추가하고 App·ThemeModal·HintModal·WinModal이 현재 언어의 테마명·설명을 사용하게 함.
+- `achievementManager`가 저장 데이터 병합 시 최신 정적 메타데이터를 유지하고 `unlockedAt`·`progress`만 저장값을 사용하게 함(F-17 메타데이터 덮어쓰기 일부 선반영).
+- `TitleScreen`, `Header`, `Controls`, `Tile`, `PuzzleBoard`, `WinModal`, `GameOverModal`, `HintModal`, `ThemeModal`, `AchievementModal`, `AchievementToast`, `BgmSelectModal`, `DailyModal`, `CustomImageModal`, `PwaInstallBanner`의 하드코딩 문자열·`alt`·`aria-label`을 번역 키로 이관함.
+- 공유 카드 Canvas 문구와 Web Share·클립보드·다운로드 알림을 현재 언어로 생성하도록 변경함.
+- `useTranslation`에 `getCurrentLanguage`·`setGlobalLanguage`를 추가하고 초기화·언어 변경 시 `document.documentElement.lang`를 동기화함. `index.html`에 저장 언어 기반 초기 `lang` 보정 스크립트를 추가함.
+- `formatMessage` 템플릿 헬퍼를 추가하고 `starCalculator`의 미사용 한국어 `summary`를 제거함.
+- `i18n.test.ts`에 4개 언어 키 집합 일치·빈 문자열·EN/JA/ZH Hangul 금지·`html lang` 동기화·템플릿 치환 검증을 추가함.
+- `App.test.tsx`에 EN 테마·업적 메타데이터 검증, `BgmSelectModal.test.tsx`·`DailyModal.test.tsx`에 EN 메타데이터 검증을 추가함.
+- `README.md`, `root/AGENTS.md`의 테스트 수치를 15개 파일/115건으로 동기화해 이전 TASK-DEV-14의 PM 전달 사항을 해소함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - Vite dev 서버(127.0.0.1:5173)에서 Service Worker 캐시를 제거한 뒤 EN/JA/ZH 전환 및 전 화면 스캔
+- **결과**:
+  - `npm test`: 15개 파일/115개 테스트 PASS(신규 i18n·DailyModal·BGM EN 테스트 포함). 최초 전체 실행에서 `achievementManager.test.ts`의 `localStorage.clear()`가 `database is locked`로 1건 실패했으나, 새 임시 `--localstorage-file` 재실행에서 115/115 PASS. `--no-file-parallelism` 실행에서도 115/115 PASS. 제품 코드가 아닌 Node 26 localStorage 파일 공유 환경 문제로 판단함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - 브라우저 EN: 타이틀·테마·게임·업적·일일·BGM·힌트·승리 모달의 `innerText`와 `aria-label`/`title`/`alt`에서 Hangul 0건. `document.documentElement.lang=en`. 공유 카드 PNG에서 `TOTAL MOVES`, `16 moves`, `Difficulty`, `Theme: Nature & Scenery` 등 영문 표시 확인.
+  - 브라우저 JA: 게임·테마·업적에서 Hangul 0건, `html lang=ja`.
+  - 브라우저 ZH: 게임·테마·업적·BGM·일일에서 Hangul 0건, `html lang=zh`.
+  - 언어 선택 옵션도 현재 UI 언어로 표시해 EN/JA/ZH DOM에 `한국어`가 남지 않도록 함.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome), OS·브라우저 언어 자동 감지, PWA manifest의 다국어화는 수행하지 않음. 데스크톱 Chromium 뷰포트에서만 확인함.
+- **증거**: `src/i18n/translations.ts`, `src/i18n/useTranslation.ts`, `src/i18n/format.ts`, `src/i18n/i18n.test.ts`, `src/utils/themeData.ts`, `src/utils/achievementData.ts`, `src/utils/audioManager.ts`, `src/utils/shareCardGenerator.ts`, `src/components/**`, `index.html`, 터미널 실행 결과, 공유 카드 PNG `C:\Users\parkt\AppData\Local\Temp\opencode-browser-jmEu2A\0\sliding-puzzle-victory.png`
