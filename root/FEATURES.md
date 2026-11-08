@@ -42,7 +42,7 @@
 | PWA / Mobile | 모바일 제스처·햅틱 | 100dvh·Safe Area 레이아웃, `touch-action: none`, Pull-to-refresh 차단, 이동·승리·에러 진동 피드백 | `PuzzleBoard`, `haptics` | `src/components/Board/PuzzleBoard.tsx`, `src/utils/haptics.ts`, `src/styles/index.css` | 구현 완료 |
 | Localization | 4개 국어 | KO·EN·JA·ZH 번역, 테마·업적·BGM·일일·공유 카드·접근성 라벨 포함. 언어 선택을 LocalStorage에 저장하고 `html lang` 동기화 | `translations`, `useTranslation`, `formatMessage` | `src/i18n/translations.ts`, `src/i18n/useTranslation.ts`, `src/i18n/format.ts` | 구현 완료 |
 | Persistence | LocalStorage 영속화 | 커스텀 이미지·업적·업적 통계·오디오 설정·언어·일일 스트릭·최고 기록을 브라우저에 저장 | `localStorage` | `src/utils/*`, `src/App.tsx`, `src/i18n/useTranslation.ts` | 구현 완료 |
-| UI / UX | 반응형 UI·애니메이션 | 타이틀·HUD·툴바·8종 모달·토스트, 0.12s 타일 트랜지션과 60fps 하드웨어 가속. 모달 포커스 트랩·배경 `inert`·보드 키 입력 차단 포함 | `App`, `components`, `useModalFocusTrap` | `src/App.tsx`, `src/components/**`, `src/styles/**`, `src/hooks/useModalFocusTrap.ts` | 구현 완료 |
+| UI / UX | 반응형 UI·애니메이션·접근성 | 타이틀·HUD·툴바·8종 모달·토스트, 0.12s 타일 트랜지션과 60fps 하드웨어 가속. 모달 포커스 트랩·배경 `inert`·보드 키 입력 차단, `main` landmark·보드 group 역할·확대 허용(`maximum-scale=5.0`)·WCAG AA 대비·`focus-visible` 외곽선 포함 | `App`, `components`, `useModalFocusTrap` | `src/App.tsx`, `src/components/**`, `src/styles/**`, `src/hooks/useModalFocusTrap.ts`, `index.html` | 구현 완료 |
 
 ---
 
@@ -57,6 +57,8 @@
 - 커스텀 이미지가 테마 모달 열기·닫기와 이미지/숫자 모드 전환에서 유지되고 테마 적용 시에만 제거되도록 수정. 드래그 앤 드롭과 MIME·10MB·저장 공간 오류 피드백 추가.
 - AI 힌트 계산 중 보드·그리드·게임 상태가 바뀌면 이전 요청 결과를 무시하고, Worker 오류·시간 초과·힌트 없음 상태를 4개 국어로 안내.
 - 모달이 열리면 포커스가 모달 내부에서 순환하고 닫을 때 이전 요소로 복원되며, 배경 콘텐츠는 `inert`·`aria-hidden`으로 비활성화됨. 보드는 모달 열림 중과 `SELECT`·`INPUT`·`TEXTAREA` 포커스 시 방향키/WASD 입력을 무시함.
+- 보드를 유효한 `group`으로 단순화하고 타이틀에 `main` landmark를 추가함. 모드 카드의 중첩 버튼 역할을 제거하고 크기 pill에 `aria-pressed`를 적용함.
+- 모바일 확대를 허용(`maximum-scale=5.0`)하고 툴바·크기 pill·강조 텍스트의 WCAG AA 대비를 보정함. BGM·SFX 라벨과 `alt`를 4개 국어로 적용하고 키보드 `focus-visible` 외곽선을 추가함.
 - v1.4.0 기준 기능 카탈로그를 2026-11-08에 정리.
 
 ### v0.0.0 (초기화)
@@ -67,8 +69,9 @@
 
 ## 3. Verification (검증 기준)
 
-- **단위·통합 테스트**: `npm test` — 19개 테스트 파일 / 130개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
+- **단위·통합 테스트**: `npm test` — 20개 테스트 파일 / 134개 케이스 전건 PASS (2026-11-08, Node.js 26.13.0).
 - **타입 검사**: `npx tsc --noEmit` — 0 Errors (`npm run build`의 tsc 단계에서 확인).
 - **프로덕션 빌드**: `npm run build` — Vite 6.4.3 빌드 성공 (2026-11-08).
-- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 스크린리더 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN 전 화면·JA/ZH 핵심 화면과 공유 카드 PNG를, TASK-DEV-16으로 커스텀 이미지 드래그·보존·검증 오류를, TASK-DEV-17로 AI 힌트 무효화·힌트 없음·시간 초과를, TASK-DEV-18로 모달 포커스 순환·복원과 보드·언어 선택 키 입력 차단을 확인했다.
+- **접근성 감사**: 데스크톱 Chromium Lighthouse 접근성 점수는 타이틀·게임 화면·테마 선택 모달·BGM 설정 모달 모두 1.0이다(2026-11-08, TASK-DEV-19). SEO의 `robots.txt` 유효성 항목은 접근성 범위가 아니며 TASK-QA-08에서 다룬다.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 스크린리더 수동 검증은 수행하지 않았다. 데스크톱 Chromium에서는 TASK-DEV-15로 EN 전 화면·JA/ZH 핵심 화면과 공유 카드 PNG를, TASK-DEV-16으로 커스텀 이미지 드래그·보존·검증 오류를, TASK-DEV-17로 AI 힌트 무효화·힌트 없음·시간 초과를, TASK-DEV-18로 모달 포커스 순환·복원과 보드·언어 선택 키 입력 차단을, TASK-DEV-19로 타이틀·게임·테마·BGM 모달의 접근성 감사와 대비·확대·라벨을 확인했다.
 - **Node.js 26 참고**: Vitest 실행 시 jsdom의 `localStorage` 초기화를 위해 `NODE_OPTIONS=--localstorage-file=<임시 파일>` 지정이 필요하다. 지정하지 않으면 localStorage 관련 테스트가 실패한다.

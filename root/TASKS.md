@@ -27,22 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-19 — ARIA 구조·색 대비·확대 허용·접근성 라벨 정비
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: Lighthouse 접근성 실패 항목을 해소하고, 스크린리더·저시력 사용자가 보드와 모달을 정상 탐색할 수 있게 한다.
-- **대상 파일**: `src/components/Board/PuzzleBoard.tsx`, `src/components/Title/TitleScreen.tsx`, `src/components/Controls/Controls.tsx`, `src/components/Header/Header.tsx`, 관련 CSS, `index.html`
-- **재현/증거**: Lighthouse 접근성 게임 화면 0.79, 타이틀 0.89. `role="grid"` 아래 `role="gridcell"`이 `role="row"` 없이 배치됨, 타이틀에 `main` landmark 없음, 툴바 대비 2.36/1.81, 크기 pill 대비 3.97, `user-scalable=no`, 모드 카드 내부 중첩 버튼, 한국어 `aria-label`/`title`/`alt`가 EN에서도 유지됨.
-- **DoD**:
-  - 보드 그리드 역할 구조를 유효하게 만들거나 단순한 버튼 그룹으로 단순화
-  - 타이틀에 `main` landmark 추가, 중첩 인터랙티브 요소 제거
-  - WCAG AA 대비 충족, `maximum-scale=5` 이상 및 확대 허용
-  - 접근성 라벨·`alt` 4개 언어 적용
-  - Lighthouse 접근성 실패 0건 확인 및 결과 기록
-- **선행 조건**: TASK-DEV-15와 라벨 문구 협의
-
 #### [ ] TASK-DEV-20 — 360px 모바일·1화면 레이아웃 및 터치 처리 정비
 
 - **Phase**: 01
@@ -152,6 +136,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-19** — ARIA 구조·색 대비·확대 허용·접근성 라벨 정비 (완료일: 2026-11-08)
+  - 핵심 결과: 보드를 `role="group"`으로 단순화하고 타이틀에 `main` landmark 추가, 모드 카드 중첩 버튼 역할 제거, 크기 pill `aria-pressed` 추가. `maximum-scale=5.0` 확대 허용, WCAG AA 대비 보정, BGM/SFX 라벨·alt 4개 국어화. Lighthouse 접근성 타이틀·게임 1.0
+  - 검증 범위: Vitest 20개 파일/134개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium Lighthouse 접근성 타이틀·게임·테마 모달·BGM 모달 1.0. 실제 모바일 실기기·스크린리더 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-19--aria-구조색-대비확대-허용접근성-라벨-정비)
+
 - **TASK-DEV-18** — 모달 포커스 트랩 및 전역 키보드 입력 충돌 해결 (완료일: 2026-11-08)
   - 핵심 결과: 공통 `useModalFocusTrap` Hook으로 8종 모달의 초기 포커스·Tab/Shift+Tab 순환·닫기 후 포커스 복원을 처리하고, 모달 열림 동안 배경 `.app-content`를 `inert`·`aria-hidden` 처리. 보드는 모달 열림 중과 `SELECT`·`INPUT`·`TEXTAREA` 포커스 시 키 입력을 무시
   - 검증 범위: Vitest 19개 파일/130개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 테마·BGM·커스텀 이미지·승리 모달 포커스 순환과 보드·언어 선택 키 입력 차단 확인. 실제 모바일 실기기·스크린리더는 미실행
@@ -172,13 +161,8 @@
   - 검증 범위: Vitest 15개 파일/115개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium EN 전 화면·JA/ZH 핵심 화면 및 공유 카드 PNG 확인. 실제 모바일 실기기·OS 언어 자동 감지는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-15--koenjazh-잔여-하드코딩-문자열-및-html-lang-정리)
 
-- **TASK-DEV-14** — Time Attack·기록 타이머를 벽시계 기준으로 보정 (완료일: 2026-11-08)
-  - 핵심 결과: 시작 시각 기반 `elapsedTime` 계산으로 메인 스레드 5초 지연 시 `00:45`→`00:40`을 정확히 반영. Time Attack 만료·기록·별점·업적이 동일한 시간 기준을 사용
-  - 검증 범위: Vitest 14개 파일/109개 케이스 PASS(신규 5건 포함), tsc 0 Errors, Vite 빌드 성공, 3×3 Time Attack 브라우저 5초 블로킹 확인. 실제 백그라운드 탭·기기 절전은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-14--time-attack기록-타이머를-벽시계-기준으로-보정)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비)

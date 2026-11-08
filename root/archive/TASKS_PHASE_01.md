@@ -521,3 +521,50 @@
   - 브라우저 콘솔 error 0건. `aria-hidden` 적용에 따른 포커스 경고도 발생하지 않음.
 - **미실행**: 실제 모바일 실기기와 스크린리더(NVDA·VoiceOver) 검증은 수행하지 않음. Firefox·Safari의 `inert` 지원 차이는 확인하지 않았고, 데스크톱 Chromium에서만 확인함. 두 개 이상 모달이 동시에 열리는 중첩 시나리오는 현재 UI에서 발생하지 않아 검증하지 않음.
 - **증거**: `src/hooks/useModalFocusTrap.ts`, `src/components/Modal/*.tsx`, `src/App.tsx`, `src/components/Board/PuzzleBoard.tsx`, `src/styles/App.css`, `src/App.keyboard.test.tsx`, 터미널 실행 결과, 브라우저 확인 결과
+
+---
+
+## TASK-DEV-19 — ARIA 구조·색 대비·확대 허용·접근성 라벨 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: Lighthouse 접근성 실패 항목을 해소하고, 스크린리더·저시력 사용자가 보드와 모달을 정상 탐색할 수 있게 한다.
+- **완료 기준(DoD)**:
+  - 보드 그리드 역할 구조를 유효하게 만들거나 단순한 버튼 그룹으로 단순화
+  - 타이틀에 `main` landmark 추가, 중첩 인터랙티브 요소 제거
+  - WCAG AA 대비 충족, `maximum-scale=5` 이상 및 확대 허용
+  - 접근성 라벨·`alt` 4개 언어 적용
+  - Lighthouse 접근성 실패 0건 확인 및 결과 기록
+
+### 진행 결과
+
+- 보드의 `role="grid"`·`role="gridcell"` 구조를 `role="group"`과 타일 버튼 목록으로 단순화하고, 보드 설명을 조작 안내 문단(`board-controls-guide`)과 `aria-describedby`로 연결함.
+- 타이틀 화면 루트를 `<main>` landmark로 변경함. 게임 화면은 기존 `<main className="game-main">`을 유지해 한 화면에 main landmark가 하나만 존재함.
+- 모드 카드의 `role="button"`·`tabIndex`·`onKeyDown`·`aria-pressed`를 제거해 카드 내부 크기 pill·시작 버튼과의 중첩 인터랙티브 요소를 해소함. 크기 pill에 `aria-pressed`를 추가하고, 난이도 pill 묶음에 `role="group"`과 `difficultyLabel` 라벨을 적용함.
+- `index.html` viewport를 `maximum-scale=5.0`으로 변경하고 `user-scalable=no`를 제거해 확대를 허용함.
+- 색 대비를 WCAG AA 기준으로 보정함. `--text-muted`를 `hsl(215, 20%, 42%)`로 조정하고, 푸터를 `text-muted`로 변경함. 크기 pill·테마 pill 텍스트를 `text-main`으로, 일일·업적·긴급·이동 제한 강조색과 주요 액션 버튼 gradient를 더 어두운 색으로 변경함.
+- BGM·SFX 오디오 버튼의 하드코딩된 `aria-label`·`alt`를 `t.bgm`·`t.sfx`로 교체해 KO/EN/JA/ZH 번역을 적용함.
+- 키보드 사용자를 위해 `select`·`input`·`textarea`·`[role="button"]`의 `:focus-visible` 외곽선을 공통 스타일로 추가함.
+- `src/App.accessibility.test.tsx`를 추가해 viewport 확대 허용, 타이틀 main landmark·중첩 카드 버튼 제거·크기 pill `aria-pressed`, 보드 group 역할·gridcell 제거·조작 안내 연결, JA/ZH 오디오 라벨·alt 번역을 검증함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - Vite dev 서버(127.0.0.1:5173)에서 Service Worker를 unregister한 뒤 데스크톱 Chromium Lighthouse 접근성 감사와 DOM 확인
+- **결과**:
+  - `npm test`: 20개 파일/134개 테스트 PASS. 신규 `App.accessibility.test.tsx` 4건 포함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - Lighthouse 수정 전: 타이틀 접근성 0.93(`landmark-one-main`, `meta-viewport`), 게임 접근성 0.79(`aria-required-children`, `aria-required-parent`, `color-contrast`, `meta-viewport`). 대비 실패는 일일 챌린지 버튼 2.36, 업적 도감 버튼 1.81이었음.
+  - Lighthouse 수정 후: 타이틀 접근성 1.0, 게임 접근성 1.0. 테마 선택 모달 1.0, BGM 설정 모달 1.0. 접근성 실패 0건.
+  - Lighthouse에 남은 유일한 실패는 SEO의 `robots.txt` 유효성 항목으로, 접근성 범위가 아니며 `TASK-QA-08`에서 다룰 항목임.
+  - 색 대비 실측: 일일 챌린지 6.18, 업적 도감 5.99, 크기 pill 15.11, 푸터 5.31(모두 AA 4.5 이상).
+  - DOM 확인: 문서 내 `main` 1개, 보드 `role="group"`, `gridcell` 0개, 4×4 보드의 타일 버튼 15개, `aria-describedby="board-controls-guide"` 연결 확인.
+  - 브라우저 콘솔 error 0건.
+- **미실행**: 실제 모바일 실기기와 스크린리더(NVDA·VoiceOver) 검증은 수행하지 않음. Firefox·Safari의 landmark·확대 동작 차이는 확인하지 않았고 데스크톱 Chromium에서만 확인함. JA/ZH 화면과 Time Attack·이동 제한의 긴급 상태는 Lighthouse로 각각 감사하지 않았고, Daily·Achievement·CustomImage·Win·GameOver 모달도 개별 Lighthouse 감사 대상에서 제외함(테마·BGM 모달만 확인).
+- **증거**: `index.html`, `src/components/Board/PuzzleBoard.tsx`, `src/components/Title/TitleScreen.tsx`, `src/components/Title/TitleScreen.css`, `src/components/Header/Header.tsx`, `src/components/Header/Header.css`, `src/components/Controls/Controls.css`, `src/styles/index.css`, `src/styles/App.css`, `src/App.accessibility.test.tsx`, Lighthouse JSON/HTML 보고서, 브라우저 DOM 확인 결과
