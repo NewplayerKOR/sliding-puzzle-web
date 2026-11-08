@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 import { ThemeId, GameMode } from '../../types/theme';
 import { GameChallengeMode, GridSize } from '../../types/puzzle';
-import { THEME_LIST } from '../../utils/themeData';
+import { THEME_LIST, localizeTheme } from '../../utils/themeData';
 import { getAssetUrl } from '../../utils/assetPath';
 import { useTranslation } from '../../i18n/useTranslation';
 import './ThemeModal.css';
@@ -108,7 +108,7 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
           <div className="theme-title-group">
             <img
               src={getAssetUrl('assets/icons/icon_theme_selector.png')}
-              alt="테마 선택"
+              alt={t.themeSelect}
               className="modal-header-icon-img"
             />
             <h3 id="theme-modal-title" className="theme-modal-title">
@@ -119,7 +119,7 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
             type="button"
             className="theme-close-btn"
             onClick={onClose}
-            aria-label="닫기"
+            aria-label={t.close}
           >
             <X size={20} />
           </button>
@@ -128,13 +128,11 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
         {/* Selected Mode Info Badge (When launched from title screen) */}
         {pendingModeInfo ? (
           <div className="theme-pending-mode-badge">
-            <span className="pending-badge-label">선택한 모드:</span>
+            <span className="pending-badge-label">{t.selectedModeLabel}</span>
             <strong className="pending-badge-val">{getModeBadgeText()}</strong>
           </div>
         ) : (
-          <p className="theme-modal-subtitle">
-            플레이할 방식과 테마를 선택해 보세요.
-          </p>
+          <p className="theme-modal-subtitle">{t.themeModalSubtitle}</p>
         )}
 
         {/* Game Mode Toggle */}
@@ -156,7 +154,8 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
         </div>
 
         <div className="theme-grid">
-          {THEME_LIST.map((theme) => {
+          {THEME_LIST.map((themeDefinition) => {
+            const theme = localizeTheme(themeDefinition, t);
             const isSelected = theme.id === selectedThemeId;
             return (
               <button
@@ -172,7 +171,7 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
                     className="theme-thumbnail"
                   />
                   {isSelected && (
-                    <div className="theme-selected-badge" aria-label="선택됨">
+                    <div className="theme-selected-badge" aria-label={t.selected}>
                       <Check size={16} />
                     </div>
                   )}
@@ -199,10 +198,10 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
             >
               <img
                 src={getAssetUrl('assets/icons/icon_play.png')}
-                alt="게임 시작"
+                alt={t.startPlay}
                 className="action-icon-img"
               />
-              <span>이 테마로 게임 시작</span>
+              <span>{t.themeStart}</span>
             </button>
           </div>
         )}

@@ -10,7 +10,6 @@ export interface StarCalculationParams {
 export interface StarRatingResult {
   stars: number;
   feedbackKey: 'starCriteria3' | 'starCriteria2' | 'starCriteria1';
-  summary: string;
 }
 
 export function calculateStars(params: StarCalculationParams): StarRatingResult {
@@ -78,6 +77,5 @@ export function calculateStars(params: StarCalculationParams): StarRatingResult 
   return {
     stars,
     feedbackKey,
-    summary: `${stars}성 달성`,
   };
 }

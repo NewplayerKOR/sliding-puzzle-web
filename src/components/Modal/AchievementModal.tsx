@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { X, Trophy, Lock, CheckCircle2, Zap, Compass, Crown, Star, ShieldCheck, Flame, Palette, Camera, Clock, Footprints, Medal } from 'lucide-react';
 import { getStoredAchievements } from '../../utils/achievementManager';
 import { useTranslation } from '../../i18n/useTranslation';
+import { formatMessage } from '../../i18n/format';
 import { getAssetUrl } from '../../utils/assetPath';
 import './AchievementModal.css';
 
@@ -53,7 +54,7 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ isOpen, onCl
           <div className="achieve-title-group">
             <img
               src={getAssetUrl('assets/icons/badge_trophy.png')}
-              alt="업적"
+              alt={t.achievements}
               className="achieve-header-img"
             />
             <div>
@@ -61,7 +62,11 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ isOpen, onCl
                 {t.achievementsTitle}
               </h3>
               <span className="achieve-progress-badge">
-                달성률: {unlockedCount} / {achievements.length} ({Math.round((unlockedCount / achievements.length) * 100)}%)
+                {formatMessage(t.achievementProgress, {
+                  unlocked: unlockedCount,
+                  total: achievements.length,
+                  percent: Math.round((unlockedCount / achievements.length) * 100),
+                })}
               </span>
             </div>
           </div>
@@ -99,15 +104,15 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ isOpen, onCl
 
                 <div className="achieve-card-info">
                   <div className="achieve-card-title-row">
-                    <h4 className="achieve-item-title">{item.title}</h4>
+                    <h4 className="achieve-item-title">{t[item.titleKey]}</h4>
                     {isUnlocked && (
                       <span className="achieve-unlocked-tag">
                         <CheckCircle2 size={13} />
-                        완료
+                        {t.completed}
                       </span>
                     )}
                   </div>
-                  <p className="achieve-item-desc">{item.description}</p>
+                  <p className="achieve-item-desc">{t[item.descriptionKey]}</p>
 
                   {/* Optional Progress bar */}
                   {!isUnlocked && item.maxProgress && (

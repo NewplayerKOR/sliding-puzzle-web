@@ -16,7 +16,7 @@ import { AchievementToast } from './components/Achievement/AchievementToast';
 import { PwaInstallBanner } from './components/PWA/PwaInstallBanner';
 import { GameMode, ThemeId, Theme } from './types/theme';
 import { GameChallengeMode, GridSize } from './types/puzzle';
-import { THEMES, DEFAULT_THEME_ID } from './utils/themeData';
+import { getLocalizedTheme, DEFAULT_THEME_ID } from './utils/themeData';
 import { getBestRecords, saveBestRecord } from './utils/recordStorage';
 import { useAssetPreloader } from './hooks/useAssetPreloader';
 import { audioManager } from './utils/audioManager';
@@ -24,9 +24,13 @@ import { findNextOptimalMove, AISolutionStep } from './utils/aiSolver';
 import { generateDailyBoard, saveDailyCompletion, getDailyStreakData, getTodayDateString } from './utils/dailyChallenge';
 import { checkGameCompletionAchievements } from './utils/achievementManager';
 import { calculateStars } from './utils/starCalculator';
+import { useTranslation } from './i18n/useTranslation';
 import './styles/App.css';
 
 export const App: React.FC = () => {
+  // 언어 변경 시 App도 다시 렌더링해 테마명·공유 카드 문자열을 갱신함
+  const { t } = useTranslation();
+
   // 에셋 백그라운드 사전 로드 (테마 변경 시 깜빡임 완전 제거)
   useAssetPreloader();
 
@@ -187,13 +191,13 @@ export const App: React.FC = () => {
   const currentTheme: Theme = customImageSrc
     ? {
         id: 'nature',
-        name: '내 사진 (Custom)',
-        description: '사용자 정의 업로드 이미지',
+        name: t.customThemeName,
+        description: t.customThemeDescription,
         imagePath: customImageSrc,
         thumbnailPath: customImageSrc,
-        category: 'photo',
+        category: t.customThemeCategory,
       }
-    : THEMES[themeId];
+    : getLocalizedTheme(themeId, t);
 
   // 승리 시 신기록 검사, 일일 챌린지 저장 및 업적 체크 (자동 클리어 치트 방지)
   useEffect(() => {

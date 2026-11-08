@@ -3,9 +3,11 @@ import { Trophy, Sparkles } from 'lucide-react';
 import { Achievement } from '../../types/achievement';
 import { onAchievementUnlocked } from '../../utils/achievementManager';
 import { audioManager } from '../../utils/audioManager';
+import { useTranslation } from '../../i18n/useTranslation';
 import './AchievementToast.css';
 
 export const AchievementToast: React.FC = () => {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState<Achievement | null>(null);
 
   useEffect(() => {
@@ -31,9 +33,9 @@ export const AchievementToast: React.FC = () => {
           <Sparkles size={14} className="toast-sparkle-icon" />
         </div>
         <div className="toast-text-content">
-          <span className="toast-tag">🏆 업적 달성! (ACHIEVEMENT UNLOCKED)</span>
-          <h4 className="toast-title">{current.title}</h4>
-          <p className="toast-desc">{current.description}</p>
+          <span className="toast-tag">{t.achievementUnlocked}</span>
+          <h4 className="toast-title">{t[current.titleKey]}</h4>
+          <p className="toast-desc">{t[current.descriptionKey]}</p>
         </div>
       </div>
     </div>

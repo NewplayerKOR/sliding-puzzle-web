@@ -120,19 +120,27 @@ describe('App Component Integration', () => {
     fireEvent.change(langSelect, { target: { value: 'en' } });
 
     // Title screen translations updated immediately
+    expect(document.documentElement.lang).toBe('en');
     expect(screen.getByText('Standard')).toBeDefined();
     expect(screen.getByText('Time Attack')).toBeDefined();
     expect(screen.getByText('Move Limit')).toBeDefined();
     expect(screen.getByText('Daily Puzzle')).toBeDefined();
     expect(screen.getByText('Trophies')).toBeDefined();
 
-    // Enter game through theme modal
+    // Theme metadata is localized before entering the game
     fireEvent.click(screen.getByText(/Play Now \(4×4\)/i));
-    fireEvent.click(screen.getByText('이 테마로 게임 시작'));
+    expect(screen.getByText('Nature & Scenery')).toBeDefined();
+    expect(screen.getByText('Lush forests and mountains in rich, vibrant colors')).toBeDefined();
+    fireEvent.click(screen.getByText('Start with This Theme'));
 
     expect(screen.getByText('Moves')).toBeDefined();
     expect(screen.getByText('Time')).toBeDefined();
     expect(screen.getByText('Home')).toBeDefined();
+
+    // Achievement metadata is localized in the trophy gallery
+    fireEvent.click(screen.getByText('Trophies'));
+    expect(screen.getByText('Joy of First Victory')).toBeDefined();
+    expect(screen.getByText('Speed Demon')).toBeDefined();
   });
 
   it('starts Time Attack mode with 45s countdown on 3x3', () => {

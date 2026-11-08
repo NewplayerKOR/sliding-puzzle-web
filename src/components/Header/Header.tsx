@@ -6,6 +6,7 @@ import { useTranslation } from '../../i18n/useTranslation';
 import { Language } from '../../i18n/translations';
 import { getDailyStreakData } from '../../utils/dailyChallenge';
 import { getAssetUrl } from '../../utils/assetPath';
+import { formatMessage } from '../../i18n/format';
 import './Header.css';
 
 interface HeaderProps {
@@ -100,17 +101,17 @@ export const Header: React.FC<HeaderProps> = ({
               value={language}
               onChange={(e) => changeLanguage(e.target.value as Language)}
               className="lang-select"
-              aria-label="언어 선택"
+              aria-label={t.languageSelect}
             >
-              <option value="ko">한국어</option>
-              <option value="en">English</option>
-              <option value="ja">日本語</option>
-              <option value="zh">中文</option>
+              <option value="ko">{t.languageKorean}</option>
+              <option value="en">{t.languageEnglish}</option>
+              <option value="ja">{t.languageJapanese}</option>
+              <option value="zh">{t.languageChinese}</option>
             </select>
           </div>
 
           {/* Audio Controls */}
-          <div className="audio-controls" role="group" aria-label="오디오 설정">
+          <div className="audio-controls" role="group" aria-label={t.audioSettings}>
             {/* BGM Track Selector Modal Trigger */}
             {onOpenBgmModal && (
               <button
@@ -120,8 +121,8 @@ export const Header: React.FC<HeaderProps> = ({
                   playSfx('click');
                   onOpenBgmModal();
                 }}
-                title="BGM 트랙 및 사운드 설정"
-                aria-label="BGM 트랙 설정"
+                title={t.bgmSettingsTitle}
+                aria-label={t.bgmTrackSettings}
               >
                 <Music size={15} />
                 <span className="audio-btn-label">BGM</span>
@@ -133,7 +134,7 @@ export const Header: React.FC<HeaderProps> = ({
               className={`audio-btn ${!bgmMuted ? 'active' : 'muted'}`}
               onClick={handleToggleBgm}
               title={bgmMuted ? t.soundOn : t.soundOff}
-              aria-label="BGM On/Off"
+              aria-label={`${t.bgm} ${bgmMuted ? t.soundOn : t.soundOff}`}
             >
               <img
                 src={!bgmMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
@@ -147,7 +148,7 @@ export const Header: React.FC<HeaderProps> = ({
               className={`audio-btn ${!sfxMuted ? 'active' : 'muted'}`}
               onClick={handleToggleSfx}
               title={sfxMuted ? t.soundOn : t.soundOff}
-              aria-label="SFX On/Off"
+              aria-label={`${t.sfx} ${sfxMuted ? t.soundOn : t.soundOff}`}
             >
               <img
                 src={!sfxMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
@@ -162,7 +163,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       <div className="header-stats">
         {/* Moves Card */}
-        <div className={`stat-card ${isMoveLimit ? 'urgent-limit' : ''}`} title="총 이동 횟수">
+        <div className={`stat-card ${isMoveLimit ? 'urgent-limit' : ''}`} title={t.movesTotalTitle}>
           <div className="stat-icon-wrapper">
             <Footprints size={18} className="stat-icon" />
           </div>
@@ -177,7 +178,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Timer Card */}
-        <div className={`stat-card ${isTimeAttack ? 'urgent-timer' : ''}`} title="진행 시간">
+        <div className={`stat-card ${isTimeAttack ? 'urgent-timer' : ''}`} title={t.elapsedTimeTitle}>
           <div className="stat-icon-wrapper">
             <Timer size={18} className="stat-icon" />
           </div>
@@ -192,11 +193,11 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Best Record Card */}
-        <div className="stat-card" title={`${gridSize}x${gridSize} 최고 기록`}>
+        <div className="stat-card" title={formatMessage(t.bestRecordTitle, { size: gridSize })}>
           <div className="stat-icon-wrapper">
             <img
               src={getAssetUrl('assets/icons/badge_trophy.png')}
-              alt="최고 기록"
+              alt={t.bestRecord}
               className="header-stat-icon-img"
             />
           </div>
@@ -204,7 +205,10 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="stat-label">{t.bestRecord}</span>
             <span className="stat-value small">
               {bestRecord
-                ? `${formatTime(bestRecord.bestTime)} / ${bestRecord.bestMoves}회`
+                ? formatMessage(t.bestRecordValue, {
+                    time: formatTime(bestRecord.bestTime),
+                    moves: bestRecord.bestMoves,
+                  })
                 : '-'}
             </span>
           </div>

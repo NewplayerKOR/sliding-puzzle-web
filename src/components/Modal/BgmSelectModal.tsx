@@ -10,6 +10,8 @@ import {
   Sliders,
 } from 'lucide-react';
 import { useAudio } from '../../hooks/useAudio';
+import { useTranslation } from '../../i18n/useTranslation';
+import { formatMessage } from '../../i18n/format';
 import './BgmSelectModal.css';
 
 interface BgmSelectModalProps {
@@ -18,6 +20,7 @@ interface BgmSelectModalProps {
 }
 
 export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
 
   const {
     bgmTracks,
@@ -72,10 +75,10 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
             </div>
             <div>
               <h3 id="bgm-modal-title" className="bgm-modal-title">
-                BGM & 사운드 설정
+                {t.bgmSettingsTitle}
               </h3>
               <span className="bgm-modal-subtitle">
-                플레이리스트 트랙 선택 및 음량 조절
+                {t.bgmSettingsSubtitle}
               </span>
             </div>
           </div>
@@ -83,7 +86,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
             type="button"
             className="bgm-close-btn"
             onClick={onClose}
-            aria-label="닫기"
+            aria-label={t.close}
           >
             <X size={20} />
           </button>
@@ -93,7 +96,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
         <div className="bgm-volume-card">
           <div className="bgm-volume-card-header">
             <Sliders size={15} />
-            <span>볼륨 & 음소거 컨트롤</span>
+            <span>{t.volumeMuteControls}</span>
           </div>
 
           <div className="bgm-volume-controls">
@@ -106,7 +109,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                   playSfx('click');
                   toggleBgmMute();
                 }}
-                title={bgmMuted ? 'BGM 켜기' : 'BGM 음소거'}
+                title={bgmMuted ? t.bgmUnmute : t.bgmMute}
               >
                 {bgmMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                 <span>BGM</span>
@@ -122,7 +125,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                   setBgmVolume(Number(e.target.value) / 100);
                 }}
                 className="volume-slider"
-                aria-label="BGM 볼륨 슬라이더"
+                aria-label={t.bgmVolumeSlider}
               />
               <span className="vol-percent-text">
                 {bgmMuted ? '0%' : `${Math.round(bgmVolume * 100)}%`}
@@ -137,7 +140,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                 onClick={() => {
                   toggleSfxMute();
                 }}
-                title={sfxMuted ? 'SFX 켜기' : 'SFX 음소거'}
+                title={sfxMuted ? t.sfxUnmute : t.sfxMute}
               >
                 {sfxMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                 <span>SFX</span>
@@ -153,7 +156,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                   setSfxVolume(Number(e.target.value) / 100);
                 }}
                 className="volume-slider"
-                aria-label="SFX 볼륨 슬라이더"
+                aria-label={t.sfxVolumeSlider}
               />
               <span className="vol-percent-text">
                 {sfxMuted ? '0%' : `${Math.round(sfxVolume * 100)}%`}
@@ -172,11 +175,9 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
             <div className="theme-sync-text">
               <span className="sync-title">
                 <Sparkles size={14} className="sparkle-sync-icon" />
-                테마 선택 시 권장 BGM 자동 연동
+                {t.autoThemeBgmTitle}
               </span>
-              <span className="sync-desc">
-                자연/픽셀/동물 등 테마 분위기에 맞추어 BGM을 자동 전환합니다.
-              </span>
+              <span className="sync-desc">{t.autoThemeBgmDesc}</span>
             </div>
           </label>
         </div>
@@ -185,7 +186,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
         <div className="bgm-playlist-section">
           <div className="playlist-section-header">
             <span className="playlist-section-title">
-              🎵 BGM 트랙 플레이리스트 ({bgmTracks.length}곡)
+              {formatMessage(t.bgmPlaylistTitle, { count: bgmTracks.length })}
             </span>
           </div>
 
@@ -205,7 +206,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                     {/* Active Equalizer Animation or Disc Icon */}
                     <div className={`track-disc-box ${isPlayingNow ? 'playing' : ''}`}>
                       {isPlayingNow ? (
-                        <div className="equalizer-bars" aria-label="재생 중">
+                        <div className="equalizer-bars" aria-label={t.playing}>
                           <span className="eq-bar bar-1"></span>
                           <span className="eq-bar bar-2"></span>
                           <span className="eq-bar bar-3"></span>
@@ -219,9 +220,9 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                     <div className="track-text-group">
                       <div className="track-title-row">
                         <span className="track-name">{track.name}</span>
-                        <span className="track-genre-badge">{track.genre}</span>
+                        <span className="track-genre-badge">{t[track.genreKey]}</span>
                       </div>
-                      <p className="track-description">{track.description}</p>
+                      <p className="track-description">{t[track.descriptionKey]}</p>
                     </div>
                   </div>
 
@@ -229,12 +230,12 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                     {isCurrent ? (
                       <span className="track-playing-tag">
                         <Check size={14} />
-                        {bgmMuted ? '선택됨 (음소거)' : '재생 중'}
+                        {bgmMuted ? t.selectedMuted : t.playing}
                       </span>
                     ) : (
                       <span className="btn-track-play">
                         <Play size={13} />
-                        선택
+                        {t.select}
                       </span>
                     )}
                   </div>

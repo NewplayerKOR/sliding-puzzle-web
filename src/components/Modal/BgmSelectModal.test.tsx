@@ -1,13 +1,20 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { cleanup, render, screen, fireEvent } from '@testing-library/react';
 import { BgmSelectModal } from './BgmSelectModal';
 import { audioManager } from '../../utils/audioManager';
+import { resetGlobalLanguage, setGlobalLanguage } from '../../i18n/useTranslation';
 
 describe('BgmSelectModal Component', () => {
   beforeEach(() => {
     localStorage.clear();
+    resetGlobalLanguage();
     window.HTMLMediaElement.prototype.play = vi.fn().mockResolvedValue(undefined);
     window.HTMLMediaElement.prototype.pause = vi.fn();
+  });
+
+  afterEach(() => {
+    cleanup();
+    resetGlobalLanguage();
   });
 
   it('renders modal with 4 BGM tracks, volume controls, and theme auto-sync checkbox', () => {
@@ -62,5 +69,17 @@ describe('BgmSelectModal Component', () => {
 
     rerender(<BgmSelectModal isOpen={false} onClose={handleClose} />);
     expect(screen.queryByText('BGM & 사운드 설정')).toBeNull();
+  });
+
+  it('renders English BGM metadata after switching language', () => {
+    setGlobalLanguage('en');
+    render(<BgmSelectModal isOpen={true} onClose={vi.fn()} />);
+
+    expect(screen.getByText('BGM & Sound Settings')).toBeDefined();
+    expect(screen.getByText('Lo-Fi / Acoustic')).toBeDefined();
+    expect(
+      screen.getByText('Calm, comfortable beats with acoustic guitar melodies')
+    ).toBeDefined();
+    expect(screen.getByText(/BGM Playlist \(4 tracks\)/i)).toBeDefined();
   });
 });

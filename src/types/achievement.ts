@@ -1,7 +1,9 @@
+import type { Translations } from '../i18n/translations';
+
 export interface Achievement {
   id: string;
-  title: string;
-  description: string;
+  titleKey: keyof Translations;
+  descriptionKey: keyof Translations;
   iconName: string;
   unlockedAt: string | null; // ISO Date string if unlocked
   progress?: number;

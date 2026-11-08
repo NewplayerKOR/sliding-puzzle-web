@@ -6,6 +6,7 @@ import { shareOrDownloadResult } from '../../utils/shareCardGenerator';
 import { useTranslation } from '../../i18n/useTranslation';
 import { calculateStars } from '../../utils/starCalculator';
 import { getAssetUrl } from '../../utils/assetPath';
+import { formatMessage } from '../../i18n/format';
 import './WinModal.css';
 
 interface WinModalProps {
@@ -143,7 +144,7 @@ export const WinModal: React.FC<WinModalProps> = ({
         <div className="modal-trophy-wrapper">
           <img
             src={getAssetUrl('assets/icons/badge_trophy.png')}
-            alt="최고 기록 황금 트로피"
+            alt={t.trophyAlt}
             className="win-trophy-img"
           />
         </div>
@@ -159,14 +160,17 @@ export const WinModal: React.FC<WinModalProps> = ({
           {t.winTitle}
         </h2>
         <p className="modal-subtitle">
-          {gridSize}×{gridSize} {t.winSubtitle}
+          {formatMessage(t.winSubtitle, { size: gridSize })}
         </p>
 
         {/* 클리어 별점 (0~3성) 및 조건 피드백 */}
-        <div className="stars-sprite-wrapper" aria-label={`별점 ${stars}개 획득`}>
+        <div
+          className="stars-sprite-wrapper"
+          aria-label={formatMessage(t.starsEarnedLabel, { stars })}
+        >
           <img
             src={getAssetUrl(`assets/icons/stars_${stars}.png`)}
-            alt={`별점 ${stars}성`}
+            alt={formatMessage(t.starsAlt, { stars })}
             className="win-stars-img"
           />
           <p className="win-star-criteria-text">{t[feedbackKey]}</p>
@@ -178,7 +182,9 @@ export const WinModal: React.FC<WinModalProps> = ({
               <Footprints size={16} />
               <span>{t.totalMoves}</span>
             </div>
-            <span className="stat-main-value">{moveCount}회</span>
+            <span className="stat-main-value">
+              {formatMessage(t.moveCountValue, { count: moveCount })}
+            </span>
           </div>
 
           <div className="modal-stat-box">
@@ -204,14 +210,20 @@ export const WinModal: React.FC<WinModalProps> = ({
                 }}
               >
                 <Play size={16} />
-                <span>{t.replayTimelapse} ({moveHistory.length - 1}수 재생)</span>
+                <span>
+                  {t.replayTimelapse} (
+                  {formatMessage(t.replayOpen, { count: moveHistory.length - 1 })})
+                </span>
               </button>
             ) : (
               <div className="replay-player-box">
                 <div className="replay-header">
                   <span className="replay-title">🎬 {t.replayTimelapse}</span>
                   <span className="replay-step-info">
-                    {replayStep} / {moveHistory.length - 1} 수
+                    {formatMessage(t.replayStepInfo, {
+                      current: replayStep,
+                      total: moveHistory.length - 1,
+                    })}
                   </span>
                 </div>
 
@@ -280,7 +292,7 @@ export const WinModal: React.FC<WinModalProps> = ({
           <button type="button" className="modal-btn btn-retry" onClick={() => onPlayAgain()}>
             <img
               src={getAssetUrl('assets/icons/icon_reset.png')}
-              alt="다시 플레이"
+              alt={t.playAgainAlt}
               className="win-btn-icon-img"
             />
             <span>{t.playAgain}</span>
@@ -295,7 +307,7 @@ export const WinModal: React.FC<WinModalProps> = ({
               <span>{nextSize}×{nextSize} {t.nextLevel}</span>
               <img
                 src={getAssetUrl('assets/icons/icon_play.png')}
-                alt="다음 도전"
+                alt={t.nextLevelAlt}
                 className="win-btn-icon-img"
               />
             </button>

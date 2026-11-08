@@ -3,6 +3,7 @@ import { Board, GridSize, MoveDirection } from '../../types/puzzle';
 import { GameMode } from '../../types/theme';
 import { Tile } from './Tile';
 import { useTranslation } from '../../i18n/useTranslation';
+import { formatMessage } from '../../i18n/format';
 import './PuzzleBoard.css';
 
 interface PuzzleBoardProps {
@@ -167,7 +168,7 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         role="grid"
-        aria-label={`${gridSize}x${gridSize} 슬라이딩 퍼즐 보드`}
+        aria-label={formatMessage(t.boardLabel, { size: gridSize })}
       >
         {/* Background slot grid for depth */}
         {Array.from({ length: gridSize * gridSize }).map((_, idx) => (

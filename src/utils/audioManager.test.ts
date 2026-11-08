@@ -63,7 +63,8 @@ describe('AudioManager Unit Tests', () => {
 
     BGM_TRACKS.forEach((track) => {
       expect(track.name).toBeTruthy();
-      expect(track.genre).toBeTruthy();
+      expect(track.genreKey).toBeTruthy();
+      expect(track.descriptionKey).toBeTruthy();
       expect(track.path).toContain('assets/audio/');
       expect(track.recommendedThemeIds.length).toBeGreaterThan(0);
     });

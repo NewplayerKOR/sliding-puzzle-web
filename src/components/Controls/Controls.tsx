@@ -95,7 +95,7 @@ export const Controls: React.FC<ControlsProps> = ({
       </div>
 
       {/* 2. 스마트 AI 힌트 & 유틸리티 툴바 (4등분 그리드) */}
-      <div className="feature-tools-row" role="toolbar" aria-label="고급 기능 툴바">
+      <div className="feature-tools-row" role="toolbar" aria-label={t.advancedTools}>
         {/* AI 스마트 힌트 (3초 쿨다운) */}
         <button
           type="button"
@@ -145,7 +145,7 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <img
             src={getAssetUrl('assets/icons/badge_trophy.png')}
-            alt="업적"
+            alt={t.achievements}
             className="toolbar-icon-img"
           />
           <span>{t.achievements}</span>
@@ -153,7 +153,7 @@ export const Controls: React.FC<ControlsProps> = ({
       </div>
 
       {/* 3. 모드 및 테마 설정 줄 (4등분 툴바) */}
-      <div className="toolbar-row" role="toolbar" aria-label="보조 설정">
+      <div className="toolbar-row" role="toolbar" aria-label={t.secondarySettings}>
         {/* 되돌리기 (Undo) */}
         {onUndo && (
           <button
@@ -177,7 +177,7 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <img
             src={getAssetUrl('assets/icons/icon_theme_selector.png')}
-            alt="테마 선택"
+            alt={t.themeSelect}
             className="toolbar-icon-img"
           />
           <span>{t.themeSelect}</span>
@@ -192,7 +192,7 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <img
             src={getAssetUrl('assets/icons/icon_hint.png')}
-            alt="미리보기"
+            alt={t.previewHint}
             className="toolbar-icon-img"
           />
           <span>{t.previewHint}</span>
@@ -207,7 +207,7 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <img
             src={getAssetUrl('assets/icons/icon_number_toggle.png')}
-            alt="번호 힌트"
+            alt={t.numberHint}
             className="toolbar-icon-img"
           />
           <span>{t.numberHint}</span>
@@ -224,7 +224,7 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <img
             src={getAssetUrl('assets/icons/icon_play.png')}
-            alt="새 게임"
+            alt={t.newGame}
             className="action-icon-img"
           />
           <span>{t.newGame}</span>
@@ -238,7 +238,7 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <img
             src={getAssetUrl('assets/icons/icon_reset.png')}
-            alt="정답 보기"
+            alt={t.resetBoard}
             className="action-icon-img"
           />
           <span>{t.resetBoard}</span>
@@ -253,7 +253,7 @@ export const Controls: React.FC<ControlsProps> = ({
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
-              alt="자동 클리어"
+              alt={t.autoClear}
               className="action-icon-img"
             />
             <span>{t.autoClear}</span>

@@ -58,7 +58,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           <button type="button" className="btn-gameover-retry" onClick={onRetry}>
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
-              alt="다시 시도"
+              alt={t.retryAlt}
               className="action-icon-img"
             />
             <span>{t.tryAgain}</span>
@@ -67,7 +67,7 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
           <button type="button" className="btn-gameover-solution" onClick={onViewSolution}>
             <img
               src={getAssetUrl('assets/icons/icon_reset.png')}
-              alt="정답 확인"
+              alt={t.solutionAlt}
               className="action-icon-img"
             />
             <span>{t.checkSolution}</span>

@@ -36,10 +36,16 @@ export function getStoredAchievements(): Achievement[] {
     const raw = localStorage.getItem(ACHIEVEMENTS_STORAGE_KEY);
     if (raw) {
       const saved: Achievement[] = JSON.parse(raw);
-      // Merge in case initial achievements updated
+      // 정적 메타데이터는 최신 정의를 쓰고, 저장된 달성 상태·진행도만 유지함.
       return INITIAL_ACHIEVEMENTS.map((init) => {
         const found = saved.find((s) => s.id === init.id);
-        return found ? { ...init, ...found } : init;
+        return found
+          ? {
+              ...init,
+              unlockedAt: found.unlockedAt ?? null,
+              progress: found.progress ?? init.progress,
+            }
+          : init;
       });
     }
   } catch {

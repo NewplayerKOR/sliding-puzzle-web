@@ -99,7 +99,7 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
     if (!file) return;
 
     if (file.size > 10 * 1024 * 1024) {
-      alert('이미지 파일 크기는 10MB 이하만 가능합니다.');
+      alert(t.imageTooLarge);
       return;
     }
 

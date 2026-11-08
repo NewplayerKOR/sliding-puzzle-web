@@ -1,4 +1,5 @@
 import { ThemeId } from '../types/theme';
+import type { Translations } from '../i18n/translations';
 import { getAssetUrl } from './assetPath';
 
 export type SfxType = 'slide' | 'blocked' | 'shuffle' | 'click' | 'victory';
@@ -7,8 +8,8 @@ export interface BgmTrack {
   id: string;
   name: string;
   path: string;
-  genre: string;
-  description: string;
+  genreKey: keyof Translations;
+  descriptionKey: keyof Translations;
   recommendedThemeIds: string[];
 }
 
@@ -17,32 +18,32 @@ export const BGM_TRACKS: BgmTrack[] = [
     id: 'chill',
     name: 'Lo-Fi Chill',
     path: getAssetUrl('assets/audio/bgm_chill.wav'),
-    genre: '칠홉 / 어쿠스틱',
-    description: '차분하고 편안한 비트와 어쿠스틱 기타 선율',
+    genreKey: 'bgmChillGenre',
+    descriptionKey: 'bgmChillDesc',
     recommendedThemeIds: ['abstract'],
   },
   {
     id: 'zen',
     name: 'Zen Nature',
     path: getAssetUrl('assets/audio/bgm_zen_nature.wav'),
-    genre: '자연 / 앰비언트',
-    description: '맑은 자연의 숨결과 평온한 명상 앰비언스',
+    genreKey: 'bgmZenGenre',
+    descriptionKey: 'bgmZenDesc',
     recommendedThemeIds: ['nature'],
   },
   {
     id: 'synth',
     name: 'Cyber Synth',
     path: getAssetUrl('assets/audio/bgm_cyber_synth.wav'),
-    genre: '신스웨이브 / 일렉트로',
-    description: '미래적인 신시사이저와 레트로 사이버네틱 리듬',
+    genreKey: 'bgmSynthGenre',
+    descriptionKey: 'bgmSynthDesc',
     recommendedThemeIds: ['pixel_art'],
   },
   {
     id: 'jazz',
     name: 'Jazz Lounge',
     path: getAssetUrl('assets/audio/bgm_jazz_cafe.wav'),
-    genre: '보사노바 재즈',
-    description: '세련된 카페 무드의 감미로운 피아노 재즈 선율',
+    genreKey: 'bgmJazzGenre',
+    descriptionKey: 'bgmJazzDesc',
     recommendedThemeIds: ['animal'],
   },
 ];

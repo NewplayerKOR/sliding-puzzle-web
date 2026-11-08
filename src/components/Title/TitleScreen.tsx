@@ -18,6 +18,7 @@ import { useAudio } from '../../hooks/useAudio';
 import { getDailyStreakData } from '../../utils/dailyChallenge';
 import { TIME_LIMITS, MOVE_LIMITS } from '../../hooks/usePuzzleGame';
 import { getAssetUrl } from '../../utils/assetPath';
+import { formatMessage } from '../../i18n/format';
 import './TitleScreen.css';
 
 interface TitleScreenProps {
@@ -85,7 +86,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           >
             <img
               src={getAssetUrl('assets/icons/badge_trophy.png')}
-              alt="업적"
+              alt={t.achievements}
               className="toolbar-icon-img"
             />
             <span>{t.achievements}</span>
@@ -100,17 +101,17 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               value={language}
               onChange={(e) => changeLanguage(e.target.value as Language)}
               className="title-lang-select"
-              aria-label="언어 선택"
+              aria-label={t.languageSelect}
             >
-              <option value="ko">한국어</option>
-              <option value="en">English</option>
-              <option value="ja">日本語</option>
-              <option value="zh">中文</option>
+              <option value="ko">{t.languageKorean}</option>
+              <option value="en">{t.languageEnglish}</option>
+              <option value="ja">{t.languageJapanese}</option>
+              <option value="zh">{t.languageChinese}</option>
             </select>
           </div>
 
           {/* Audio Controls */}
-          <div className="title-audio-controls" role="group" aria-label="오디오 설정">
+          <div className="title-audio-controls" role="group" aria-label={t.audioSettings}>
             {onOpenBgmModal && (
               <button
                 type="button"
@@ -119,8 +120,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                   playSfx('click');
                   onOpenBgmModal();
                 }}
-                title="BGM 트랙 및 사운드 설정"
-                aria-label="BGM 트랙 설정"
+                title={t.bgmSettingsTitle}
+                aria-label={t.bgmTrackSettings}
               >
                 <Music size={14} />
                 <span>BGM</span>
@@ -224,7 +225,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
-              alt="시작"
+              alt={t.startPlay}
               className="action-icon-img"
             />
             <span>{t.startPlay} ({standardSize}×{standardSize})</span>
@@ -264,7 +265,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                   setTimeAttackSize(sz);
                 }}
               >
-                {sz}×{sz} ({TIME_LIMITS[sz]}초)
+                {formatMessage(t.timePillTemplate, { size: sz, seconds: TIME_LIMITS[sz] })}
               </button>
             ))}
           </div>
@@ -279,10 +280,15 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
-              alt="시작"
+              alt={t.startPlay}
               className="action-icon-img"
             />
-            <span>{t.modeTimeAttack} ({TIME_LIMITS[timeAttackSize]}초 도전)</span>
+            <span>
+              {formatMessage(t.timeAttackStartTemplate, {
+                mode: t.modeTimeAttack,
+                seconds: TIME_LIMITS[timeAttackSize],
+              })}
+            </span>
           </button>
         </div>
 
@@ -319,7 +325,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                   setMoveLimitSize(sz);
                 }}
               >
-                {sz}×{sz} ({MOVE_LIMITS[sz]}회)
+                {formatMessage(t.movePillTemplate, { size: sz, moves: MOVE_LIMITS[sz] })}
               </button>
             ))}
           </div>
@@ -334,10 +340,15 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
-              alt="시작"
+              alt={t.startPlay}
               className="action-icon-img"
             />
-            <span>{t.modeMoveLimit} ({MOVE_LIMITS[moveLimitSize]}수 도전)</span>
+            <span>
+              {formatMessage(t.moveLimitStartTemplate, {
+                mode: t.modeMoveLimit,
+                moves: MOVE_LIMITS[moveLimitSize],
+              })}
+            </span>
           </button>
         </div>
 
@@ -377,10 +388,10 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           >
             <img
               src={getAssetUrl('assets/icons/icon_play.png')}
-              alt="시작"
+              alt={t.startPlay}
               className="action-icon-img"
             />
-            <span>{t.dailyChallenge} 시작하기</span>
+            <span>{formatMessage(t.dailyStartTemplate, { mode: t.dailyChallenge })}</span>
           </button>
         </div>
       </div>

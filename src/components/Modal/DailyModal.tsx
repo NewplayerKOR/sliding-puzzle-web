@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { X, Flame, CheckCircle, Trophy } from 'lucide-react';
 import { getDailyStreakData, getTodayDateString } from '../../utils/dailyChallenge';
 import { useTranslation } from '../../i18n/useTranslation';
+import { formatMessage } from '../../i18n/format';
 import './DailyModal.css';
 
 interface DailyModalProps {
@@ -81,7 +82,9 @@ export const DailyModal: React.FC<DailyModalProps> = ({
             </div>
             <div className="streak-info">
               <span className="streak-label">{t.currentStreak}</span>
-              <span className="streak-value">{streakData.currentStreak}일</span>
+              <span className="streak-value">
+                {streakData.currentStreak}{t.streakDaysSuffix}
+              </span>
             </div>
           </div>
 
@@ -91,7 +94,9 @@ export const DailyModal: React.FC<DailyModalProps> = ({
             </div>
             <div className="streak-info">
               <span className="streak-label">{t.maxStreak}</span>
-              <span className="streak-value">{streakData.maxStreak}일</span>
+              <span className="streak-value">
+                {streakData.maxStreak}{t.streakDaysSuffix}
+              </span>
             </div>
           </div>
         </div>
@@ -100,24 +105,34 @@ export const DailyModal: React.FC<DailyModalProps> = ({
         <div className="daily-calendar-wrapper">
           <div className="calendar-header">
             <span>
-              {year}년 {month + 1}월 출석 현황
+              {formatMessage(t.dailyCalendarTitle, { year, month: month + 1 })}
             </span>
             <span className="calendar-count">
-              완료 {streakData.completedDates.filter((d) => d.startsWith(monthPrefix)).length}/{daysInMonth}일
+              {formatMessage(t.dailyCompletedCount, {
+                completed: streakData.completedDates.filter((d) => d.startsWith(monthPrefix)).length,
+                total: daysInMonth,
+              })}
             </span>
           </div>
 
           <div className="calendar-grid">
-            {days.map(({ dayNum, isCompleted, isToday }) => (
-              <div
-                key={dayNum}
-                className={`calendar-day ${isCompleted ? 'completed' : ''} ${isToday ? 'today' : ''}`}
-                title={`${dayNum}일 ${isCompleted ? '(클리어 완료)' : isToday ? '(오늘의 도전)' : ''}`}
-              >
-                <span className="day-number">{dayNum}</span>
-                {isCompleted && <CheckCircle className="day-check" size={14} />}
-              </div>
-            ))}
+            {days.map(({ dayNum, isCompleted, isToday }) => {
+              const statusLabel = isCompleted
+                ? t.dailyDayCompleted
+                : isToday
+                ? t.dailyDayToday
+                : '';
+              return (
+                <div
+                  key={dayNum}
+                  className={`calendar-day ${isCompleted ? 'completed' : ''} ${isToday ? 'today' : ''}`}
+                  title={`${formatMessage(t.dailyDayLabel, { day: dayNum })} ${statusLabel}`.trim()}
+                >
+                  <span className="day-number">{dayNum}</span>
+                  {isCompleted && <CheckCircle className="day-check" size={14} />}
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -134,12 +149,12 @@ export const DailyModal: React.FC<DailyModalProps> = ({
             {isTodayDone ? (
               <>
                 <CheckCircle size={18} />
-                <span>오늘의 퍼즐 완료 (다시 플레이)</span>
+                <span>{t.dailyTodayCompleted}</span>
               </>
             ) : (
               <>
                 <Flame size={18} />
-                <span>오늘의 퍼즐 도전하기</span>
+                <span>{t.dailyTodayStart}</span>
               </>
             )}
           </button>

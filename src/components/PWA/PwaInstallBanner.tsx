@@ -40,7 +40,7 @@ export const PwaInstallBanner: React.FC = () => {
     <div className="pwa-banner-container" role="banner">
       <div className="pwa-banner-card">
         <div className="pwa-icon-box">
-          <img src={getAssetUrl('assets/icons/badge_trophy.png')} alt="App Icon" className="pwa-app-icon" />
+          <img src={getAssetUrl('assets/icons/badge_trophy.png')} alt={t.appTitle} className="pwa-app-icon" />
         </div>
 
         <div className="pwa-text-box">

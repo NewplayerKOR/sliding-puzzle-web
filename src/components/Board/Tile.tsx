@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { GridSize, TileData } from '../../types/puzzle';
 import { GameMode } from '../../types/theme';
 import { getTileSpriteStyle } from '../../utils/spriteCalculator';
+import { useTranslation } from '../../i18n/useTranslation';
+import { formatMessage } from '../../i18n/format';
 import './Tile.css';
 
 interface TileProps {
@@ -27,6 +29,7 @@ export const Tile: React.FC<TileProps> = ({
   showNumberOverlay,
   onClick,
 }) => {
+  const { t } = useTranslation();
   const isCorrect = tile.currentPos === tile.targetPos;
   const prevCorrectRef = useRef<boolean>(isCorrect);
   const [showSparkle, setShowSparkle] = useState<boolean>(false);
@@ -67,8 +70,12 @@ export const Tile: React.FC<TileProps> = ({
       style={spriteStyle}
       onClick={onClick}
       disabled={!isMovable}
-      aria-label={`타일 ${tile.value}${isMovable ? ' (이동 가능)' : ''}`}
-      title={isMovable ? `타일 ${tile.value} 이동하기` : `타일 ${tile.value}`}
+      aria-label={formatMessage(isMovable ? t.tileMovableLabel : t.tileLabel, {
+        value: tile.value,
+      })}
+      title={formatMessage(isMovable ? t.tileMoveTitle : t.tileLabel, {
+        value: tile.value,
+      })}
     >
       {/* 숫자 모드 또는 오버레이 힌트 활성화 시 숫자 표시 */}
       {(gameMode === 'number' || showNumberOverlay) && (
@@ -84,7 +91,7 @@ export const Tile: React.FC<TileProps> = ({
 
       {/* AI 스마트 힌트 타겟 펄스 및 방향 화살표 */}
       {isAiHintTarget && (
-        <div className={`tile-ai-hint-overlay dir-${aiHintDirection || 'up'}`} role="status" aria-label="AI 추천 이동">
+        <div className={`tile-ai-hint-overlay dir-${aiHintDirection || 'up'}`} role="status" aria-label={t.aiRecommendedMove}>
           <span className="hint-arrow">
             {aiHintDirection === 'down' ? '↓' : aiHintDirection === 'up' ? '↑' : aiHintDirection === 'right' ? '→' : '←'}
           </span>

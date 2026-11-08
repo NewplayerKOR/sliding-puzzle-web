@@ -1,4 +1,7 @@
 import { GridSize } from '../types/puzzle';
+import { translations } from '../i18n/translations';
+import { getCurrentLanguage } from '../i18n/useTranslation';
+import { formatMessage } from '../i18n/format';
 
 export interface ShareCardContext {
   gridSize: GridSize;
@@ -10,6 +13,7 @@ export interface ShareCardContext {
 }
 
 export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob | null> {
+  const t = translations[getCurrentLanguage()] || translations.ko;
   const canvas = document.createElement('canvas');
   const size = 1000;
   canvas.width = size;
@@ -38,7 +42,7 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
 
   c.fillStyle = '#94a3b8';
   c.font = '500 24px sans-serif';
-  c.fillText('PERFECT CLEAR RECORD', size / 2, 130);
+  c.fillText(t.shareCardSubtitle, size / 2, 130);
 
   // 3. Theme Thumbnail Preview in Center
   const thumbSize = 380;
@@ -95,11 +99,15 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
   c.fillStyle = '#94a3b8';
   c.font = 'bold 22px sans-serif';
   c.textAlign = 'center';
-  c.fillText('TOTAL MOVES', mCardX + cardW / 2, cardY + 42);
+  c.fillText(t.totalMoves.toUpperCase(), mCardX + cardW / 2, cardY + 42);
 
   c.fillStyle = '#38bdf8';
   c.font = 'bold 44px sans-serif';
-  c.fillText(`${ctx.moveCount}회`, mCardX + cardW / 2, cardY + 92);
+  c.fillText(
+    formatMessage(t.moveCountValue, { count: ctx.moveCount }),
+    mCardX + cardW / 2,
+    cardY + 92
+  );
 
   // Time Card
   const tCardX = size / 2 + 20;
@@ -117,7 +125,7 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
 
   c.fillStyle = '#94a3b8';
   c.font = 'bold 22px sans-serif';
-  c.fillText('TIME ELAPSED', tCardX + cardW / 2, cardY + 42);
+  c.fillText(t.timeElapsed.toUpperCase(), tCardX + cardW / 2, cardY + 42);
 
   c.fillStyle = '#4ade80';
   c.font = 'bold 44px sans-serif';
@@ -127,11 +135,15 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
   c.fillStyle = '#64748b';
   c.font = '500 22px sans-serif';
   c.textAlign = 'center';
-  c.fillText(`Difficulty: ${ctx.gridSize}×${ctx.gridSize} | Theme: ${ctx.themeName}`, size / 2, 840);
+  c.fillText(
+    formatMessage(t.shareCardFooter, { size: ctx.gridSize, theme: ctx.themeName }),
+    size / 2,
+    840
+  );
 
   c.fillStyle = '#3b82f6';
   c.font = 'bold 24px sans-serif';
-  c.fillText('Play now: Web Sliding Puzzle', size / 2, 890);
+  c.fillText(t.shareCardPlayNow, size / 2, 890);
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob), 'image/png');
@@ -142,6 +154,7 @@ export async function shareOrDownloadResult(
   ctx: ShareCardContext,
   onNotify: (msg: string) => void
 ): Promise<void> {
+  const t = translations[getCurrentLanguage()] || translations.ko;
   const blob = await generateShareCardBlob(ctx);
   if (!blob) return;
 
@@ -153,8 +166,8 @@ export async function shareOrDownloadResult(
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
       await navigator.share({
-        title: 'Sliding Block Puzzle 승리!',
-        text: `${ctx.gridSize}×${ctx.gridSize} 퍼즐을 ${ctx.moveCount}수만에 클리어했습니다! 🧩`,
+        title: t.shareTitle,
+        text: formatMessage(t.shareText, { size: ctx.gridSize, moves: ctx.moveCount }),
         files: [file],
       });
       return;
@@ -171,7 +184,7 @@ export async function shareOrDownloadResult(
           'image/png': blob,
         }),
       ]);
-      onNotify('결과 카드가 클립보드에 복사되었습니다!');
+      onNotify(t.shareCopied);
       return;
     } catch {
       // fallback to download
@@ -185,5 +198,5 @@ export async function shareOrDownloadResult(
   a.download = `sliding-puzzle-victory.png`;
   a.click();
   URL.revokeObjectURL(url);
-  onNotify('결과 카드가 이미지 파일로 다운로드되었습니다!');
+  onNotify(t.shareDownloaded);
 }

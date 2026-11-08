@@ -12,12 +12,25 @@ export function getInitialLanguage(): Language {
   return 'ko';
 }
 
+function applyDocumentLanguage(lang: Language) {
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = lang;
+  }
+}
+
 // Global language store & subscribers
 let currentGlobalLanguage: Language = getInitialLanguage();
 const listeners = new Set<(lang: Language) => void>();
 
-function setGlobalLanguage(newLang: Language) {
+applyDocumentLanguage(currentGlobalLanguage);
+
+export function getCurrentLanguage(): Language {
+  return currentGlobalLanguage;
+}
+
+export function setGlobalLanguage(newLang: Language) {
   currentGlobalLanguage = newLang;
+  applyDocumentLanguage(newLang);
   try {
     localStorage.setItem(LANG_STORAGE_KEY, newLang);
   } catch {
@@ -34,6 +47,7 @@ function setGlobalLanguage(newLang: Language) {
 
 export function resetGlobalLanguage() {
   currentGlobalLanguage = 'ko';
+  applyDocumentLanguage('ko');
   listeners.forEach((listener) => {
     try {
       listener('ko');
