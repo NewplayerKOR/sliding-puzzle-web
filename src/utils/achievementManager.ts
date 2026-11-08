@@ -30,8 +30,13 @@ function notifyUnlock(achievement: Achievement) {
   });
 }
 
+// INITIAL_ACHIEVEMENTS 원본이 달성 처리 중 변경되지 않도록 복사본을 반환함
+function cloneInitialAchievements(): Achievement[] {
+  return INITIAL_ACHIEVEMENTS.map((achievement) => ({ ...achievement }));
+}
+
 export function getStoredAchievements(): Achievement[] {
-  if (typeof window === 'undefined') return INITIAL_ACHIEVEMENTS;
+  if (typeof window === 'undefined') return cloneInitialAchievements();
   try {
     const raw = localStorage.getItem(ACHIEVEMENTS_STORAGE_KEY);
     if (raw) {
@@ -45,13 +50,13 @@ export function getStoredAchievements(): Achievement[] {
               unlockedAt: found.unlockedAt ?? null,
               progress: found.progress ?? init.progress,
             }
-          : init;
+          : { ...init };
       });
     }
   } catch {
     // ignore
   }
-  return INITIAL_ACHIEVEMENTS;
+  return cloneInitialAchievements();
 }
 
 export function saveStoredAchievements(achievements: Achievement[]) {

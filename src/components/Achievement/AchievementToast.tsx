@@ -6,27 +6,43 @@ import { audioManager } from '../../utils/audioManager';
 import { useTranslation } from '../../i18n/useTranslation';
 import './AchievementToast.css';
 
+const TOAST_DURATION_MS = 4500;
+
 export const AchievementToast: React.FC = () => {
   const { t } = useTranslation();
-  const [current, setCurrent] = useState<Achievement | null>(null);
+  // 한 번의 승리로 여러 업적이 달성돼도 마지막 1건만 덮어쓰지 않도록 큐에 보관함
+  const [queue, setQueue] = useState<Achievement[]>([]);
+  const current = queue[0] ?? null;
 
   useEffect(() => {
     const unsubscribe = onAchievementUnlocked((achievement) => {
-      audioManager.playSfx('victory');
-      setCurrent(achievement);
-      const timer = setTimeout(() => {
-        setCurrent(null);
-      }, 4500);
-      return () => clearTimeout(timer);
+      setQueue((prev) => [...prev, achievement]);
     });
 
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    if (!current) return;
+
+    // 표시 중인 업적에 맞춰 효과음을 재생하고, 표시 시간이 끝나면 다음 업적으로 넘어감
+    audioManager.playSfx('victory');
+    const timer = setTimeout(() => {
+      setQueue((prev) => prev.slice(1));
+    }, TOAST_DURATION_MS);
+
+    return () => clearTimeout(timer);
+  }, [current]);
+
   if (!current) return null;
 
   return (
-    <div className="achievement-toast-container" role="alert" aria-live="assertive">
+    <div
+      key={current.id}
+      className="achievement-toast-container"
+      role="alert"
+      aria-live="assertive"
+    >
       <div className="achievement-toast-card">
         <div className="toast-icon-wrapper">
           <Trophy size={24} className="toast-trophy-icon" />
