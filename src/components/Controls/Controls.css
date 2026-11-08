@@ -295,4 +295,24 @@
   }
 }
 
+/* 360px급 화면에서는 라벨을 숨기고 4열 아이콘 툴바로 세로 높이를 줄임 */
+@media (max-width: 400px) {
+  .game-controls {
+    gap: 0.45rem;
+  }
+  .feature-tools-row,
+  .toolbar-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .btn-feature-tool,
+  .toolbar-btn {
+    min-height: 34px;
+    padding: 0.2rem;
+  }
+  .btn-feature-tool span,
+  .toolbar-btn span {
+    display: none;
+  }
+}
+
 

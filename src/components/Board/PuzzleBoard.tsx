@@ -122,16 +122,24 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
   // 터치 스와이프 제스처 핸들링
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
+  // React의 passive touchmove 대신 non-passive 네이티브 리스너로 스크롤 간섭을 차단함
+  useEffect(() => {
+    const board = boardRef.current;
+    if (!board) return;
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (touchStartRef.current && e.cancelable) {
+        e.preventDefault();
+      }
+    };
+
+    board.addEventListener('touchmove', handleTouchMove, { passive: false });
+    return () => board.removeEventListener('touchmove', handleTouchMove);
+  }, []);
+
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
     touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    // 터치 스와이프 진행 중 브라우저의 기본 세로 스크롤 / Pull-to-refresh 간섭 원천 차단
-    if (touchStartRef.current && e.cancelable) {
-      e.preventDefault();
-    }
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -176,7 +184,6 @@ export const PuzzleBoard: React.FC<PuzzleBoardProps> = ({
           } as React.CSSProperties
         }
         onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         role="group"
         aria-label={formatMessage(t.boardLabel, { size: gridSize })}

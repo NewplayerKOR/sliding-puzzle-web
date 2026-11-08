@@ -103,6 +103,7 @@ export const Controls: React.FC<ControlsProps> = ({
           onClick={() => handleAction(onRequestAiHint)}
           disabled={isAiCalculating || aiCooldown > 0}
           title={aiCooldown > 0 ? `${t.aiHintCooldown} (${aiCooldown}s)` : t.aiHint}
+          aria-label={aiCooldown > 0 ? `${t.aiHintCooldown} (${aiCooldown}s)` : t.aiHint}
         >
           <Sparkles size={16} className={isAiCalculating ? 'spinning' : ''} />
           <span>
@@ -120,6 +121,7 @@ export const Controls: React.FC<ControlsProps> = ({
           className="btn-feature-tool"
           onClick={() => handleAction(onOpenCustomImageModal)}
           title={t.customPhoto}
+          aria-label={t.customPhoto}
         >
           <Camera size={16} />
           <span>{t.customPhoto}</span>
@@ -131,6 +133,7 @@ export const Controls: React.FC<ControlsProps> = ({
           className="btn-feature-tool btn-daily"
           onClick={() => handleAction(onOpenDailyModal)}
           title={t.dailyChallenge}
+          aria-label={t.dailyChallenge}
         >
           <Flame size={16} />
           <span>{t.dailyChallenge}</span>
@@ -142,6 +145,7 @@ export const Controls: React.FC<ControlsProps> = ({
           className="btn-feature-tool btn-achievement"
           onClick={() => handleAction(onOpenAchievementModal)}
           title={t.achievements}
+          aria-label={t.achievements}
         >
           <img
             src={getAssetUrl('assets/icons/badge_trophy.png')}
@@ -162,6 +166,7 @@ export const Controls: React.FC<ControlsProps> = ({
             onClick={() => handleAction(onUndo)}
             disabled={!canUndo}
             title={usedUndoCount !== undefined && usedUndoCount > 0 ? `${t.undo} (${usedUndoCount})` : t.undo}
+            aria-label={usedUndoCount !== undefined && usedUndoCount > 0 ? `${t.undo} (${usedUndoCount})` : t.undo}
           >
             <RotateCcw size={16} />
             <span>{t.undo}</span>
@@ -174,6 +179,7 @@ export const Controls: React.FC<ControlsProps> = ({
           className="toolbar-btn"
           onClick={() => handleAction(onOpenThemeModal)}
           title={t.themeSelect}
+          aria-label={t.themeSelect}
         >
           <img
             src={getAssetUrl('assets/icons/icon_theme_selector.png')}
@@ -189,6 +195,7 @@ export const Controls: React.FC<ControlsProps> = ({
           className="toolbar-btn"
           onClick={() => handleAction(onOpenHintModal)}
           title={t.previewHint}
+          aria-label={t.previewHint}
         >
           <img
             src={getAssetUrl('assets/icons/icon_hint.png')}
@@ -204,6 +211,7 @@ export const Controls: React.FC<ControlsProps> = ({
           className={`toolbar-btn ${showNumberOverlay ? 'active-mode' : ''}`}
           onClick={() => handleAction(onToggleNumberOverlay)}
           title={t.numberHint}
+          aria-label={t.numberHint}
         >
           <img
             src={getAssetUrl('assets/icons/icon_number_toggle.png')}

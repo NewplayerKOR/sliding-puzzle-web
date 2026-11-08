@@ -65,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({
         {onReturnHome && (
           <button
             type="button"
-            className="btn-home-return"
+            className="home-btn"
             onClick={() => {
               playSfx('click');
               onReturnHome();
@@ -77,12 +77,12 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         )}
 
-        <div className="header-top-right">
+        <div className="header-actions-right">
           {/* Daily Streak Indicator */}
           {onOpenDaily && (
             <button
               type="button"
-              className="daily-streak-btn"
+              className="daily-streak-badge-btn"
               onClick={() => {
                 playSfx('click');
                 onOpenDaily();

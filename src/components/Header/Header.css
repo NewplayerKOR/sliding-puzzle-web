@@ -391,3 +391,27 @@
     font-size: 0.75rem;
   }
 }
+
+@media (max-width: 400px) {
+  .header-actions-right {
+    width: 100%;
+    justify-content: center;
+    gap: 0.25rem;
+  }
+  .daily-streak-badge-btn {
+    padding: 0.3rem 0.45rem;
+  }
+  .lang-select-wrapper {
+    padding: 0.25rem 0.35rem;
+  }
+  .audio-controls {
+    gap: 0.25rem;
+    padding: 0.25rem 0.3rem;
+  }
+  .audio-btn {
+    padding: 0.3rem 0.4rem;
+  }
+  .audio-btn-label {
+    display: none;
+  }
+}

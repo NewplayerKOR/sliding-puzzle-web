@@ -15,7 +15,7 @@
   grid-template-columns: repeat(var(--grid-size, 4), 1fr);
   grid-template-rows: repeat(var(--grid-size, 4), 1fr);
   gap: var(--tile-gap, 8px);
-  width: min(100%, min(460px, calc(100vw - 32px), 52dvh));
+  width: min(100%, min(460px, calc(100vw - 32px), calc(100dvh - 470px)));
   aspect-ratio: 1 / 1;
   background-color: var(--board-bg);
   border: 2px solid var(--board-border);
@@ -92,6 +92,12 @@
   }
 }
 
+@media (max-width: 380px) {
+  .puzzle-board {
+    width: min(100%, 310px, calc(100vw - 24px), 48dvh);
+  }
+}
+
 @media (max-height: 680px) {
   .puzzle-board {
     --board-padding: 5px;
@@ -100,5 +106,12 @@
   }
   .board-wrapper {
     gap: 0.4rem;
+  }
+}
+
+@media (max-height: 850px) and (min-width: 481px) {
+  .puzzle-board {
+    --board-padding: 6px;
+    --tile-gap: 6px;
   }
 }

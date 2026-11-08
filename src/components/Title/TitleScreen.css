@@ -587,3 +587,18 @@
     font-size: 1.8rem;
   }
 }
+
+@media (max-width: 420px) {
+  .title-top-bar {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+  .title-top-left,
+  .title-top-right {
+    width: 100%;
+    justify-content: center;
+  }
+  .title-badge-btn {
+    white-space: nowrap;
+  }
+}
