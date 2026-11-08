@@ -5,6 +5,9 @@ React와 TypeScript로 만든 클라이언트 사이드 슬라이딩 퍼즐(N-Pu
 - **참여자**: NewplayerKOR
 - **현재 버전**: 1.4.0
 - **저장소**: <https://github.com/NewplayerKOR/sliding-puzzle-web>
+- **플레이**: <https://sliding-puzzle-web.vercel.app>
+
+> Vercel 프로젝트가 pause 상태이면 사이트가 열리지 않을 수 있습니다.
 
 ---
 
@@ -120,30 +123,7 @@ src/
 
 ---
 
-## 5. 실행 방법
-
-### 요구사항
-
-- Node.js 24.15.0 이상(24.x) 또는 26.0.0 이상 (`.nvmrc`: 24)
-- npm 10.0.0 이상
-
-### 설치 및 실행
-
-```bash
-git clone https://github.com/NewplayerKOR/sliding-puzzle-web.git
-cd sliding-puzzle-web
-
-npm ci          # lockfile 기준 설치
-npm run dev     # 개발 서버 (http://localhost:5173)
-npm test        # Vitest
-npm run typecheck
-npm run build   # tsc + Vite 프로덕션 빌드
-npm run test:e2e # 최초 1회 npx playwright install chromium
-```
-
----
-
-## 6. 테스트 및 검증
+## 5. 테스트 및 검증
 
 2026-11-08 기준 결과입니다.
 
@@ -160,17 +140,7 @@ npm run test:e2e # 최초 1회 npx playwright install chromium
 
 ---
 
-## 7. 배포 및 CI
-
-- **CI**: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) — Node 24 기준 `npm ci` → 테스트 → 타입 검사 → 빌드 → 프로덕션 의존성 감사 후 Playwright Chromium E2E를 실행합니다.
-- **배포**: `dist/` 정적 번들을 정적 호스팅에 배포합니다. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원합니다.
-- **Vercel**: 2026-11-08 기준 프로젝트가 소유자에 의해 의도적으로 pause 상태입니다. 장애가 아니며, 재개하면 기존 설정으로 배포를 다시 시작합니다.
-- **상세 절차**: [root/DEPLOYMENT.md](./root/DEPLOYMENT.md)
-- **robots**: [public/robots.txt](./public/robots.txt)
-
----
-
-## 8. 문서
+## 6. 문서
 
 | 문서 | 내용 |
 | :--- | :--- |

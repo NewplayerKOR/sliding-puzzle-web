@@ -46,7 +46,7 @@ Vercel 프로젝트가 pause 상태에서 재개될 때 아래 설정을 유지�
 - `base: './'`이므로 `https://example.com/sub/` 같은 경로에 `dist/`를 올려도 된다.
 - Service Worker scope·캐시 URL은 배포 경로를 기준으로 계산된다. 서브패스에서도 `/sub/sw.js`가 루트 범위를 침범하지 않는지 확인한다.
 - 서브패스 호스팅은 HTTPS(또는 localhost)여야 Service Worker가 등록된다.
-- 검색 crawler는 도메인 루트의 `/robots.txt`를 읽는다. 서브패스 배포에서도 검색 노출이 필요하면 도메인 루트에 동일한 정책을 배치한다.
+- `public/robots.txt`는 모든 crawler를 차단해 Vercel 트래픽·자원 소진을 막는다. 서브패스 배포에서도 도메인 루트에 동일한 차단 정책을 배치한다.
 
 ## 5. 배포 후 확인
 
@@ -55,7 +55,7 @@ Vercel 프로젝트가 pause 상태에서 재개될 때 아래 설정을 유지�
 3. 새로고침 후 업데이트 배너가 표시되면 "나중에"와 "지금 업데이트" 동작을 확인한다.
 4. DevTools → Application에서 `manifest.webmanifest` 파싱, 아이콘 192/512·maskable·apple-touch 로드, Service Worker active를 확인한다.
 5. 네트워크를 오프라인으로 전환하고 새로고침해 타이틀과 기본 테마가 표시되는지 확인한다.
-6. `robots.txt`가 배포 루트에서 200으로 응답하는지 확인한다.
+6. `robots.txt`가 배포 루트에서 200으로 응답하고 `Disallow: /`가 포함되는지 확인한다.
 7. 콘솔에 예기치 않은 오류가 없는지 확인한다.
 
 ## 6. 캐시·업데이트 절차
