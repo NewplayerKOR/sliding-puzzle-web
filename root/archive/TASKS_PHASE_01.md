@@ -1259,3 +1259,82 @@
   - 측정 원문: `root/archive/assets/task-dev-27/metrics.json`(한국어 15개 모달×뷰포트), `language-metrics.json`(EN·JA·ZH 15개 조합)
   - 소스: `src/components/Modal/BgmSelectModal.css`, `CustomImageModal.css`, `HintModal.css`, `ThemeModal.css`, `DailyModal.css`, `src/styles/index.css`
 - **작업 상태**: `root/TASKS.md`의 TASK-DEV-27 완료 요약, `root/DESIGN_SYSTEM.md`의 `--text-word-break` 토큰·검증 결과 반영
+
+---
+
+## TASK-DEV-28 — 모바일 터치 타깃·PWA 배너 접근성 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 360px에서 작은 인터랙티브 타깃을 WCAG 2.5.8(24×24px) 이상으로 확대하고, 주요 PWA CTA를 44px로 맞추며, Service Worker 업데이트 아이콘 버튼에 접근 가능한 이름을 제공한다.
+- **대상 파일**: `src/components/Title/TitleScreen.css`, `src/components/Header/Header.css`, `src/components/Modal/BgmSelectModal.css`, `src/components/PWA/PwaInstallBanner.css`, `src/components/PWA/ServiceWorkerUpdateBanner.css`, `src/components/PWA/ServiceWorkerUpdateBanner.tsx`
+- **재현/증거**:
+  - 언어 선택 `<select>`의 실제 클릭 영역이 64×16px이고, 36px 높이의 래퍼 오른쪽 여백을 클릭하면 `DIV.lang-select-wrapper`가 잡혀 select에 포커스가 가지 않음.
+  - BGM 볼륨 슬라이더의 input 박스가 360에서 150×4px, 1280에서 274×4px로 터치·드래그 영역이 매우 얇음.
+  - 360px에서 PWA 설치 버튼 116×40px, 업데이트 버튼 36×40px로 주요 CTA가 44px 기준에 미달함.
+  - 400px 이하에서 `.btn-sw-update span`이 `display: none`이 되어 업데이트 버튼의 `ariaSnapshot`이 `- button`으로 나오고, `aria-label`도 없어 스크린리더가 동작을 알 수 없음.
+  - PWA 설치 배너의 설명 문구가 360px에서 `text-overflow: ellipsis`로 잘림.
+  - 증거: `root/archive/assets/task-qa-09/`의 `pwa-install-360x640.webp`, `sw-update-360x640.webp`, `bgm-360x640.webp` 및 QA 측정 결과.
+- **완료 기준(DoD)**:
+  - [x] 언어 select·볼륨 슬라이더의 실제 히트 영역을 최소 24×24px 이상(가능하면 32~44px)으로 확대
+  - [x] PWA 설치·업데이트 주요 CTA를 모바일에서 최소 44px 높이로 조정
+  - [x] 400px 이하에서도 업데이트 버튼에 텍스트 또는 `aria-label`로 접근 가능한 이름 제공
+  - [x] PWA 설치 배너 설명을 2줄 허용 또는 축약 문구와 전체 접근성 이름으로 제공
+  - [x] 360×640·360×800·1280×800 회귀 스크린샷과 `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
+
+### 1. 진행 결과
+
+- `TitleScreen.tsx`·`Header.tsx`
+  - 언어 선택 래퍼를 `<div>`에서 `<label>`로 변경함. 래퍼의 아이콘·여백을 클릭해도 내부 `<select>`로 포커스가 이동함.
+  - `select`에 `align-self: stretch`와 최소 높이를 적용해 실제 클릭 영역을 래퍼 높이까지 확장함.
+- `TitleScreen.css`·`Header.css`
+  - `.title-lang-select`를 64×32px, `.lang-select`를 64×34px로 확장하고 래퍼에 `cursor: pointer`를 적용함.
+- `BgmSelectModal.css`
+  - `.volume-slider` input 박스를 4px에서 32px로 확대함. 시각 트랙은 `::-webkit-slider-runnable-track`·`::-moz-range-track` 4px로 유지하고 thumb는 16px로 키워 기존 디자인을 보존함.
+  - `.theme-sync-checkbox`를 16×16px에서 24×24px로 확대하고 `margin-top`을 0으로 맞춤.
+- `PwaInstallBanner.css`
+  - 설명을 `-webkit-line-clamp: 2`로 2줄 허용하고 `word-break: var(--text-word-break)`·`overflow-wrap`을 적용함.
+  - 설치 CTA를 44px, 닫기 버튼을 44×44px로 확대함.
+  - 480px 이하에서 카드를 `flex-wrap`으로 전환해 설명은 전체 폭, 액션은 다음 행에 배치함. 설치 버튼은 남은 폭을 채움.
+- `PwaInstallBanner.tsx`
+  - 설명 문구에 `title={t.pwaInstallPrompt}`를 추가해 마우스 오버·보조기술에서 전체 문구를 확인할 수 있게 함.
+- `ServiceWorkerUpdateBanner.css`·`.tsx`
+  - 업데이트 CTA와 나중에 버튼을 44×44px로 확대함.
+  - 400px 이하에서 CTA 텍스트를 숨겨도 `aria-label={t.pwaUpdateNow}`로 접근 가능한 이름을 유지함.
+- `ServiceWorkerUpdateBanner.test.tsx`
+  - 업데이트 버튼의 `aria-label`이 `지금 업데이트`인지 확인하는 검증을 추가함.
+
+### 2. 검증
+
+- **실행·확인 방법**:
+  - `npm test`
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - `npm run test:e2e`
+  - Playwright Chromium에서 360×640·360×800·1280×800 뷰포트로 타이틀·게임 헤더·BGM 모달·PWA 설치 배너·SW 업데이트 배너를 열어 측정함.
+  - PWA 설치·SW 업데이트 배너는 실제 설치/업데이트 대신 `beforeinstallprompt`·`sliding-puzzle:sw-update-available` 이벤트를 주입해 UI를 확인함.
+  - 언어 select는 래퍼 오른쪽 여백을 클릭한 뒤 `document.activeElement`가 `SELECT`인지 확인함.
+  - EN·JA·ZH는 360×640에서 select·슬라이더·PWA 배너를 같은 방식으로 추가 측정함.
+- **결과**:
+  - `npm test`: 29개 파일/183개 케이스 PASS.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.5 프로덕션 빌드 성공. CSS 77.73KB(gzip 10.35KB), JS 360.80KB(gzip 112.12KB).
+  - `npm run test:e2e`: Playwright Chromium 4/4 PASS.
+  - 언어 select: 타이틀 64×32px, 게임 헤더 64×34px. 래퍼 오른쪽 여백 클릭 후 `document.activeElement`가 `SELECT.title-lang-select`/`SELECT.lang-select`로 확인됨.
+  - BGM 볼륨 슬라이더: 360px 150×32px, 1280px 274×32px. `min-height: 32px`.
+  - 터치 타깃 감사: 타이틀·게임 헤더·BGM 모달에서 24px 미만 인터랙티브 요소 0건.
+  - PWA 설치 배너 360px: 설치 254×44px, 닫기 44×44px, 카드 328×108px. 설명 258×17px 1줄, `scrollHeight`/`clientHeight` 17/17로 잘림 없음.
+  - PWA 설치 배너 1280px: 설치 124.4×44px, 닫기 44×44px, 카드 480×73px. 설명 229.6×33.6px 2줄, `scrollHeight`/`clientHeight` 34/34로 전체 문구 표시.
+  - PWA 업데이트 배너 360px: 업데이트 44×44px(아이콘 전용), 나중에 44×44px, 카드 328×62px. `aria-label="지금 업데이트"`와 접근 가능한 버튼 이름 1건 확인.
+  - PWA 업데이트 배너 1280px: 업데이트 120.2×44px(텍스트 표시), 나중에 44×44px, 카드 480×62px.
+  - 다국어 360×640: EN·JA·ZH 모두 select 높이 32px, 슬라이더 150×32px, PWA 설치 254×44px, 업데이트 44×44px, 이슈 0건. JA PWA 설치 배너는 설명 2줄로 카드 125px, SW 업데이트 카드는 68px로 뷰포트 안에 표시됨.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome), Safari/Firefox 렌더링, 스크린리더 수동 검증, 실제 PWA 설치 프롬프트·Service Worker 업데이트 이벤트. 배너 UI는 이벤트 주입으로 확인함.
+- **증거**:
+  - 스크린샷: `root/archive/assets/task-dev-28/`의 before 6건과 after 15건 WebP.
+    - before: `before-title-360x640.webp`, `before-title-1280x800.webp`, `before-game-360x640.webp`, `before-bgm-360x640.webp`, `before-pwa-install-360x640.webp`, `before-sw-update-360x640.webp`
+    - after: `after-{title,game-header,bgm,pwa-install,sw-update}-{360x640,360x800,1280x800}.webp`
+  - 측정 원문: `root/archive/assets/task-dev-28/metrics.json`(한국어 15개 상태×뷰포트), `language-metrics.json`(EN·JA·ZH 360×640)
+  - 소스: `src/components/Title/TitleScreen.tsx`, `TitleScreen.css`, `Header/Header.tsx`, `Header.css`, `Modal/BgmSelectModal.css`, `PWA/PwaInstallBanner.tsx`, `PwaInstallBanner.css`, `PWA/ServiceWorkerUpdateBanner.tsx`, `ServiceWorkerUpdateBanner.css`, `ServiceWorkerUpdateBanner.test.tsx`
+- **작업 상태**: `root/TASKS.md`의 TASK-DEV-28 완료 요약, `root/DESIGN_SYSTEM.md`의 포커스·터치 기준과 검증 결과 반영

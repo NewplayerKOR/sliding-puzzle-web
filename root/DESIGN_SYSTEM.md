@@ -208,6 +208,10 @@ WCAG 2.1 상대 휘도로 계산한 주요 조합은 다음과 같다. 일반 �
 
 - 키보드 포커스는 `2px solid var(--color-signal-600)`과 `outline-offset: 2px`를 유지한다. `outline: none`만 적용하는 것을 금지한다.
 - 주요 액션 버튼(모드 시작·모달 CTA·게임 툴바)은 최소 **44×44px**의 히트 영역을 확보한다. 상단 유틸리티·세그먼트 컨트롤은 32~36px 이상을 유지하고, 모든 터치 목표는 WCAG 2.5.8 AA(24×24px) 이상을 충족한다.
+- `select`는 `<label>` 래퍼로 감싸고 `align-self: stretch`로 실제 히트 영역을 32~34px까지 확보한다. 래퍼의 아이콘·여백을 클릭해도 select에 포커스가 가야 한다.
+- range 입력은 시각 트랙을 4px로 유지하되 input 박스를 32px, thumb를 16px로 키워 드래그·터치 영역을 확보한다.
+- PWA 설치·업데이트 CTA는 44px 높이, 닫기·나중에 버튼은 44×44px를 사용한다. 400px 이하에서 CTA 텍스트를 숨길 때도 `aria-label`로 접근 가능한 이름을 유지한다.
+- PWA 설치 배너 설명은 최대 2줄을 허용하고, 480px 이하에서는 액션 행을 분리해 전체 문구를 읽을 수 있게 한다.
 - 360px 폭에서 가로 스크롤이 발생하지 않아야 하며, 고정 높이 화면에서도 핵심 조작이 잘리지 않아야 한다.
 
 ---
@@ -318,3 +322,17 @@ npm run build
 - 일일 스트릭: 360px에서 `현재 연속 스트릭`·`최대 연속 스트릭`이 단어 중간에서 끊기지 않고 카드 안에 표시됨
 - 다국어: EN·JA·ZH 360×640에서 5개 모달의 제목·이름·장르·라벨 단어 중간 줄바꿈과 가로 넘침 0건을 확인함. 일본어 BGM의 긴 자동 연동 라벨은 `min-width: 0`과 기본 줄바꿈 규칙으로 패널 안에 수용함
 - 스크린샷·측정 원문: `root/archive/assets/task-dev-27/`의 before/after WebP 21건과 `metrics.json`, `language-metrics.json`
+
+### 6.5 TASK-DEV-28 검증 결과
+
+- `npm test`: 29개 파일/183개 케이스 PASS
+- `npx tsc --noEmit`: 0 Errors
+- `npm run build`: Vite 6.4.5 프로덕션 빌드 성공(CSS 77.73KB/gzip 10.35KB, JS 360.80KB/gzip 112.12KB)
+- `npm run test:e2e`: Playwright Chromium 4/4 PASS
+- 언어 select: 타이틀 64×32px, 게임 헤더 64×34px. 래퍼 오른쪽 여백을 클릭했을 때 `document.activeElement`가 `SELECT`로 확인됨
+- 볼륨 슬라이더: 360px 150×32px, 1280px 274×32px. 시각 트랙 4px·thumb 16px를 유지하면서 input 히트 영역을 32px로 확대함
+- PWA 설치: 설치 CTA 254×44px(360px)·124.4×44px(1280px), 닫기 44×44px. 360px에서 설명 1줄(258×17px), 1280px에서 2줄(229.6×33.6px)로 전체 문구가 잘리지 않음
+- PWA 업데이트: 업데이트 CTA 44×44px(360px 아이콘 전용)·120.2×44px(1280px), 나중에 44×44px. 360px에서 텍스트가 숨겨져도 `aria-label="지금 업데이트"`로 접근 가능한 이름이 유지됨
+- 터치 타깃 감사: 타이틀·게임 헤더·BGM 모달에서 24px 미만 인터랙티브 요소 0건. BGM 자동 연동 체크박스는 16×16px에서 24×24px로 확대함
+- 다국어: EN·JA·ZH 360×640에서 select·슬라이더·PWA 설치/업데이트 CTA·배너 오버플로 이슈 0건. JA PWA 설치 배너는 설명 2줄로 카드 125px, SW 업데이트 카드는 68px로 뷰포트 안에 표시됨
+- 스크린샷·측정 원문: `root/archive/assets/task-dev-28/`의 before 6건·after 15건 WebP와 `metrics.json`, `language-metrics.json`

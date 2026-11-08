@@ -1,0 +1,444 @@
+{
+  "360x640": {
+    "title": {
+      "wrapper": {
+        "selector": ".title-lang-select-wrapper",
+        "tag": "LABEL",
+        "width": 100,
+        "height": 34,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "한국어English日本語中文"
+      },
+      "select": {
+        "selector": ".title-lang-select",
+        "tag": "SELECT",
+        "width": 64,
+        "height": 32,
+        "display": "block",
+        "ariaLabel": "언어 선택",
+        "text": "한국어English日本語中文"
+      },
+      "activeAfterWrapperClick": {
+        "tag": "SELECT",
+        "cls": "title-lang-select",
+        "aria": "언어 선택"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\title-360x640.png"
+    },
+    "gameHeader": {
+      "wrapper": {
+        "selector": ".lang-select-wrapper",
+        "tag": "LABEL",
+        "width": 91,
+        "height": 36,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "한국어English日本語中文"
+      },
+      "select": {
+        "selector": ".lang-select",
+        "tag": "SELECT",
+        "width": 64,
+        "height": 34,
+        "display": "block",
+        "ariaLabel": "언어 선택",
+        "text": "한국어English日本語中文"
+      },
+      "activeAfterWrapperClick": {
+        "tag": "SELECT",
+        "cls": "lang-select",
+        "aria": "언어 선택"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\game-header-360x640.png"
+    },
+    "bgm": {
+      "slider": {
+        "width": 150,
+        "height": 32,
+        "minHeight": "32px",
+        "appearance": "none",
+        "ariaLabel": "BGM 볼륨 슬라이더"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\bgm-360x640.png"
+    },
+    "pwaInstall": {
+      "install": {
+        "selector": ".btn-pwa-install",
+        "tag": "BUTTON",
+        "width": 254,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "홈 화면에 설치"
+      },
+      "close": {
+        "selector": ".btn-pwa-close",
+        "tag": "BUTTON",
+        "width": 44,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "닫기",
+        "text": ""
+      },
+      "desc": {
+        "text": "앱으로 설치하여 오프라인에서도 즐겨보세요!",
+        "title": "앱으로 설치하여 오프라인에서도 즐겨보세요!",
+        "width": 258,
+        "height": 16.8,
+        "scrollWidth": 258,
+        "clientWidth": 258,
+        "scrollHeight": 17,
+        "clientHeight": 17
+      },
+      "descLines": {
+        "lines": 1,
+        "tops": [
+          546
+        ]
+      },
+      "card": {
+        "top": 516,
+        "bottom": 624,
+        "width": 328,
+        "height": 108,
+        "withinViewport": true
+      },
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\pwa-install-360x640.png"
+    },
+    "swUpdate": {
+      "update": {
+        "selector": ".btn-sw-update",
+        "tag": "BUTTON",
+        "width": 44,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "지금 업데이트",
+        "text": "지금 업데이트"
+      },
+      "updateAccessible": 1,
+      "updateTextVisible": false,
+      "dismiss": {
+        "selector": ".btn-sw-dismiss",
+        "tag": "BUTTON",
+        "width": 44,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "나중에",
+        "text": ""
+      },
+      "desc": {
+        "text": "새 버전이 준비되었습니다. 지금 업데이트하면 최신 수정 사항이 적용됩니다.",
+        "width": 214,
+        "scrollHeight": 34,
+        "clientHeight": 34
+      },
+      "card": {
+        "top": 16,
+        "bottom": 78,
+        "width": 328,
+        "height": 62,
+        "withinViewport": true
+      },
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\sw-update-360x640.png"
+    }
+  },
+  "360x800": {
+    "title": {
+      "wrapper": {
+        "selector": ".title-lang-select-wrapper",
+        "tag": "LABEL",
+        "width": 100,
+        "height": 34,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "한국어English日本語中文"
+      },
+      "select": {
+        "selector": ".title-lang-select",
+        "tag": "SELECT",
+        "width": 64,
+        "height": 32,
+        "display": "block",
+        "ariaLabel": "언어 선택",
+        "text": "한국어English日本語中文"
+      },
+      "activeAfterWrapperClick": {
+        "tag": "SELECT",
+        "cls": "title-lang-select",
+        "aria": "언어 선택"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\title-360x800.png"
+    },
+    "gameHeader": {
+      "wrapper": {
+        "selector": ".lang-select-wrapper",
+        "tag": "LABEL",
+        "width": 91,
+        "height": 36,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "한국어English日本語中文"
+      },
+      "select": {
+        "selector": ".lang-select",
+        "tag": "SELECT",
+        "width": 64,
+        "height": 34,
+        "display": "block",
+        "ariaLabel": "언어 선택",
+        "text": "한국어English日本語中文"
+      },
+      "activeAfterWrapperClick": {
+        "tag": "SELECT",
+        "cls": "lang-select",
+        "aria": "언어 선택"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\game-header-360x800.png"
+    },
+    "bgm": {
+      "slider": {
+        "width": 150,
+        "height": 32,
+        "minHeight": "32px",
+        "appearance": "none",
+        "ariaLabel": "BGM 볼륨 슬라이더"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\bgm-360x800.png"
+    },
+    "pwaInstall": {
+      "install": {
+        "selector": ".btn-pwa-install",
+        "tag": "BUTTON",
+        "width": 254,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "홈 화면에 설치"
+      },
+      "close": {
+        "selector": ".btn-pwa-close",
+        "tag": "BUTTON",
+        "width": 44,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "닫기",
+        "text": ""
+      },
+      "desc": {
+        "text": "앱으로 설치하여 오프라인에서도 즐겨보세요!",
+        "title": "앱으로 설치하여 오프라인에서도 즐겨보세요!",
+        "width": 258,
+        "height": 16.8,
+        "scrollWidth": 258,
+        "clientWidth": 258,
+        "scrollHeight": 17,
+        "clientHeight": 17
+      },
+      "descLines": {
+        "lines": 1,
+        "tops": [
+          706
+        ]
+      },
+      "card": {
+        "top": 676,
+        "bottom": 784,
+        "width": 328,
+        "height": 108,
+        "withinViewport": true
+      },
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\pwa-install-360x800.png"
+    },
+    "swUpdate": {
+      "update": {
+        "selector": ".btn-sw-update",
+        "tag": "BUTTON",
+        "width": 44,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "지금 업데이트",
+        "text": "지금 업데이트"
+      },
+      "updateAccessible": 1,
+      "updateTextVisible": false,
+      "dismiss": {
+        "selector": ".btn-sw-dismiss",
+        "tag": "BUTTON",
+        "width": 44,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "나중에",
+        "text": ""
+      },
+      "desc": {
+        "text": "새 버전이 준비되었습니다. 지금 업데이트하면 최신 수정 사항이 적용됩니다.",
+        "width": 214,
+        "scrollHeight": 34,
+        "clientHeight": 34
+      },
+      "card": {
+        "top": 16,
+        "bottom": 78,
+        "width": 328,
+        "height": 62,
+        "withinViewport": true
+      },
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\sw-update-360x800.png"
+    }
+  },
+  "1280x800": {
+    "title": {
+      "wrapper": {
+        "selector": ".title-lang-select-wrapper",
+        "tag": "LABEL",
+        "width": 100,
+        "height": 34,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "한국어English日本語中文"
+      },
+      "select": {
+        "selector": ".title-lang-select",
+        "tag": "SELECT",
+        "width": 64,
+        "height": 32,
+        "display": "block",
+        "ariaLabel": "언어 선택",
+        "text": "한국어English日本語中文"
+      },
+      "activeAfterWrapperClick": {
+        "tag": "SELECT",
+        "cls": "title-lang-select",
+        "aria": "언어 선택"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\title-1280x800.png"
+    },
+    "gameHeader": {
+      "wrapper": {
+        "selector": ".lang-select-wrapper",
+        "tag": "LABEL",
+        "width": 91,
+        "height": 36,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "한국어English日本語中文"
+      },
+      "select": {
+        "selector": ".lang-select",
+        "tag": "SELECT",
+        "width": 64,
+        "height": 34,
+        "display": "block",
+        "ariaLabel": "언어 선택",
+        "text": "한국어English日本語中文"
+      },
+      "activeAfterWrapperClick": {
+        "tag": "SELECT",
+        "cls": "lang-select",
+        "aria": "언어 선택"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\game-header-1280x800.png"
+    },
+    "bgm": {
+      "slider": {
+        "width": 274,
+        "height": 32,
+        "minHeight": "32px",
+        "appearance": "none",
+        "ariaLabel": "BGM 볼륨 슬라이더"
+      },
+      "tinyTargets": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\bgm-1280x800.png"
+    },
+    "pwaInstall": {
+      "install": {
+        "selector": ".btn-pwa-install",
+        "tag": "BUTTON",
+        "width": 124.4,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": null,
+        "text": "홈 화면에 설치"
+      },
+      "close": {
+        "selector": ".btn-pwa-close",
+        "tag": "BUTTON",
+        "width": 44,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "닫기",
+        "text": ""
+      },
+      "desc": {
+        "text": "앱으로 설치하여 오프라인에서도 즐겨보세요!",
+        "title": "앱으로 설치하여 오프라인에서도 즐겨보세요!",
+        "width": 229.6,
+        "height": 33.6,
+        "scrollWidth": 230,
+        "clientWidth": 230,
+        "scrollHeight": 34,
+        "clientHeight": 34
+      },
+      "descLines": {
+        "lines": 2,
+        "tops": [
+          741,
+          758
+        ]
+      },
+      "card": {
+        "top": 711,
+        "bottom": 784,
+        "width": 480,
+        "height": 73,
+        "withinViewport": true
+      },
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\pwa-install-1280x800.png"
+    },
+    "swUpdate": {
+      "update": {
+        "selector": ".btn-sw-update",
+        "tag": "BUTTON",
+        "width": 120.2,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "지금 업데이트",
+        "text": "지금 업데이트"
+      },
+      "updateAccessible": 1,
+      "updateTextVisible": true,
+      "dismiss": {
+        "selector": ".btn-sw-dismiss",
+        "tag": "BUTTON",
+        "width": 44,
+        "height": 44,
+        "display": "flex",
+        "ariaLabel": "나중에",
+        "text": ""
+      },
+      "desc": {
+        "text": "새 버전이 준비되었습니다. 지금 업데이트하면 최신 수정 사항이 적용됩니다.",
+        "width": 278,
+        "scrollHeight": 34,
+        "clientHeight": 34
+      },
+      "card": {
+        "top": 16,
+        "bottom": 78,
+        "width": 480,
+        "height": 62,
+        "withinViewport": true
+      },
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev28\\sw-update-1280x800.png"
+    }
+  }
+}
