@@ -4,8 +4,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 1.5rem 1rem max(1rem, env(safe-area-inset-bottom)) 1rem;
-  background: radial-gradient(circle at 50% 0%, hsl(220, 25%, 96%) 0%, hsl(220, 20%, 92%) 100%);
+  padding: var(--space-6) var(--space-4) max(var(--space-4), env(safe-area-inset-bottom)) var(--space-4);
+  background-color: var(--color-canvas);
+  color: var(--color-charcoal);
   box-sizing: border-box;
 }
 
@@ -20,95 +21,98 @@
 
 .global-toast-banner {
   position: fixed;
-  top: 1.25rem;
+  top: var(--space-5);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2500;
-  background-color: var(--primary-600);
-  color: #fff;
-  padding: 0.6rem 1.25rem;
-  border-radius: var(--radius-lg);
-  font-size: 0.825rem;
-  font-weight: 700;
-  box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
-  animation: toastSlideDown 0.3s ease-out;
+  z-index: var(--z-toast);
+  background-color: var(--color-signal-700);
+  color: var(--color-white);
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--color-signal-800);
+  border-radius: var(--radius-1);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.01em;
+  box-shadow: var(--shadow-md);
+  animation: toastSlideDown var(--motion-duration-base) var(--motion-ease-enter);
 }
 
 .game-main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
+  gap: var(--space-5);
   width: 100%;
-  max-width: 500px;
+  max-width: var(--layout-content-max);
   margin: 0 auto;
 }
 
 .game-card {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--board-border);
-  border-radius: var(--radius-xl);
-  padding: 1.5rem 1.25rem;
-  box-shadow: var(--shadow-xl);
+  background-color: var(--color-paper);
+  border: var(--border-default);
+  border-radius: var(--radius-2);
+  padding: var(--space-6) var(--space-5);
+  box-shadow: var(--shadow-none);
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.15rem;
+  gap: var(--space-4);
   align-items: center;
 }
 
 .app-footer {
   text-align: center;
-  padding-top: 1rem;
-  padding-bottom: 0.5rem;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-weight: 500;
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-graphite);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.01em;
 }
 
 @media (max-width: 480px) {
   .app-container {
-    padding: 0.75rem 0.65rem max(0.75rem, env(safe-area-inset-bottom)) 0.65rem;
+    padding: var(--space-3) var(--space-2) max(var(--space-3), env(safe-area-inset-bottom)) var(--space-2);
   }
   .game-main {
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
   .game-card {
-    padding: 0.85rem 0.75rem;
-    border-radius: var(--radius-lg);
-    gap: 0.85rem;
+    padding: var(--space-3);
+    border-radius: var(--radius-2);
+    gap: var(--space-3);
   }
   .app-footer {
-    padding-top: 0.5rem;
-    font-size: 0.7rem;
+    padding-top: var(--space-2);
+    font-size: var(--font-size-xs);
   }
 }
 
 @media (max-width: 380px) {
   .app-container {
-    padding: 0.5rem 0.4rem max(0.5rem, env(safe-area-inset-bottom)) 0.4rem;
+    padding: var(--space-2) var(--space-1) max(var(--space-2), env(safe-area-inset-bottom)) var(--space-1);
   }
   .game-main {
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
   .game-card {
-    padding: 0.5rem 0.4rem;
-    border-radius: var(--radius-md);
-    gap: 0.5rem;
+    padding: var(--space-2);
+    border-radius: var(--radius-1);
+    gap: var(--space-2);
   }
 }
 
 /* 800px 안팎 높이에서도 게임 화면이 한 화면에 들어오도록 세로 여백을 압축함 */
 @media (max-height: 850px) and (min-width: 481px) {
   .app-container {
-    padding-top: 0.75rem;
-    padding-bottom: 0.5rem;
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-2);
   }
   .game-main {
-    gap: 0.75rem;
+    gap: var(--space-3);
   }
   .game-card {
-    padding: 1rem;
-    gap: 0.85rem;
+    padding: var(--space-4);
+    gap: var(--space-3);
   }
 }

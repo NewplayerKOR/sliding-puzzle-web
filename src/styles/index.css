@@ -1,67 +1,159 @@
 /* ==========================================================================
-   CSS RESET & BASE DESIGN SYSTEM TOKENS
+   TASK-DEV-25 심플·어반 디자인 시스템 토큰
+   - 중립 팔레트(off-white·concrete·charcoal) + 단일 신호색(signal orange)
+   - 표면은 1px 보더와 면으로 구분하고 그림자·블러·그라데이션은 최소화함
+   - 화면별 CSS 마이그레이션은 TASK-DEV-26에서 수행함
+   - 상세 기준: root/DESIGN_SYSTEM.md
    ========================================================================== */
 
 :root {
-  /* Color Palette - Refined Modern Slate & Indigo Accent */
-  --bg-app: hsl(220, 20%, 97%);
-  --bg-surface: hsl(0, 0%, 100%);
-  --bg-surface-elevated: hsl(220, 20%, 99%);
-  --bg-surface-subtle: hsl(220, 15%, 93%);
-  --bg-surface-active: hsl(220, 15%, 88%);
-  --bg-body: hsl(220, 18%, 95%);
+  color-scheme: light;
 
-  --text-main: hsl(222, 47%, 11%);
-  --text-muted: hsl(215, 20%, 42%);
-  --text-subtle: hsl(215, 16%, 65%);
-  --text-inverse: hsl(0, 0%, 100%);
+  /* Neutral */
+  --color-ink: #171713;
+  --color-charcoal: #22221D;
+  --color-graphite: #4E4E47;
+  --color-steel: #62625A;
+  --color-concrete-strong: #A3A39A;
+  --color-concrete: #D2D2C9;
+  --color-concrete-soft: #E4E4DC;
+  --color-canvas: #EFEFEA;
+  --color-paper: #F7F7F3;
+  --color-white: #FFFFFF;
 
-  /* Primary Accent - Vibrant Royal Blue */
-  --primary-50: hsl(217, 91%, 95%);
-  --primary-100: hsl(217, 91%, 90%);
-  --primary-200: hsl(217, 91%, 80%);
-  --primary-500: hsl(221, 83%, 53%);
-  --primary-600: hsl(224, 76%, 48%);
-  --primary-700: hsl(226, 70%, 40%);
+  /* Signal: 화면당 하나의 강조색만 사용함 */
+  --color-signal-50: #FDF1E8;
+  --color-signal-100: #F9DDC8;
+  --color-signal-200: #F2B892;
+  --color-signal-500: #D9480F;
+  --color-signal-600: #BB3E0B;
+  --color-signal-700: #9A3412;
+  --color-signal-800: #7C2D12;
 
-  /* Success / Victory / Amber */
-  --success-50: hsl(142, 70%, 95%);
-  --success-500: hsl(142, 71%, 45%);
-  --success-600: hsl(142, 72%, 36%);
-  --amber-500: hsl(45, 93%, 47%);
-  --amber-50: hsl(45, 93%, 95%);
+  /* Semantic: 성공·경고·오류에만 제한함 */
+  --color-success-subtle: #E8F3EC;
+  --color-success: #2F7D4F;
+  --color-success-strong: #1F6A3D;
+  --color-warning-subtle: #FAF1DE;
+  --color-warning: #8A5A12;
+  --color-warning-strong: #6F470C;
+  --color-danger-subtle: #FCEDEA;
+  --color-danger: #C63A2F;
+  --color-danger-strong: #A62B22;
 
-  /* Board & Tile Tokens */
-  --board-bg: hsl(220, 14%, 90%);
-  --board-border: hsl(220, 13%, 82%);
-  --tile-bg: hsl(0, 0%, 100%);
-  --tile-text: hsl(222, 47%, 18%);
-  --tile-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-  --tile-shadow-hover: 0 8px 14px -2px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08);
-  --tile-shadow-active: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  /* Typography: 시스템 grotesk + monospace 숫자 */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', 'Roboto Mono', Consolas, monospace;
+  --font-family: var(--font-sans);
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 32px;
+  --font-size-3xl: 40px;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.4;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
-  --tile-movable-border: hsl(221, 83%, 65%);
-  --tile-empty-bg: hsl(220, 14%, 86%);
+  /* Spacing: 4px 기준 */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  /* Border / Focus */
+  --border-width: 1px;
+  --border-color: var(--color-concrete);
+  --border-color-strong: #82827A;
+  --border-default: var(--border-width) solid var(--border-color);
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --focus-ring-color: var(--color-signal-600);
 
-  /* Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Radius: 0 / 4 / 8px만 사용함 */
+  --radius-0: 0;
+  --radius-1: 4px;
+  --radius-2: 8px;
+  --radius-sm: var(--radius-1);
+  --radius-md: var(--radius-1);
+  --radius-lg: var(--radius-2);
+  --radius-xl: var(--radius-2);
 
-  /* Transitions */
-  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spring: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Shadow: 1px 보더를 우선하고 그림자는 최소한만 사용함 */
+  --shadow-none: none;
+  --shadow-sm: 0 1px 0 rgba(23, 23, 19, 0.06);
+  --shadow-md: 0 2px 4px rgba(23, 23, 19, 0.08);
+  --shadow-lg: 0 4px 12px rgba(23, 23, 19, 0.10);
+  --shadow-xl: 0 8px 24px rgba(23, 23, 19, 0.12);
 
-  /* Typography */
-  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Motion: 기능성 피드백만 유지함 */
+  --motion-duration-fast: 120ms;
+  --motion-duration-base: 180ms;
+  --motion-duration-slow: 240ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --transition-fast: var(--motion-duration-fast) var(--motion-ease-standard);
+  --transition-normal: var(--motion-duration-base) var(--motion-ease-standard);
+  --transition-spring: var(--motion-duration-base) var(--motion-ease-standard);
+
+  /* Layer */
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-overlay: 1000;
+  --z-modal: 1100;
+  --z-toast: 2000;
+
+  /* Layout */
+  --layout-content-max: 500px;
+  --layout-page-max: 960px;
+  --gutter-inline: var(--space-4);
+  --gutter-block: var(--space-6);
+
+  /* Legacy aliases: TASK-DEV-26에서 화면별 CSS와 함께 제거 예정임 */
+  --bg-app: var(--color-canvas);
+  --bg-surface: var(--color-paper);
+  --bg-surface-elevated: var(--color-white);
+  --bg-surface-subtle: var(--color-concrete-soft);
+  --bg-surface-active: #DCDCD3;
+  --bg-body: var(--color-canvas);
+  --text-main: var(--color-charcoal);
+  --text-muted: var(--color-graphite);
+  --text-subtle: var(--color-steel);
+  --text-inverse: var(--color-white);
+  --primary-50: var(--color-signal-50);
+  --primary-100: var(--color-signal-100);
+  --primary-200: var(--color-signal-200);
+  --primary-500: var(--color-signal-500);
+  --primary-600: var(--color-signal-600);
+  --primary-700: var(--color-signal-700);
+  --success-50: var(--color-success-subtle);
+  --success-500: var(--color-success);
+  --success-600: var(--color-success-strong);
+  --amber-50: var(--color-warning-subtle);
+  --amber-500: var(--color-warning);
+  --board-bg: #E6E6DF;
+  --board-border: var(--color-concrete);
+  --tile-bg: var(--color-paper);
+  --tile-text: var(--color-charcoal);
+  --tile-shadow: var(--shadow-sm);
+  --tile-shadow-hover: var(--shadow-md);
+  --tile-shadow-active: none;
+  --tile-movable-border: var(--color-signal-500);
+  --tile-empty-bg: #DEDED6;
 }
 
 /* Global Reset */
@@ -72,14 +164,19 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  font-size: 16px;
+}
+
 html, body {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  font-family: var(--font-family);
-  background-color: var(--bg-app);
-  color: var(--text-main);
-  line-height: 1.5;
+  font-family: var(--font-sans);
+  background-color: var(--color-canvas);
+  color: var(--color-charcoal);
+  line-height: var(--line-height-normal);
+  font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   touch-action: manipulation;
@@ -89,6 +186,11 @@ html, body {
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
+}
+
+::selection {
+  background-color: var(--color-signal-100);
+  color: var(--color-ink);
 }
 
 /* Custom Smooth Scrollbars for Modals */
@@ -112,6 +214,7 @@ html, body {
 
 button {
   font-family: inherit;
+  color: inherit;
   cursor: pointer;
   border: none;
   background: none;
@@ -125,8 +228,16 @@ select:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 [role="button"]:focus-visible {
-  outline: 2px solid var(--primary-500);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* 타이머·이동 수·기록처럼 값이 변하는 숫자에 사용함 */
+.u-numeric {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+  letter-spacing: -0.01em;
 }
 
 /* ==========================================================================
@@ -198,26 +309,23 @@ textarea:focus-visible,
 .sprite-confetti-8 { background-position: 100% 100%; }
 
 
-/* Animations */
+/* Animations: 장식적 scale·bounce·glow를 제거한 기능성 피드백만 유지함 */
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: scale(0.96);
   }
   to {
     opacity: 1;
-    transform: scale(1);
   }
 }
 
+/* 레거시 키프레임 이름은 화면별 CSS 호환을 위해 유지하되 네온 글로우는 제거함 */
 @keyframes pulseGlow {
   0%, 100% {
-    opacity: 0.4;
-    box-shadow: inset 0 0 8px rgba(37, 99, 235, 0.2);
+    opacity: 0.55;
   }
   50% {
-    opacity: 0.8;
-    box-shadow: inset 0 0 16px rgba(37, 99, 235, 0.4);
+    opacity: 1;
   }
 }
 
@@ -237,15 +345,23 @@ textarea:focus-visible,
 }
 
 @keyframes popIn {
-  0% {
+  from {
     opacity: 0;
-    transform: scale(0.85);
+    transform: translateY(4px);
   }
-  70% {
-    transform: scale(1.04);
-  }
-  100% {
+  to {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
