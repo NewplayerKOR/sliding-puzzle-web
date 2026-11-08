@@ -21,26 +21,22 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
   const c = canvas.getContext('2d');
   if (!c) return null;
 
-  // 1. Background Gradient
-  const bgGrad = c.createLinearGradient(0, 0, size, size);
-  bgGrad.addColorStop(0, '#0f172a');
-  bgGrad.addColorStop(0.5, '#1e293b');
-  bgGrad.addColorStop(1, '#090d16');
-  c.fillStyle = bgGrad;
+  // 1. Off-white Background
+  c.fillStyle = '#EFEFEA';
   c.fillRect(0, 0, size, size);
 
   // Outer Border
-  c.strokeStyle = '#3b82f6';
-  c.lineWidth = 8;
-  c.strokeRect(20, 20, size - 40, size - 40);
+  c.strokeStyle = '#22221D';
+  c.lineWidth = 4;
+  c.strokeRect(24, 24, size - 48, size - 48);
 
   // 2. Header Brand
-  c.fillStyle = '#ffffff';
+  c.fillStyle = '#171713';
   c.font = 'bold 44px sans-serif';
   c.textAlign = 'center';
-  c.fillText('🧩 SLIDING BLOCK PUZZLE', size / 2, 90);
+  c.fillText('SLIDING BLOCK PUZZLE', size / 2, 90);
 
-  c.fillStyle = '#94a3b8';
+  c.fillStyle = '#4E4E47';
   c.font = '500 24px sans-serif';
   c.fillText(t.shareCardSubtitle, size / 2, 130);
 
@@ -51,7 +47,7 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
 
   c.save();
   c.beginPath();
-  c.roundRect(thumbX, thumbY, thumbSize, thumbSize, 24);
+  c.roundRect(thumbX, thumbY, thumbSize, thumbSize, 8);
   c.clip();
 
   try {
@@ -64,19 +60,19 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
     });
     c.drawImage(img, thumbX, thumbY, thumbSize, thumbSize);
   } catch {
-    c.fillStyle = '#334155';
+    c.fillStyle = '#E4E4DC';
     c.fillRect(thumbX, thumbY, thumbSize, thumbSize);
   }
   c.restore();
 
   // Border around thumbnail
-  c.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-  c.lineWidth = 4;
+  c.strokeStyle = '#D2D2C9';
+  c.lineWidth = 2;
   c.strokeRect(thumbX, thumbY, thumbSize, thumbSize);
 
-  // 4. Stars Rating in Gold
+  // 4. Stars Rating
   const starSymbols = '★'.repeat(ctx.stars) + '☆'.repeat(3 - ctx.stars);
-  c.fillStyle = '#fbbf24';
+  c.fillStyle = '#BB3E0B';
   c.font = 'bold 64px sans-serif';
   c.textAlign = 'center';
   c.fillText(starSymbols, size / 2, 620);
@@ -88,20 +84,20 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
 
   // Moves Card
   const mCardX = size / 2 - cardW - 20;
-  c.fillStyle = '#1e293b';
+  c.fillStyle = '#F7F7F3';
   c.beginPath();
-  c.roundRect(mCardX, cardY, cardW, cardH, 16);
+  c.roundRect(mCardX, cardY, cardW, cardH, 8);
   c.fill();
-  c.strokeStyle = '#334155';
+  c.strokeStyle = '#D2D2C9';
   c.lineWidth = 2;
   c.stroke();
 
-  c.fillStyle = '#94a3b8';
+  c.fillStyle = '#4E4E47';
   c.font = 'bold 22px sans-serif';
   c.textAlign = 'center';
   c.fillText(t.totalMoves.toUpperCase(), mCardX + cardW / 2, cardY + 42);
 
-  c.fillStyle = '#38bdf8';
+  c.fillStyle = '#22221D';
   c.font = 'bold 44px sans-serif';
   c.fillText(
     formatMessage(t.moveCountValue, { count: ctx.moveCount }),
@@ -111,11 +107,11 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
 
   // Time Card
   const tCardX = size / 2 + 20;
-  c.fillStyle = '#1e293b';
+  c.fillStyle = '#F7F7F3';
   c.beginPath();
-  c.roundRect(tCardX, cardY, cardW, cardH, 16);
+  c.roundRect(tCardX, cardY, cardW, cardH, 8);
   c.fill();
-  c.strokeStyle = '#334155';
+  c.strokeStyle = '#D2D2C9';
   c.lineWidth = 2;
   c.stroke();
 
@@ -123,16 +119,16 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
   const secs = ctx.elapsedTime % 60;
   const timeStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-  c.fillStyle = '#94a3b8';
+  c.fillStyle = '#4E4E47';
   c.font = 'bold 22px sans-serif';
   c.fillText(t.timeElapsed.toUpperCase(), tCardX + cardW / 2, cardY + 42);
 
-  c.fillStyle = '#4ade80';
+  c.fillStyle = '#22221D';
   c.font = 'bold 44px sans-serif';
   c.fillText(timeStr, tCardX + cardW / 2, cardY + 92);
 
   // 6. Footer Info
-  c.fillStyle = '#64748b';
+  c.fillStyle = '#62625A';
   c.font = '500 22px sans-serif';
   c.textAlign = 'center';
   c.fillText(
@@ -141,7 +137,7 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
     840
   );
 
-  c.fillStyle = '#3b82f6';
+  c.fillStyle = '#BB3E0B';
   c.font = 'bold 24px sans-serif';
   c.fillText(t.shareCardPlayNow, size / 2, 890);
 

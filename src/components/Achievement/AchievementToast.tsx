@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Trophy, Sparkles } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 import { Achievement } from '../../types/achievement';
 import { onAchievementUnlocked } from '../../utils/achievementManager';
 import { audioManager } from '../../utils/audioManager';
@@ -45,8 +45,7 @@ export const AchievementToast: React.FC = () => {
     >
       <div className="achievement-toast-card">
         <div className="toast-icon-wrapper">
-          <Trophy size={24} className="toast-trophy-icon" />
-          <Sparkles size={14} className="toast-sparkle-icon" />
+          <Trophy size={22} className="toast-trophy-icon" />
         </div>
         <div className="toast-text-content">
           <span className="toast-tag">{t.achievementUnlocked}</span>

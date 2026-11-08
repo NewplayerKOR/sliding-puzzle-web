@@ -33,7 +33,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.01em;
-  box-shadow: var(--shadow-md);
+  box-shadow: none;
   animation: toastSlideDown var(--motion-duration-base) var(--motion-ease-enter);
 }
 

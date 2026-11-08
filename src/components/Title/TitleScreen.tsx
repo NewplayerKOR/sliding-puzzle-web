@@ -6,9 +6,12 @@ import {
   Flame,
   Camera,
   Globe,
-  Sparkles,
+  Trophy,
   Calendar,
   Music,
+  Volume2,
+  VolumeX,
+  Play,
 } from 'lucide-react';
 import { GameChallengeMode, GridSize } from '../../types/puzzle';
 import { ThemeId, Theme } from '../../types/theme';
@@ -17,7 +20,6 @@ import { Language } from '../../i18n/translations';
 import { useAudio } from '../../hooks/useAudio';
 import { getDailyStreakData } from '../../utils/dailyChallenge';
 import { TIME_LIMITS, MOVE_LIMITS } from '../../hooks/usePuzzleGame';
-import { getAssetUrl } from '../../utils/assetPath';
 import { formatMessage } from '../../i18n/format';
 import './TitleScreen.css';
 
@@ -74,7 +76,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             onClick={onOpenDailyModal}
             title={`${t.currentStreak}: ${streakData.currentStreak}${t.streakDaysSuffix}`}
           >
-            <Flame size={16} className="flame-pulse" />
+            <Flame size={14} />
             <span>{streakData.currentStreak}{t.streakDaysSuffix} {t.streakBadgeText}</span>
           </button>
 
@@ -84,11 +86,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
             onClick={onOpenAchievementModal}
             title={t.achievements}
           >
-            <img
-              src={getAssetUrl('assets/icons/badge_trophy.png')}
-              alt={t.achievements}
-              className="toolbar-icon-img"
-            />
+            <Trophy size={14} />
             <span>{t.achievements}</span>
           </button>
         </div>
@@ -138,11 +136,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               title={bgmMuted ? t.soundOn : t.soundOff}
               aria-label={t.bgm}
             >
-              <img
-                src={!bgmMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
-                alt={t.bgm}
-                className="title-audio-icon-img"
-              />
+              {bgmMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
             </button>
 
             <button
@@ -152,11 +146,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               title={sfxMuted ? t.soundOn : t.soundOff}
               aria-label={t.sfx}
             >
-              <img
-                src={!sfxMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
-                alt={t.sfx}
-                className="title-audio-icon-img"
-              />
+              {sfxMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               <span>{t.sfx}</span>
             </button>
           </div>
@@ -165,13 +155,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
 
       {/* Hero Title Section */}
       <div className="title-hero-section">
-        <div className="title-logo-badge">
-          <Sparkles size={16} className="sparkle-icon" />
-          <span>PUZZLE MASTER</span>
-        </div>
-        <h1 className="title-main-heading">
-          <span className="hero-emoji">🧩</span> {t.appTitle}
-        </h1>
+        <h1 className="title-main-heading">{t.appTitle}</h1>
         <p className="title-hero-desc">{t.titleHeroSub}</p>
       </div>
 
@@ -183,8 +167,9 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           onClick={() => setSelectedMode('standard')}
         >
           <div className="mode-card-header">
+            <span className="mode-index">01</span>
             <div className="mode-icon-box standard">
-              <Shield size={24} />
+              <Shield size={20} />
             </div>
             <div className="mode-title-group">
               <h2 className="mode-card-title">{t.modeStandard}</h2>
@@ -220,11 +205,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               handleModeClick('standard', standardSize);
             }}
           >
-            <img
-              src={getAssetUrl('assets/icons/icon_play.png')}
-              alt={t.startPlay}
-              className="action-icon-img"
-            />
+            <Play size={16} aria-hidden="true" />
             <span>{t.startPlay} ({standardSize}×{standardSize})</span>
           </button>
         </div>
@@ -235,8 +216,9 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           onClick={() => setSelectedMode('timeAttack')}
         >
           <div className="mode-card-header">
+            <span className="mode-index">02</span>
             <div className="mode-icon-box timeattack">
-              <Clock size={24} />
+              <Clock size={20} />
             </div>
             <div className="mode-title-group">
               <h2 className="mode-card-title">{t.modeTimeAttack}</h2>
@@ -272,11 +254,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               handleModeClick('timeAttack', timeAttackSize);
             }}
           >
-            <img
-              src={getAssetUrl('assets/icons/icon_play.png')}
-              alt={t.startPlay}
-              className="action-icon-img"
-            />
+            <Play size={16} aria-hidden="true" />
             <span>
               {formatMessage(t.timeAttackStartTemplate, {
                 mode: t.modeTimeAttack,
@@ -292,8 +270,9 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           onClick={() => setSelectedMode('moveLimit')}
         >
           <div className="mode-card-header">
+            <span className="mode-index">03</span>
             <div className="mode-icon-box movelimit">
-              <Footprints size={24} />
+              <Footprints size={20} />
             </div>
             <div className="mode-title-group">
               <h2 className="mode-card-title">{t.modeMoveLimit}</h2>
@@ -329,11 +308,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               handleModeClick('moveLimit', moveLimitSize);
             }}
           >
-            <img
-              src={getAssetUrl('assets/icons/icon_play.png')}
-              alt={t.startPlay}
-              className="action-icon-img"
-            />
+            <Play size={16} aria-hidden="true" />
             <span>
               {formatMessage(t.moveLimitStartTemplate, {
                 mode: t.modeMoveLimit,
@@ -349,8 +324,9 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           onClick={() => setSelectedMode('daily')}
         >
           <div className="mode-card-header">
+            <span className="mode-index">04</span>
             <div className="mode-icon-box daily">
-              <Flame size={24} />
+              <Flame size={20} />
             </div>
             <div className="mode-title-group">
               <h2 className="mode-card-title">{t.dailyChallenge}</h2>
@@ -373,11 +349,7 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               handleDailyClick();
             }}
           >
-            <img
-              src={getAssetUrl('assets/icons/icon_play.png')}
-              alt={t.startPlay}
-              className="action-icon-img"
-            />
+            <Play size={16} aria-hidden="true" />
             <span>{formatMessage(t.dailyStartTemplate, { mode: t.dailyChallenge })}</span>
           </button>
         </div>
@@ -390,8 +362,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           className="btn-custom-photo-hero"
           onClick={onOpenCustomImageModal}
         >
-          <Camera size={18} />
-          <span>📸 {t.cropModalTitle}</span>
+          <Camera size={18} aria-hidden="true" />
+          <span>{t.cropModalTitle}</span>
         </button>
       </div>
     </main>

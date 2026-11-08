@@ -1,34 +1,34 @@
 .achievement-toast-container {
   position: fixed;
-  top: 1rem;
+  top: var(--space-4);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 2000;
+  z-index: var(--z-toast);
   pointer-events: none;
-  animation: toastSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: toastSlideDown var(--motion-duration-base) var(--motion-ease-enter);
 }
 
 .achievement-toast-card {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  background: linear-gradient(135deg, hsl(222, 47%, 14%), hsl(222, 47%, 18%));
-  border: 1.5px solid #f59e0b;
-  border-radius: var(--radius-lg);
-  padding: 0.75rem 1.25rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 0 15px rgba(245, 158, 11, 0.3);
-  color: #fff;
+  gap: var(--space-3);
+  background: var(--color-charcoal);
+  border: 1px solid var(--color-concrete-strong);
+  border-radius: var(--radius-2);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: none;
+  color: var(--color-white);
   min-width: 320px;
   max-width: 90vw;
 }
 
 .toast-icon-wrapper {
   position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(245, 158, 11, 0.3), rgba(245, 158, 11, 0.05));
-  border: 1.5px solid #f59e0b;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-1);
+  background: transparent;
+  border: 1px solid var(--color-signal-200);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,40 +36,34 @@
 }
 
 .toast-trophy-icon {
-  color: #fbbf24;
-}
-
-.toast-sparkle-icon {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  color: #fef08a;
-  animation: pulseGlow 1s infinite;
+  color: var(--color-signal-200);
 }
 
 .toast-text-content {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .toast-tag {
-  font-size: 0.65rem;
-  font-weight: 800;
-  color: #fbbf24;
-  letter-spacing: 0.06em;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-signal-200);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .toast-title {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #fff;
-  margin: 0.1rem 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-white);
+  margin: 2px 0;
 }
 
 .toast-desc {
-  font-size: 0.75rem;
-  color: #cbd5e1;
-  line-height: 1.2;
+  font-size: var(--font-size-sm);
+  color: var(--color-concrete);
+  line-height: var(--line-height-snug);
 }
 
 @keyframes toastSlideDown {

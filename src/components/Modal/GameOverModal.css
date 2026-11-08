@@ -1,115 +1,109 @@
 .gameover-modal-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  background-color: rgba(23, 23, 19, 0.62);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 1rem;
-  animation: fadeIn var(--transition-fast);
+  z-index: var(--z-overlay);
+  padding: var(--space-4);
+  animation: fadeIn var(--motion-duration-fast) var(--motion-ease-standard);
 }
 
 .gameover-modal-content {
-  background-color: var(--bg-surface);
-  border: 2px solid #ef4444;
-  border-radius: var(--radius-xl);
-  padding: 1.75rem 1.25rem;
-  max-width: 380px;
+  background-color: var(--color-paper);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-2);
+  padding: var(--space-5);
+  max-width: 400px;
   width: 100%;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 20px rgba(239, 68, 68, 0.3);
-  animation: popIn var(--transition-spring);
+  box-shadow: none;
+  animation: popIn var(--motion-duration-base) var(--motion-ease-standard);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.75rem;
+  align-items: stretch;
+  text-align: left;
+  gap: var(--space-3);
 }
 
 .gameover-icon-box {
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(239, 68, 68, 0.25), rgba(239, 68, 68, 0.05));
-  border: 2px solid #ef4444;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-1);
+  background: var(--color-danger-subtle);
+  border: 1px solid var(--color-danger);
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: shakeWarning 0.5s ease-in-out;
+  align-self: flex-start;
 }
 
 .gameover-icon {
-  color: #ef4444;
+  color: var(--color-danger-strong);
 }
 
 .gameover-title {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: #ef4444;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-danger-strong);
   letter-spacing: -0.02em;
+  line-height: var(--line-height-tight);
 }
 
 .gameover-subtitle {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  line-height: 1.4;
-  margin: -0.25rem 0 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-graphite);
+  line-height: var(--line-height-normal);
+  margin: 0;
 }
 
 .gameover-actions {
-  display: flex;
-  gap: 0.6rem;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--space-2);
   width: 100%;
 }
 
 .btn-gameover-retry {
-  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: var(--space-1);
   min-height: 44px;
-  border-radius: var(--radius-md);
-  background-color: #ef4444;
-  color: #fff;
-  border: none;
-  font-size: 0.875rem;
-  font-weight: 700;
+  border-radius: var(--radius-1);
+  background-color: var(--color-danger);
+  color: var(--color-white);
+  border: 1px solid var(--color-danger);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-  transition: all var(--transition-fast);
+  box-shadow: none;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .btn-gameover-retry:hover {
-  background-color: #dc2626;
-  transform: translateY(-1px);
+  background-color: var(--color-danger-strong);
+  border-color: var(--color-danger-strong);
 }
 
 .btn-gameover-solution {
-  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: var(--space-1);
   min-height: 44px;
-  border-radius: var(--radius-md);
-  background-color: var(--bg-surface-subtle);
-  color: var(--text-main);
-  border: 1px solid var(--board-border);
-  font-size: 0.875rem;
-  font-weight: 600;
+  border-radius: var(--radius-1);
+  background-color: transparent;
+  color: var(--color-charcoal);
+  border: 1px solid var(--color-concrete);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .btn-gameover-solution:hover {
-  background-color: var(--bg-body);
-}
-
-@keyframes shakeWarning {
-  0%, 100% { transform: translateX(0); }
-  20%, 60% { transform: translateX(-6px); }
-  40%, 80% { transform: translateX(6px); }
+  background-color: var(--color-concrete-soft);
+  border-color: var(--color-charcoal);
 }

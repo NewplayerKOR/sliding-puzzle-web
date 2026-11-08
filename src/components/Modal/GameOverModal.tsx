@@ -1,8 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { AlertOctagon } from 'lucide-react';
+import { AlertOctagon, RotateCcw, Play } from 'lucide-react';
 import { GameChallengeMode } from '../../types/puzzle';
 import { useTranslation } from '../../i18n/useTranslation';
-import { getAssetUrl } from '../../utils/assetPath';
 import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './GameOverModal.css';
 
@@ -65,20 +64,12 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
 
         <div className="gameover-actions">
           <button type="button" className="btn-gameover-retry" onClick={onRetry}>
-            <img
-              src={getAssetUrl('assets/icons/icon_play.png')}
-              alt={t.retryAlt}
-              className="action-icon-img"
-            />
+            <Play size={16} aria-hidden="true" />
             <span>{t.tryAgain}</span>
           </button>
 
           <button type="button" className="btn-gameover-solution" onClick={onViewSolution}>
-            <img
-              src={getAssetUrl('assets/icons/icon_reset.png')}
-              alt={t.solutionAlt}
-              className="action-icon-img"
-            />
+            <RotateCcw size={16} aria-hidden="true" />
             <span>{t.checkSolution}</span>
           </button>
         </div>

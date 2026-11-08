@@ -4,7 +4,7 @@ import {
   Music2,
   Volume2,
   VolumeX,
-  Sparkles,
+  RefreshCw,
   Check,
   Play,
   Sliders,
@@ -183,7 +183,7 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
             />
             <div className="theme-sync-text">
               <span className="sync-title">
-                <Sparkles size={14} className="sparkle-sync-icon" />
+                <RefreshCw size={14} className="sync-icon" aria-hidden="true" />
                 {t.autoThemeBgmTitle}
               </span>
               <span className="sync-desc">{t.autoThemeBgmDesc}</span>

@@ -7,7 +7,6 @@ import {
   ALL_IMAGE_ASSETS,
   CORE_IMAGE_ASSETS,
   THEME_ASSETS,
-  SPRITE_ASSETS,
 } from './assetPreloader';
 
 describe('assetPreloader', () => {
@@ -16,21 +15,11 @@ describe('assetPreloader', () => {
   });
 
   it('keeps theme images out of the core startup set', () => {
-    expect(SPRITE_ASSETS).toHaveLength(2);
-    expect(CORE_IMAGE_ASSETS).toHaveLength(16);
+    expect(CORE_IMAGE_ASSETS).toHaveLength(0);
     expect(THEME_ASSETS).toHaveLength(4);
-    expect(ALL_IMAGE_ASSETS).toHaveLength(20);
+    expect(ALL_IMAGE_ASSETS).toHaveLength(4);
 
-    expect(CORE_IMAGE_ASSETS).toContain('/assets/sprites/ui_icons_spritesheet.png');
-    expect(CORE_IMAGE_ASSETS).toContain('/assets/sprites/fx_animations_spritesheet.png');
-    expect(CORE_IMAGE_ASSETS).not.toContain('/assets/sprites/sheet_ui_fx.png');
-    expect(CORE_IMAGE_ASSETS).toContain('/assets/icons/stars_3.png');
-    expect(CORE_IMAGE_ASSETS).toContain('/assets/icons/badge_trophy.png');
-    expect(CORE_IMAGE_ASSETS).toContain('/assets/icons/icon_sound_on.png');
-    expect(CORE_IMAGE_ASSETS).toContain('/assets/icons/icon_theme_selector.png');
-    expect(CORE_IMAGE_ASSETS).not.toContain('/assets/images/theme_nature.png');
-
-    expect(THEME_ASSETS).toEqual(
+    expect(ALL_IMAGE_ASSETS).toEqual(
       expect.arrayContaining([
         '/assets/images/theme_nature.png',
         '/assets/images/theme_pixel_art.png',
@@ -38,6 +27,7 @@ describe('assetPreloader', () => {
         '/assets/images/theme_animal.png',
       ])
     );
+    expect(CORE_IMAGE_ASSETS).not.toContain('/assets/images/theme_nature.png');
   });
 
   it('loads only core images and the selected theme on initial load', async () => {

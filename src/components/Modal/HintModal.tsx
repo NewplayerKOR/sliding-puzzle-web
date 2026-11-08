@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { X } from 'lucide-react';
+import { X, Eye } from 'lucide-react';
 import { ThemeInfo } from '../../types/theme';
-import { getAssetUrl } from '../../utils/assetPath';
 import { useTranslation } from '../../i18n/useTranslation';
 import { formatMessage } from '../../i18n/format';
 import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
@@ -43,7 +42,7 @@ export const HintModal: React.FC<HintModalProps> = ({ isOpen, theme, onClose }) 
       >
         <div className="hint-modal-header">
           <div className="hint-title-group">
-            <img src={getAssetUrl('assets/icons/icon_hint.png')} alt={t.previewHint} className="modal-header-icon-img" />
+            <Eye size={20} className="hint-icon" aria-hidden="true" />
 
             <h3 id="hint-title" className="hint-title">
               {formatMessage(t.hintTitleWithTheme, { theme: theme.name })}

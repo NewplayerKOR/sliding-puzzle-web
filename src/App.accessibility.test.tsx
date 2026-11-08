@@ -103,7 +103,7 @@ describe('App accessibility structure', () => {
     expect(guide?.textContent).toContain('방향키');
   });
 
-  it('localizes audio control labels and alt text in Japanese and Chinese', () => {
+  it('localizes audio control accessible labels in Japanese and Chinese', () => {
     render(<App />);
     const languageSelect = screen.getByLabelText('언어 선택');
 
@@ -111,12 +111,19 @@ describe('App accessibility structure', () => {
 
     expect(screen.getAllByLabelText('BGM').length).toBeGreaterThan(0);
     expect(screen.getAllByLabelText('効果音').length).toBeGreaterThan(0);
-    expect(screen.getAllByAltText('効果音').length).toBeGreaterThan(0);
+
+    // PNG alt 대신 lucide 아이콘을 포함한 버튼의 접근성 이름을 검증함
+    const jaSfxButtons = screen.getAllByRole('button', { name: '効果音' });
+    expect(jaSfxButtons.length).toBeGreaterThan(0);
+    expect(jaSfxButtons[0].querySelector('svg')).not.toBeNull();
 
     fireEvent.change(languageSelect, { target: { value: 'zh' } });
 
     expect(screen.getAllByLabelText('音乐').length).toBeGreaterThan(0);
     expect(screen.getAllByLabelText('音效').length).toBeGreaterThan(0);
-    expect(screen.getAllByAltText('音效').length).toBeGreaterThan(0);
+
+    const zhSfxButtons = screen.getAllByRole('button', { name: '音效' });
+    expect(zhSfxButtons.length).toBeGreaterThan(0);
+    expect(zhSfxButtons[0].querySelector('svg')).not.toBeNull();
   });
 });

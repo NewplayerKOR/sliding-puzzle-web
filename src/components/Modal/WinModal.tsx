@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { Timer, Footprints, Sparkles, Play, Pause, RotateCcw, Share2 } from 'lucide-react';
+import { Timer, Footprints, Trophy, Star, Play, Pause, RotateCcw, Share2 } from 'lucide-react';
 import { Board, GridSize, GameChallengeMode } from '../../types/puzzle';
 import { shareOrDownloadResult } from '../../utils/shareCardGenerator';
 import { useTranslation } from '../../i18n/useTranslation';
@@ -53,32 +53,39 @@ export const WinModal: React.FC<WinModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      // 승리 축하 Confetti 폭죽 발사
-      const duration = 2.5 * 1000;
-      const animationEnd = Date.now() + duration;
+      // 승리 축하 Confetti는 1회성 피드백으로 유지하되, reduced motion에서는 생략함
+      const reduceMotion =
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const frame = () => {
-        confetti({
-          particleCount: 4,
-          angle: 60,
-          spread: 60,
-          origin: { x: 0, y: 0.7 },
-          colors: ['#2563eb', '#38bdf8', '#10b981', '#f59e0b', '#ec4899'],
-        });
-        confetti({
-          particleCount: 4,
-          angle: 120,
-          spread: 60,
-          origin: { x: 1, y: 0.7 },
-          colors: ['#2563eb', '#38bdf8', '#10b981', '#f59e0b', '#ec4899'],
-        });
+      if (!reduceMotion) {
+        const duration = 2.5 * 1000;
+        const animationEnd = Date.now() + duration;
 
-        if (Date.now() < animationEnd) {
-          requestAnimationFrame(frame);
-        }
-      };
+        const frame = () => {
+          confetti({
+            particleCount: 4,
+            angle: 60,
+            spread: 60,
+            origin: { x: 0, y: 0.7 },
+            colors: ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'],
+          });
+          confetti({
+            particleCount: 4,
+            angle: 120,
+            spread: 60,
+            origin: { x: 1, y: 0.7 },
+            colors: ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'],
+          });
 
-      frame();
+          if (Date.now() < animationEnd) {
+            requestAnimationFrame(frame);
+          }
+        };
+
+        frame();
+      }
+
       setShowReplay(false);
       setReplayStep(0);
       setIsPlayingReplay(false);
@@ -144,18 +151,13 @@ export const WinModal: React.FC<WinModalProps> = ({
   return (
     <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div ref={contentRef} className="modal-content" tabIndex={-1}>
-        {/* 황금 트로피 뱃지 */}
+        {/* 클리어 트로피 */}
         <div className="modal-trophy-wrapper">
-          <img
-            src={getAssetUrl('assets/icons/badge_trophy.png')}
-            alt={t.trophyAlt}
-            className="win-trophy-img"
-          />
+          <Trophy size={36} className="win-trophy-icon" aria-hidden="true" />
         </div>
 
         {isNewRecord && (
           <div className="new-record-badge" role="status">
-            <Sparkles size={16} />
             <span>{t.newRecord}</span>
           </div>
         )}
@@ -172,11 +174,17 @@ export const WinModal: React.FC<WinModalProps> = ({
           className="stars-sprite-wrapper"
           aria-label={formatMessage(t.starsEarnedLabel, { stars })}
         >
-          <img
-            src={getAssetUrl(`assets/icons/stars_${stars}.png`)}
-            alt={formatMessage(t.starsAlt, { stars })}
-            className="win-stars-img"
-          />
+          <div className="win-stars-row">
+            {[1, 2, 3].map((index) => (
+              <Star
+                key={index}
+                size={32}
+                className={index <= stars ? 'win-star-earned' : 'win-star-empty'}
+                fill={index <= stars ? 'currentColor' : 'none'}
+                aria-hidden="true"
+              />
+            ))}
+          </div>
           <p className="win-star-criteria-text">{t[feedbackKey]}</p>
         </div>
 
@@ -186,7 +194,7 @@ export const WinModal: React.FC<WinModalProps> = ({
               <Footprints size={16} />
               <span>{t.totalMoves}</span>
             </div>
-            <span className="stat-main-value">
+            <span className="stat-main-value u-numeric">
               {formatMessage(t.moveCountValue, { count: moveCount })}
             </span>
           </div>
@@ -196,7 +204,7 @@ export const WinModal: React.FC<WinModalProps> = ({
               <Timer size={16} />
               <span>{t.timeElapsed}</span>
             </div>
-            <span className="stat-main-value">{formatTime(elapsedTime)}</span>
+            <span className="stat-main-value u-numeric">{formatTime(elapsedTime)}</span>
           </div>
         </div>
 
@@ -222,7 +230,7 @@ export const WinModal: React.FC<WinModalProps> = ({
             ) : (
               <div className="replay-player-box">
                 <div className="replay-header">
-                  <span className="replay-title">🎬 {t.replayTimelapse}</span>
+                  <span className="replay-title">{t.replayTimelapse}</span>
                   <span className="replay-step-info">
                     {formatMessage(t.replayStepInfo, {
                       current: replayStep,
@@ -294,11 +302,7 @@ export const WinModal: React.FC<WinModalProps> = ({
 
         <div className="modal-actions">
           <button type="button" className="modal-btn btn-retry" onClick={() => onPlayAgain()}>
-            <img
-              src={getAssetUrl('assets/icons/icon_reset.png')}
-              alt={t.playAgainAlt}
-              className="win-btn-icon-img"
-            />
+            <RotateCcw size={16} aria-hidden="true" />
             <span>{t.playAgain}</span>
           </button>
 
@@ -309,11 +313,7 @@ export const WinModal: React.FC<WinModalProps> = ({
               onClick={() => onNextLevel(nextSize)}
             >
               <span>{nextSize}×{nextSize} {t.nextLevel}</span>
-              <img
-                src={getAssetUrl('assets/icons/icon_play.png')}
-                alt={t.nextLevelAlt}
-                className="win-btn-icon-img"
-              />
+              <Play size={16} aria-hidden="true" />
             </button>
           )}
         </div>

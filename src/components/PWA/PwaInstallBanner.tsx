@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Download, X } from 'lucide-react';
+import { Download, X, LayoutGrid } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
-import { getAssetUrl } from '../../utils/assetPath';
 import './PwaInstallBanner.css';
 
 export const PwaInstallBanner: React.FC = () => {
@@ -40,7 +39,7 @@ export const PwaInstallBanner: React.FC = () => {
     <div className="pwa-banner-container" role="banner">
       <div className="pwa-banner-card">
         <div className="pwa-icon-box">
-          <img src={getAssetUrl('assets/icons/badge_trophy.png')} alt={t.appTitle} className="pwa-app-icon" />
+          <LayoutGrid size={24} aria-hidden="true" />
         </div>
 
         <div className="pwa-text-box">

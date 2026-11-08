@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Check } from 'lucide-react';
+import { X, Check, Palette, Play } from 'lucide-react';
 import { ThemeId, GameMode } from '../../types/theme';
 import { GameChallengeMode, GridSize } from '../../types/puzzle';
 import { THEME_LIST, localizeTheme } from '../../utils/themeData';
-import { getAssetUrl } from '../../utils/assetPath';
 import { useTranslation } from '../../i18n/useTranslation';
 import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './ThemeModal.css';
@@ -97,14 +96,14 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
   const getModeBadgeText = () => {
     if (!pendingModeInfo) return null;
     if (pendingModeInfo.isDaily) {
-      return `🔥 ${t.dailyChallenge} (4×4)`;
+      return `${t.dailyChallenge} (4×4)`;
     }
     const modeName =
       pendingModeInfo.mode === 'timeAttack'
-        ? `⚡ ${t.modeTimeAttack}`
+        ? t.modeTimeAttack
         : pendingModeInfo.mode === 'moveLimit'
-        ? `👣 ${t.modeMoveLimit}`
-        : `🛡️ ${t.modeStandard}`;
+        ? t.modeMoveLimit
+        : t.modeStandard;
     return `${modeName} • ${pendingModeInfo.size}×${pendingModeInfo.size}`;
   };
 
@@ -124,11 +123,7 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
       >
         <div className="theme-modal-header">
           <div className="theme-title-group">
-            <img
-              src={getAssetUrl('assets/icons/icon_theme_selector.png')}
-              alt={t.themeSelect}
-              className="modal-header-icon-img"
-            />
+            <Palette size={20} className="theme-header-icon" aria-hidden="true" />
             <h3 id="theme-modal-title" className="theme-modal-title">
               {t.themeModalTitle}
             </h3>
@@ -214,11 +209,7 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
               className="btn-theme-start-game"
               onClick={handleStartGame}
             >
-              <img
-                src={getAssetUrl('assets/icons/icon_play.png')}
-                alt={t.startPlay}
-                className="action-icon-img"
-              />
+              <Play size={16} aria-hidden="true" />
               <span>{t.themeStart}</span>
             </button>
           </div>

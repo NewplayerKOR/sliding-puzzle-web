@@ -1,11 +1,10 @@
-import { Timer, Footprints, Globe, Flame, Home, Music } from 'lucide-react';
+import { Timer, Footprints, Globe, Flame, Home, Music, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { GameStatus, GameChallengeMode, GridSize } from '../../types/puzzle';
 import { BestRecord } from '../../types/theme';
 import { useAudio } from '../../hooks/useAudio';
 import { useTranslation } from '../../i18n/useTranslation';
 import { Language } from '../../i18n/translations';
 import { getDailyStreakData } from '../../utils/dailyChallenge';
-import { getAssetUrl } from '../../utils/assetPath';
 import { formatMessage } from '../../i18n/format';
 import './Header.css';
 
@@ -136,11 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
               title={bgmMuted ? t.soundOn : t.soundOff}
               aria-label={`${t.bgm} ${bgmMuted ? t.soundOn : t.soundOff}`}
             >
-              <img
-                src={!bgmMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
-                alt={t.bgm}
-                className="audio-icon-img"
-              />
+              {bgmMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
             </button>
 
             <button
@@ -150,11 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
               title={sfxMuted ? t.soundOn : t.soundOff}
               aria-label={`${t.sfx} ${sfxMuted ? t.soundOn : t.soundOff}`}
             >
-              <img
-                src={!sfxMuted ? getAssetUrl('assets/icons/icon_sound_on.png') : getAssetUrl('assets/icons/icon_sound_off.png')}
-                alt={t.sfx}
-                className="audio-icon-img"
-              />
+              {sfxMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
               <span className="audio-btn-label">{t.sfx}</span>
             </button>
           </div>
@@ -195,11 +186,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Best Record Card */}
         <div className="stat-card" title={formatMessage(t.bestRecordTitle, { size: gridSize })}>
           <div className="stat-icon-wrapper">
-            <img
-              src={getAssetUrl('assets/icons/badge_trophy.png')}
-              alt={t.bestRecord}
-              className="header-stat-icon-img"
-            />
+            <Trophy size={18} className="stat-icon" />
           </div>
           <div className="stat-content">
             <span className="stat-label">{t.bestRecord}</span>

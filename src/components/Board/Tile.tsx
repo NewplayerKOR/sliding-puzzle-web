@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { GridSize, TileData } from '../../types/puzzle';
 import { GameMode } from '../../types/theme';
 import { getTileSpriteStyle } from '../../utils/spriteCalculator';
@@ -31,18 +31,6 @@ export const Tile: React.FC<TileProps> = ({
 }) => {
   const { t } = useTranslation();
   const isCorrect = tile.currentPos === tile.targetPos;
-  const prevCorrectRef = useRef<boolean>(isCorrect);
-  const [showSparkle, setShowSparkle] = useState<boolean>(false);
-
-  // 타일이 정답 위치에 새로 안착했을 때 Sparkle VFX 발동
-  useEffect(() => {
-    if (!tile.isEmpty && isCorrect && !prevCorrectRef.current) {
-      setShowSparkle(true);
-      const timer = setTimeout(() => setShowSparkle(false), 600);
-      return () => clearTimeout(timer);
-    }
-    prevCorrectRef.current = isCorrect;
-  }, [isCorrect, tile.isEmpty]);
 
   if (tile.isEmpty) {
     return (
@@ -50,9 +38,7 @@ export const Tile: React.FC<TileProps> = ({
         className="puzzle-tile tile-empty"
         aria-hidden="true"
         role="presentation"
-      >
-        <div className="empty-slot-indicator" />
-      </div>
+      />
     );
   }
 
@@ -97,9 +83,6 @@ export const Tile: React.FC<TileProps> = ({
           </span>
         </div>
       )}
-
-      {/* 정답 안착 시 6-frame Sparkle VFX Sequence */}
-      {showSparkle && <div className="tile-sparkle-fx animated-sparkle" aria-hidden="true" />}
     </button>
   );
 };

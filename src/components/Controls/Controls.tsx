@@ -7,11 +7,16 @@ import {
   Footprints,
   Shield,
   RotateCcw,
+  Trophy,
+  Palette,
+  Eye,
+  Hash,
+  Shuffle,
+  Play,
 } from 'lucide-react';
 import { GameChallengeMode, GridSize } from '../../types/puzzle';
 import { audioManager } from '../../utils/audioManager';
 import { useTranslation } from '../../i18n/useTranslation';
-import { getAssetUrl } from '../../utils/assetPath';
 import './Controls.css';
 
 interface ControlsProps {
@@ -147,11 +152,7 @@ export const Controls: React.FC<ControlsProps> = ({
           title={t.achievements}
           aria-label={t.achievements}
         >
-          <img
-            src={getAssetUrl('assets/icons/badge_trophy.png')}
-            alt={t.achievements}
-            className="toolbar-icon-img"
-          />
+          <Trophy size={16} aria-hidden="true" />
           <span>{t.achievements}</span>
         </button>
       </div>
@@ -181,11 +182,7 @@ export const Controls: React.FC<ControlsProps> = ({
           title={t.themeSelect}
           aria-label={t.themeSelect}
         >
-          <img
-            src={getAssetUrl('assets/icons/icon_theme_selector.png')}
-            alt={t.themeSelect}
-            className="toolbar-icon-img"
-          />
+          <Palette size={16} aria-hidden="true" />
           <span>{t.themeSelect}</span>
         </button>
 
@@ -197,11 +194,7 @@ export const Controls: React.FC<ControlsProps> = ({
           title={t.previewHint}
           aria-label={t.previewHint}
         >
-          <img
-            src={getAssetUrl('assets/icons/icon_hint.png')}
-            alt={t.previewHint}
-            className="toolbar-icon-img"
-          />
+          <Eye size={16} aria-hidden="true" />
           <span>{t.previewHint}</span>
         </button>
 
@@ -213,11 +206,7 @@ export const Controls: React.FC<ControlsProps> = ({
           title={t.numberHint}
           aria-label={t.numberHint}
         >
-          <img
-            src={getAssetUrl('assets/icons/icon_number_toggle.png')}
-            alt={t.numberHint}
-            className="toolbar-icon-img"
-          />
+          <Hash size={16} aria-hidden="true" />
           <span>{t.numberHint}</span>
         </button>
       </div>
@@ -230,11 +219,7 @@ export const Controls: React.FC<ControlsProps> = ({
           onClick={() => handleAction(onShuffle)}
           title={t.newGame}
         >
-          <img
-            src={getAssetUrl('assets/icons/icon_play.png')}
-            alt={t.newGame}
-            className="action-icon-img"
-          />
+          <Shuffle size={16} aria-hidden="true" />
           <span>{t.newGame}</span>
         </button>
 
@@ -244,11 +229,7 @@ export const Controls: React.FC<ControlsProps> = ({
           onClick={() => handleAction(onReset)}
           title={t.resetBoard}
         >
-          <img
-            src={getAssetUrl('assets/icons/icon_reset.png')}
-            alt={t.resetBoard}
-            className="action-icon-img"
-          />
+          <RotateCcw size={16} aria-hidden="true" />
           <span>{t.resetBoard}</span>
         </button>
 
@@ -259,11 +240,7 @@ export const Controls: React.FC<ControlsProps> = ({
             onClick={() => handleAction(onAutoSolve)}
             title={t.autoClear}
           >
-            <img
-              src={getAssetUrl('assets/icons/icon_play.png')}
-              alt={t.autoClear}
-              className="action-icon-img"
-            />
+            <Play size={16} aria-hidden="true" />
             <span>{t.autoClear}</span>
           </button>
         )}

@@ -3,7 +3,6 @@ import { X, Trophy, Lock, CheckCircle2, Zap, Compass, Crown, Star, ShieldCheck, 
 import { getStoredAchievements } from '../../utils/achievementManager';
 import { useTranslation } from '../../i18n/useTranslation';
 import { formatMessage } from '../../i18n/format';
-import { getAssetUrl } from '../../utils/assetPath';
 import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
 import './AchievementModal.css';
 
@@ -62,11 +61,7 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ isOpen, onCl
       >
         <div className="achieve-modal-header">
           <div className="achieve-title-group">
-            <img
-              src={getAssetUrl('assets/icons/badge_trophy.png')}
-              alt={t.achievements}
-              className="achieve-header-img"
-            />
+            <Trophy size={24} className="achieve-header-icon" aria-hidden="true" />
             <div>
               <h3 id="achieve-modal-title" className="achieve-modal-title">
                 {t.achievementsTitle}
