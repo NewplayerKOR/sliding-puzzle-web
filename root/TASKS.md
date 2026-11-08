@@ -27,24 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-16 — 커스텀 이미지 보존·드래그 앤 드롭·업로드 검증 정비
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: 테마 모달을 열기만 해도 커스텀 이미지가 삭제되는 문제를 없애고, 안내 문구와 실제 업로드 동작을 일치시키며, 용량·형식 오류를 사용자에게 알린다.
-- **대상 파일**: `src/App.tsx`(`onOpenThemeModal`, `handleConfirmThemeStart`, `onSelectTheme`), `src/components/Modal/CustomImageModal.tsx`, `src/components/Modal/CustomImageModal.css`
-- **재현/증거**:
-  - 커스텀 이미지 적용 후 `localStorage`에 728,626바이트 저장 확인 → 테마 모달을 열기만 해도 `sliding_puzzle_custom_image`가 0바이트가 되고 보드가 이전 테마로 복귀함.
-  - 모달 문구는 "클릭하거나 이미지를 여기로 드래그"이나 `onDrop`/`onDragOver` 핸들러가 없어 파일 드롭이 무반응.
-  - 10MB 초과 시 한국어 `alert`만 표시하고, `localStorage` quota 초과는 조용히 무시하며, 파일 MIME 검증이 없음.
-- **DoD**:
-  - 테마 모달 열기·닫기만으로 커스텀 이미지를 삭제하지 않고, 테마 확정/변경 시에만 제거
-  - 드래그 앤 드롭 구현 또는 안내 문구 수정
-  - 파일 형식·크기·quota 오류를 현재 언어로 피드백하고 실패 시 적용 상태를 명확히 표시
-  - 관련 브라우저 수동 확인과 회귀 테스트 추가
-- **선행 조건**: 없음
-
 #### [ ] TASK-DEV-17 — AI 힌트 레이스 컨디션·Worker 실패 처리
 
 - **Phase**: 01
@@ -197,11 +179,16 @@
   - Playwright E2E 스모크(타이틀→테마→게임→이동/Undo→AI 힌트→3x3 승리, 360px 레이아웃, 모달 포커스, EN 전환) 추가
   - `public/robots.txt`와 배포·캐시 갱신 절차 문서 추가
   - CI·로컬 실행 결과와 미실행 범위 기록
-- **선행 조건**: 없음 (TASK-DEV-16~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
+- **선행 조건**: 없음 (TASK-DEV-17~24와 병행 가능. E2E는 DEV 수정 완료 후 최종 확인)
 
 ---
 
 ## 3. Recent Completions (최근 완료 요약)
+
+- **TASK-DEV-16** — 커스텀 이미지 보존·드래그 앤 드롭·업로드 검증 정비 (완료일: 2026-11-08)
+  - 핵심 결과: 테마 모달 열기·닫기와 모드 전환에서 커스텀 이미지를 유지하고 테마 적용 시에만 제거. 드래그 앤 드롭, MIME·10MB·quota 오류의 4개 국어 피드백 추가
+  - 검증 범위: Vitest 17개 파일/123개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 드래그·보존·테마 변경·형식/용량/quota 오류 확인. 실제 모바일 실기기·OS별 파일 드롭은 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-16--커스텀-이미지-보존드래그-앤-드롭업로드-검증-정비)
 
 - **TASK-DEV-15** — KO/EN/JA/ZH 잔여 하드코딩 문자열 및 `html lang` 정리 (완료일: 2026-11-08)
   - 핵심 결과: 테마·업적·BGM·일일·공유 카드·단위·접근성 라벨을 번역 키로 이관하고 `html lang`을 선택 언어와 동기화. EN 전 화면과 JA/ZH 핵심 화면에서 한국어 잔존 0건 확인
@@ -223,13 +210,8 @@
   - 검증 범위: `npm test` 104/104 PASS, `npm run build` 성공, 실행 출력에서 `sliding-block-puzzle@1.4.0` 확인
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-04--v140-버전-표기-정렬)
 
-- **TASK-PM-03** — Node.js 검증 환경 연결 및 테스트·빌드 실측 (완료일: 2026-11-08)
-  - 핵심 결과: WebStorm 번들 Node.js 26.13.0 연결, Vitest 14개 파일/104개 케이스 PASS, Vite 6.4.3 빌드 성공
-  - 검증 범위: `npm test`(Node 26 `--localstorage-file` 조건), `npm run build`, `dist` 산출물 3종 확인. 브라우저·모바일 수동 검증은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-03--nodejs-검증-환경-연결-및-테스트빌드-실측)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증)

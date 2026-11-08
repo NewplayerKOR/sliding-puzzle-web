@@ -382,3 +382,50 @@
   - 언어 선택 옵션도 현재 UI 언어로 표시해 EN/JA/ZH DOM에 `한국어`가 남지 않도록 함.
 - **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome), OS·브라우저 언어 자동 감지, PWA manifest의 다국어화는 수행하지 않음. 데스크톱 Chromium 뷰포트에서만 확인함.
 - **증거**: `src/i18n/translations.ts`, `src/i18n/useTranslation.ts`, `src/i18n/format.ts`, `src/i18n/i18n.test.ts`, `src/utils/themeData.ts`, `src/utils/achievementData.ts`, `src/utils/audioManager.ts`, `src/utils/shareCardGenerator.ts`, `src/components/**`, `index.html`, 터미널 실행 결과, 공유 카드 PNG `C:\Users\parkt\AppData\Local\Temp\opencode-browser-jmEu2A\0\sliding-puzzle-victory.png`
+
+---
+
+## TASK-DEV-16 — 커스텀 이미지 보존·드래그 앤 드롭·업로드 검증 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 테마 모달을 열기만 해도 커스텀 이미지가 삭제되는 문제를 없애고, 안내 문구와 실제 업로드 동작을 일치시키며, 용량·형식 오류를 사용자에게 알린다.
+- **완료 기준(DoD)**:
+  - 테마 모달 열기·닫기만으로 커스텀 이미지를 삭제하지 않고, 테마 확정/변경 시에만 제거
+  - 드래그 앤 드롭 구현 또는 안내 문구 수정
+  - 파일 형식·크기·quota 오류를 현재 언어로 피드백하고 실패 시 적용 상태를 명확히 표시
+  - 관련 브라우저 수동 확인과 회귀 테스트 추가
+
+### 진행 결과
+
+- `Controls`의 테마 선택 버튼에서 커스텀 이미지를 즉시 삭제하던 동작을 제거해, 테마 모달을 열고 닫기만 해서는 저장 이미지와 현재 테마가 유지되게 함.
+- `ThemeModal`에 `onModeChange`를 추가해 게임 중 이미지/숫자 모드 전환이 테마·커스텀 이미지를 삭제하지 않게 함.
+- 시작 전 테마 선택은 모달 내부 선택으로만 유지하고, `이 테마로 게임 시작` 확정 시 `onSelectTheme`·`onConfirmStart`로 반영하도록 변경함. 게임 중 테마 카드 선택은 즉시 적용·모달 닫힘과 함께 커스텀 이미지를 제거함.
+- `CustomImageModal`에 `onDragOver`/`onDragLeave`/`onDrop`을 구현하고 드래그 중 `.drag-active` 시각 피드백을 추가함. 드롭존에 Enter/Space 키보드 업로드도 추가함.
+- 업로드 검증을 `SUPPORTED_IMAGE_TYPES`(PNG·JPEG·WebP·GIF)와 10MB 상한으로 통일하고, `alert` 대신 모달 내 `role="alert"` 메시지로 표시함.
+- `localStorage.setItem` quota 실패 시 모달을 닫지 않고 적용하지 않은 상태로 오류를 표시해 실패 상태를 명확히 함. 재시도 성공 시 정상 적용됨.
+- `FileReader.onerror`, `Image.onerror`, `canvas.toDataURL` 예외도 현재 언어의 로드 실패 메시지로 처리함.
+- `imageUnsupportedType`·`imageStorageQuotaExceeded`·`imageLoadFailed` 번역 키를 KO/EN/JA/ZH에 추가함.
+- `CustomImageModal.css`에 드래그 활성 상태와 오류 메시지 스타일을 추가하고, 드롭존 자식 요소에 `pointer-events: none`을 적용해 드래그 이벤트가 끊기지 않게 함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - Vite dev 서버(127.0.0.1:5173)에서 Service Worker 캐시 제거 후 데스크톱 Chromium으로 커스텀 이미지 드래그·적용·보존·검증 오류 확인
+- **결과**:
+  - `npm test`: 17개 파일/123개 테스트 PASS. 신규 `CustomImageModal.test.tsx` 6건(형식·10MB·EN 오류·드래그 활성·적용·quota)과 `App.customImage.test.tsx` 2건(모달 열기/닫기·모드 전환 보존, 테마 적용 시 제거) 포함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지).
+  - 브라우저: 테마 이미지 파일(623,798바이트)을 드롭존에 드롭해 적용했고, 저장된 data URL 809,414자 확인. 테마 모달 열기·닫기 후에도 동일 길이 유지.
+  - 브라우저: 테마 모달에서 `숫자 모드`로 전환해도 저장 이미지가 유지되고, 미리보기 제목이 `완성본 미리보기: 내 사진 (Custom)`으로 표시됨.
+  - 브라우저: 테마 카드 `자연 & 풍경` 적용 시 저장 이미지가 제거되고 미리보기 제목이 `완성본 미리보기: 자연 & 풍경`으로 변경됨.
+  - 브라우저: 텍스트 파일 드롭 시 `지원하지 않는 이미지 형식입니다...`, 11MB 파일 드롭 시 `이미지 파일 크기는 10MB 이하만 가능합니다.` 표시. 드래그 중 `.drag-active` 적용 확인.
+  - 브라우저: `Storage.prototype.setItem`을 quota 예외로 대체했을 때 `이미지를 저장할 공간이 부족해 적용하지 못했습니다...` 오류와 함께 모달이 열린 상태로 유지되고 저장소는 비어 있음. 예외 해제 후 재적용은 성공(672,186자).
+  - 브라우저 콘솔 uncaught error 0건.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 OS별 파일 드래그, 실제 저장소 한도 소진(quota는 `Storage.prototype.setItem` 예외로 재현)은 수행하지 않음. 데스크톱 Chromium에서만 확인함.
+- **증거**: `src/components/Modal/CustomImageModal.tsx`, `src/components/Modal/CustomImageModal.css`, `src/components/Modal/CustomImageModal.test.tsx`, `src/components/Modal/ThemeModal.tsx`, `src/App.tsx`, `src/App.customImage.test.tsx`, `src/i18n/translations.ts`, 터미널 실행 결과, 브라우저 확인 결과

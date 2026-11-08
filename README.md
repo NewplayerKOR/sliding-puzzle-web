@@ -26,7 +26,7 @@ React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이�
 | **Game Modes** | 챌린지 모드 | Standard, Time Attack(제한시간), Move Limit(이동수 제한) |
 | **AI Solver** | AI 스마트 힌트 | A* 알고리즘 기반 다음 이동 타일 및 방향 안내 (3초 쿨다운) |
 | **Themes** | 4종 테마 및 숫자 모드 | 자연, 픽셀아트, 기하학 패턴, 동물 테마 프리셋 및 숫자 모드 전환 |
-| **Custom Image** | 이미지 업로드 및 크롭 | 로컬 이미지(JPG, PNG, WebP) 로드 및 Canvas 기반 1:1 크롭 |
+| **Custom Image** | 이미지 업로드 및 크롭 | 로컬 이미지(JPG, PNG, WebP, GIF) 드래그 앤 드롭·형식/용량 검증 및 Canvas 기반 1:1 크롭 |
 | **Daily Puzzle** | 일일 챌린지 | Mulberry32 PRNG 기반 날짜별 시드 퍼즐 및 출석 스트릭 기록 |
 | **Audio System** | 오디오 매니저 | 4종 BGM 트랙(크로스페이드) 및 3채널 SFX 풀링 |
 | **Action / Undo** | 되돌리기 및 리플레이 | 1수 되돌리기(Undo) 및 클리어 후 타임랩스 리플레이 |
@@ -101,7 +101,7 @@ npm test
 
 | 항목 | 도구 | 대상 | 결과 |
 | :--- | :--- | :--- | :---: |
-| **유닛 / 통합 테스트** | Vitest | 15개 테스트 파일 (115개 테스트 케이스) | **115 / 115 Passed** |
+| **유닛 / 통합 테스트** | Vitest | 17개 테스트 파일 (123개 테스트 케이스) | **123 / 123 Passed** |
 | **타입 검사** | TypeScript (`tsc --noEmit`) | 전체 소스코드 | **0 Errors** |
 | **프로덕션 빌드** | Vite | 번들링 및 에셋 압축 | **정상 생성** |
 
