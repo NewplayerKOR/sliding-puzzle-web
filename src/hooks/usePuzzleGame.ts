@@ -62,6 +62,14 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
   const [moveHistory, setMoveHistory] = useState<Board[]>(() => [generateSolvedBoard(initialSize)]);
 
   const prevStatusRef = useRef<GameStatus>(status);
+  // 타이머 시작 시각(ms). null이면 타이머 정지 상태임.
+  const timerStartedAtRef = useRef<number | null>(null);
+
+  // 시작 시각 기준 실제 경과 초를 계산함. 틱 지연·백그라운드 스로틀링과 무관하게 벽시계를 따름.
+  const getElapsedSeconds = useCallback((): number => {
+    if (timerStartedAtRef.current === null) return 0;
+    return Math.max(0, Math.floor((Date.now() - timerStartedAtRef.current) / 1000));
+  }, []);
 
   // Time Attack & Move Limit thresholds
   const timeLimit = TIME_LIMITS[gridSize];
@@ -94,29 +102,32 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
     prevStatusRef.current = status;
   }, [status]);
 
-  // 타이머 작동 및 타임어택 제한 시간 만료 체크
+  // 타이머 작동 및 타임어택 제한 시간 만료 체크 (시작 시각 기반 경과 시간)
   useEffect(() => {
-    let intervalId: number | null = null;
+    if (status !== 'playing') return;
 
-    if (status === 'playing') {
-      intervalId = window.setInterval(() => {
-        setElapsedTime((prev) => {
-          const next = prev + 1;
-          // 타임어택 모드에서 시간 초과 검사
-          if (challengeMode === 'timeAttack' && next >= timeLimit) {
-            setStatus('gameover');
-          }
-          return next;
-        });
-      }, 1000);
-    }
+    const syncElapsedTime = () => {
+      if (timerStartedAtRef.current === null) return;
+      const nextElapsed = getElapsedSeconds();
+      setElapsedTime(nextElapsed);
 
-    return () => {
-      if (intervalId !== null) {
-        clearInterval(intervalId);
+      // 타임어택 모드에서 실제 경과 시간 기준으로 시간 초과 검사
+      if (challengeMode === 'timeAttack' && nextElapsed >= timeLimit) {
+        timerStartedAtRef.current = null;
+        setStatus('gameover');
       }
     };
-  }, [status, challengeMode, timeLimit]);
+
+    // 탭 복귀·절전 해제 시 즉시 보정하고, 250ms 주기로 초 경계를 따라감
+    syncElapsedTime();
+    const intervalId = window.setInterval(syncElapsedTime, 250);
+    document.addEventListener('visibilitychange', syncElapsedTime);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', syncElapsedTime);
+    };
+  }, [status, challengeMode, timeLimit, getElapsedSeconds]);
 
   // 새 게임 시작 (셔플)
   const startNewGame = useCallback(
@@ -129,6 +140,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
           : gridSize;
       setGridSize(validSize);
       const shuffled = shuffleBoard(validSize);
+      timerStartedAtRef.current = Date.now();
       setBoard(shuffled);
       setMoveCount(0);
       setElapsedTime(0);
@@ -148,6 +160,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
       if (size && [3, 4, 5].includes(size)) {
         setGridSize(size);
       }
+      timerStartedAtRef.current = Date.now();
       setBoard(seededBoard);
       setMoveCount(0);
       setElapsedTime(0);
@@ -165,6 +178,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
     audioManager.playBgm();
     setGridSize(newSize);
     const shuffled = shuffleBoard(newSize);
+    timerStartedAtRef.current = Date.now();
     setBoard(shuffled);
     setMoveCount(0);
     setElapsedTime(0);
@@ -184,6 +198,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
   const resetGame = useCallback(() => {
     audioManager.playSfx('click');
     const solved = generateSolvedBoard(gridSize);
+    timerStartedAtRef.current = null;
     setBoard(solved);
     setMoveCount(0);
     setElapsedTime(0);
@@ -198,6 +213,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
     setBoard(generateSolvedBoard(gridSize));
     setMoveCount((prev) => (prev > 0 ? prev : Math.max(10, gridSize * 4)));
     setElapsedTime((prev) => (prev > 0 ? prev : 12));
+    timerStartedAtRef.current = null;
     setIsAutoSolved(true);
     setStatus('won');
   }, [gridSize]);
@@ -243,8 +259,9 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
       audioManager.playBgm();
       triggerHaptic('slide');
 
-      // 만약 idle 상태에서 첫 이동이면 바로 playing 상태로 전환
+      // 만약 idle 상태에서 첫 이동이면 바로 playing 상태로 전환하고 타이머를 시작함
       if (status === 'idle') {
+        timerStartedAtRef.current = Date.now();
         setStatus('playing');
       }
 
@@ -257,18 +274,22 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
 
       // 이동수 제한 모드에서 한도 초과 검사
       if (challengeMode === 'moveLimit' && nextMoveCount >= moveLimit && !checkWinCondition(newBoard)) {
+        setElapsedTime(getElapsedSeconds());
+        timerStartedAtRef.current = null;
         setStatus('gameover');
         return true;
       }
 
-      // 승리 판정
+      // 승리 판정: 마지막 틱 이후 경과분까지 반영해 기록·별점·업적이 같은 시간 기준을 사용하게 함
       if (checkWinCondition(newBoard)) {
+        setElapsedTime(getElapsedSeconds());
+        timerStartedAtRef.current = null;
         setStatus('won');
       }
 
       return true;
     },
-    [board, emptyIndex, gridSize, status, moveCount, challengeMode, moveLimit]
+    [board, emptyIndex, gridSize, status, moveCount, challengeMode, moveLimit, getElapsedSeconds]
   );
 
   // 키보드 방향키 이동

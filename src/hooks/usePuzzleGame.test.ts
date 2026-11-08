@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { usePuzzleGame } from './usePuzzleGame';
 
@@ -271,5 +271,115 @@ describe('usePuzzleGame Hook', () => {
     expect(result.current.board[22].value).toBe(23);
     expect(result.current.board[23].value).toBe(24);
     expect(result.current.board[24].isEmpty).toBe(true);
+  });
+
+  describe('벽시계 기준 타이머 (TASK-DEV-14)', () => {
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('메인 스레드 지연 후에도 실제 경과 시간을 반영한다', () => {
+      vi.useFakeTimers();
+      const { result } = renderHook(() => usePuzzleGame(3));
+
+      act(() => {
+        result.current.startNewGame();
+      });
+
+      act(() => {
+        // 5초 블로킹을 모사: 시스템 시각만 점프시키고 콜백은 1회만 실행
+        vi.setSystemTime(Date.now() + 5000);
+        vi.advanceTimersByTime(250);
+      });
+
+      expect(result.current.elapsedTime).toBe(5);
+      expect(result.current.status).toBe('playing');
+    });
+
+    it('지연된 틱에서도 실제 경과 시간으로 Time Attack을 만료시킨다', () => {
+      vi.useFakeTimers();
+      const { result } = renderHook(() => usePuzzleGame(3));
+
+      act(() => {
+        result.current.changeChallengeMode('timeAttack');
+      });
+      act(() => {
+        result.current.startNewGame();
+      });
+
+      act(() => {
+        vi.setSystemTime(Date.now() + 46000);
+        vi.advanceTimersByTime(250);
+      });
+
+      expect(result.current.elapsedTime).toBe(46);
+      expect(result.current.remainingTime).toBe(0);
+      expect(result.current.status).toBe('gameover');
+    });
+
+    it('탭 복귀(visibilitychange) 시 즉시 경과 시간을 보정한다', () => {
+      vi.useFakeTimers();
+      const { result } = renderHook(() => usePuzzleGame(3));
+
+      act(() => {
+        result.current.startNewGame();
+      });
+
+      act(() => {
+        vi.setSystemTime(Date.now() + 10000);
+        document.dispatchEvent(new Event('visibilitychange'));
+      });
+
+      expect(result.current.elapsedTime).toBe(10);
+    });
+
+    it('승리한 수에서 마지막 틱 이후 경과분까지 기록 시간에 반영한다', () => {
+      vi.useFakeTimers();
+      const { result } = renderHook(() => usePuzzleGame(3));
+
+      // 초기 정답 보드에서 첫 이동 시 타이머가 시작됨
+      act(() => {
+        result.current.moveTile(7);
+      });
+
+      act(() => {
+        vi.setSystemTime(Date.now() + 7000);
+      });
+      act(() => {
+        result.current.moveTile(8);
+      });
+
+      expect(result.current.status).toBe('won');
+      expect(result.current.elapsedTime).toBe(7);
+    });
+
+    it('리셋 후 새 게임에서 타이머를 새 시작 시각으로 재시작한다', () => {
+      vi.useFakeTimers();
+      const { result } = renderHook(() => usePuzzleGame(3));
+
+      act(() => {
+        result.current.startNewGame();
+      });
+      act(() => {
+        vi.setSystemTime(Date.now() + 10000);
+        vi.advanceTimersByTime(250);
+      });
+      expect(result.current.elapsedTime).toBe(10);
+
+      act(() => {
+        result.current.resetGame();
+      });
+      expect(result.current.elapsedTime).toBe(0);
+      expect(result.current.status).toBe('idle');
+
+      act(() => {
+        result.current.startNewGame();
+      });
+      act(() => {
+        vi.advanceTimersByTime(3000);
+      });
+
+      expect(result.current.elapsedTime).toBe(3);
+    });
   });
 });
