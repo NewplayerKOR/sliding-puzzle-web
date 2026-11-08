@@ -1183,3 +1183,79 @@
 
 - `root/DEPLOYMENT.md`는 TASK-QA-08 산출물로, Node.js 24.15 이상(24.x) 또는 26.0.0 이상·npm 10 이상을 안내하도록 표현을 맞췄다. TASK-PM-05는 README/AGENTS를 `engines` 기준으로 정확히 맞추고 배포 문서로 연결하는 범위로 완료함.
 - Vercel pause는 장애가 아닌 의도된 운영 상태로 README·AGENTS·DEPLOYMENT에 일관되게 기록함.
+
+---
+
+## TASK-DEV-27 — 360px 모달 텍스트 줄바꿈·잘림 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: 360px 폭에서 모달 제목·테마명·BGM 트랙명·일일 스트릭 라벨이 단어 중간에서 끊기거나 핵심 정보가 잘리지 않도록 반응형 텍스트 레이아웃을 정비한다.
+- **대상 파일**: `src/components/Modal/BgmSelectModal.css`, `CustomImageModal.css`, `HintModal.css`, `ThemeModal.css`, `DailyModal.css`, `src/styles/index.css`
+- **재현/증거**:
+  - 360×640에서 BGM 모달 제목 `BGM & 사운드 설정`이 `설`/`정`으로 분리되고, `내 사진으로 퍼즐 만들기`가 `만들`/`기`, `완성본 미리보기: 자연 & 풍경`이 `풍`/`경`으로 분리됨.
+  - 같은 뷰포트에서 테마 카드 이름이 `레트로 픽…`으로 잘리고, BGM 트랙 이름이 `Lo-Fi...`, `Zen Na...`, `C...`, `Jazz Lou...`로 잘림.
+  - 일일 모달의 `현재 연속 스트릭`·`최대 연속 스트릭`이 `스트`/`릭`으로 분리됨.
+  - 증거: `root/archive/assets/task-qa-09/`의 `bgm-360x640.webp`, `custom-image-360x640.webp`, `hint-360x640.webp`, `theme-360x640.webp`, `daily-360x640.webp`, `1280x800-bgm.webp`.
+- **완료 기준(DoD)**:
+  - [x] 360×640·360×800에서 모달 제목과 라벨이 단어 중간에서 끊기지 않음
+  - [x] 테마·BGM 카드의 이름과 장르/카테고리를 2줄 허용 또는 명확한 축약 표기로 제공하고, 화면만 보고 전체 이름을 식별할 수 있게 함
+  - [x] 일일 스트릭 라벨이 카드 폭 안에서 자연스럽게 표시됨
+  - [x] 360×640·360×800·1280×800 회귀 스크린샷과 `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
+
+### 1. 진행 결과
+
+- `index.css`
+  - `--text-word-break: normal` 토큰을 추가하고 `:root:lang(ko)`에서 `keep-all`로 덮어씀. 한국어는 단어 중간 줄바꿈을 막고, 영어·일본어·중국어는 각 언어의 기본 줄바꿈 규칙을 유지함.
+  - 모달 제목·카드명·라벨에서 `word-break` 값을 이 토큰으로 통일해 다국어에서 생길 수 있는 과도한 `keep-all` 고정을 피함.
+- `BgmSelectModal.css`
+  - 헤더를 `align-items: flex-start`·`gap`·`flex-shrink: 0`으로 정리하고 제목 그룹에 `flex: 1`·`min-width: 0`을 적용함. 닫기 버튼은 줄어들지 않게 고정함.
+  - 360px에서 제목을 18px로 낮추고, 부제·볼륨 라벨·자동 연동 라벨·플레이리스트 제목에 단어 단위 줄바꿈과 `overflow-wrap`을 적용함.
+  - 트랙 카드의 이름과 장르 배지를 `flex-wrap`으로 2줄 허용하고, 장르 배지에 `max-width: 100%`·`white-space: normal`을 적용해 일본어 장르명이 카드 밖으로 넘치지 않게 함.
+  - 자동 연동 영역의 `.theme-sync-text`에 `flex: 1`·`min-width: 0`, 체크박스에 `flex-shrink: 0`을 적용해 긴 일본어 라벨이 패널 폭을 밀어내지 않게 함.
+- `ThemeModal.css`
+  - 헤더 제목 그룹·닫기 버튼을 같은 방식으로 정리하고, 선택 모드 배지·부제에 줄바꿈 규칙을 적용함.
+  - 카드 헤더를 세로 배치로 바꿔 이름과 카테고리가 폭을 나눠 쓰지 않게 하고, 이름은 2줄까지 표시함. 360px에서는 이름 12px, 카테고리 배지는 이름 아래에 표시됨.
+  - 400px 이하에서 모달 제목을 16px로 낮춤.
+- `DailyModal.css`
+  - 헤더 제목 그룹·닫기 버튼을 정리하고 제목을 360px에서 18px로 낮춤.
+  - 스트릭 카드를 `align-items: flex-start`로 바꾸고 `.streak-info`에 `min-width: 0`, 라벨에 단어 단위 줄바꿈을 적용함. 360px에서는 아이콘을 28px로 줄여 라벨 폭을 확보함.
+- `HintModal.css`
+  - 제목 그룹에 `flex: 1`·`min-width: 0`을 적용하고 제목을 360px에서 16px로 낮춤. 테마명이 포함된 제목이 한 줄에 들어가고, 설명문도 패널 안에서 줄바꿈됨.
+- `CustomImageModal.css`
+  - 제목에 `flex: 1`·`min-width: 0`을 적용하고 420px 이하에서 18px로 낮춤. 부제·업로드 안내 문구에 단어 단위 줄바꿈을 적용함.
+- 마크업 변경은 하지 않았고, 기존 클래스와 포커스 트랩·`inert`·Escape 닫기 동작을 유지함.
+
+### 2. 검증
+
+- **실행·확인 방법**:
+  - `npm test`
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - 프로덕션 프리뷰(4173)에서 Playwright Chromium으로 360×640·360×800·1280×800 뷰포트를 열고 테마·BGM·커스텀 이미지·일일·힌트 모달을 각각 열어 측정함.
+  - `Intl.Segmenter('ko', { granularity: 'word' })`로 단어 구간을 나눈 뒤 `Range.getClientRects()`의 줄 위치가 2개 이상인 경우를 단어 중간 줄바꿈으로 판정함.
+  - 제목·이름·카테고리 요소의 `scrollWidth`/`clientWidth` 차이로 가로 잘림을, 패널·문서의 `scrollWidth`로 가로 오버플로를 확인함.
+  - EN·JA·ZH는 360×640에서 5개 모달을 같은 방식으로 추가 측정함.
+- **결과**:
+  - `npm test`: 29개 파일/183개 케이스 PASS.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.5 프로덕션 빌드 성공. CSS 76.54KB(gzip 10.17KB), JS 360.74KB(gzip 112.10KB).
+  - `npm run test:e2e`: Playwright Chromium 4/4 PASS(핵심 플레이·모달 포커스 트랩·EN 전환·360px 레이아웃).
+  - 한국어 360×640: 5개 모달 모두 제목 1줄, 단어 중간 줄바꿈 0건, 제목·이름·카테고리 가로 잘림 0건, 패널 뷰포트 이탈 0건, 문서 가로 오버플로 0건.
+    - 테마: 패널 328×494, 제목 16px, 카드 이름 67/64/64/64px, 카테고리 34/58/34/46px로 모두 잘리지 않음.
+    - BGM: 패널 328×542, 제목 18px, 트랙명 67/76/81/81px, 장르 95/95/131/86px로 모두 잘리지 않음.
+    - 커스텀 이미지: 패널 328×308, 제목 18px, 업로드 안내 2줄 260×42px.
+    - 일일: 패널 328×491, 제목 18px, 스트릭 라벨 2개 모두 92×17px 1줄.
+    - 힌트: 패널 328×416, 제목 16px 214×22px, 설명 2줄 294×36px.
+  - 한국어 360×800·1280×800에서도 동일하게 제목 1줄·잘림 0건·오버플로 0건을 확인함. 1280px에서는 테마 18px, BGM·일일·커스텀 이미지 24px, 힌트 18px 제목을 유지함.
+  - EN·JA·ZH 360×640: 5개 모달 × 3개 언어 = 15개 조합에서 제목·이름·장르·라벨 단어 중간 줄바꿈 0건, 가로 잘림 0건, 패널·문서 가로 오버플로 0건. 일본어 BGM의 긴 자동 연동 라벨도 패널 안에 수용됨.
+- **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome), Safari/Firefox 렌더링, 스크린리더 수동 검증, OS 수준 `prefers-reduced-motion` 에뮬레이션. 360px 측정은 Playwright Chromium 뷰포트로 수행함.
+- **증거**:
+  - 스크린샷: `root/archive/assets/task-dev-27/`의 before 6건과 after 15건 WebP.
+    - before: `before-theme-360x640.webp`, `before-bgm-360x640.webp`, `before-custom-image-360x640.webp`, `before-daily-360x640.webp`, `before-hint-360x640.webp`, `before-bgm-1280x800.webp`
+    - after: `after-{theme,bgm,custom-image,daily,hint}-{360x640,360x800,1280x800}.webp`
+  - 측정 원문: `root/archive/assets/task-dev-27/metrics.json`(한국어 15개 모달×뷰포트), `language-metrics.json`(EN·JA·ZH 15개 조합)
+  - 소스: `src/components/Modal/BgmSelectModal.css`, `CustomImageModal.css`, `HintModal.css`, `ThemeModal.css`, `DailyModal.css`, `src/styles/index.css`
+- **작업 상태**: `root/TASKS.md`의 TASK-DEV-27 완료 요약, `root/DESIGN_SYSTEM.md`의 `--text-word-break` 토큰·검증 결과 반영

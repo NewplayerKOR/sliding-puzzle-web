@@ -99,6 +99,7 @@ Plus Jakarta Sans·Google Fonts 의존을 제거하고 시스템 폰트 스택�
 | `--font-weight-medium` | `500` |
 | `--font-weight-semibold` | `600` |
 | `--font-weight-bold` | `700` |
+| `--text-word-break` | `normal` (`:root:lang(ko)`에서 `keep-all`) |
 
 ### 2.5 Spacing
 
@@ -168,6 +169,8 @@ Plus Jakarta Sans·Google Fonts 의존을 제거하고 시스템 폰트 스택�
 - 제목은 `--line-height-tight`(1.25), UI 라벨은 `--line-height-snug`(1.4), 본문은 `--line-height-normal`(1.5), 장문은 `--line-height-relaxed`(1.65)를 사용한다.
 - 굵기는 **400/500/600/700**만 사용한다. 800·900은 사용하지 않는다.
 - 한 줄에 들어가는 본문 길이는 데스크톱 기준 60~75자, 모바일에서는 30~40자를 넘기지 않도록 줄바꿈과 최대 폭을 함께 조정한다.
+- 모달 제목·카드명·라벨은 `--text-word-break`를 사용한다. 한국어는 `keep-all`로 단어 중간 줄바꿈을 막고, 영어·일본어·중국어는 기본 줄바꿈 규칙을 적용한다. 긴 이름은 2줄 또는 메타데이터 분리 배치로 전체 이름을 식별할 수 있게 한다.
+- 모달 제목은 360px에서 16~18px로 낮추고, 닫기 버튼과 제목 그룹이 같은 줄에서 겹치지 않도록 `min-width: 0`·`flex: 1`을 함께 사용한다.
 
 ### 3.2 숫자
 
@@ -301,3 +304,17 @@ npm run build
 - `prefers-reduced-motion: reduce` 전역 규칙이 빌드 CSS에 포함됨을 확인함. 실제 OS 설정 에뮬레이션은 수행하지 않음
 - 스크린샷: `root/archive/assets/task-dev-26/`의 `title-before-360x800.webp`, `title-after-360x800.webp`, `game-before-360x800.webp`, `game-after-360x800.webp`, `title-before-1280x800.webp`, `title-after-1280x800.webp`, `game-before-1280x800.webp`, `game-after-1280x800.webp`, `win-after-1280x800.webp`, `gameover-after-1280x800.webp`
 - 미실행: 실제 모바일 실기기, Safari/Firefox 렌더링, 스크린리더 수동 검증, OS 수준 `prefers-reduced-motion` 에뮬레이션, 공유 카드의 실제 공유 시트·다운로드 이미지, PWA manifest 색상·SW 프리캐시 갱신
+
+### 6.4 TASK-DEV-27 검증 결과
+
+- `npm test`: 29개 파일/183개 케이스 PASS
+- `npx tsc --noEmit`: 0 Errors
+- `npm run build`: Vite 6.4.5 프로덕션 빌드 성공
+- `npm run test:e2e`: Playwright Chromium 4/4 PASS(핵심 플레이·모달 포커스 트랩·EN 전환·360px 레이아웃)
+- 대상 모달: 테마·BGM·커스텀 이미지·일일·힌트
+- 360×640·360×800·1280×800에서 5개 모달 모두 제목 1줄, 단어 중간 줄바꿈 0건, 제목·이름 가로 잘림 0건, 패널 뷰포트 이탈 0건, 문서 가로 오버플로 0건을 확인함
+- 테마 카드: 이름과 카테고리를 세로로 분리하고 이름 2줄을 허용해 `자연 & 풍경`·`레트로 픽셀`·`기하학 추상`·`귀여운 동물` 전체 이름을 360px에서 식별할 수 있음
+- BGM 카드: 트랙명과 장르 배지를 줄바꿈 가능하게 하고 장르 배지에 `max-width: 100%`를 적용해 `Lo-Fi Chill`·`Zen Nature`·`Cyber Synth`·`Jazz Lounge`와 장르 전체를 식별할 수 있음
+- 일일 스트릭: 360px에서 `현재 연속 스트릭`·`최대 연속 스트릭`이 단어 중간에서 끊기지 않고 카드 안에 표시됨
+- 다국어: EN·JA·ZH 360×640에서 5개 모달의 제목·이름·장르·라벨 단어 중간 줄바꿈과 가로 넘침 0건을 확인함. 일본어 BGM의 긴 자동 연동 라벨은 `min-width: 0`과 기본 줄바꿈 규칙으로 패널 안에 수용함
+- 스크린샷·측정 원문: `root/archive/assets/task-dev-27/`의 before/after WebP 21건과 `metrics.json`, `language-metrics.json`

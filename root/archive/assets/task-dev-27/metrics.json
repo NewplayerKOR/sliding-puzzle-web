@@ -1,0 +1,1214 @@
+{
+  "360x640": {
+    "theme": {
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 73,
+        "bottom": 567,
+        "width": 328,
+        "height": 494,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "퍼즐 테마 선택",
+        "fontSize": "16px",
+        "lineHeight": "24px",
+        "lines": 1,
+        "width": 106,
+        "height": 24,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".theme-name",
+          "text": "자연 & 풍경",
+          "width": 67,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "레트로 픽셀",
+          "width": 64,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "기하학 추상",
+          "width": 64,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "귀여운 동물",
+          "width": 64,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        }
+      ],
+      "categories": [
+        {
+          "selector": ".theme-category",
+          "text": "풍경",
+          "width": 34,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "픽셀아트",
+          "width": 58,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "패턴",
+          "width": 34,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "캐릭터",
+          "width": 46,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        }
+      ],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\theme-360x640.png"
+    },
+    "bgm": {
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 49,
+        "bottom": 591,
+        "width": 328,
+        "height": 542,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "BGM & 사운드 설정",
+        "fontSize": "18px",
+        "lineHeight": "22.5px",
+        "lines": 1,
+        "width": 201,
+        "height": 23,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".track-name",
+          "text": "Lo-Fi Chill",
+          "width": 67,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Zen Nature",
+          "width": 76,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Cyber Synth",
+          "width": 81,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Jazz Lounge",
+          "width": 81,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        }
+      ],
+      "categories": [
+        {
+          "selector": ".track-genre-badge",
+          "text": "칠홉 / 어쿠스틱",
+          "width": 95,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "자연 / 앰비언트",
+          "width": 95,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "신스웨이브 / 일렉트로",
+          "width": 131,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "보사노바 재즈",
+          "width": 86,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\bgm-360x640.png"
+    },
+    "custom-image": {
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 166,
+        "bottom": 474,
+        "width": 328,
+        "height": 308,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "내 사진으로 퍼즐 만들기",
+        "fontSize": "18px",
+        "lineHeight": "22.5px",
+        "lines": 1,
+        "width": 250,
+        "height": 23,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".upload-prompt-text",
+          "text": "클릭하거나 이미지를 여기로 드래그하세요 (최대 10MB)",
+          "width": 260,
+          "height": 42,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\custom-image-360x640.png"
+    },
+    "daily": {
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 74,
+        "bottom": 566,
+        "width": 328,
+        "height": 491,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "auto"
+      },
+      "title": {
+        "text": "오늘의 퍼즐 챌린지",
+        "fontSize": "18px",
+        "lineHeight": "27px",
+        "lines": 1,
+        "width": 155,
+        "height": 27,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".streak-label",
+          "text": "현재 연속 스트릭",
+          "width": 92,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".streak-label",
+          "text": "최대 연속 스트릭",
+          "width": 92,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\daily-360x640.png"
+    },
+    "hint": {
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 112,
+        "bottom": 528,
+        "width": 328,
+        "height": 416,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "완성본 미리보기: 자연 & 풍경",
+        "fontSize": "16px",
+        "lineHeight": "22.4px",
+        "lines": 1,
+        "width": 214,
+        "height": 22,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".hint-footer-desc",
+          "text": "이 이미지를 완성할 수 있도록 타일을 순서대로 맞춰보세요.",
+          "width": 294,
+          "height": 36,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\hint-360x640.png"
+    }
+  },
+  "360x800": {
+    "theme": {
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 153,
+        "bottom": 647,
+        "width": 328,
+        "height": 494,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "퍼즐 테마 선택",
+        "fontSize": "16px",
+        "lineHeight": "24px",
+        "lines": 1,
+        "width": 106,
+        "height": 24,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".theme-name",
+          "text": "자연 & 풍경",
+          "width": 67,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "레트로 픽셀",
+          "width": 64,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "기하학 추상",
+          "width": 64,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "귀여운 동물",
+          "width": 64,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        }
+      ],
+      "categories": [
+        {
+          "selector": ".theme-category",
+          "text": "풍경",
+          "width": 34,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "픽셀아트",
+          "width": 58,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "패턴",
+          "width": 34,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "캐릭터",
+          "width": 46,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        }
+      ],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\theme-360x800.png"
+    },
+    "bgm": {
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 129,
+        "bottom": 671,
+        "width": 328,
+        "height": 542,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "BGM & 사운드 설정",
+        "fontSize": "18px",
+        "lineHeight": "22.5px",
+        "lines": 1,
+        "width": 201,
+        "height": 23,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".track-name",
+          "text": "Lo-Fi Chill",
+          "width": 67,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Zen Nature",
+          "width": 76,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Cyber Synth",
+          "width": 81,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Jazz Lounge",
+          "width": 81,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        }
+      ],
+      "categories": [
+        {
+          "selector": ".track-genre-badge",
+          "text": "칠홉 / 어쿠스틱",
+          "width": 95,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "자연 / 앰비언트",
+          "width": 95,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "신스웨이브 / 일렉트로",
+          "width": 131,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "보사노바 재즈",
+          "width": 86,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\bgm-360x800.png"
+    },
+    "custom-image": {
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 246,
+        "bottom": 554,
+        "width": 328,
+        "height": 308,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "내 사진으로 퍼즐 만들기",
+        "fontSize": "18px",
+        "lineHeight": "22.5px",
+        "lines": 1,
+        "width": 250,
+        "height": 23,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".upload-prompt-text",
+          "text": "클릭하거나 이미지를 여기로 드래그하세요 (최대 10MB)",
+          "width": 260,
+          "height": 42,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\custom-image-360x800.png"
+    },
+    "daily": {
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 154,
+        "bottom": 646,
+        "width": 328,
+        "height": 491,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "auto"
+      },
+      "title": {
+        "text": "오늘의 퍼즐 챌린지",
+        "fontSize": "18px",
+        "lineHeight": "27px",
+        "lines": 1,
+        "width": 155,
+        "height": 27,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".streak-label",
+          "text": "현재 연속 스트릭",
+          "width": 92,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".streak-label",
+          "text": "최대 연속 스트릭",
+          "width": 92,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\daily-360x800.png"
+    },
+    "hint": {
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 16,
+        "right": 344,
+        "top": 192,
+        "bottom": 608,
+        "width": 328,
+        "height": 416,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "완성본 미리보기: 자연 & 풍경",
+        "fontSize": "16px",
+        "lineHeight": "22.4px",
+        "lines": 1,
+        "width": 214,
+        "height": 22,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".hint-footer-desc",
+          "text": "이 이미지를 완성할 수 있도록 타일을 순서대로 맞춰보세요.",
+          "width": 294,
+          "height": 36,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\hint-360x800.png"
+    }
+  },
+  "1280x800": {
+    "theme": {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 400,
+        "right": 880,
+        "top": 61,
+        "bottom": 739,
+        "width": 480,
+        "height": 678,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "퍼즐 테마 선택",
+        "fontSize": "18px",
+        "lineHeight": "27px",
+        "lines": 1,
+        "width": 119,
+        "height": 27,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".theme-name",
+          "text": "자연 & 풍경",
+          "width": 78,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "레트로 픽셀",
+          "width": 75,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "기하학 추상",
+          "width": 75,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".theme-name",
+          "text": "귀여운 동물",
+          "width": 75,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        }
+      ],
+      "categories": [
+        {
+          "selector": ".theme-category",
+          "text": "풍경",
+          "width": 34,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "픽셀아트",
+          "width": 58,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "패턴",
+          "width": 34,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        },
+        {
+          "selector": ".theme-category",
+          "text": "캐릭터",
+          "width": 46,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "nowrap",
+          "wordBreak": "normal",
+          "overflowWrap": "normal"
+        }
+      ],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\theme-1280x800.png"
+    },
+    "bgm": {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 410,
+        "right": 870,
+        "top": 121,
+        "bottom": 679,
+        "width": 460,
+        "height": 557,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "BGM & 사운드 설정",
+        "fontSize": "24px",
+        "lineHeight": "30px",
+        "lines": 1,
+        "width": 219,
+        "height": 30,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".track-name",
+          "text": "Lo-Fi Chill",
+          "width": 67,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Zen Nature",
+          "width": 76,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Cyber Synth",
+          "width": 81,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        },
+        {
+          "selector": ".track-name",
+          "text": "Jazz Lounge",
+          "width": 81,
+          "height": 20,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "anywhere"
+        }
+      ],
+      "categories": [
+        {
+          "selector": ".track-genre-badge",
+          "text": "칠홉 / 어쿠스틱",
+          "width": 95,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "자연 / 앰비언트",
+          "width": 95,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "신스웨이브 / 일렉트로",
+          "width": 131,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".track-genre-badge",
+          "text": "보사노바 재즈",
+          "width": 86,
+          "height": 19,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\bgm-1280x800.png"
+    },
+    "custom-image": {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 420,
+        "right": 860,
+        "top": 229,
+        "bottom": 572,
+        "width": 440,
+        "height": 343,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "내 사진으로 퍼즐 만들기",
+        "fontSize": "24px",
+        "lineHeight": "30px",
+        "lines": 1,
+        "width": 354,
+        "height": 30,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".upload-prompt-text",
+          "text": "클릭하거나 이미지를 여기로 드래그하세요 (최대 10MB)",
+          "width": 350,
+          "height": 21,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\custom-image-1280x800.png"
+    },
+    "daily": {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 420,
+        "right": 860,
+        "top": 116,
+        "bottom": 684,
+        "width": 440,
+        "height": 569,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "auto"
+      },
+      "title": {
+        "text": "오늘의 퍼즐 챌린지",
+        "fontSize": "24px",
+        "lineHeight": "36px",
+        "lines": 1,
+        "width": 206,
+        "height": 36,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".streak-label",
+          "text": "현재 연속 스트릭",
+          "width": 92,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        },
+        {
+          "selector": ".streak-label",
+          "text": "최대 연속 스트릭",
+          "width": 92,
+          "height": 17,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\daily-1280x800.png"
+    },
+    "hint": {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "documentHorizontalOverflow": false,
+      "panel": {
+        "left": 430,
+        "right": 850,
+        "top": 151,
+        "bottom": 649,
+        "width": 420,
+        "height": 498,
+        "withinViewport": true,
+        "clippedX": false,
+        "overflowY": "hidden"
+      },
+      "title": {
+        "text": "완성본 미리보기: 자연 & 풍경",
+        "fontSize": "18px",
+        "lineHeight": "25.2px",
+        "lines": 1,
+        "width": 240,
+        "height": 25,
+        "clippedX": false,
+        "wordBreaks": []
+      },
+      "names": [
+        {
+          "selector": ".hint-footer-desc",
+          "text": "이 이미지를 완성할 수 있도록 타일을 순서대로 맞춰보세요.",
+          "width": 378,
+          "height": 18,
+          "clippedX": false,
+          "clippedY": false,
+          "wordBreaks": [],
+          "whiteSpace": "normal",
+          "wordBreak": "keep-all",
+          "overflowWrap": "break-word"
+        }
+      ],
+      "categories": [],
+      "screenshot": "C:\\Users\\parkt\\AppData\\Local\\Temp\\opencode\\dev27\\hint-1280x800.png"
+    }
+  }
+}

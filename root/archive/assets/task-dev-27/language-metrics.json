@@ -1,0 +1,338 @@
+{
+  "en": {
+    "theme": {
+      "issues": 0,
+      "title": "Select Theme",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "Nature & Scenery",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Retro Pixel",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Geometric Abstract",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Cute Animals",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "bgm": {
+      "issues": 0,
+      "title": "BGM & Sound Settings",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "Lo-Fi Chill",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Zen Nature",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Cyber Synth",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Jazz Lounge",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "custom-image": {
+      "issues": 0,
+      "title": "Create Custom Puzzle",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "Click or drag an image here (Max 10MB)",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "daily": {
+      "issues": 0,
+      "title": "Daily Puzzle Challenge",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "Current Streak",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Best Streak",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "hint": {
+      "issues": 0,
+      "title": "Original Preview: Nature & Scenery",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "Slide the tiles to recreate this complete artwork.",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    }
+  },
+  "ja": {
+    "theme": {
+      "issues": 0,
+      "title": "テーマ選択",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "自然＆風景",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "レトロピクセル",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "幾何学アブストラクト",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "かわいい動物",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "bgm": {
+      "issues": 0,
+      "title": "BGM＆サウンド設定",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "Lo-Fi Chill",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Zen Nature",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Cyber Synth",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Jazz Lounge",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "custom-image": {
+      "issues": 0,
+      "title": "自分の写真でパズル作成",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "クリックまたは画像をドラッグしてください（最大10MB）",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "daily": {
+      "issues": 0,
+      "title": "本日のデイリーパズル",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "現在の連続記録",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "最高連続記録",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "hint": {
+      "issues": 0,
+      "title": "完成図プレビュー: 自然＆風景",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "この完成画像を目指してタイルを動かしてください。",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    }
+  },
+  "zh": {
+    "theme": {
+      "issues": 0,
+      "title": "拼图主题选择",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "自然与风景",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "复古像素",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "几何抽象",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "可爱动物",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "bgm": {
+      "issues": 0,
+      "title": "BGM与声音设置",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "Lo-Fi Chill",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Zen Nature",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Cyber Synth",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "Jazz Lounge",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "custom-image": {
+      "issues": 0,
+      "title": "自选照片拼图",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "点击或拖拽图片至此处上传（最大 10MB）",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "daily": {
+      "issues": 0,
+      "title": "每日拼图挑战",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "当前连续天数",
+          "clipped": false,
+          "breaks": []
+        },
+        {
+          "text": "最高连续天数",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    },
+    "hint": {
+      "issues": 0,
+      "title": "原图参考：自然与风景",
+      "titleBreaks": [],
+      "titleClipped": false,
+      "panelClipX": false,
+      "docOverflowX": false,
+      "names": [
+        {
+          "text": "请对照原图，将打乱的图块复原。",
+          "clipped": false,
+          "breaks": []
+        }
+      ]
+    }
+  }
+}

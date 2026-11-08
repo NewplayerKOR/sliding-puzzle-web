@@ -15,19 +15,7 @@
 
 ## 1. Active Tasks (진행 중인 작업)
 
-#### [-] TASK-DEV-27 — 360px 모달 텍스트 줄바꿈·잘림 정비
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P2
-- **목표**: 360px 폭에서 모달 제목·테마명·BGM 트랙명·일일 스트릭 라벨이 단어 중간에서 끊기거나 핵심 정보가 잘리지 않도록 반응형 텍스트 레이아웃을 정비한다.
-- **대상 파일**: `src/components/Modal/BgmSelectModal.css`, `CustomImageModal.css`, `HintModal.css`, `ThemeModal.css`, `DailyModal.css`, 필요한 경우 각 컴포넌트의 헤더·카드 마크업
-- **DoD**:
-  - 360×640·360×800에서 모달 제목과 라벨이 단어 중간에서 끊기지 않음(`word-break: keep-all`·반응형 제목 크기·헤더 배치 조정 등)
-  - 테마·BGM 카드의 이름과 장르/카테고리를 2줄 허용 또는 명확한 축약 표기로 제공하고, 화면만 보고 전체 이름을 식별할 수 있게 함
-  - 일일 스트릭 라벨이 카드 폭 안에서 자연스럽게 표시됨
-  - 360×640·360×800·1280×800 회귀 스크린샷과 `npm test`, `npx tsc --noEmit`, `npm run build` 결과 기록
-- **선행 조건**: 없음
+(현재 진행 중인 작업 없음)
 
 ---
 
@@ -67,6 +55,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-27** — 360px 모달 텍스트 줄바꿈·잘림 정비 (완료일: 2026-11-08)
+  - 핵심 결과: 모달 5종의 제목·테마명·BGM 트랙명·일일 스트릭 라벨을 단어 중간 줄바꿈 없이 표시하도록 정비함. `--text-word-break` 토큰으로 한국어만 `keep-all`을 적용하고, 헤더 제목 그룹에 `flex: 1`·`min-width: 0`, 360px 제목 16~18px, 테마 카드 이름/카테고리 세로 배치·2줄 이름, BGM 트랙명/장르 2줄 허용, 스트릭 라벨 폭 확보를 적용함. 일본어 BGM의 긴 자동 연동·장르 라벨도 패널 안에 수용하도록 `min-width: 0`·`max-width: 100%`를 보강함
+  - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 6.4.5 빌드 성공, Playwright E2E 4/4 PASS. 360×640·360×800·1280×800 한국어 5개 모달에서 제목 1줄·단어 중간 줄바꿈 0건·가로 잘림 0건·패널/문서 오버플로 0건, EN·JA·ZH 360×640 15개 조합에서도 0건. 실제 모바일 실기기·Safari/Firefox·스크린리더는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-27--360px-모달-텍스트-줄바꿈잘림-정비)
+
 - **TASK-PM-05** — Node.js 요구사항·배포 문서 링크 정합화 (완료일: 2026-11-08)
   - 핵심 결과: README·AGENTS의 Node/npm 요구사항을 `engines`·`.nvmrc`·CI 기준으로 맞추고, 기술 스택을 lockfile 버전(React 19.2.8·Vite 6.4.5 등)으로 갱신. `DEPLOYMENT.md`·CI·`robots.txt` 링크와 Vercel pause 상태를 문서에 연결
   - 검증 범위: 문서 링크 누락 0건, Node 26.13.0에서 `npm test` 29개 파일/183개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 6.4.5 성공. GitHub Actions 원격 실행·Vercel 실제 배포·실기기 검증은 미실행
@@ -87,13 +80,8 @@
   - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공(스프라이트 CSS 경고 해소). 360×800·1280×800 변경 전후 스크린샷과 Win/GameOver 스크린샷 확보. 360×800 게임 화면 800px·가로 오버플로 0건·주요 액션 44px, 주요 모달 6종의 360/1280 레이아웃 확인. 그라데이션·blur·9999px pill·12px 미만 폰트·UI 이모지·800/900 굵기 0건. 실제 모바일 실기기·Safari/Firefox·OS 수준 reduced-motion·공유 카드 실제 공유는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-26--전-화면-심플어반-uiux-적용-및-가독성-개선)
 
-- **TASK-DEV-25** — 심플·어반 디자인 시스템 및 가독성 기준 수립 (완료일: 2026-11-08)
-  - 핵심 결과: `src/styles/index.css`에 off-white·concrete·charcoal 중립 팔레트와 단일 신호색, 시스템 grotesk·monospace 숫자, 4px 간격, 0/4/8px radius, 1px 보더, 최소 그림자, 기능성 모션 토큰을 정의함. `App.css`의 전역 셸을 평면 배경·1px 보더·토큰 여백으로 교체하고, `index.html`에서 Google Fonts와 이모지 파비콘을 제거함. pulse·bounce·spring 장식을 줄이고 `prefers-reduced-motion` 전역 규칙을 추가함. `root/DESIGN_SYSTEM.md`에 금지·지양 목록과 화면별 TASK-DEV-26 마이그레이션 기준을 작성함
-  - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 프로덕션 프리뷰에서 시스템 폰트 16px/24px·`tabular-nums`·평면 `#EFEFEA` 배경·Google Fonts 요청 0건·콘솔 오류 0건, 포커스 링 2px `#BB3E0B` 확인. 360×800·1280×800 게임 화면은 스크롤·가로 오버플로 없이 1화면 유지. 주요 텍스트·신호색 조합 WCAG AA 4.5:1 이상. 실제 모바일 실기기·Safari/Firefox·OS 수준 reduced-motion은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-25--심플어반-디자인-시스템-및-가독성-기준-수립)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)
