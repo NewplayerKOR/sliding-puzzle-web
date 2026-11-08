@@ -1,159 +1,182 @@
 # Sliding Block Puzzle
 
-* **참여자**: NewplayerKOR
-* **기술 스택**: React 19, TypeScript, Vite
-* **📌 개발/QA 세션 진입 시**: [AGENTS.md](./root/AGENTS.md)와 [TASKS.md](./root/TASKS.md)를 먼저 읽으세요.
+React와 TypeScript로 만든 클라이언트 사이드 슬라이딩 퍼즐(N-Puzzle) 웹 앱입니다. 3×3·4×4·5×5 보드에서 타일을 밀어 목표 배열을 완성합니다. 별도 백엔드 없이 브라우저에서 동작하며, 게임 기록·설정·업적은 LocalStorage에 저장합니다.
 
-React와 TypeScript 기반으로 개발된 클라이언트 사이드 슬라이딩 퍼즐(N-Puzzle) 웹 애플리케이션입니다. 브라우저 표준 API(Canvas API, Web Audio API, Web Worker, Service Worker)를 활용하여 별도 백엔드 없이 모든 기능이 동작합니다.
-
----
-
-## 1. 주요 특징 (Features)
-
-* **풀이 가능성 검증 (Solvability Validation)**: 반전수(Inversion Count)와 패리티(Parity) 판별을 통한 풀이 가능한 퍼즐 생성
-* **텍스처 분할 렌더링**: 단일 텍스처를 CSS `background-position` 연산으로 분할 표시
-* **비동기 AI 힌트**: 맨해튼 거리 및 선형 충돌 휴리스틱 기반 A* 알고리즘 (Web Worker 분리)
-* **반응형 레이아웃**: `100dvh` 및 Safe Area 인셋을 적용한 1화면 레이아웃
-* **심플·어반 디자인 시스템**: off-white·concrete·charcoal 중립 팔레트, 단일 신호색, 시스템 폰트·monospace 숫자, 1px 보더·0/4/8px radius·기능성 모션을 전 화면에 적용. 그라데이션·블러·네온 글로우·UI 이모지를 제거하고 lucide 단일 아이콘으로 통일. 상세 기준은 [DESIGN_SYSTEM.md](./root/DESIGN_SYSTEM.md)
-* **PWA 오프라인 지원**: Service Worker 캐싱을 통한 오프라인 구동
+- **참여자**: NewplayerKOR
+- **현재 버전**: 1.4.0
+- **저장소**: <https://github.com/NewplayerKOR/sliding-puzzle-web>
 
 ---
 
-## 2. 세부 기능 목록
+## 1. 주요 기능
 
-| 모듈 | 기능명 | 설명 |
-| :--- | :--- | :--- |
-| **Core Game** | 3단계 난이도 및 셔플 | 3x3, 4x4, 5x5 난이도 선택 및 100회 상한 셔플 |
-| **Game Modes** | 챌린지 모드 | Standard, Time Attack(제한시간), Move Limit(이동수 제한) |
-| **AI Solver** | AI 스마트 힌트 | A* 알고리즘 기반 다음 이동 타일 및 방향 안내 (3초 쿨다운) |
-| **Themes** | 4종 테마 및 숫자 모드 | 자연, 픽셀아트, 기하학 패턴, 동물 테마 프리셋 및 숫자 모드 전환 |
-| **Custom Image** | 이미지 업로드 및 크롭 | 로컬 이미지(JPG, PNG, WebP, GIF) 드래그 앤 드롭·형식/용량 검증 및 Canvas 기반 1:1 크롭 |
-| **Daily Puzzle** | 일일 챌린지 | Mulberry32 PRNG 기반 날짜별 시드 퍼즐 및 출석 스트릭 기록 |
-| **Audio System** | 오디오 매니저 | 4종 BGM 트랙(96kbps MP3, 크로스페이드) 및 3채널 SFX 풀링. 최초에는 현재 트랙만 로드 |
-| **Action / Undo** | 되돌리기 및 리플레이 | 1수 되돌리기(Undo) 및 클리어 후 타임랩스 리플레이 |
-| **Gamification** | 12종 업적 | 업적 달성 검사, 다중 달성 순차 토스트, 트로피 도감 및 3성 별점 |
-| **PWA & Mobile** | PWA 및 햅틱 | 웹 앱 설치 지원, maskable·apple-touch 아이콘, 필수 셸 중심 오프라인 캐싱과 현재 테마·BGM 런타임 캐시, 업데이트 안내, 15ms 조작 진동 |
-| **Storage Resilience** | LocalStorage 방어 | 손상 JSON·잘못된 타입·저장소 차단 시 기본값 폴백, 일일·기록·업적·오디오·언어 스키마 검증 |
-| **Design System** | 심플·어반 디자인 시스템 | off-white·concrete·charcoal 중립 팔레트, 단일 신호색, 시스템 grotesk·monospace 숫자, 1px 보더·0/4/8px radius·최소 그림자·기능성 모션·`prefers-reduced-motion` 대응. 타이틀·HUD·컨트롤·보드·8종 모달·업적·PWA·공유 카드에 적용하고 lucide 단일 아이콘으로 통일 |
-| **Localization** | 다국어 지원 (i18n) | 한국어(KO), 영어(EN), 일본어(JA), 중국어(ZH) 지원 |
-| **SNS Share** | 결과 카드 생성 | Canvas 기반 1000x1000 결과 이미지 생성 및 공유 API 연동 |
+| 구분 | 내용 |
+| :--- | :--- |
+| **코어 게임** | 3×3·4×4·5×5 난이도, 풀이 가능한 셔플, 클릭·키보드·터치 스와이프 조작, 같은 행/열 멀티 타일 슬라이드, 1수 Undo |
+| **게임 모드** | Standard, Time Attack(3×3 45초·4×4 120초·5×5 300초), Move Limit(3×3 35회·4×4 80회·5×5 220회) |
+| **AI 힌트** | Manhattan 거리 + Linear Conflict A*, 4×4 서브골 리덕션, 5×5 폴백, Web Worker 비동기 처리, 3초 쿨다운 |
+| **테마** | 자연·픽셀아트·기하학·동물 4종 테마, 이미지/숫자 모드, 완성본 미리보기 |
+| **커스텀 이미지** | JPG·PNG·WebP·GIF 업로드(10MB 이하), 드래그 앤 드롭, 512×512 Canvas 1:1 크롭, 1~3배 줌 |
+| **일일 챌린지** | 날짜 기반 Mulberry32 시드 4×4 보드, 하루 1회 완료 기록, 출석 스트릭·월간 캘린더 |
+| **업적·별점** | 12종 업적, 다중 달성 순차 토스트, 도감, 난이도·모드·시간·이동 수 기준 3성 별점 |
+| **오디오** | BGM 4트랙(Lo-Fi Chill·Zen Nature·Cyber Synth·Jazz Lounge), 5종 SFX, 테마별 음색, 0.6초 콤보 피치 |
+| **기록·공유** | 난이도별 최고 시간·이동 수, Canvas 1000×1000 결과 카드, Web Share·클립보드·다운로드 폴백 |
+| **PWA·모바일** | 설치·오프라인 캐싱, 업데이트 안내 배너, 100dvh·Safe Area, 터치 제스처, 진동 피드백 |
+| **다국어** | 한국어(KO), 영어(EN), 일본어(JA), 중국어(ZH) |
+| **디자인** | off-white·concrete·charcoal 중립 팔레트, 단일 신호색, 시스템 폰트·monospace 숫자, 1px 보더, 0/4/8px radius, `prefers-reduced-motion` |
 
 ---
 
-## 3. 기술 스택 (Tech Stack)
+## 2. 화면
+
+2026-11-08 QA 검증 시점의 스크린샷입니다.
+
+| 메인 화면 (1280×800) | 게임 화면 (360×800) |
+| :---: | :---: |
+| ![메인 화면](root/archive/assets/task-qa-09/title-1280x800.webp) | ![게임 화면](root/archive/assets/task-qa-09/game-360x800.webp) |
+
+---
+
+## 3. 기술 스택
 
 | 분류 | 기술 | 버전 | 비고 |
 | :--- | :--- | :--- | :--- |
-| **Runtime** | Node.js | 24.15.0+ (24.x) 또는 26.0.0+ | `.nvmrc` 24, `package.json` `engines` 기준 |
-| **Framework** | React | 19.2.8 | UI 컴포넌트 렌더링 및 상태 관리 |
-| **Language** | TypeScript | 5.9.3 | 정적 타입 검사 |
-| **Build Tool** | Vite | 6.4.5 | 개발 서버 및 프로덕션 번들링 |
-| **Testing** | Vitest | 4.1.12 | 유닛 및 통합 테스트 러너 |
-| **DOM Testing** | Testing Library | 16.3.2 | React 컴포넌트 렌더링 테스트 |
-| **E2E Testing** | Playwright | 1.65.0 | Chromium 스모크 테스트 |
-| **Styling** | Vanilla CSS | Standard | CSS Grid/Flexbox 및 100dvh 레이아웃 |
-| **Audio** | Web Audio API | Standard | 브라우저 내장 오디오 제어 |
-| **Worker** | Web Worker | Standard | AI 힌트 탐색 연산 분리 |
-| **PWA** | Service Worker | Standard | 셸·코어 자산 프리캐시 및 현재 테마·BGM 런타임 캐싱 |
+| **Runtime** | Node.js | 24.15.0+ (24.x) 또는 26.0.0+ | `.nvmrc` 24, `package.json` `engines` |
+| **Framework** | React | 19.2.8 | UI 컴포넌트·상태 관리 |
+| **Language** | TypeScript | 5.9.3 | strict 모드 |
+| **Build** | Vite | 6.4.5 | 개발 서버·프로덕션 번들 |
+| **Test** | Vitest | 4.1.12 | 유닛·통합 테스트 |
+| **DOM Test** | Testing Library | 16.3.2 | React 컴포넌트 테스트 |
+| **E2E** | Playwright | 1.65.0 | Chromium 스모크 테스트 |
+| **Styling** | Vanilla CSS | - | CSS Grid/Flexbox, 디자인 토큰 |
+| **Browser API** | Canvas, Web Audio, Web Worker, Service Worker, Vibration, Web Share | - | 클라이언트 기능 구현 |
 
 ---
 
-## 4. 코어 알고리즘 (Core Algorithms)
+## 4. 구조
 
-### 4.1 가분성 판별 (Solvability Parity)
-1차원 타일 배열의 반전수(Inversion Count, $I$)와 빈 슬롯의 위치를 기준으로 풀이 가능 여부를 검증합니다.
+### 4.1 앱 구조
 
-| 그리드 크기 ($N$) | 풀이 가능 조건 |
+백엔드와 데이터베이스가 없으므로 ERD 대신 앱 구조와 LocalStorage 저장 키를 기록합니다.
+
+```mermaid
+flowchart LR
+    UI["React UI<br/>Title · Board · HUD · Modal"] --> STATE["usePuzzleGame<br/>board · status · timer · history"]
+    STATE --> LOGIC["puzzleLogic<br/>shuffle · move · win"]
+    UI --> HINT["solver.worker<br/>A* hint"]
+    HINT --> AI["aiSolver<br/>Manhattan + Linear Conflict"]
+    UI --> AUDIO["audioManager<br/>BGM · SFX"]
+    UI --> I18N["i18n<br/>KO · EN · JA · ZH"]
+    UI --> STORAGE[("LocalStorage<br/>records · achievements · settings")]
+    UI --> SW["Service Worker<br/>cache · offline"]
+    SW --> ASSETS["public assets<br/>themes · audio · sprites"]
+```
+
+### 4.2 LocalStorage
+
+| 키 | 저장 내용 |
 | :--- | :--- |
-| **홀수 그리드 (3x3, 5x5)** | $I \equiv 0 \pmod 2$ (반전수가 짝수) |
-| **짝수 그리드 (4x4)** | $(I + R_{\text{bottom}}) \equiv 1 \pmod 2$ (반전수 + 하단 기준 빈 슬롯 행 번호의 합이 홀수) |
+| `sliding_puzzle_best_records` | 난이도별 최고 시간·이동 수 |
+| `sliding_puzzle_achievements`, `sliding_puzzle_achievement_stats` | 업적 달성 상태·진행도·통계 |
+| `sliding_puzzle_daily_streak` | 일일 챌린지 완료 날짜·스트릭 |
+| `sliding_puzzle_sfx_muted`, `sliding_puzzle_bgm_muted`, `sliding_puzzle_sfx_vol`, `sliding_puzzle_bgm_vol`, `sliding_puzzle_current_bgm`, `sliding_puzzle_auto_theme_bgm` | 오디오 설정 |
+| `sliding_puzzle_lang` | 선택 언어 |
+| `sliding_puzzle_custom_image` | 커스텀 퍼즐 이미지 |
 
-### 4.2 A* 경로 탐색 휴리스틱
+저장소 접근 차단·손상 JSON·스키마 불일치는 공통 storage 래퍼에서 흡수하고 기본값으로 폴백합니다.
+
+### 4.3 코어 알고리즘
+
+**풀이 가능성**
+
+| 그리드 | 조건 |
+| :--- | :--- |
+| 홀수(3×3, 5×5) | 반전수(Inversion Count)가 짝수 |
+| 짝수(4×4) | 반전수 + 하단 기준 빈 슬롯 행 번호의 합이 홀수 |
+
+**A\* 힌트**
+
 $$h(n) = h_{\text{manhattan}}(n) + 2 \times C_{\text{linear}}(n)$$
-* **Manhattan Distance ($h_{\text{manhattan}}$)**: 각 타일의 현재 좌표와 목표 좌표 간 격자 거리의 총합
-* **Linear Conflict ($C_{\text{linear}}$)**: 동일 행/열에서 목표 순서가 서로 역전된 타일 쌍의 개수
+
+- Manhattan 거리와 Linear Conflict를 결합합니다.
+- 4×4는 행·열 서브골로 축소한 뒤 3×3 A*로 해결합니다.
+- 5×5는 탐색 예산과 폴백을 적용하고, 계산은 Web Worker에서 수행합니다.
+
+### 4.4 주요 디렉터리
+
+```text
+src/
+├── components/   # Board, Controls, Header, Modal, Title, Achievement, PWA
+├── hooks/        # usePuzzleGame, useAudio, useAssetPreloader, useModalFocusTrap
+├── utils/        # puzzleLogic, aiSolver, audioManager, dailyChallenge, storage 등
+├── workers/      # solver.worker.ts
+├── i18n/         # KO/EN/JA/ZH 번역
+├── styles/       # 디자인 토큰·전역/컴포넌트 스타일
+├── test/         # Vitest setup
+├── types/        # TypeScript 타입
+├── App.tsx
+└── main.tsx
+```
 
 ---
 
-## 5. 실행 방법 (Getting Started)
+## 5. 실행 방법
 
 ### 요구사항
-* Node.js 24.15.0 이상(24.x) 또는 26.0.0 이상 (`.nvmrc`: 24)
-* npm 10.0.0 이상
+
+- Node.js 24.15.0 이상(24.x) 또는 26.0.0 이상 (`.nvmrc`: 24)
+- npm 10.0.0 이상
 
 ### 설치 및 실행
+
 ```bash
-# 저장소 복제
 git clone https://github.com/NewplayerKOR/sliding-puzzle-web.git
 cd sliding-puzzle-web
 
-# 패키지 설치 (lockfile 기준)
-npm ci
-
-# 개발 서버 실행
-npm run dev
-
-# 프로덕션 빌드
-npm run build
-
-# 테스트 실행
-npm test
-
-# 타입 검사
+npm ci          # lockfile 기준 설치
+npm run dev     # 개발 서버 (http://localhost:5173)
+npm test        # Vitest
 npm run typecheck
-
-# E2E 테스트 (최초 1회 npx playwright install chromium)
-npm run test:e2e
+npm run build   # tsc + Vite 프로덕션 빌드
+npm run test:e2e # 최초 1회 npx playwright install chromium
 ```
 
 ---
 
-## 6. 배포 및 CI
+## 6. 테스트 및 검증
 
-- **배포 절차**: [root/DEPLOYMENT.md](./root/DEPLOYMENT.md) — Vercel 설정, 서브패스 배포, 배포 후 확인, 캐시·업데이트·롤백 절차를 정리했다.
-- **CI**: [.github/workflows/ci.yml](./.github/workflows/ci.yml) — Node 24 기준으로 `npm ci` → 테스트 → 타입 검사 → 빌드 → 프로덕션 의존성 감사를 수행하고, 이어서 Playwright Chromium E2E를 실행한다.
-- **Vercel 상태**: 2026-11-08 기준 Vercel 프로젝트는 소유자가 의도적으로 pause한 상태다. `main` push 자동 배포는 실행되지 않지만 장애가 아니며, resume하면 기존 설정으로 재개된다. 자세한 내용은 배포 문서를 따른다.
-- **robots.txt**: [public/robots.txt](./public/robots.txt)는 전체 크롤링 허용 정책이다. 서브패스 배포에서 도메인 루트 정책이 필요하면 배포 문서를 따른다.
+2026-11-08 기준 결과입니다.
 
----
+| 항목 | 결과 |
+| :--- | :--- |
+| 유닛·통합 테스트 | **29개 파일 / 183개 케이스 PASS** |
+| 타입 검사 | **0 Errors** |
+| 프로덕션 빌드 | **Vite 6.4.5 성공** |
+| E2E | **Playwright Chromium 4/4 PASS** |
+| Lighthouse | 8개 화면 접근성·Best Practices·SEO **1.0** |
 
-## 7. 테스트 및 검증 현황
-
-| 항목 | 도구 | 대상 | 결과 |
-| :--- | :--- | :--- | :---: |
-| **유닛 / 통합 테스트** | Vitest | 29개 테스트 파일 (183개 테스트 케이스) | **183 / 183 Passed** |
-| **타입 검사** | TypeScript (`tsc --noEmit`) | 전체 소스코드 | **0 Errors** |
-| **프로덕션 빌드** | Vite | 번들링 및 에셋 압축 | **정상 생성** |
-| **에셋 최적화** | Vitest·브라우저 측정 | dist 용량 및 초기 로딩 | **20.65→11.04MB / 9,222,220→2,716,771바이트 (-70.5%)** |
-| **업적 토스트** | Vitest·브라우저 측정 | 다중 달성 큐 | **3건 순차 표시·14초 후 소멸 확인** |
-| **저장소 방어** | Vitest·브라우저 측정 | 손상 데이터·차단 | **기본값 폴백·타이틀/모달 정상 렌더링 확인** |
-| **디자인 토큰** | Vitest·브라우저 측정 | 전 화면 심플·어반 UI | **그라데이션·블러·pill·이모지 0건, 360×800/1280×800 1화면 확인** |
-| **E2E 스모크** | Playwright | Chromium 4개 시나리오 | **4 / 4 Passed** |
+- Node.js 26.13.0에서도 별도 `NODE_OPTIONS` 없이 `npm test`가 통과합니다.
+- 실제 모바일 실기기·Safari/Firefox·스크린리더 검증은 수행하지 않았습니다.
 
 ---
 
-## 8. 디렉토리 구조 (Directory Structure)
+## 7. 배포 및 CI
 
-```
-sliding-puzzle-web/
-├── .github/workflows/       # CI (quality + e2e)
-├── e2e/                     # Playwright E2E 스모크 테스트
-├── root/                    # 거버넌스 (AGENTS.md, TASKS.md, FEATURES.md, DEPLOYMENT.md, DESIGN_SYSTEM.md)
-├── roles/                   # 역할별 행동 수칙 (PM, DEV, QA_DEVOPS)
-├── public/                  # 정적 에셋 (아이콘, 오디오, 테마 텍스처, PWA 매니페스트, sw.js, robots.txt)
-├── src/
-│   ├── components/          # React 컴포넌트 (Board, Controls, Modal, Title 등)
-│   ├── hooks/               # 커스텀 훅 (usePuzzleGame, useAudio, useAssetPreloader 등)
-│   ├── i18n/                # 4개 국어 딕셔너리 (translations.ts, useTranslation.ts)
-│   ├── styles/              # 디자인 토큰·전역/컴포넌트 스타일
-│   ├── test/                # Vitest setup
-│   ├── types/               # TypeScript 인터페이스 및 타입 정의
-│   ├── utils/               # 코어 로직, 알고리즘, 오디오 매니저, 스토리지
-│   ├── workers/             # A* 탐색 Web Worker (solver.worker.ts)
-│   ├── App.tsx              # 메인 애플리케이션 컴포넌트
-│   └── main.tsx             # 진입점
-├── scripts/                 # 에셋 생성·가공용 Node 스크립트
-├── .nvmrc                   # Node 24
-├── playwright.config.ts     # Playwright 설정
-└── package.json             # 프로젝트 메타데이터 및 의존성
-```
+- **CI**: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) — Node 24 기준 `npm ci` → 테스트 → 타입 검사 → 빌드 → 프로덕션 의존성 감사 후 Playwright Chromium E2E를 실행합니다.
+- **배포**: `dist/` 정적 번들을 정적 호스팅에 배포합니다. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원합니다.
+- **Vercel**: 2026-11-08 기준 프로젝트가 소유자에 의해 의도적으로 pause 상태입니다. 장애가 아니며, 재개하면 기존 설정으로 배포를 다시 시작합니다.
+- **상세 절차**: [root/DEPLOYMENT.md](./root/DEPLOYMENT.md)
+- **robots**: [public/robots.txt](./public/robots.txt)
+
+---
+
+## 8. 문서
+
+| 문서 | 내용 |
+| :--- | :--- |
+| [root/AGENTS.md](./root/AGENTS.md) | 프로젝트 규칙·작업 라이프사이클·환경 요약 |
+| [root/TASKS.md](./root/TASKS.md) | 진행·대기·보류 업무와 완료 기록 |
+| [root/FEATURES.md](./root/FEATURES.md) | 구현·검증된 기능 카탈로그 |
+| [root/DESIGN_SYSTEM.md](./root/DESIGN_SYSTEM.md) | 디자인 토큰·가독성·금지·지양 목록 |
+| [root/DEPLOYMENT.md](./root/DEPLOYMENT.md) | 배포·캐시·업데이트·롤백 절차 |
+| [roles/](./roles) | PM·DEV·QA 역할별 행동 수칙 |
