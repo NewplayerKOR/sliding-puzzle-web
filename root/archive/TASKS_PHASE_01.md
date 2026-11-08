@@ -614,3 +614,56 @@
   - 스크린샷: [타이틀 360×800](./assets/task-dev-20/title-360x800.webp), [게임 360×800](./assets/task-dev-20/game-360x800.webp), [게임 360×640](./assets/task-dev-20/game-360x640.webp), [게임 1280×800](./assets/task-dev-20/game-1280x800.webp). 1280×800은 1280×800 iframe을 0.72배로 축소 촬영한 뒤 원해상도로 복원함.
 - **미실행**: 실제 모바일 실기기(iOS Safari·Android Chrome)와 실제 손가락 스와이프·Pull-to-refresh는 확인하지 않았음. Firefox의 `dvh`·터치 리스너 동작도 미확인. 360×640은 설계상 세로 스크롤을 허용했고 1화면 요구 대상이 아님.
 - **증거**: `src/components/Header/Header.tsx`, `src/components/Header/Header.css`, `src/components/Title/TitleScreen.css`, `src/components/Controls/Controls.tsx`, `src/components/Controls/Controls.css`, `src/components/Board/PuzzleBoard.tsx`, `src/components/Board/PuzzleBoard.css`, `src/components/Board/PuzzleBoard.test.tsx`, `src/styles/App.css`, `root/archive/assets/task-dev-20/*.webp`, 터미널 실행 결과, 브라우저 iframe 측정·스크린샷 결과
+
+---
+
+## TASK-DEV-21 — PWA 매니페스트 아이콘·Service Worker 폴백/업데이트 안정화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **완료일**: 2026-11-08
+- **목표**: PWA 설치 요건을 충족하는 아이콘을 제공하고, 서버 오류·업데이트 시 캐시 폴백과 게임 진행 보호를 강화한다.
+- **대상 파일**: `public/manifest.webmanifest`, `public/assets/icons/**`, `public/sw.js`, `src/main.tsx`
+- **재현/증거**: 매니페스트는 `badge_trophy.png`를 192×192·512×512로 선언하지만 실제 이미지는 224×197이고 maskable·apple-touch 아이콘이 없음. 서버 중단 후 재로드 시 SW가 502 응답을 그대로 반환해 캐시 폴백이 동작하지 않음. `controllerchange`에서 무조건 `location.reload()`를 호출해 업데이트 시 게임이 중단될 수 있음.
+- **완료 기준(DoD)**:
+  - 192×192·512×512 정사각형 아이콘과 maskable 아이콘, apple-touch-icon 추가
+  - Navigation Network First에서 `!response.ok`도 캐시 폴백 처리
+  - `cache.addAll` 실패 시 자산별 캐시 또는 설치 실패 처리
+  - 업데이트 시 진행 중 게임을 즉시 새로고침하지 않고 안내 후 반영
+  - 서브패스 배포와 오프라인 재로드 재검증
+
+### 진행 결과
+
+- `sharp`로 3×3 슬라이딩 퍼즐 그리드 아이콘을 생성해 `icon-192.png`·`icon-512.png`(purpose `any`), `icon-maskable-192.png`·`icon-maskable-512.png`(purpose `maskable`), `apple-touch-icon.png`(180×180)을 추가함. maskable 아이콘은 80% 안전 영역 안에 그리드가 들어오도록 축소하고 배경을 꽉 채워 마스킹 시 잘림을 막음.
+- `manifest.webmanifest`에 `scope: "./"`를 추가하고 아이콘 4종을 `any`/`maskable` purpose로 분리 선언함. 모든 경로를 상대 경로로 유지해 서브패스 배포에서도 해석되게 함.
+- `index.html`에 180×180 `apple-touch-icon` 링크와 `apple-mobile-web-app-capable`·status-bar·title 메타를 추가함.
+- `public/sw.js`를 v2.1로 올리고 다음을 반영함.
+  - `self.location.href` 기준으로 `INDEX_URL`을 계산해 서브패스에서도 캐시 셸을 찾도록 함.
+  - Navigation Network First에서 `response.ok`가 아닌 4xx·5xx 응답도 캐시된 `index.html`로 폴백하고, 네트워크 예외 시에도 캐시 셸을 반환함.
+  - `cache.addAll` 실패 시 `cache.add`로 자산별 재시도하고 실패 자산만 경고로 남겨 설치 전체가 비지 않게 함.
+  - install에서 자동 `skipWaiting()`을 제거하고, `SKIP_WAITING` 메시지를 받을 때만 대기 워커를 활성화함. activate에서는 이전 캐시 정리 후 `clients.claim()`을 수행함.
+  - 성공한 Navigation 응답을 요청 URL과 `INDEX_URL` 양쪽에 캐시하고, 캐시 쓰기 실패는 경고만 남겨 응답을 막지 않음.
+- `src/utils/swUpdateManager.ts`를 추가해 등록·대기 워커 감지·업데이트 이벤트·적용 요청·`controllerchange` 새로고침을 분리함. 새로고침은 사용자가 적용을 선택한 뒤 한 번만 수행하고, 테스트를 위해 reload 콜백을 주입할 수 있게 함.
+- `ServiceWorkerUpdateBanner`를 추가해 `role="status"`·`aria-live="polite"` 배너로 새 버전을 안내하고, "지금 업데이트"에서 `SKIP_WAITING`을 요청하며 "나중에"에서는 배너만 닫음. 4개 국어 문구를 추가하고 400px 이하에서는 버튼 라벨을 숨겨 아이콘으로 표시함.
+- `App.tsx`에서 배너를 `.app-content` 밖에 렌더링해 모달 열림 중에도 업데이트 안내를 조작할 수 있게 함. `main.tsx`는 `registerServiceWorker(getAssetUrl('sw.js'))`만 호출하도록 단순화함.
+
+### 검증
+
+- **실행·확인 방법**:
+  - `npm test` (Node.js 26.13.0, `NODE_OPTIONS=--localstorage-file=<임시 파일>`)
+  - `npx tsc --noEmit`
+  - `npm run build`
+  - `dist`를 `http://127.0.0.1:4173/sliding-puzzle/` 서브패스로 서빙하는 Node 정적 서버에서 데스크톱 Chromium으로 SW 등록·캐시·매니페스트·오프라인·업데이트 흐름을 확인
+- **결과**:
+  - `npm test`: 24개 파일/152개 테스트 PASS. 신규 `serviceWorkerScript.test.ts` 9건, `swUpdateManager.test.ts` 5건, `ServiceWorkerUpdateBanner.test.tsx` 2건 포함.
+  - `npx tsc --noEmit`: 0 Errors.
+  - `npm run build`: Vite 6.4.3 프로덕션 빌드 성공(기존 `sheet_ui_fx.css` 빌드 시점 경고 1건 유지). `dist`에 프리캐시 대상 36개 파일과 `sw.js`·`manifest.webmanifest`가 포함됨을 확인.
+  - 서브패스 등록: SW scope `http://127.0.0.1:4173/sliding-puzzle/`, controller `.../sliding-puzzle/sw.js`, `sliding-puzzle-v2.1` 캐시 37건(셸 2건 포함), `index.html`·`/sliding-puzzle/`·아이콘 캐시 확인.
+  - 매니페스트: 아이콘 4종 모두 200 응답, `any` 192×192·512×512와 `maskable` 192×192·512×512의 실제 디코딩 크기가 선언과 일치함. `apple-touch-icon` 링크는 `./assets/icons/apple-touch-icon.png`로 확인.
+  - 502 폴백: 서버를 502 모드로 전환한 뒤 새로고침해도 타이틀 화면이 렌더링되고 document 요청은 200(SW 캐시)으로 기록됨.
+  - 오프라인: 테스트 서버를 중단한 뒤 새로고침해도 타이틀 화면이 캐시에서 렌더링됨. 브라우저 연결 프록시가 직접 요청에 502를 반환하는 환경이었으나 SW가 캐시 셸로 폴백함.
+  - 업데이트: 서버의 `sw.js`를 변경한 뒤 `registration.update()`를 호출하면 대기 워커와 함께 배너가 표시되고, `window` 프로브가 유지돼 즉시 새로고침되지 않음. "나중에"는 배너만 닫고 새로고침하지 않음. 페이지를 다시 열면 대기 워커가 있어 배너가 재표시됨. "지금 업데이트"는 `SKIP_WAITING` 전송 후 `controllerchange`에서 1회 새로고침하고, 새 워커의 `GET_BUILD` 응답 `sw-build-update`와 `registration.waiting === null`, 단일 캐시(`sliding-puzzle-v2.1`)를 확인함.
+  - 브라우저 콘솔 error 0건.
+- **미실행**: 실제 모바일 실기기·iOS Safari의 홈 화면 아이콘 적용, Firefox의 SW 업데이트 동작, 실제 정적 호스팅(GitHub Pages 등) 배포 환경은 확인하지 않았음. Chrome 설치 프롬프트 UI와 Lighthouse PWA 카테고리 감사도 실행하지 않았음(제공 도구는 접근성·SEO·모범 사례만 지원).
+- **증거**: `public/manifest.webmanifest`, `public/sw.js`, `public/assets/icons/icon-192.png`, `public/assets/icons/icon-512.png`, `public/assets/icons/icon-maskable-192.png`, `public/assets/icons/icon-maskable-512.png`, `public/assets/icons/apple-touch-icon.png`, `index.html`, `src/main.tsx`, `src/App.tsx`, `src/utils/swUpdateManager.ts`, `src/components/PWA/ServiceWorkerUpdateBanner.tsx`, `src/components/PWA/ServiceWorkerUpdateBanner.css`, `src/utils/serviceWorkerScript.test.ts`, `src/utils/swUpdateManager.test.ts`, `src/components/PWA/ServiceWorkerUpdateBanner.test.tsx`, 터미널 실행 결과, 브라우저 등록·캐시·업데이트 측정 결과

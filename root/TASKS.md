@@ -27,8 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-21 — PWA 매니페스트 아이콘·Service Worker 폴백/업데이트 안정화
-
 - **Phase**: 01
 - **담당**: DEV
 - **우선순위**: P2
@@ -117,6 +115,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-21** — PWA 매니페스트 아이콘·Service Worker 폴백/업데이트 안정화 (완료일: 2026-11-08)
+  - 핵심 결과: 192×192·512×512 `any` 아이콘과 maskable 2종, apple-touch-icon(180×180)을 추가하고 매니페스트 `scope`·purpose를 정비. SW Navigation에서 502 등 `!response.ok` 응답도 캐시 셸로 폴백하고, `cache.addAll` 실패 시 자산별 캐시로 전환. 새 워커는 자동 활성화하지 않고 업데이트 배너에서 사용자가 선택할 때만 `SKIP_WAITING` 후 새로고침
+  - 검증 범위: Vitest 24개 파일/152개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공. 서브패스(`/sliding-puzzle/`) 프로덕션 빌드에서 SW scope·캐시 37건·아이콘 4종 규격 확인, 502 응답·서버 중단 재로드에서 캐시 셸 렌더링 확인, 업데이트 배너 표시→나중에(무새로고침)→지금 업데이트(새 워커 활성·1회 새로고침) 확인. 실제 모바일 실기기·Safari는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-21--pwa-매니페스트-아이콘service-worker-폴백업데이트-안정화)
+
 - **TASK-DEV-20** — 360px 모바일·1화면 레이아웃 및 터치 처리 정비 (완료일: 2026-11-08)
   - 핵심 결과: 헤더 클래스 불일치를 바로잡고 360px에서 타이틀 상단 바를 2줄로 배치해 배지·오디오 컨트롤 잘림 해소. 400px 이하 툴바를 4열 아이콘으로 압축하고 보드·여백을 높이에 맞춰 축소해 360×800·1280×800 게임 화면을 스크롤 없이 배치. 터치 스크롤 차단을 non-passive 리스너로 전환
   - 검증 범위: Vitest 21개 파일/136개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 360×640·360×800·1280×800 iframe 뷰포트 측정과 스크린샷 4종, 데스크톱 Chromium 터치 이벤트·콘솔 오류 0건 확인. 실제 모바일 실기기·iOS Safari는 미실행
@@ -137,13 +140,8 @@
   - 검증 범위: Vitest 18개 파일/127개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 정상 힌트·보드 변경 무효화·힌트 없음·시간 초과·재시도 확인. 실제 모바일 실기기·Worker 스크립트 로드 실패는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-17--ai-힌트-레이스-컨디션worker-실패-처리)
 
-- **TASK-DEV-16** — 커스텀 이미지 보존·드래그 앤 드롭·업로드 검증 정비 (완료일: 2026-11-08)
-  - 핵심 결과: 테마 모달 열기·닫기와 모드 전환에서 커스텀 이미지를 유지하고 테마 적용 시에만 제거. 드래그 앤 드롭, MIME·10MB·quota 오류의 4개 국어 피드백 추가
-  - 검증 범위: Vitest 17개 파일/123개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, 데스크톱 Chromium에서 드래그·보존·테마 변경·형식/용량/quota 오류 확인. 실제 모바일 실기기·OS별 파일 드롭은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-16--커스텀-이미지-보존드래그-앤-드롭업로드-검증-정비)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화)
