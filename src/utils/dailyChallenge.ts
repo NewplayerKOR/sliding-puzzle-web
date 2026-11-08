@@ -1,6 +1,7 @@
 import { Board, GridSize } from '../types/puzzle';
 import { generateSolvedBoard, isSolvable, checkWinCondition } from './puzzleLogic';
 import { getTodayDateString, hashStringToSeed, mulberry32 } from './prng';
+import { isRecord, readStorageJson, writeStorageJson } from './storage';
 
 export { getTodayDateString };
 
@@ -12,36 +13,62 @@ export interface DailyStreakData {
 }
 
 const DAILY_STORAGE_KEY = 'sliding_puzzle_daily_streak';
+const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+function createEmptyStreakData(): DailyStreakData {
+  return { currentStreak: 0, maxStreak: 0, lastCompletedDate: null, completedDates: [] };
+}
+
+function toNonNegativeInteger(value: unknown): number {
+  return typeof value === 'number' && Number.isFinite(value) && value >= 0
+    ? Math.floor(value)
+    : 0;
+}
+
+// 손상된 필드가 있어도 유효한 값만 살려 스트릭 UI가 예외 없이 동작하게 함.
+function normalizeDailyStreakData(value: unknown): DailyStreakData | null {
+  if (!isRecord(value)) return null;
+
+  const completedDates = Array.isArray(value.completedDates)
+    ? Array.from(
+        new Set(
+          value.completedDates.filter(
+            (date): date is string => typeof date === 'string' && DATE_PATTERN.test(date)
+          )
+        )
+      )
+    : [];
+  const currentStreak = toNonNegativeInteger(value.currentStreak);
+  const maxStreak = Math.max(toNonNegativeInteger(value.maxStreak), currentStreak);
+  const lastCompletedDate =
+    typeof value.lastCompletedDate === 'string' && DATE_PATTERN.test(value.lastCompletedDate)
+      ? value.lastCompletedDate
+      : null;
+
+  return { currentStreak, maxStreak, lastCompletedDate, completedDates };
+}
 
 export function getDailyStreakData(): DailyStreakData {
-  if (typeof window === 'undefined') {
-    return { currentStreak: 0, maxStreak: 0, lastCompletedDate: null, completedDates: [] };
-  }
-  try {
-    const raw = localStorage.getItem(DAILY_STORAGE_KEY);
-    if (raw) {
-      const parsed: DailyStreakData = JSON.parse(raw);
-      const todayStr = getTodayDateString();
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = `${yesterday.getFullYear()}-${(yesterday.getMonth() + 1).toString().padStart(2, '0')}-${yesterday.getDate().toString().padStart(2, '0')}`;
+  const parsed = readStorageJson(DAILY_STORAGE_KEY, normalizeDailyStreakData);
+  if (parsed) {
+    const todayStr = getTodayDateString();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = `${yesterday.getFullYear()}-${(yesterday.getMonth() + 1).toString().padStart(2, '0')}-${yesterday.getDate().toString().padStart(2, '0')}`;
 
-      if (
-        parsed.lastCompletedDate &&
-        parsed.lastCompletedDate !== todayStr &&
-        parsed.lastCompletedDate !== yesterdayStr
-      ) {
-        return {
-          ...parsed,
-          currentStreak: 0,
-        };
-      }
-      return parsed;
+    if (
+      parsed.lastCompletedDate &&
+      parsed.lastCompletedDate !== todayStr &&
+      parsed.lastCompletedDate !== yesterdayStr
+    ) {
+      return {
+        ...parsed,
+        currentStreak: 0,
+      };
     }
-  } catch {
-    // fallback
+    return parsed;
   }
-  return { currentStreak: 0, maxStreak: 0, lastCompletedDate: null, completedDates: [] };
+  return createEmptyStreakData();
 }
 
 export function saveDailyCompletion(dateStr: string = getTodayDateString()): DailyStreakData {
@@ -71,11 +98,7 @@ export function saveDailyCompletion(dateStr: string = getTodayDateString()): Dai
     completedDates: newCompletedDates,
   };
 
-  try {
-    localStorage.setItem(DAILY_STORAGE_KEY, JSON.stringify(updated));
-  } catch {
-    // ignore
-  }
+  writeStorageJson(DAILY_STORAGE_KEY, updated);
 
   return updated;
 }

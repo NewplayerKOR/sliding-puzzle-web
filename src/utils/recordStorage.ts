@@ -1,28 +1,51 @@
 import { GridSize } from '../types/puzzle';
 import { BestRecord, BestRecords } from '../types/theme';
+import { isRecord, readStorageJson, writeStorageJson } from './storage';
 
 const STORAGE_KEY_RECORDS = 'sliding_puzzle_best_records';
 
-const DEFAULT_RECORDS: BestRecords = {
-  3: null,
-  4: null,
-  5: null,
-};
+function createDefaultRecords(): BestRecords {
+  return {
+    3: null,
+    4: null,
+    5: null,
+  };
+}
+
+function normalizeBestRecord(value: unknown): BestRecord | null {
+  if (!isRecord(value)) return null;
+
+  const { bestTime, bestMoves, clearedAt } = value;
+  if (
+    typeof bestTime !== 'number' ||
+    !Number.isFinite(bestTime) ||
+    bestTime < 0 ||
+    typeof bestMoves !== 'number' ||
+    !Number.isFinite(bestMoves) ||
+    bestMoves < 0
+  ) {
+    return null;
+  }
+
+  return {
+    bestTime,
+    bestMoves,
+    clearedAt: typeof clearedAt === 'string' ? clearedAt : '',
+  };
+}
+
+function normalizeBestRecords(value: unknown): BestRecords {
+  if (!isRecord(value)) return createDefaultRecords();
+
+  return {
+    3: normalizeBestRecord(value['3']),
+    4: normalizeBestRecord(value['4']),
+    5: normalizeBestRecord(value['5']),
+  };
+}
 
 export function getBestRecords(): BestRecords {
-  if (typeof window === 'undefined') return DEFAULT_RECORDS;
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY_RECORDS);
-    if (!raw) return DEFAULT_RECORDS;
-    const parsed = JSON.parse(raw);
-    return {
-      3: parsed[3] || null,
-      4: parsed[4] || null,
-      5: parsed[5] || null,
-    };
-  } catch {
-    return DEFAULT_RECORDS;
-  }
+  return readStorageJson(STORAGE_KEY_RECORDS, normalizeBestRecords) ?? createDefaultRecords();
 }
 
 export function saveBestRecord(
@@ -49,14 +72,7 @@ export function saveBestRecord(
     };
 
     currentRecords[gridSize] = newRecord;
-
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(STORAGE_KEY_RECORDS, JSON.stringify(currentRecords));
-      } catch {
-        // LocalStorage fallback
-      }
-    }
+    writeStorageJson(STORAGE_KEY_RECORDS, currentRecords);
   }
 
   return { isNewRecord, records: currentRecords };

@@ -1,6 +1,7 @@
 import { ThemeId } from '../types/theme';
 import type { Translations } from '../i18n/translations';
 import { getAssetUrl } from './assetPath';
+import { readStorageItem, writeStorageItem } from './storage';
 
 export type SfxType = 'slide' | 'blocked' | 'shuffle' | 'click' | 'victory';
 
@@ -64,6 +65,46 @@ const STORAGE_KEY_BGM_VOL = 'sliding_puzzle_bgm_vol';
 const STORAGE_KEY_CURRENT_BGM = 'sliding_puzzle_current_bgm';
 const STORAGE_KEY_AUTO_THEME_BGM = 'sliding_puzzle_auto_theme_bgm';
 
+export interface StoredAudioSettings {
+  sfxMuted: string | null;
+  bgmMuted: string | null;
+  sfxVolume: string | null;
+  bgmVolume: string | null;
+  currentBgmTrackId: string | null;
+  autoThemeBgm: string | null;
+}
+
+function parseBooleanSetting(value: string | null): boolean | null {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return null;
+}
+
+function parseVolumeSetting(value: string | null): number | null {
+  if (value === null || value.trim() === '') return null;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return null;
+  return Math.max(0, Math.min(1, parsed));
+}
+
+// 손상된 저장값은 무시하고 기본 설정값을 사용함.
+export function normalizeStoredAudioConfig(
+  stored: StoredAudioSettings,
+  defaults: AudioConfig
+): AudioConfig {
+  return {
+    sfxMuted: parseBooleanSetting(stored.sfxMuted) ?? defaults.sfxMuted,
+    bgmMuted: parseBooleanSetting(stored.bgmMuted) ?? defaults.bgmMuted,
+    sfxVolume: parseVolumeSetting(stored.sfxVolume) ?? defaults.sfxVolume,
+    bgmVolume: parseVolumeSetting(stored.bgmVolume) ?? defaults.bgmVolume,
+    currentBgmTrackId:
+      stored.currentBgmTrackId && BGM_TRACKS.some((track) => track.id === stored.currentBgmTrackId)
+        ? stored.currentBgmTrackId
+        : defaults.currentBgmTrackId,
+    autoThemeBgm: parseBooleanSetting(stored.autoThemeBgm) ?? defaults.autoThemeBgm,
+  };
+}
+
 export const COMBO_TIMEOUT_MS = 600; // 0.6 seconds timeout
 export const MAX_COMBO = 8; // Max 8 combos
 
@@ -126,40 +167,25 @@ class AudioManager {
   }
 
   private loadSettings(): void {
-    if (typeof window === 'undefined') return;
-    try {
-      const sfxMuted = localStorage.getItem(STORAGE_KEY_SFX_MUTED);
-      const bgmMuted = localStorage.getItem(STORAGE_KEY_BGM_MUTED);
-      const sfxVol = localStorage.getItem(STORAGE_KEY_SFX_VOL);
-      const bgmVol = localStorage.getItem(STORAGE_KEY_BGM_VOL);
-      const currentBgm = localStorage.getItem(STORAGE_KEY_CURRENT_BGM);
-      const autoTheme = localStorage.getItem(STORAGE_KEY_AUTO_THEME_BGM);
+    const stored: StoredAudioSettings = {
+      sfxMuted: readStorageItem(STORAGE_KEY_SFX_MUTED),
+      bgmMuted: readStorageItem(STORAGE_KEY_BGM_MUTED),
+      sfxVolume: readStorageItem(STORAGE_KEY_SFX_VOL),
+      bgmVolume: readStorageItem(STORAGE_KEY_BGM_VOL),
+      currentBgmTrackId: readStorageItem(STORAGE_KEY_CURRENT_BGM),
+      autoThemeBgm: readStorageItem(STORAGE_KEY_AUTO_THEME_BGM),
+    };
 
-      if (sfxMuted !== null) this.config.sfxMuted = sfxMuted === 'true';
-      if (bgmMuted !== null) this.config.bgmMuted = bgmMuted === 'true';
-      if (sfxVol !== null) this.config.sfxVolume = parseFloat(sfxVol);
-      if (bgmVol !== null) this.config.bgmVolume = parseFloat(bgmVol);
-      if (currentBgm && BGM_TRACKS.some((t) => t.id === currentBgm)) {
-        this.config.currentBgmTrackId = currentBgm;
-      }
-      if (autoTheme !== null) this.config.autoThemeBgm = autoTheme === 'true';
-    } catch {
-      // Storage unavailable fallback
-    }
+    this.config = normalizeStoredAudioConfig(stored, this.config);
   }
 
   private saveSettings(): void {
-    if (typeof window === 'undefined') return;
-    try {
-      localStorage.setItem(STORAGE_KEY_SFX_MUTED, String(this.config.sfxMuted));
-      localStorage.setItem(STORAGE_KEY_BGM_MUTED, String(this.config.bgmMuted));
-      localStorage.setItem(STORAGE_KEY_SFX_VOL, String(this.config.sfxVolume));
-      localStorage.setItem(STORAGE_KEY_BGM_VOL, String(this.config.bgmVolume));
-      localStorage.setItem(STORAGE_KEY_CURRENT_BGM, this.config.currentBgmTrackId);
-      localStorage.setItem(STORAGE_KEY_AUTO_THEME_BGM, String(this.config.autoThemeBgm));
-    } catch {
-      // Storage error ignored
-    }
+    writeStorageItem(STORAGE_KEY_SFX_MUTED, String(this.config.sfxMuted));
+    writeStorageItem(STORAGE_KEY_BGM_MUTED, String(this.config.bgmMuted));
+    writeStorageItem(STORAGE_KEY_SFX_VOL, String(this.config.sfxVolume));
+    writeStorageItem(STORAGE_KEY_BGM_VOL, String(this.config.bgmVolume));
+    writeStorageItem(STORAGE_KEY_CURRENT_BGM, this.config.currentBgmTrackId);
+    writeStorageItem(STORAGE_KEY_AUTO_THEME_BGM, String(this.config.autoThemeBgm));
     this.notifyListeners();
   }
 

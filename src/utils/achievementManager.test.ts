@@ -145,4 +145,69 @@ describe('achievementManager', () => {
 
     expect(INITIAL_ACHIEVEMENTS.find((a) => a.id === 'first_victory')?.unlockedAt).toBeNull();
   });
+
+  it('falls back to initial achievements for corrupt JSON or non-array values', () => {
+    localStorage.setItem('sliding_puzzle_achievements', '{broken');
+    expect(getStoredAchievements().every((a) => a.unlockedAt === null)).toBe(true);
+
+    localStorage.setItem('sliding_puzzle_achievements', JSON.stringify({ first_victory: true }));
+    const stored = getStoredAchievements();
+    expect(stored).toHaveLength(INITIAL_ACHIEVEMENTS.length);
+    expect(stored.every((a) => a.unlockedAt === null)).toBe(true);
+  });
+
+  it('ignores malformed achievement entries and normalizes progress', () => {
+    localStorage.setItem(
+      'sliding_puzzle_achievements',
+      JSON.stringify([
+        null,
+        42,
+        { id: 42, unlockedAt: '2025-01-01T00:00:00.000Z' },
+        { id: 'first_victory', unlockedAt: 123, progress: '9' },
+        { id: 'star_collector', unlockedAt: '2025-02-01T00:00:00.000Z', progress: -3 },
+        { id: 'daily_streak_3', unlockedAt: '2025-03-01T00:00:00.000Z', progress: 2.7 },
+      ])
+    );
+
+    const stored = getStoredAchievements();
+    const firstVictory = stored.find((a) => a.id === 'first_victory');
+    const starCollector = stored.find((a) => a.id === 'star_collector');
+    const dailyStreak = stored.find((a) => a.id === 'daily_streak_3');
+
+    expect(firstVictory?.unlockedAt).toBeNull();
+    expect(firstVictory?.progress).toBeUndefined();
+    expect(starCollector?.unlockedAt).toBe('2025-02-01T00:00:00.000Z');
+    expect(starCollector?.progress).toBe(0);
+    expect(dailyStreak?.unlockedAt).toBe('2025-03-01T00:00:00.000Z');
+    expect(dailyStreak?.progress).toBe(2);
+  });
+
+  it('normalizes malformed stats before evaluating progress achievements', () => {
+    localStorage.setItem(
+      'sliding_puzzle_achievement_stats',
+      JSON.stringify({
+        threeStarCount: '5',
+        clearedThemes: ['nature', 'bogus', 7, 'nature'],
+        hasUsedUndoInGame: 'true',
+      })
+    );
+
+    const newly = checkGameCompletionAchievements(fastThreeByThreeWin);
+    const stored = getStoredAchievements();
+
+    expect(newly.map((a) => a.id)).toEqual(['first_victory', 'speed_demon', 'purist_no_undo']);
+    expect(stored.find((a) => a.id === 'star_collector')?.progress).toBe(1);
+    expect(stored.find((a) => a.id === 'theme_explorer')?.progress).toBe(1);
+  });
+
+  it('falls back to empty stats for corrupt stats JSON', () => {
+    localStorage.setItem('sliding_puzzle_achievement_stats', '{broken');
+
+    const newly = checkGameCompletionAchievements(fastThreeByThreeWin);
+    const stored = getStoredAchievements();
+
+    expect(newly.map((a) => a.id)).toEqual(['first_victory', 'speed_demon', 'purist_no_undo']);
+    expect(stored.find((a) => a.id === 'star_collector')?.progress).toBe(1);
+    expect(stored.find((a) => a.id === 'theme_explorer')?.progress).toBe(1);
+  });
 });

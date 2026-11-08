@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Upload, ZoomIn, ZoomOut, Check, RefreshCw } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
 import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
+import { readStorageItem, writeStorageItem } from '../../utils/storage';
 import './CustomImageModal.css';
 
 interface CustomImageModalProps {
@@ -38,11 +39,9 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
 
   // Load existing custom image if any
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(CUSTOM_IMAGE_STORAGE_KEY);
-      if (saved && !imageSrc) {
-        setImageSrc(saved);
-      }
+    const saved = readStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
+    if (saved && saved.startsWith('data:image/') && !imageSrc) {
+      setImageSrc(saved);
     }
   }, [imageSrc]);
 
@@ -214,9 +213,7 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
       return;
     }
 
-    try {
-      localStorage.setItem(CUSTOM_IMAGE_STORAGE_KEY, dataUrl);
-    } catch {
+    if (!writeStorageItem(CUSTOM_IMAGE_STORAGE_KEY, dataUrl)) {
       // 저장 실패 시 이전 이미지를 유지하고 모달을 닫지 않아 적용 상태를 명확히 함
       setErrorMessage(t.imageStorageQuotaExceeded);
       return;

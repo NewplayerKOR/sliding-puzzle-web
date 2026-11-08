@@ -3,6 +3,8 @@ import {
   audioManager,
   BGM_TRACKS,
   getComboPitchMultiplier,
+  normalizeStoredAudioConfig,
+  type AudioConfig,
 } from './audioManager';
 
 function createMockAudioContext() {
@@ -255,6 +257,82 @@ describe('AudioManager Unit Tests', () => {
 
       audioManager.playSfx('slide');
       expect(mockCtx.createBiquadFilter).toHaveBeenCalled();
+    });
+  });
+
+  describe('stored audio settings validation', () => {
+    const defaults: AudioConfig = {
+      sfxVolume: 0.8,
+      bgmVolume: 0.35,
+      sfxMuted: false,
+      bgmMuted: false,
+      currentBgmTrackId: 'chill',
+      autoThemeBgm: true,
+    };
+
+    it('falls back to defaults and clamps invalid stored values', () => {
+      expect(
+        normalizeStoredAudioConfig(
+          {
+            sfxMuted: 'yes',
+            bgmMuted: 'false',
+            sfxVolume: 'not-a-number',
+            bgmVolume: '9',
+            currentBgmTrackId: 'missing',
+            autoThemeBgm: 'nope',
+          },
+          defaults
+        )
+      ).toEqual({
+        sfxVolume: 0.8,
+        bgmVolume: 1,
+        sfxMuted: false,
+        bgmMuted: false,
+        currentBgmTrackId: 'chill',
+        autoThemeBgm: true,
+      });
+
+      expect(
+        normalizeStoredAudioConfig(
+          {
+            sfxMuted: 'true',
+            bgmMuted: 'true',
+            sfxVolume: '-0.5',
+            bgmVolume: '0.4',
+            currentBgmTrackId: 'zen',
+            autoThemeBgm: 'false',
+          },
+          defaults
+        )
+      ).toEqual({
+        sfxVolume: 0,
+        bgmVolume: 0.4,
+        sfxMuted: true,
+        bgmMuted: true,
+        currentBgmTrackId: 'zen',
+        autoThemeBgm: false,
+      });
+    });
+
+    it('loads sanitized settings from localStorage on construction', async () => {
+      localStorage.setItem('sliding_puzzle_sfx_vol', 'not-a-number');
+      localStorage.setItem('sliding_puzzle_bgm_vol', '9');
+      localStorage.setItem('sliding_puzzle_sfx_muted', 'yes');
+      localStorage.setItem('sliding_puzzle_bgm_muted', 'true');
+      localStorage.setItem('sliding_puzzle_current_bgm', 'missing');
+      localStorage.setItem('sliding_puzzle_auto_theme_bgm', 'nope');
+
+      vi.resetModules();
+      const { audioManager: freshAudioManager } = await import('./audioManager');
+
+      expect(freshAudioManager.getConfig()).toEqual({
+        sfxVolume: 0.8,
+        bgmVolume: 1,
+        sfxMuted: false,
+        bgmMuted: true,
+        currentBgmTrackId: 'chill',
+        autoThemeBgm: true,
+      });
     });
   });
 });

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { translations, Language } from './translations';
 import {
   getCurrentLanguage,
@@ -60,6 +60,29 @@ describe('i18n translations', () => {
   it('detects fallback language cleanly', () => {
     const lang = getInitialLanguage();
     expect(['ko', 'en', 'ja', 'zh']).toContain(lang);
+  });
+
+  it('falls back to ko for unsupported language values', () => {
+    localStorage.setItem('sliding_puzzle_lang', 'fr');
+    expect(getInitialLanguage()).toBe('ko');
+  });
+
+  it('falls back to ko when storage access is blocked', () => {
+    vi.stubGlobal('localStorage', {
+      getItem: () => {
+        throw new Error('storage blocked');
+      },
+      setItem: () => {
+        throw new Error('storage blocked');
+      },
+      removeItem: () => {
+        throw new Error('storage blocked');
+      },
+    });
+
+    expect(getInitialLanguage()).toBe('ko');
+    expect(() => setGlobalLanguage('en')).not.toThrow();
+    vi.unstubAllGlobals();
   });
 
   it('formats placeholder templates and keeps unknown placeholders', () => {

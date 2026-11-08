@@ -1,13 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Language, translations, Translations } from './translations';
+import { readStorageItem, writeStorageItem } from '../utils/storage';
 
 const LANG_STORAGE_KEY = 'sliding_puzzle_lang';
+const SUPPORTED_LANGUAGES: Language[] = ['ko', 'en', 'ja', 'zh'];
 
 export function getInitialLanguage(): Language {
-  if (typeof window === 'undefined') return 'ko';
-  const saved = localStorage.getItem(LANG_STORAGE_KEY) as Language | null;
-  if (saved && ['ko', 'en', 'ja', 'zh'].includes(saved)) {
-    return saved;
+  const saved = readStorageItem(LANG_STORAGE_KEY);
+  if (saved && SUPPORTED_LANGUAGES.includes(saved as Language)) {
+    return saved as Language;
   }
   return 'ko';
 }
@@ -31,11 +32,7 @@ export function getCurrentLanguage(): Language {
 export function setGlobalLanguage(newLang: Language) {
   currentGlobalLanguage = newLang;
   applyDocumentLanguage(newLang);
-  try {
-    localStorage.setItem(LANG_STORAGE_KEY, newLang);
-  } catch {
-    // ignore
-  }
+  writeStorageItem(LANG_STORAGE_KEY, newLang);
   listeners.forEach((listener) => {
     try {
       listener(newLang);

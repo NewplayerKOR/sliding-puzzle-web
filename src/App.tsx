@@ -27,9 +27,11 @@ import { generateDailyBoard, saveDailyCompletion, getDailyStreakData, getTodayDa
 import { checkGameCompletionAchievements } from './utils/achievementManager';
 import { calculateStars } from './utils/starCalculator';
 import { useTranslation } from './i18n/useTranslation';
+import { readStorageItem, removeStorageItem } from './utils/storage';
 import './styles/App.css';
 
 const AI_HINT_TIMEOUT_MS = 5000;
+const CUSTOM_IMAGE_STORAGE_KEY = 'sliding_puzzle_custom_image';
 type AiHintErrorKey = 'aiHintUnavailable' | 'aiHintFailed' | 'aiHintTimeout';
 
 export const App: React.FC = () => {
@@ -75,10 +77,8 @@ export const App: React.FC = () => {
   useAssetPreloader(themeId);
 
   const [customImageSrc, setCustomImageSrc] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('sliding_puzzle_custom_image');
-    }
-    return null;
+    const saved = readStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
+    return saved && saved.startsWith('data:image/') ? saved : null;
   });
   const [isDailyGameActive, setIsDailyGameActive] = useState<boolean>(false);
   const [showNumberOverlay, setShowNumberOverlay] = useState<boolean>(true);
@@ -426,9 +426,7 @@ export const App: React.FC = () => {
 
   // 테마 모달에서 테마 확정 후 게임 시작
   const handleConfirmThemeStart = (selectedTheme: ThemeId, mode: GameMode) => {
-    try {
-      localStorage.removeItem('sliding_puzzle_custom_image');
-    } catch {}
+    removeStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
     setCustomImageSrc(null);
     setThemeId(selectedTheme);
     setGameMode(mode);
@@ -480,9 +478,7 @@ export const App: React.FC = () => {
           <TitleScreen
             currentTheme={currentTheme}
             onSelectTheme={(newTheme) => {
-              try {
-                localStorage.removeItem('sliding_puzzle_custom_image');
-              } catch {}
+              removeStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
               setCustomImageSrc(null);
               setThemeId(newTheme);
               audioManager.syncThemeBgm(newTheme);
@@ -593,9 +589,7 @@ export const App: React.FC = () => {
         currentGameMode={gameMode}
         pendingModeInfo={pendingGameStart}
         onSelectTheme={(newTheme, newMode) => {
-          try {
-            localStorage.removeItem('sliding_puzzle_custom_image');
-          } catch {}
+          removeStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
           setCustomImageSrc(null);
           setThemeId(newTheme);
           setGameMode(newMode);
