@@ -1,9 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
+  createBoardKey,
   getDailyStreakData,
   saveDailyCompletion,
   getTodayDateString,
 } from './dailyChallenge';
+import { generateSolvedBoard } from './puzzleLogic';
 
 const STORAGE_KEY = 'sliding_puzzle_daily_streak';
 
@@ -88,5 +90,21 @@ describe('dailyChallenge storage resilience', () => {
 
     expect(updated.completedDates).toContain(today);
     expect(updated.currentStreak).toBe(1);
+  });
+});
+
+describe('createBoardKey', () => {
+  it('정답 보드의 타일 값을 위치 순서대로 식별자로 만든다', () => {
+    expect(createBoardKey(generateSolvedBoard(3))).toBe('1,2,3,4,5,6,7,8,0');
+  });
+
+  it('타일 위치가 달라지면 다른 식별자를 만든다', () => {
+    const board = generateSolvedBoard(3);
+    const swapped = board.map((tile) => ({ ...tile }));
+    const first = swapped[7];
+    swapped[7] = swapped[8];
+    swapped[8] = first;
+
+    expect(createBoardKey(swapped)).not.toBe(createBoardKey(board));
   });
 });

@@ -51,7 +51,6 @@ export interface Translations {
 
   // Actions & Sizes
   newGame: string;
-  resetBoard: string;
   autoClear: string;
   sizeEasy: string;
   sizeNormal: string;
@@ -90,6 +89,8 @@ export interface Translations {
   gameOverSubtitleMoves: string;
   tryAgain: string;
   checkSolution: string;
+  solutionPreviewDesc: string;
+  solutionPreviewBoard: string;
 
   // Modals & General
   close: string;
@@ -311,7 +312,6 @@ export const translations: Record<Language, Translations> = {
     aiHintTimeout: 'AI 힌트 계산 시간이 초과되었습니다. 다시 시도해 주세요.',
 
     newGame: '새 게임 (셔플)',
-    resetBoard: '정답 보기 (리셋)',
     autoClear: '자동 클리어',
     sizeEasy: '3×3 초급',
     sizeNormal: '4×4 중급',
@@ -347,6 +347,8 @@ export const translations: Record<Language, Translations> = {
     gameOverSubtitleMoves: '이동 가능 횟수를 모두 소진하였습니다.',
     tryAgain: '다시 도전',
     checkSolution: '정답 보기',
+    solutionPreviewDesc: '정답 배치를 확인하는 읽기 전용 미리보기입니다. 이 화면에서는 타일을 움직일 수 없습니다.',
+    solutionPreviewBoard: '정답 보드 미리보기',
 
     close: '닫기',
     cancel: '취소',
@@ -554,7 +556,6 @@ export const translations: Record<Language, Translations> = {
     aiHintTimeout: 'AI hint calculation timed out. Please try again.',
 
     newGame: 'New Game',
-    resetBoard: 'Reset Board',
     autoClear: 'Auto Clear',
     sizeEasy: '3×3 Easy',
     sizeNormal: '4×4 Medium',
@@ -590,6 +591,8 @@ export const translations: Record<Language, Translations> = {
     gameOverSubtitleMoves: 'Out of available moves.',
     tryAgain: 'Try Again',
     checkSolution: 'View Solution',
+    solutionPreviewDesc: 'A read-only preview of the solved board. Tiles cannot be moved here.',
+    solutionPreviewBoard: 'Solved board preview',
 
     close: 'Close',
     cancel: 'Cancel',
@@ -797,7 +800,6 @@ export const translations: Record<Language, Translations> = {
     aiHintTimeout: 'AIヒントの計算がタイムアウトしました。もう一度お試しください。',
 
     newGame: '新規ゲーム',
-    resetBoard: '正解表示',
     autoClear: '自動クリア',
     sizeEasy: '3×3 初級',
     sizeNormal: '4×4 中級',
@@ -833,6 +835,8 @@ export const translations: Record<Language, Translations> = {
     gameOverSubtitleMoves: '移動可能手数がなくなりました。',
     tryAgain: '再挑戦',
     checkSolution: '正解を確認',
+    solutionPreviewDesc: '完成状態を確認するための読み取り専用プレビューです。この画面ではタイルを動かせません。',
+    solutionPreviewBoard: '完成盤のプレビュー',
 
     close: '閉じる',
     cancel: 'キャンセル',
@@ -1040,7 +1044,6 @@ export const translations: Record<Language, Translations> = {
     aiHintTimeout: 'AI 提示计算超时，请重试。',
 
     newGame: '新游戏',
-    resetBoard: '查看原样',
     autoClear: '自动通关',
     sizeEasy: '3×3 简单',
     sizeNormal: '4×4 普通',
@@ -1076,6 +1079,8 @@ export const translations: Record<Language, Translations> = {
     gameOverSubtitleMoves: '已用尽所有步数。',
     tryAgain: '重新挑战',
     checkSolution: '查看答案',
+    solutionPreviewDesc: '这是完成棋盘的只读预览。此画面中无法移动方块。',
+    solutionPreviewBoard: '完成棋盘预览',
 
     close: '关闭',
     cancel: '取消',

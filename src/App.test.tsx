@@ -2,11 +2,25 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 import { resetGlobalLanguage } from './i18n/useTranslation';
+import { clickBoardPosition, readBoard, solveBoard } from './test/puzzleTestUtils';
 
 // Mock canvas-confetti
 vi.mock('canvas-confetti', () => ({
   default: vi.fn(),
 }));
+
+// 3×3 승리 테스트는 고정된 2수 풀이 보드를 사용해 BFS 탐색 시간을 줄임
+vi.mock('./utils/puzzleLogic', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./utils/puzzleLogic')>();
+  const { createNearSolved3x3Board } = await import('./test/nearSolvedBoard');
+
+  return {
+    ...actual,
+    shuffleBoard: vi.fn((size: 3 | 4 | 5) =>
+      size === 3 ? createNearSolved3x3Board() : actual.shuffleBoard(size)
+    ),
+  };
+});
 
 // Mock Audio
 beforeEach(() => {
@@ -177,7 +191,7 @@ describe('App Component Integration', () => {
     expect(screen.getByText('35')).toBeDefined();
   });
 
-  it('triggers win modal and timelapse player when solved state is achieved', () => {
+  it('triggers win modal and timelapse player when solved state is achieved through valid moves', () => {
     render(<App />);
 
     // Select 3x3 on Standard card
@@ -185,15 +199,12 @@ describe('App Component Integration', () => {
     fireEvent.click(standard3x3Btn);
 
     startStandardGame('3×3');
-    fireEvent.click(screen.getByText(/정답 보기/i));
 
-    // Move tile 8 to empty slot (index 7 -> index 8)
-    const tile8First = screen.getByRole('button', { name: /타일 8/i });
-    fireEvent.click(tile8First);
-
-    // Move tile 8 back (index 8 -> index 7)
-    const tile8Second = screen.getByRole('button', { name: /타일 8/i });
-    fireEvent.click(tile8Second);
+    const solution = solveBoard(readBoard(3), 3);
+    expect(solution.length).toBeGreaterThan(0);
+    for (const position of solution) {
+      clickBoardPosition(position, 3);
+    }
 
     // Modal should appear
     expect(screen.getByText(/퍼즐 완성! 축하합니다!/i)).toBeDefined();

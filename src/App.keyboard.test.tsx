@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
 import { resetGlobalLanguage } from './i18n/useTranslation';
+import { pressMovableDirection } from './test/puzzleTestUtils';
 
 vi.mock('canvas-confetti', () => ({
   default: vi.fn(),
@@ -95,7 +96,6 @@ describe('App modal focus and keyboard isolation', () => {
   it('blocks board shortcuts while a modal is open and resumes after closing', () => {
     render(<App />);
     startGame(3);
-    fireEvent.click(screen.getByText(/정답 보기/i));
 
     expect(getMoveCount()).toBe(0);
 
@@ -107,14 +107,13 @@ describe('App modal focus and keyboard isolation', () => {
     fireEvent.keyDown(document.activeElement as HTMLElement, { key: 'Escape' });
     expect(screen.queryByRole('dialog')).toBeNull();
 
-    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    pressMovableDirection(3);
     expect(getMoveCount()).toBe(1);
   });
 
   it('ignores board shortcuts while the language select is focused', () => {
     render(<App />);
     startGame(4);
-    fireEvent.click(screen.getByText(/정답 보기/i));
 
     const languageSelect = screen.getByLabelText('언어 선택') as HTMLSelectElement;
     languageSelect.focus();
@@ -127,7 +126,7 @@ describe('App modal focus and keyboard isolation', () => {
 
     languageSelect.blur();
     expect(document.activeElement).toBe(document.body);
-    fireEvent.keyDown(window, { key: 'ArrowDown' });
+    pressMovableDirection(4);
 
     expect(getMoveCount()).toBe(1);
   });

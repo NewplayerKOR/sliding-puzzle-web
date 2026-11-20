@@ -38,7 +38,7 @@ interface ControlsProps {
   onOpenAchievementModal: () => void;
   onRequestAiHint: () => void;
   onShuffle: () => void;
-  onReset: () => void;
+  onViewSolution: () => void;
   onAutoSolve?: () => void;
 }
 
@@ -59,7 +59,7 @@ export const Controls: React.FC<ControlsProps> = ({
   onOpenAchievementModal,
   onRequestAiHint,
   onShuffle,
-  onReset,
+  onViewSolution,
   onAutoSolve,
 }) => {
   const { t } = useTranslation();
@@ -211,7 +211,7 @@ export const Controls: React.FC<ControlsProps> = ({
         </button>
       </div>
 
-      {/* 4. 게임 액션 버튼 줄 (새 게임 셔플, 정답 보기 리셋, 자동 클리어) - 3등분 그리드 */}
+      {/* 4. 게임 액션 버튼 줄 (새 게임 셔플, 정답 보기 미리보기, 자동 클리어) - 3등분 그리드 */}
       <div className="action-buttons">
         <button
           type="button"
@@ -226,11 +226,11 @@ export const Controls: React.FC<ControlsProps> = ({
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={() => handleAction(onReset)}
-          title={t.resetBoard}
+          onClick={() => handleAction(onViewSolution)}
+          title={t.checkSolution}
         >
           <RotateCcw size={16} aria-hidden="true" />
-          <span>{t.resetBoard}</span>
+          <span>{t.checkSolution}</span>
         </button>
 
         {onAutoSolve && !import.meta.env.PROD && (

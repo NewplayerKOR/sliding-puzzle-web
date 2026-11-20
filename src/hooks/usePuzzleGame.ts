@@ -194,7 +194,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
     setChallengeMode(mode);
   }, []);
 
-  // 보드 초기화 (정답 상태로 리셋)
+  // 보드 초기화 (게임을 완전히 떠날 때만 사용함. 정답 보기는 App의 읽기 전용 모달을 사용)
   const resetGame = useCallback(() => {
     audioManager.playSfx('click');
     const solved = generateSolvedBoard(gridSize);

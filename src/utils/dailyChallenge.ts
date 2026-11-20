@@ -12,8 +12,18 @@ export interface DailyStreakData {
   completedDates: string[]; // List of YYYY-MM-DD strings
 }
 
+export interface ActiveDailyChallenge {
+  date: string;
+  boardKey: string;
+}
+
 const DAILY_STORAGE_KEY = 'sliding_puzzle_daily_streak';
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Daily 시작 보드와 완료 시점의 게임 보드를 비교할 식별자를 만듦. */
+export function createBoardKey(board: Board): string {
+  return board.map((tile) => tile.value).join(',');
+}
 
 function createEmptyStreakData(): DailyStreakData {
   return { currentStreak: 0, maxStreak: 0, lastCompletedDate: null, completedDates: [] };

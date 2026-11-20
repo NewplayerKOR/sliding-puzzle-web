@@ -12,6 +12,7 @@ import { DailyModal } from './components/Modal/DailyModal';
 import { AchievementModal } from './components/Modal/AchievementModal';
 import { GameOverModal } from './components/Modal/GameOverModal';
 import { BgmSelectModal } from './components/Modal/BgmSelectModal';
+import { SolutionModal } from './components/Modal/SolutionModal';
 import { AchievementToast } from './components/Achievement/AchievementToast';
 import { PwaInstallBanner } from './components/PWA/PwaInstallBanner';
 import { ServiceWorkerUpdateBanner } from './components/PWA/ServiceWorkerUpdateBanner';
@@ -23,7 +24,7 @@ import { useAssetPreloader } from './hooks/useAssetPreloader';
 import { preloadAllThemeAssets } from './utils/assetPreloader';
 import { audioManager } from './utils/audioManager';
 import { findNextOptimalMove, AISolutionStep } from './utils/aiSolver';
-import { generateDailyBoard, saveDailyCompletion, getDailyStreakData, getTodayDateString } from './utils/dailyChallenge';
+import { generateDailyBoard, saveDailyCompletion, getDailyStreakData, getTodayDateString, createBoardKey, ActiveDailyChallenge } from './utils/dailyChallenge';
 import { checkGameCompletionAchievements } from './utils/achievementManager';
 import { calculateStars } from './utils/starCalculator';
 import { useTranslation } from './i18n/useTranslation';
@@ -80,7 +81,7 @@ export const App: React.FC = () => {
     const saved = readStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
     return saved && saved.startsWith('data:image/') ? saved : null;
   });
-  const [isDailyGameActive, setIsDailyGameActive] = useState<boolean>(false);
+  const [activeDaily, setActiveDaily] = useState<ActiveDailyChallenge | null>(null);
   const [showNumberOverlay, setShowNumberOverlay] = useState<boolean>(true);
 
   // 테마 변경 시 오디오 매니저의 효과음 음색 동기화
@@ -95,6 +96,7 @@ export const App: React.FC = () => {
   const [isDailyModalOpen, setIsDailyModalOpen] = useState<boolean>(false);
   const [isAchievementModalOpen, setIsAchievementModalOpen] = useState<boolean>(false);
   const [isBgmModalOpen, setIsBgmModalOpen] = useState<boolean>(false);
+  const [isSolutionOpen, setIsSolutionOpen] = useState<boolean>(false);
   const [pendingGameStart, setPendingGameStart] = useState<{
     mode: GameChallengeMode;
     size: GridSize;
@@ -116,6 +118,7 @@ export const App: React.FC = () => {
     isDailyModalOpen ||
     isAchievementModalOpen ||
     isBgmModalOpen ||
+    isSolutionOpen ||
     isWon ||
     isGameOver;
 
@@ -365,9 +368,13 @@ export const App: React.FC = () => {
       setIsNewRecord(recordAchieved);
       setBestRecords(updatedRecords);
 
-      // 일일 챌린지 클리어 기록
-      if (isDailyGameActive) {
-        saveDailyCompletion(getTodayDateString());
+      // 일일 챌린지 클리어 기록: 시작 날짜와 실제 시작 보드가 모두 일치할 때만 저장함
+      const dailyBoardMatches =
+        activeDaily !== null &&
+        moveHistory.length > 0 &&
+        createBoardKey(moveHistory[0]) === activeDaily.boardKey;
+      if (activeDaily && dailyBoardMatches) {
+        saveDailyCompletion(activeDaily.date);
       }
 
       // 정밀 별점 계산
@@ -394,11 +401,25 @@ export const App: React.FC = () => {
     } else {
       setIsNewRecord(false);
     }
-  }, [status, elapsedTime, moveCount, gridSize, isDailyGameActive, customImageSrc, themeId, challengeMode, usedUndoCount, isAutoSolved]);
+  }, [status, elapsedTime, moveCount, gridSize, activeDaily, moveHistory, customImageSrc, themeId, challengeMode, usedUndoCount, isAutoSolved]);
+
+  // 게임을 완전히 떠날 때만 세션을 초기화함. 정답 보기는 이 함수를 호출하지 않음.
+  const handleReturnHome = () => {
+    setActiveDaily(null);
+    setIsSolutionOpen(false);
+    resetGame();
+    setCurrentScreen('title');
+  };
+
+  // 새 게임을 시작하면 이전 Daily 컨텍스트를 반드시 해제함
+  const handleStartNewGame = () => {
+    setActiveDaily(null);
+    startNewGame();
+  };
 
   // 타이틀 화면에서 특정 모드로 게임 시작
   const handleStartFromTitle = (mode: GameChallengeMode, size: GridSize) => {
-    setIsDailyGameActive(false);
+    setActiveDaily(null);
     changeChallengeMode(mode);
     changeGridSize(size);
     setCurrentScreen('game');
@@ -406,11 +427,18 @@ export const App: React.FC = () => {
 
   // 일일 챌린지 시작 핸들러
   const handleStartDailyChallenge = () => {
-    setIsDailyGameActive(true);
+    const date = getTodayDateString();
+    const dailyBoard = generateDailyBoard(date, 4);
     changeChallengeMode('standard');
-    const dailyBoard = generateDailyBoard(getTodayDateString(), 4);
+    setActiveDaily({ date, boardKey: createBoardKey(dailyBoard) });
     startSeededGame(dailyBoard, 4);
     setCurrentScreen('game');
+  };
+
+  // 챌린지 모드를 바꾸면 Daily 보드 컨텍스트를 해제함
+  const handleSelectChallengeMode = (mode: GameChallengeMode) => {
+    setActiveDaily(null);
+    changeChallengeMode(mode);
   };
 
   // 메인화면에서 모드 선택 시 테마 선택 모달을 띄우는 핸들러
@@ -444,6 +472,7 @@ export const App: React.FC = () => {
 
   // 커스텀 이미지 적용 핸들러
   const handleApplyCustomImage = (dataUrl: string) => {
+    setActiveDaily(null);
     setCustomImageSrc(dataUrl);
     setGameMode('image');
     startNewGame();
@@ -508,10 +537,7 @@ export const App: React.FC = () => {
               bestRecord={bestRecords[gridSize]}
               onOpenDaily={() => setIsDailyModalOpen(true)}
               onOpenBgmModal={() => setIsBgmModalOpen(true)}
-              onReturnHome={() => {
-                resetGame();
-                setCurrentScreen('title');
-              }}
+              onReturnHome={handleReturnHome}
             />
 
             <div className="game-card">
@@ -525,10 +551,10 @@ export const App: React.FC = () => {
                 usedUndoCount={usedUndoCount}
                 onUndo={undoMove}
                 onSelectGridSize={(s) => {
-                  setIsDailyGameActive(false);
+                  setActiveDaily(null);
                   changeGridSize(s);
                 }}
-                onSelectChallengeMode={changeChallengeMode}
+                onSelectChallengeMode={handleSelectChallengeMode}
                 onToggleNumberOverlay={() => setShowNumberOverlay((prev) => !prev)}
                 onOpenThemeModal={() => {
                   // 모달을 열기만 해서는 커스텀 이미지를 유지하고, 테마 확정·변경 시에만 제거함
@@ -540,11 +566,8 @@ export const App: React.FC = () => {
                 onOpenDailyModal={() => setIsDailyModalOpen(true)}
                 onOpenAchievementModal={() => setIsAchievementModalOpen(true)}
                 onRequestAiHint={handleRequestAiHint}
-                onShuffle={() => {
-                  setIsDailyGameActive(false);
-                  startNewGame();
-                }}
-                onReset={resetGame}
+                onShuffle={handleStartNewGame}
+                onViewSolution={() => setIsSolutionOpen(true)}
                 onAutoSolve={autoSolveGame}
               />
 
@@ -609,7 +632,15 @@ export const App: React.FC = () => {
         onClose={() => setIsBgmModalOpen(false)}
       />
 
-
+      {/* 읽기 전용 정답 보드 미리보기 모달 */}
+      <SolutionModal
+        isOpen={isSolutionOpen}
+        gridSize={gridSize}
+        gameMode={gameMode}
+        themeImagePath={currentTheme.imagePath}
+        showNumberOverlay={showNumberOverlay}
+        onClose={() => setIsSolutionOpen(false)}
+      />
 
       {/* 커스텀 사진 업로드 및 1:1 크롭 모달 */}
       <CustomImageModal
@@ -633,11 +664,11 @@ export const App: React.FC = () => {
 
       {/* 게임오버 모달 (타임어택 / 이동제한 실패) */}
       <GameOverModal
-        isOpen={isGameOver}
+        isOpen={isGameOver && !isSolutionOpen}
         challengeMode={challengeMode}
-        onRetry={() => startNewGame()}
-        onViewSolution={() => resetGame()}
-        onClose={() => resetGame()}
+        onRetry={handleStartNewGame}
+        onViewSolution={() => setIsSolutionOpen(true)}
+        onClose={handleReturnHome}
       />
 
       {/* 승리 축하 및 타임랩스/공유 모달 */}
@@ -651,9 +682,9 @@ export const App: React.FC = () => {
         moveHistory={moveHistory}
         themeName={currentTheme.name}
         themeImageSrc={currentTheme.imagePath}
-        onPlayAgain={startNewGame}
+        onPlayAgain={handleStartNewGame}
         onNextLevel={(next) => {
-          setIsDailyGameActive(false);
+          setActiveDaily(null);
           changeGridSize(next);
         }}
         onNotify={handleNotify}
