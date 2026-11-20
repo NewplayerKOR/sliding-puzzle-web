@@ -360,3 +360,17 @@ npm run build
 - 숫자 모드와 이미지 모드 모두 정답 배치를 표시하고, 이미지 모드에서는 8개 이미지 슬라이스 위에 숫자 오버레이를 표시함. 미리보기 중 보드·타이머·이동 수는 변하지 않음.
 - 토큰: 배경 `--color-paper` `rgb(247,247,243)`, radius 8px, 1px 보더, 그림자 없음, 시스템 폰트 스택, `overscroll-behavior: contain`, `prefers-reduced-motion` 전역 규칙 적용.
 - 스크린샷·측정 원문: `root/archive/assets/task-dev-29/`의 숫자 모드 3건·이미지 모드 1건 WebP와 `metrics.json`, `verification.json`.
+
+### 6.8 TASK-DEV-32~39 접근성·모달·PWA 검증 (2026-11-20)
+
+- `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors.
+- `npm run build`: Vite 8.3.6 성공. CSS 83.34KB(gzip 11.07KB), JS 389.44KB(gzip 121.29KB), solver worker 8.73KB.
+- `npm run test:e2e`: Playwright Chromium 15/15 PASS. 360×640·1280×800 모달 스크롤 잠금·Tab 순환·Escape, 홈 복귀 확인, 접근성 역할 검증 포함.
+- Lighthouse(타이틀 화면) 접근성 **1.0**. 게임·모달은 Playwright DOM 검증으로 대체했고 Lighthouse 점수 범위는 타이틀 화면이다.
+- 모달 수명주기: 열림 동안 `body.overflow: hidden`·스크롤바 폭 보정, 닫힘 시 이전 값 복원. 오버레이·콘텐츠에 `overscroll-behavior: contain`. 승리·게임오버 시 보조 모달 자동 종료로 `aria-modal` 다이얼로그 1개 유지.
+- 홈 복귀 확인: 진행 중(`playing`·이동 1회 이상)일 때만 표시. 360×640 콘텐츠 328px, 1280×800 400px, 가로 오버플로 0건, 취소·확인 버튼 44px, Tab 순환·Escape 취소.
+- 접근성 역할: 업적 토스트 `status`/`polite`/`atomic`, PWA 배너 `aside` complementary, 업적 진행 바 `progressbar`+`aria-valuemin/max/now/valuetext`, Daily 캘린더 `grid`/`gridcell`+`aria-current="date"`, BGM/SFX 토글 `aria-pressed`+상태 라벨.
+- 장식·입력: 모드 카드의 `div onClick`·`cursor: pointer` 제거, 전역 `user-select: text`(버튼·보드는 선택 차단 유지), 커스텀 이미지 캔버스 방향키 팬 10px·Shift 30px와 `focus-visible` 외곽선.
+- PWA: 매니페스트 `#EFEFEA`/`#BB3E0B`, orientation 제거, 2×2 타일 모티프 아이콘 5종, maskable 80% safe zone, 프리캐시 v2.4/17건/1,209,901바이트.
+- 스크린샷·측정 원문: `root/archive/assets/task-dev-33/`, `task-dev-34/`, `task-dev-35/`, `task-dev-36/`, `task-dev-39/`의 WebP·JSON과 `lighthouse-accessibility.json`.
+- 미실행: 실제 스크린리더(NVDA·VoiceOver)·모바일 실기기·Safari/Firefox, 게임·모달 화면 Lighthouse.

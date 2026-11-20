@@ -1,0 +1,13 @@
+{
+  "task": "TASK-DEV-39",
+  "lighthouseAccessibility": 1,
+  "toast": {
+    "role": "status",
+    "ariaLive": "polite"
+  },
+  "pwaLandmark": "complementary",
+  "progressbar": "aria-valuemin/max/now/valuetext",
+  "calendar": "grid/gridcell + aria-current=date",
+  "destructiveHomeReturn": "확인 모달 후 폐기",
+  "keyboardCanvasPan": "방향키 10px, Shift 30px"
+}

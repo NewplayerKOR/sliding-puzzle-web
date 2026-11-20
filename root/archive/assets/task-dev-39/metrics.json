@@ -1,0 +1,26 @@
+{
+  "viewport360": {
+    "scrollWidth": 360,
+    "innerWidth": 360,
+    "dialog": {
+      "left": 16,
+      "right": 344,
+      "top": 189.40625,
+      "bottom": 458.59375
+    },
+    "bodyOverflow": "hidden",
+    "userSelect": "text",
+    "audioPressed": "true",
+    "audioLabel": "BGM 음소거"
+  },
+  "viewport1280": {
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "dialog": {
+      "left": 440,
+      "right": 840,
+      "top": 291.40625,
+      "bottom": 516.59375
+    }
+  }
+}

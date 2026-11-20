@@ -1,0 +1,8 @@
+{
+  "task": "TASK-DEV-34",
+  "metrics": {
+    "error": "이미지를 불러오지 못했습니다. 다른 파일을 선택해 주세요.",
+    "applyDisabled": true,
+    "cropperVisible": true
+  }
+}

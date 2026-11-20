@@ -1,0 +1,8 @@
+{
+  "task": "TASK-DEV-35",
+  "metrics": {
+    "dialogs": 1,
+    "canvasCount": 1,
+    "modalVisible": true
+  }
+}

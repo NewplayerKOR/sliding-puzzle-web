@@ -49,7 +49,14 @@ Vercel 프로젝트가 pause 상태에서 재개될 때 아래 설정을 유지�
 - 서브패스 호스팅은 HTTPS(또는 localhost)여야 Service Worker가 등록된다.
 - `public/robots.txt`는 모든 crawler를 차단해 Vercel 트래픽·자원 소진을 막는다. 서브패스 배포에서도 도메인 루트에 동일한 차단 정책을 배치한다.
 
-## 5. 배포 후 확인
+## 5. PWA 브랜딩·자산
+
+- 매니페스트는 디자인 토큰에 맞춰 `background_color: #EFEFEA`, `theme_color: #BB3E0B`를 사용한다. `orientation`은 두지 않아 가로 태블릿·데스크톱 설치에서도 회전·리사이즈를 허용한다.
+- 홈 화면 아이콘은 `scripts/generate-pwa-icons.js`로 생성한다. `npm run generate:pwa-icons` 실행 후 192·512 `any`, maskable 2종, apple-touch-icon(180×180)이 `public/assets/icons/`에 갱신된다. maskable 아이콘은 중앙 80% safe zone 안에 배치한다.
+- 프리캐시는 셸·SFX 5종·PWA 아이콘 5종·기본 테마·빌드 번들 17건/약 1.21MB다. 실제 코드에서 참조하지 않는 스프라이트·개별 PNG 아이콘은 추가하지 않는다.
+- 설치 프롬프트는 사용자 선택을 1회만 사용할 수 있으므로 수락·거부·오류 모두 배너를 닫고, `appinstalled` 이벤트에서도 닫는다.
+
+## 6. 배포 후 확인
 
 1. 배포 URL에서 타이틀·모드 카드·테마 모달이 표시되는지 확인한다.
 2. 3×3 게임을 시작해 타일 이동·Undo·AI 힌트·승리 모달을 확인한다.
@@ -59,15 +66,15 @@ Vercel 프로젝트가 pause 상태에서 재개될 때 아래 설정을 유지�
 6. `robots.txt`가 배포 루트에서 200으로 응답하고 `Disallow: /`가 포함되는지 확인한다.
 7. 콘솔에 예기치 않은 오류가 없는지 확인한다.
 
-## 6. 캐시·업데이트 절차
+## 7. 캐시·업데이트 절차
 
 - 빌드마다 JS/CSS 파일명에 해시가 붙고, `vite.config.ts` 플러그인이 현재 빌드의 해시 번들을 `dist/sw.js` 프리캐시 목록에 자동 주입한다.
-- `public/sw.js`의 `CACHE_NAME` 버전을 올리면 이전 캐시를 정리한다. 캐시 목록 구조나 정적 자산 구성이 바뀌면 버전을 함께 올린다.
+- `public/sw.js`의 `CACHE_NAME` 버전을 올리면 이전 캐시를 정리한다. 캐시 목록 구조나 정적 자산 구성이 바뀌면 버전을 함께 올린다. 현재 버전은 `sliding-puzzle-v2.4`다.
 - HTML은 Network First, 정적 자산은 Cache First(`ignoreVary`)다. `Vary: Origin`이 붙은 crossorigin 번들도 캐시에서 제공된다. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 `skipWaiting`으로 반영한다.
 - 배포 직후 이전 탭이 열려 있으면 이전 해시 자산을 참조할 수 있다. 새로고침 또는 업데이트 배너 적용 후 최신 버전인지 확인한다.
 - 긴급 롤백 시 Vercel의 이전 배포를 promote하거나 이전 커밋을 redeploy한다. Service Worker 캐시는 새 배포의 `CACHE_NAME`이 달라야 자동 정리되므로, 롤백 시 버전 문자열도 함께 확인한다.
 
-## 7. CI 실패 시 대응
+## 8. CI 실패 시 대응
 
 - `npm test` 실패: 실패한 테스트 파일과 환경(Node 버전, jsdom Storage)을 확인한다.
 - `npm run typecheck` 실패: `tsc --noEmit` 오류를 수정한다. 빌드(`tsc && vite build`)도 같은 검사를 수행한다.

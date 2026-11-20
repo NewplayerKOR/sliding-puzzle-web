@@ -1,0 +1,26 @@
+{
+  "task": "TASK-DEV-32",
+  "before": {
+    "fallbackBug": "Worker를 만들 수 없는 환경에서 5초 타임아웃 ref를 30ms 폴백 타이머가 덮어써, 폴백 힌트가 약 5.3초 후 사라지고 시간 초과 토스트가 표시됨",
+    "toastBug": "handleNotify가 이전 3초 타이머를 정리하지 않아 연속 알림에서 새 토스트가 조기 종료될 수 있음"
+  },
+  "after": {
+    "fallback": "폴백 타이머를 설정하기 전에 5초 Worker 타임아웃을 취소하고, 성공한 힌트는 보드·게임 상태가 바뀔 때까지 유지됨",
+    "toast": "useTransientToast가 마지막 메시지 기준 3초를 보장하고 언마운트 시 타이머를 정리함"
+  },
+  "tests": {
+    "App.aiHint": "6 passed (Worker 미지원 폴백 성공·힌트 없음·5초 경과 유지 포함)",
+    "useTransientToast": "3 passed (연속 호출·단일 타이머·즉시 닫기)",
+    "fullSuite": "41 files / 247 tests passed"
+  },
+  "commands": {
+    "npm test": "pass",
+    "npm run typecheck": "0 Errors",
+    "npm run build": "Vite 8.3.6 success"
+  },
+  "evidence": [
+    "src/App.aiHint.test.tsx",
+    "src/hooks/useTransientToast.test.ts",
+    "src/hooks/useTransientToast.ts"
+  ]
+}

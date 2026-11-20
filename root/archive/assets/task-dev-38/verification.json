@@ -1,0 +1,23 @@
+{
+  "task": "TASK-DEV-38",
+  "before": {
+    "reproduction": "Time Attack 제한 시간 검사가 250ms 인터벌에서만 실행되어, 틱 사이·탭 복귀 직후 제한 시간을 넘긴 이동과 승리가 인정될 수 있음"
+  },
+  "after": {
+    "movementGuard": "moveTile 진입 시 실제 경과 초를 확인하고 제한 시간 이상이면 이동을 거부한 뒤 gameover로 전환",
+    "recordGuard": "제한 시간 직후 완성되는 수가 거부되어 won 상태·기록 저장·업적으로 이어지지 않음"
+  },
+  "tests": {
+    "usePuzzleGame": "13 passed (틱 사이 이동 거부·완성 수 거부 포함)",
+    "App.solution": "8 passed (만료 시 정답 미리보기 종료·GameOver 단일 표시)",
+    "fullSuite": "41 files / 247 tests passed"
+  },
+  "commands": {
+    "npm test": "pass",
+    "npm run typecheck": "0 Errors",
+    "npm run build": "Vite 8.3.6 success"
+  },
+  "evidence": [
+    "src/hooks/usePuzzleGame.test.ts"
+  ]
+}

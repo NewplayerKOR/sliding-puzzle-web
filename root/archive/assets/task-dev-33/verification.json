@@ -1,0 +1,10 @@
+{
+  "task": "TASK-DEV-33",
+  "bodyScrollLock": "모달 열림 시 overflow hidden, 닫힘 시 이전 값 복원",
+  "overscrollBehavior": "모달 오버레이·콘텐츠 contain",
+  "nesting": "Time Attack 만료 시 BGM 모달을 닫고 GameOver 1개만 표시",
+  "evidence": [
+    "theme-modal-scroll-lock-360x640.webp",
+    "gameover-after-bgm-360x640.webp"
+  ]
+}

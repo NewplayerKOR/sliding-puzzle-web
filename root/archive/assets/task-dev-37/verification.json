@@ -1,0 +1,26 @@
+{
+  "task": "TASK-DEV-37",
+  "before": {
+    "webAudio": "master gain과 개별 gain에 sfxVolume을 각각 적용해 실제 음량이 제곱으로 감소",
+    "autoBgm": "setAutoThemeBgm(true)가 설정만 저장하고 현재 테마의 권장 BGM으로 즉시 전환하지 않음"
+  },
+  "after": {
+    "webAudio": "master gain 1, 개별 gain에만 sfxVolume을 적용해 HTMLAudio 폴백과 동일한 1회 스케일링",
+    "autoBgm": "자동 연동을 켜는 즉시 현재 테마의 권장 BGM으로 전환하고 이후 테마 변경에도 동기화",
+    "copy": "4개 국어 자동 연동 설명을 즉시 전환 동작에 맞춰 갱신"
+  },
+  "tests": {
+    "audioManager": "15 passed (단일 볼륨 적용·즉시 전환 포함)",
+    "BgmSelectModal": "6 passed (체크박스 즉시 전환 포함)",
+    "fullSuite": "41 files / 247 tests passed"
+  },
+  "commands": {
+    "npm test": "pass",
+    "npm run typecheck": "0 Errors",
+    "npm run build": "Vite 8.3.6 success"
+  },
+  "evidence": [
+    "src/utils/audioManager.test.ts",
+    "src/components/Modal/BgmSelectModal.test.tsx"
+  ]
+}

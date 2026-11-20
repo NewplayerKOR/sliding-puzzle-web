@@ -1,0 +1,39 @@
+{
+  "task": "TASK-DEV-36",
+  "manifest": {
+    "background": "#EFEFEA",
+    "theme": "#BB3E0B",
+    "orientation": "removed"
+  },
+  "cacheInfo": {
+    "keys": [
+      "sliding-puzzle-v2.4"
+    ],
+    "count": 17,
+    "totalBytes": 1209901,
+    "urls": [
+      "/assets/index-DVjL6VuT.js",
+      "/assets/index-WUZa5-lU.css",
+      "/assets/solver.worker-CyubXBrk.js",
+      "/",
+      "/index.html",
+      "/manifest.webmanifest",
+      "/assets/audio/sfx_slide.mp3",
+      "/assets/audio/sfx_blocked.mp3",
+      "/assets/audio/sfx_shuffle.mp3",
+      "/assets/audio/sfx_victory.mp3",
+      "/assets/audio/sfx_click.mp3",
+      "/assets/icons/icon-192.png",
+      "/assets/icons/icon-512.png",
+      "/assets/icons/icon-maskable-192.png",
+      "/assets/icons/icon-maskable-512.png",
+      "/assets/icons/apple-touch-icon.png",
+      "/assets/images/theme_nature.png"
+    ]
+  },
+  "banner": {
+    "role": "complementary",
+    "width360": true,
+    "width1280": true
+  }
+}

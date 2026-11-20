@@ -1509,3 +1509,275 @@
   - 수정 전 재현은 이번 세션에서 과거 커밋을 다시 빌드해 재실행하지 않고, 2026-11-20 QA 감사 기록을 비교 기준으로 사용함.
   - Vercel 프로젝트는 소유자가 의도적으로 pause한 상태이며 결함으로 판단하지 않음.
 - **작업 상태**: `root/TASKS.md`의 TASK-QA-10 완료 요약과 Phase 보관 링크 반영. DEV-29~31의 기능 명세는 `root/FEATURES.md`에 이미 반영되어 있음.
+
+## TASK-DEV-32 — AI 힌트 폴백·토스트 타이머 정리
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: Worker를 만들 수 없는 환경의 AI 힌트 폴백에서 이전 타임아웃이 남아 힌트를 지우는 문제와, 액션 토스트 타이머가 새 토스트를 조기 종료하는 문제를 정리한다.
+- **대상 파일**: `src/App.tsx`, `src/hooks/useTransientToast.ts`, 관련 테스트
+- **재현/증거**:
+  - `Worker`를 비활성화한 Chromium에서 AI 힌트를 요청하면 힌트가 표시된 뒤 약 5.3초 후 사라지고 `AI 힌트 계산 시간이 초과되었습니다` 토스트가 표시됨.
+  - 5초 타임아웃을 폴백의 30ms 타임아웃이 `aiHintTimerRef`에서 덮어써 기존 타임아웃을 정리하지 못함.
+  - `handleNotify`도 이전 3초 타이머를 정리하지 않아 연속 알림에서 새 토스트가 조기 종료될 수 있음.
+- **DoD**:
+  - 폴백 성공 시 5초 타임아웃을 확실히 취소하고, 힌트는 보드·게임 상태가 바뀔 때까지 유지된다.
+  - 액션 토스트는 새 메시지마다 이전 타이머를 정리하고 마지막 메시지 기준으로 3초를 보장한다.
+  - Worker 미지원·Worker 오류·5초 타임아웃·폴백 성공 경로를 테스트로 구분해 검증한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - 폴백 타이머를 설정하기 전에 `clearAiHintTimer()`로 5초 Worker 타임아웃을 취소하도록 수정함.
+  - `useTransientToast` 훅을 추가해 새 메시지마다 이전 타이머를 정리하고 마지막 메시지 기준 3초를 보장함. AI 힌트 오류 토스트도 같은 훅을 사용함.
+  - 언마운트 시 토스트 타이머를 정리함.
+- **검증**:
+  - `App.aiHint.test.tsx`: 6건 PASS. Worker 미지원 폴백 성공 후 5초가 지나도 힌트 유지·시간 초과 토스트 없음, 폴백 힌트 없음 경로 포함.
+  - `useTransientToast.test.ts`: 3건 PASS. 연속 메시지 3초 보장·단일 타이머·즉시 닫기 확인.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공.
+- **미실행**: 실제 Chromium에서 `Worker`를 비활성화한 수동 재현, 실제 모바일·Safari/Firefox.
+- **증거**:
+  - `root/archive/assets/task-dev-32/verification.json`
+  - 테스트: `src/App.aiHint.test.tsx`, `src/hooks/useTransientToast.test.ts`
+  - 코드: `src/App.tsx`, `src/hooks/useTransientToast.ts`
+- **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
+
+## TASK-DEV-33 — 모달 배경 스크롤·중첩·오버스크롤 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 모달이 열린 동안 배경 페이지가 스크롤되지 않게 하고, Time Attack 만료 시 모달이 중첩되지 않도록 모달 수명주기를 정리한다.
+- **대상 파일**: `src/App.tsx`, `src/hooks/useBodyScrollLock.ts`, `src/styles/index.css`, 관련 테스트
+- **재현/증거**:
+  - 360×640 타이틀에서 테마 모달을 연 채 PageDown 시 `scrollY`가 증가했고 포커스는 모달 안에 있었음.
+  - Time Attack 중 BGM 모달을 연 채 제한 시간이 만료되면 `aria-modal` 다이얼로그 두 개가 동시에 열림.
+  - 모달 내용에 `overscroll-behavior: contain`이 없고 모달 열림 시 body scroll lock도 없음.
+- **DoD**:
+  - 모달이 하나라도 열려 있으면 배경 문서 스크롤을 잠그고, 모달 내부 스크롤은 `overscroll-behavior: contain`으로 페이지에 전달하지 않는다.
+  - Time Attack 만료 등으로 GameOver/Win이 발생하면 기존 모달을 닫아 `aria-modal` 다이얼로그가 동시에 두 개 열리지 않게 한다.
+  - 360×640·1280×800에서 모달 스크롤·포커스·Escape·Tab 순환 회귀를 확인한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - `useBodyScrollLock`을 추가해 모달 열림 동안 `body.overflow: hidden`과 스크롤바 폭 보정을 적용하고, 닫힘 시 이전 값을 복원함.
+  - 모든 모달 오버레이·콘텐츠에 `overscroll-behavior: contain`을 적용함.
+  - 승리·게임오버 전환 시 열려 있던 힌트·테마·커스텀 이미지·Daily·업적·BGM·정답 모달을 닫도록 `useEffect`를 추가함.
+  - Time Attack 만료 시 정답 미리보기를 닫고 GameOver만 표시하도록 TASK-DEV-29의 만료 테스트 기대값을 새 정책에 맞게 갱신함.
+- **검증**:
+  - `App.modalLifecycle.test.tsx`: 3건 PASS. 테마 모달 열림 중 body 잠금·닫힘 복원, BGM 모달 위 GameOver 시 다이얼로그 1개, GameOver 홈 복귀 후 복원.
+  - `useBodyScrollLock.test.ts`: 2건 PASS. 잠금·이전 값 복원·언마운트 복원.
+  - `e2e/modal-lifecycle.spec.ts`: 2건 PASS. 360×640 휠·PageDown 후 `scrollY` 0, 1280×800 Tab 순환·Escape 복귀.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공.
+- **미실행**: 실제 모바일 실기기·Safari/Firefox의 overscroll 동작.
+- **증거**:
+  - `root/archive/assets/task-dev-33/verification.json`
+  - `theme-modal-scroll-lock-360x640.webp`, `gameover-after-bgm-360x640.webp`
+  - 테스트: `src/App.modalLifecycle.test.tsx`, `src/hooks/useBodyScrollLock.test.ts`, `e2e/modal-lifecycle.spec.ts`
+- **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
+
+## TASK-DEV-34 — 커스텀 이미지 모달 상태·로드 실패 처리
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 테마 적용으로 커스텀 이미지가 해제된 뒤 모달을 다시 열 때 이전 크롭이 남지 않게 하고, 이미지 로드 실패 시 빈 캔버스가 저장되지 않게 한다.
+- **대상 파일**: `src/components/Modal/CustomImageModal.tsx`, 관련 테스트
+- **재현/증거**:
+  - 커스텀 이미지 적용 후 테마를 선택해 저장소 값이 `null`이 됐는데도 모달을 다시 열면 512px 크롭 캔버스가 그대로 표시됨.
+  - 저장된 data URL이 손상돼 이미지 로드가 실패해도 크롭 UI와 Apply가 남아 빈 캔버스를 저장할 수 있음.
+- **DoD**:
+  - 모달을 닫거나 외부에서 커스텀 이미지가 해제되면 내부 `imageSrc`·`zoom`·`offset` 상태를 초기화하고, 다음 열기에서 저장소 상태와 동기화한다.
+  - 이미지 로드 실패 시 Apply를 비활성화하거나 오류 상태로 전환해 빈 캔버스 저장을 막는다.
+  - 저장소 삭제 후 재열기·손상 data URL·정상 적용 시나리오의 테스트를 추가한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - `isOpen` 전환 시 내부 크롭 상태를 초기화하고 저장소 값과 동기화하도록 효과를 분리함.
+  - `isImageReady` 상태를 추가해 이미지 로드 전·실패 시 Apply를 비활성화하고 오류 문구를 표시함. 로드 중 이전 캔버스를 지움.
+  - 정상 적용 시에만 `canvas.toDataURL`과 저장을 수행하도록 `handleApply`에 유효성 검사를 추가함.
+- **검증**:
+  - `CustomImageModal.test.tsx`: 8건 PASS. 외부 해제 후 재열기 시 드롭존 복귀, 손상 data URL 시 Apply 비활성·오류·저장 없음, 정상 적용 포함.
+  - `App.customImage.test.tsx`: 2건 PASS. 테마 모달 열기·닫기·모드 전환 시 커스텀 이미지 유지, 테마 적용 시 제거.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공.
+- **미실행**: 실제 손상 이미지 파일·대용량 이미지의 브라우저 디코딩, 실제 모바일·Safari/Firefox.
+- **증거**:
+  - `root/archive/assets/task-dev-34/verification.json`, `custom-image-error-360x640.webp`
+  - 테스트: `src/components/Modal/CustomImageModal.test.tsx`, `src/App.customImage.test.tsx`
+- **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
+
+## TASK-DEV-35 — 승리 Confetti·공유 흐름 후처리 안정성
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 승리 모달을 닫은 뒤 Confetti 루프가 남지 않게 하고, 공유 취소·실패·지연 상황에서 사용자가 예측 가능한 결과를 받게 한다.
+- **대상 파일**: `src/components/Modal/WinModal.tsx`, `src/utils/shareCardGenerator.ts`, 관련 테스트
+- **재현/증거**:
+  - 승리 모달에서 `다시 플레이`를 눌러 모달이 닫힌 뒤에도 고정 Confetti 캔버스와 RAF 루프가 최대 2.5초 남음.
+  - 공유 시트 취소(`AbortError`)도 클립보드 복사·다운로드 폴백으로 진행되고, 이미지 로드 타임아웃·`toBlob` 실패 시 무응답.
+  - Object URL을 `a.click()` 직후 즉시 해제해 Safari/Firefox에서 다운로드가 취소될 위험이 있음.
+- **DoD**:
+  - 모달 닫기·언마운트 시 Confetti RAF와 캔버스를 정리한다.
+  - 사용자가 공유를 취소하면 다운로드·복사 폴백을 실행하지 않고, 실제 실패·타임아웃에만 폴백하며 실패 사유를 안내한다.
+  - 이미지 로드 타임아웃·Blob 생성 실패·다운로드 앵커 수명을 보강하고 관련 테스트를 추가한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - `WinModal` 효과가 RAF id를 보관하고 cleanup에서 `cancelAnimationFrame`과 `confetti.reset()`을 호출하도록 수정함.
+  - 공유 취소 `AbortError`는 즉시 종료하고, 실제 실패만 클립보드·다운로드로 폴백하도록 분기함.
+  - 테마 이미지 로드에 3초 타임아웃을 추가하고, Blob 생성 실패 시 `shareFailed` 토스트를 표시함.
+  - 다운로드 앵커를 문서에 연결한 뒤 클릭·제거하고 Object URL을 1초 후 해제함.
+- **검증**:
+  - `WinModal.test.tsx`: 2건 PASS. 닫기 시 RAF 취소·Confetti reset, reduced motion 시 생략.
+  - `shareCardGenerator.test.ts`: 5건 PASS. 취소 시 폴백 없음, 실제 실패 시 클립보드, 클립보드 실패 시 지연 다운로드, Blob 실패 안내, 이미지 타임아웃 후 생성.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+- **미실행**: 실제 Web Share 시트·Safari/Firefox 다운로드·모바일 공유.
+- **증거**:
+  - `root/archive/assets/task-dev-35/verification.json`, `win-modal-360x640.webp`
+  - 테스트: `src/components/Modal/WinModal.test.tsx`, `src/utils/shareCardGenerator.test.ts`
+- **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
+
+## TASK-DEV-36 — PWA 브랜딩·매니페스트·프리캐시 자산 정리
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: PWA 설치 아이콘·스플래시 색상을 현재 심플·어반 디자인 시스템에 맞추고, 사용하지 않는 프리캐시 자산을 정리한다.
+- **대상 파일**: `public/manifest.webmanifest`, `public/assets/icons/*`, `public/sw.js`, `src/components/PWA/PwaInstallBanner.tsx`, `scripts/generate-pwa-icons.js`
+- **재현/증거**:
+  - 매니페스트가 `background_color: #0f172a`, `theme_color: #2563eb`로 현재 `#EFEFEA`/`#BB3E0B` 토큰과 불일치함.
+  - 홈 화면 아이콘이 구형 블루 그라데이션이고 `portrait-primary`로 가로 태블릿 사용을 제한함.
+  - 프리캐시에 실제로 참조하지 않는 스프라이트·개별 PNG 아이콘 약 0.5MB가 포함됨.
+  - 설치 프롬프트의 `prompt()`/`userChoice` 거부가 처리되지 않음.
+- **DoD**:
+  - 매니페스트 색상을 현재 디자인 토큰과 맞추고 192·512·maskable·apple-touch 아이콘을 새 팔레트로 재생성한다.
+  - `orientation`을 유지할지 제거할지 제품 기준을 정하고 문서화한다.
+  - 프리캐시에서 실제 사용 자산만 남기고 설치 프롬프트 거부·`appinstalled` 이벤트를 안전하게 처리한다.
+  - manifest·아이콘 응답과 360×640·1280×800 설치 배너 회귀를 확인하고 `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: TASK-DEV-30 완료 후
+- **진행 결과**:
+  - 매니페스트를 `#EFEFEA`/`#BB3E0B`로 갱신하고 `lang`·`dir`를 추가함. `orientation`은 제거해 가로 태블릿·데스크톱 설치를 허용하기로 결정함.
+  - `scripts/generate-pwa-icons.js`로 파비콘과 같은 2×2 타일 모티프의 아이콘 5종을 생성함. maskable은 중앙 80% safe zone 안에 배치함.
+  - 프리캐시를 v2.4로 올리고 셸·SFX·PWA 아이콘·기본 테마·빌드 번들 17건/1,209,901바이트로 축소함.
+  - 설치 버튼 중복 클릭을 막고, 프롬프트 거부·오류·`appinstalled`에서 배너를 닫도록 처리함.
+- **검증**:
+  - `pwaBranding.test.ts`: 4건 PASS. 매니페스트 색상·orientation 제거·아이콘 규격·maskable safe zone.
+  - `PwaInstallBanner.test.tsx`: 4건 PASS. complementary landmark·1회 prompt·거부·오류·appinstalled.
+  - `serviceWorkerScript.test.ts`: 12건 PASS. v2.4·17건 목록·미사용 자산 제외·캐시 정리.
+  - `e2e/pwa-offline.spec.ts`: 1건 PASS. 최초 설치 직후 오프라인 재로드.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+- **미실행**: 실제 설치 프롬프트·홈 화면 아이콘·스플래시, Safari/Firefox, Vercel 재배포.
+- **증거**:
+  - `root/archive/assets/task-dev-36/verification.json`, `pwa-icons.webp`, `install-banner-360x640.webp`, `install-banner-1280x800.webp`
+  - 테스트: `src/utils/pwaBranding.test.ts`, `src/components/PWA/PwaInstallBanner.test.tsx`, `src/utils/serviceWorkerScript.test.ts`, `e2e/pwa-offline.spec.ts`
+- **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
+
+## TASK-DEV-37 — 오디오 볼륨·BGM 자동 연동 정합화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: Web Audio와 HTMLAudio의 SFX 음량을 동일한 기준으로 맞추고, BGM 자동 연동 체크박스의 동작을 명확히 한다.
+- **대상 파일**: `src/utils/audioManager.ts`, `src/components/Modal/BgmSelectModal.tsx`, 관련 테스트
+- **재현/증거**:
+  - Web Audio 경로는 master gain과 개별 gain에 `sfxVolume`을 각각 곱해 실제 음량이 제곱으로 줄어듦.
+  - `setAutoThemeBgm(true)`는 설정만 저장하고 현재 테마의 권장 BGM으로 즉시 전환하지 않음.
+- **DoD**:
+  - Web Audio와 HTMLAudio 폴백의 SFX 음량이 같은 입력에서 같은 체감 음량이 되도록 스케일링을 한 번만 적용한다.
+  - 자동 연동을 켜는 즉시 현재 테마의 권장 BGM으로 전환하거나, 다음 테마부터 적용된다는 문구로 동작을 명확히 한다.
+  - 볼륨·음소거·트랙 전환·자동 연동 테스트를 추가한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - Web Audio master gain을 1로 두고 개별 gain에만 `sfxVolume`을 적용해 HTMLAudio와 동일한 1회 스케일링으로 맞춤.
+  - `setAutoThemeBgm(true)`가 현재 테마 권장 BGM으로 즉시 전환하도록 수정함.
+  - 4개 국어 자동 연동 설명을 즉시 전환·테마 변경 동기화 동작에 맞춰 갱신함.
+- **검증**:
+  - `audioManager.test.ts`: 15건 PASS. `sfxVolume 0.5`에서 master 1·개별 0.425 적용, 즉시 BGM 전환 포함.
+  - `BgmSelectModal.test.tsx`: 6건 PASS. 체크박스 활성화 시 현재 테마 권장 트랙 전환.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+- **미실행**: 실제 기기 음량 청취, Safari/Firefox Web Audio 동작.
+- **증거**:
+  - `root/archive/assets/task-dev-37/verification.json`
+  - 테스트: `src/utils/audioManager.test.ts`, `src/components/Modal/BgmSelectModal.test.tsx`
+- **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
+
+## TASK-DEV-38 — Time Attack 이동 시점 제한 시간 검사
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: Time Attack에서 250ms 인터벌과 이동 이벤트 사이의 틈으로 제한 시간 이후 이동·승리가 인정되지 않게 한다.
+- **대상 파일**: `src/hooks/usePuzzleGame.ts`, 관련 테스트
+- **재현/증거**:
+  - 제한 시간 검사는 타이머 인터벌에서만 수행하고 `moveTile()`은 이동 시점의 경과 시간을 확인하지 않음.
+  - 메인 스레드 지연·탭 복귀 직후에는 제한 시간을 넘긴 이동이 승리로 이어질 수 있음.
+- **DoD**:
+  - 이동 처리 전에 실제 경과 시간을 확인해 제한 시간 이상이면 이동을 거부하고 `gameover`로 전환한다.
+  - 제한 시간 직후 이동·승리·기록 저장이 발생하지 않는 테스트를 추가한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: TASK-DEV-29 완료 후
+- **진행 결과**:
+  - `moveTile()` 진입 시 `challengeMode === 'timeAttack' && status === 'playing'`이면 `getElapsedSeconds()`를 확인하고 제한 시간 이상이면 이동을 거부·`gameover` 전환하도록 추가함.
+  - 만료 이동은 `moveCount`를 증가시키지 않고 `elapsedTime`을 실제 경과 값으로 갱신함.
+  - 제한 시간 직후 완성되는 수가 승리·기록 저장으로 이어지지 않음을 확인함.
+- **검증**:
+  - `usePuzzleGame.test.ts`: 13건 PASS. 틱 콜백 없이 벽시계만 46초 이동한 뒤 이동 거부, 2수 풀이 보드의 마지막 수 거부·gameover·moveCount 유지.
+  - `App.solution.test.tsx`: 8건 PASS. 만료 시 정답 미리보기를 닫고 GameOver 1개만 표시.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+- **미실행**: 실제 저사양 기기·백그라운드 스로틀링에서의 수동 재현.
+- **증거**:
+  - `root/archive/assets/task-dev-38/verification.json`
+  - 테스트: `src/hooks/usePuzzleGame.test.ts`, `src/App.solution.test.tsx`
+- **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
+
+## TASK-DEV-39 — 접근성·파괴적 액션 UX 잔여 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 토스트·PWA landmark·진행 바·캘린더·모드 카드·아이콘 버튼·전역 선택 스타일의 접근성 문제와, 홈 복귀 같은 파괴적 액션의 확인 절차를 정비한다.
+- **대상 파일**: `TitleScreen`, `PwaInstallBanner`, `AchievementToast`, `AchievementModal`, `DailyModal`, `CustomImageModal`, `WinModal`, `ConfirmModal`, `Header`, `src/styles/index.css`
+- **재현/증거**:
+  - 업적 토스트가 `role="alert"`와 `aria-live="assertive"`를 함께 사용해 비긴급 알림이 스크린리더 발화를 끊음.
+  - 하단 PWA 설치 배너가 `role="banner"`를 사용해 landmark가 중복·오배치됨.
+  - 업적 진행 바에 `role="progressbar"`/`aria-value*`가 없고, Daily 캘린더의 완료·오늘 상태가 `title`/아이콘에만 의존함.
+  - 타이틀 모드 카드가 `div onClick`으로 선택 상태를 바꾸며 키보드 동등 조작·상태 노출이 없고, BGM/SFX 아이콘 버튼 라벨이 동작·상태를 설명하지 않음.
+  - `html/body`의 전역 `user-select: none`이 텍스트 복사를 막고, 커스텀 이미지 캔버스 팬은 포인터 전용임.
+  - 홈 복귀가 진행 중 게임을 확인 없이 폐기함.
+- **DoD**:
+  - 업적 토스트를 `role="status"`/`aria-live="polite"`로 조정하고, PWA 배너를 올바른 `region`/`complementary` landmark로 바꾼다.
+  - 진행 바·캘린더에 스크린리더용 상태와 값을 제공한다.
+  - 모드 카드의 키보드 선택 또는 장식 처리, BGM/SFX 버튼의 동작·상태 라벨, 텍스트 선택 범위, 캔버스 팬 키보드 대안을 정리한다.
+  - WinModal의 Escape/닫기 정책과 홈 복귀 확인·Undo 중 하나를 결정해 적용한다.
+  - Lighthouse 접근성과 키보드·스크린리더 수동 확인 결과, 360×640·1280×800 회귀, `npm test`·`npm run typecheck`·`npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - 업적 토스트를 `role="status"`·`aria-live="polite"`·`aria-atomic`으로 변경함.
+  - PWA 배너를 `aside` complementary landmark로 바꾸고 아이콘을 `aria-hidden` 처리함.
+  - 업적 진행 바에 `progressbar`·`aria-valuemin/max/now/valuetext`·업적 제목 라벨을 추가함.
+  - Daily 캘린더를 `grid`/`gridcell`로 만들고 각 날짜에 `aria-label`, 오늘에 `aria-current="date"`를 적용함.
+  - 장식 모드 카드의 `div onClick`과 `cursor: pointer`를 제거해 선택은 크기 pill·시작 버튼으로만 변경되게 함.
+  - 타이틀·헤더 BGM/SFX 토글에 동작·상태를 포함한 `aria-label`과 `aria-pressed`를 적용함.
+  - 전역 `user-select`를 `text`로 바꿔 설명·규칙 텍스트를 복사할 수 있게 하고, 게임 보드·버튼은 기존처럼 선택을 막음.
+  - 커스텀 이미지 캔버스를 `tabIndex=0`·방향키 팬(10px, Shift 30px)·안내 문구로 보강함.
+  - 진행 중(`status === 'playing' && moveCount > 0`) 홈 복귀 시 `ConfirmModal`로 확인을 받고, 취소하면 게임을 유지함.
+  - WinModal은 결과 확인이 필요한 완료 상태로 정의해 Escape로 닫지 않고 다시 플레이/다음 단계 중 하나를 선택하도록 정책을 명시함.
+- **검증**:
+  - `App.accessibility.test.tsx`: 모드 카드 배경 클릭 무효·오디오 `aria-pressed`·JA/ZH 라벨 포함 PASS.
+  - `AchievementModal.test.tsx`: 진행 바 값 2/3·valuetext 확인 PASS.
+  - `DailyModal.test.tsx`: grid·gridcell 수·오늘 `aria-current` 확인 PASS.
+  - `CustomImageModal.test.tsx`: 방향키 팬으로 drawImage 좌표 10,10 이동 확인 PASS.
+  - `AchievementToast.test.tsx`: status/polite 및 큐 종료 확인 PASS.
+  - `App.homeConfirm.test.tsx`: 확인·취소·확인 후 홈 복귀·첫 이동 전 즉시 복귀 PASS.
+  - `e2e/accessibility-ux.spec.ts`: 5건 PASS. 장식 카드·텍스트 선택·오디오 상태·홈 확인·캘린더/진행 바·360×640 모달 레이아웃.
+  - 360×640 확인 모달 328px, 1280×800 400px, 가로 오버플로 0건, body overflow hidden.
+  - Lighthouse(타이틀 화면) 접근성 **1.0**.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+- **미실행**: 실제 스크린리더(NVDA·VoiceOver) 수동 확인, 실제 모바일 실기기, Safari/Firefox, 게임·모달 화면의 Lighthouse 점수.
+- **증거**:
+  - `root/archive/assets/task-dev-39/verification.json`, `metrics.json`, `lighthouse-accessibility.json`
+  - `home-confirm-360x640.webp`, `home-confirm-1280x800.webp`, `daily-calendar-360x640.webp`, `achievement-progress-360x640.webp`
+  - 테스트: `src/App.accessibility.test.tsx`, `src/App.homeConfirm.test.tsx`, `e2e/accessibility-ux.spec.ts`
+- **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
