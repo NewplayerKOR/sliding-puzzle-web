@@ -166,6 +166,28 @@ html, body {
   color: var(--color-ink);
 }
 
+/* 모달 레이어: 배경 페이지로 스크롤이 전파되지 않도록 차단함 */
+.modal-overlay,
+.achieve-modal-overlay,
+.bgm-modal-overlay,
+.custom-img-modal-overlay,
+.daily-modal-overlay,
+.gameover-modal-overlay,
+.hint-modal-overlay,
+.solution-modal-overlay,
+.theme-modal-overlay,
+.modal-content,
+.achieve-modal-content,
+.bgm-modal-content,
+.custom-img-modal-content,
+.daily-modal-content,
+.gameover-modal-content,
+.hint-modal-content,
+.solution-modal-content,
+.theme-modal-content {
+  overscroll-behavior: contain;
+}
+
 /* Custom Smooth Scrollbars for Modals */
 ::-webkit-scrollbar {
   width: 6px;

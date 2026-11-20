@@ -22,6 +22,7 @@ import { getLocalizedTheme, DEFAULT_THEME_ID } from './utils/themeData';
 import { getBestRecords, saveBestRecord } from './utils/recordStorage';
 import { useAssetPreloader } from './hooks/useAssetPreloader';
 import { useTransientToast } from './hooks/useTransientToast';
+import { useBodyScrollLock } from './hooks/useBodyScrollLock';
 import { preloadAllThemeAssets } from './utils/assetPreloader';
 import { audioManager } from './utils/audioManager';
 import { findNextOptimalMove, AISolutionStep } from './utils/aiSolver';
@@ -122,6 +123,24 @@ export const App: React.FC = () => {
     isSolutionOpen ||
     isWon ||
     isGameOver;
+
+  // 모달이 하나라도 열려 있으면 배경 문서 스크롤을 잠금
+  useBodyScrollLock(isAnyModalOpen);
+
+  // 승리·게임오버가 발생하면 열려 있던 보조 모달을 닫아 aria-modal 다이얼로그가
+  // 동시에 두 개 노출되지 않도록 함. GameOver의 정답 보기는 이 전환 이후에 열림.
+  useEffect(() => {
+    if (!isWon && !isGameOver) return;
+
+    setIsHintOpen(false);
+    setIsThemeModalOpen(false);
+    setIsCustomImageModalOpen(false);
+    setIsDailyModalOpen(false);
+    setIsAchievementModalOpen(false);
+    setIsBgmModalOpen(false);
+    setIsSolutionOpen(false);
+    setPendingGameStart(null);
+  }, [isWon, isGameOver]);
 
   // AI 힌트 상태
   const [aiHint, setAiHint] = useState<AISolutionStep | null>(null);
