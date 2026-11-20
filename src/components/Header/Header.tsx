@@ -134,6 +134,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={handleToggleBgm}
               title={bgmMuted ? t.soundOn : t.soundOff}
               aria-label={`${t.bgm} ${bgmMuted ? t.soundOn : t.soundOff}`}
+              aria-pressed={!bgmMuted}
             >
               {bgmMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
             </button>
@@ -144,6 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={handleToggleSfx}
               title={sfxMuted ? t.soundOn : t.soundOff}
               aria-label={`${t.sfx} ${sfxMuted ? t.soundOn : t.soundOff}`}
+              aria-pressed={!sfxMuted}
             >
               {sfxMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
               <span className="audio-btn-label">{t.sfx}</span>
