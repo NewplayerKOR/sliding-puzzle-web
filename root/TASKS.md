@@ -27,6 +27,26 @@
 
 ### [DEV]
 
+#### [ ] TASK-DEV-43 — 모바일 문서 세로 스크롤 복구
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: Samsung Internet·Chromium 기반 모바일에서 타이틀·게임 화면의 문서 세로 스크롤이 동작하게 하고, 모달 열림/닫힘의 배경 스크롤 잠금과 보드 스와이프는 유지한다.
+- **대상 파일**: `src/styles/index.css`, `e2e/mobile-scroll.spec.ts` 신규, 필요 시 `src/hooks/useBodyScrollLock.ts`
+- **재현/증거**:
+  - 2026-11-20 `vite preview`(127.0.0.1:4173), Playwright Chromium Pixel 7(412×839, touch)에서 타이틀 `scrollHeight` 1216px > `innerHeight` 839px이나 wheel·touch swipe 후 `scrollY`가 0에 머묾. 게임 화면도 947px > 839px에서 동일하게 재현됨.
+  - `window.scrollTo(0, 200)`는 동작해 문서 자체는 스크롤 가능하지만 입력 스크롤만 차단됨.
+  - computed style은 `html/body { overflow: hidden auto; overscroll-behavior: none; }`. `body`가 `overflow-x: hidden` 때문에 스크롤 컨테이너가 되고 `body`의 `overscroll-behavior: none`이 루트 문서로의 스크롤 체인을 끊음.
+  - 페이지 내 `body { overscroll-behavior: auto }` 적용 시 타이틀 `scrollY` 377, 게임 `scrollY` 108까지 정상 스크롤됨. `touch-action: auto`만 바꾼 경우에는 해결되지 않음.
+- **DoD**:
+  - `body`의 `overscroll-behavior: none`을 제거하고 `html`에만 `overscroll-behavior-y: none`을 유지하는 최소 수정으로 루트 스크롤 체인을 복구한다. 수정 이유를 CSS 주석으로 남긴다.
+  - 360×640·360×800·412×839에서 타이틀·게임 화면이 wheel·touch swipe로 스크롤되고 마지막 콘텐츠까지 도달한다. 가로 오버플로는 0건이어야 한다.
+  - 모달 열림 중 배경 스크롤이 잠기고 닫힘 후 복원되며, 중첩 모달 회귀가 없어야 한다. 보드 스와이프는 타일 이동만 수행하고 페이지를 스크롤하지 않아야 한다.
+  - Playwright 모바일 회귀 테스트를 추가해 수정 전 실패·수정 후 통과를 확인한다. touch swipe는 Chromium CDP `Input.dispatchTouchEvent`를 사용한다.
+  - `npm test`, `npm run typecheck`, `npm run build`, `npm run test:e2e` 결과와 실제 Samsung Internet 실기기 확인 여부(미실행 시 사유)를 기록한다.
+- **선행 조건**: 없음
+
 #### [ ] TASK-DEV-40 — PWA 첫 설치 업데이트 배너 오탐 방지
 
 - **Phase**: 01
@@ -82,7 +102,27 @@
 
 ### [QA / DevOps]
 
-(대기 중인 작업 없음)
+#### [ ] TASK-QA-12 — Context7 기반 최신 도구체인 적용 준비·검증
+
+- **Phase**: 01
+- **담당**: QA_DEVOPS
+- **우선순위**: P2
+- **목표**: Context7 최신 문서와 npm registry를 대조해 현재 도구체인의 호환성·breaking change를 확인하고, 위험도가 낮은 patch·minor 업데이트와 `@testing-library/jest-dom` 8을 적용한 뒤 전체 회귀를 검증한다. 소스 수정이 필요한 변경은 DEV 후속 작업으로 분리한다.
+- **대상 파일**: `package.json`, `package-lock.json`, 필요 시 `.github/workflows/ci.yml`
+- **재현/증거**:
+  - 2026-11-20 `npm outdated --long`: `vite` 8.3.6→8.3.8, `vitest` 5.1.0→5.1.1, `@vitejs/plugin-react` 6.2.1→6.3.0, `jsdom` 31.0.0→31.0.1, `@playwright/test` 1.65.0→1.65.1, `lucide-react` 1.70.0→1.77.0, `@testing-library/jest-dom` 7.0.1→8.0.0. React 19.3.1·TypeScript 7.0.2는 최신.
+  - `npm audit` prod·전체 모두 0건.
+  - Context7 `/vitejs/vite`: Vite 8 Rolldown, Node `^20.19` 또는 `>=22.12`, plugin hook 변경. 현재 Node 26.13.0과 `generateBundle`·`closeBundle` 사용은 지원 범위.
+  - Context7 `/vitest-dev/vitest`: `environment: 'browser'` 금지, jsdom 설정·`setupFiles` 병합·`base: '/'` 변경. 현재 jsdom 단일 설정과 `setupFiles` 구조는 해당 없음.
+  - Context7 `/react/react`: 19.3은 수정 중심이며 `react`·`react-dom` 정확한 버전 일치 필요. 현재 19.3.1로 일치.
+  - `@testing-library/jest-dom` 8.0.0은 Vitest 5 미만 지원을 제거하고 `>=5 <6`을 지원한다. 현재 Vitest 5.1.0과 호환. Context7 문서는 v6.9.1까지만 있어 GitHub release note로 보완.
+- **DoD**:
+  - Context7 라이브러리 ID·질의·문서 한계와 `npm outdated`·`npm audit` 결과를 완료 기록에 남긴다.
+  - patch·minor 업데이트와 `@testing-library/jest-dom` 8.0.0을 lockfile 기준으로 적용하고 `npm ci`를 통과한다. 현재 테스트에서 `jest-dom` matcher를 직접 사용하지 않는 점은 기록하고, 제거 여부는 별도 정리 작업으로 남긴다.
+  - 소스 수정이 필요한 변경은 강제 적용하지 않고 DEV 후속 작업으로 등록한다.
+  - 전체 `npm test`, `npm run typecheck`, `npm run build`, `npm run test:e2e`, `npm audit` 0건을 확인한다. DEV-43 신규 테스트가 있으면 해당 수치를 포함한다.
+  - `root/AGENTS.md`·`root/DESIGN_SYSTEM.md`의 도구체인 버전 기록은 PM에 전달하거나 PM이 갱신한다.
+- **선행 조건**: 없음
 
 ---
 
