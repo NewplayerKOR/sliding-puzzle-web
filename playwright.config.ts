@@ -2,6 +2,21 @@ import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4173;
 
+const projects = [
+  {
+    name: 'chromium',
+    use: { ...devices['Desktop Chrome'] },
+  },
+];
+
+// WebKit은 첫 설치 Service Worker 레이스 검증이 필요할 때만 선택적으로 실행함
+if (process.env.PW_WEBKIT === '1') {
+  projects.push({
+    name: 'webkit',
+    use: { ...devices['Desktop Safari'] },
+  });
+}
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -17,12 +32,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-  ],
+  projects,
   webServer: {
     command: `npm run preview -- --host 127.0.0.1 --port ${PORT}`,
     url: `http://127.0.0.1:${PORT}`,

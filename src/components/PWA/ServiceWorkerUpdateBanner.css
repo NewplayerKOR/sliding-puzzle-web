@@ -1,6 +1,8 @@
 .sw-update-banner {
   position: fixed;
-  top: max(var(--space-4), env(safe-area-inset-top));
+  /* 헤더 상단의 BGM·SFX·홈 버튼을 가리지 않도록 헤더 높이만큼 아래에 배치함.
+     360px에서는 상단 유틸리티 바가 두 줄로 감기므로 80px 오프셋을 사용함. */
+  top: calc(max(var(--space-4), env(safe-area-inset-top)) + 80px);
   left: 50%;
   transform: translateX(-50%);
   z-index: var(--z-toast);

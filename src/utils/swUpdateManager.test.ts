@@ -23,10 +23,22 @@ function createEventSource<T extends Record<string, unknown>>(base: T) {
 
 const originalServiceWorkerDescriptor = Object.getOwnPropertyDescriptor(navigator, 'serviceWorker');
 
-function installServiceWorkerMock(registrationPromise: Promise<unknown>) {
+interface ServiceWorkerMockOptions {
+  controller?: ServiceWorker | null;
+  existingRegistration?: { active?: unknown; waiting?: unknown } | null;
+}
+
+function installServiceWorkerMock(
+  registrationPromise: Promise<unknown>,
+  options: ServiceWorkerMockOptions = {}
+) {
   const container = createEventSource({
-    controller: {} as ServiceWorker | null,
+    controller:
+      options.controller === undefined ? ({} as ServiceWorker) : options.controller,
     register: vi.fn(() => registrationPromise),
+    getRegistration: vi.fn(() =>
+      Promise.resolve(options.existingRegistration ?? undefined)
+    ),
   });
   Object.defineProperty(navigator, 'serviceWorker', {
     configurable: true,
@@ -126,6 +138,49 @@ describe('registerServiceWorker', () => {
     worker.emit('statechange');
 
     expect(handleUpdate).not.toHaveBeenCalled();
+    window.removeEventListener(SW_UPDATE_AVAILABLE_EVENT, handleUpdate);
+  });
+
+  it('ignores the first-install event when the controller activates before statechange', async () => {
+    const worker = createEventSource({ state: 'installing', postMessage: vi.fn() });
+    const registration = createEventSource({ waiting: null as unknown, installing: worker });
+    const container = installServiceWorkerMock(Promise.resolve(registration), {
+      controller: null,
+    });
+    const handleUpdate = vi.fn();
+    window.addEventListener(SW_UPDATE_AVAILABLE_EVENT, handleUpdate);
+
+    startRegistration();
+    await vi.waitFor(() => expect(container.register).toHaveBeenCalled());
+
+    registration.emit('updatefound');
+    // 첫 설치 중 controller가 먼저 활성화되는 WebKit 레이스를 모사함
+    container.controller = {} as ServiceWorker;
+    worker.state = 'installed';
+    worker.emit('statechange');
+
+    expect(handleUpdate).not.toHaveBeenCalled();
+    window.removeEventListener(SW_UPDATE_AVAILABLE_EVENT, handleUpdate);
+  });
+
+  it('notifies for an update after a hard reload even without a current controller', async () => {
+    const worker = createEventSource({ state: 'installing', postMessage: vi.fn() });
+    const registration = createEventSource({ waiting: null as unknown, installing: worker });
+    const container = installServiceWorkerMock(Promise.resolve(registration), {
+      controller: null,
+      existingRegistration: { active: { state: 'activated' }, waiting: null },
+    });
+    const handleUpdate = vi.fn();
+    window.addEventListener(SW_UPDATE_AVAILABLE_EVENT, handleUpdate);
+
+    startRegistration();
+    await vi.waitFor(() => expect(container.register).toHaveBeenCalled());
+
+    registration.emit('updatefound');
+    worker.state = 'installed';
+    worker.emit('statechange');
+
+    expect(handleUpdate).toHaveBeenCalledTimes(1);
     window.removeEventListener(SW_UPDATE_AVAILABLE_EVENT, handleUpdate);
   });
 
