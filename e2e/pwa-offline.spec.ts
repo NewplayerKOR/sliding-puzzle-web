@@ -31,7 +31,7 @@ test.describe('PWA 최초 설치 오프라인', () => {
       return { keys, urls };
     });
 
-    expect(cacheInfo.keys).toContain('sliding-puzzle-v2.3');
+    expect(cacheInfo.keys).toContain('sliding-puzzle-v2.4');
     expect(cacheInfo.urls.some((url) => /\/assets\/index-.*\.js$/.test(url))).toBe(true);
     expect(cacheInfo.urls.some((url) => /\/assets\/index-.*\.css$/.test(url))).toBe(true);
     expect(cacheInfo.urls.some((url) => /\/assets\/solver\.worker-.*\.js$/.test(url))).toBe(

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sliding-puzzle-v2.3';
+const CACHE_NAME = 'sliding-puzzle-v2.4';
 // Vite 빌드 시 해시된 엔트리 JS·CSS·solver worker 목록으로 치환됨
 const BUILD_ASSETS = [];
 // 서브패스 배포에서도 동작하도록 SW 위치 기준으로 셸 URL을 계산함
@@ -15,27 +15,11 @@ const ASSETS_TO_CACHE = [
   './assets/audio/sfx_shuffle.mp3',
   './assets/audio/sfx_victory.mp3',
   './assets/audio/sfx_click.mp3',
-  './assets/sprites/ui_icons_spritesheet.png',
-  './assets/sprites/fx_animations_spritesheet.png',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/icon-maskable-192.png',
   './assets/icons/icon-maskable-512.png',
   './assets/icons/apple-touch-icon.png',
-  './assets/icons/badge_trophy.png',
-  './assets/icons/icon_sound_on.png',
-  './assets/icons/icon_sound_off.png',
-  './assets/icons/icon_pause.png',
-  './assets/icons/icon_play.png',
-  './assets/icons/icon_reset.png',
-  './assets/icons/icon_hint.png',
-  './assets/icons/icon_number_toggle.png',
-  './assets/icons/icon_theme_selector.png',
-  './assets/icons/stars_0.png',
-  './assets/icons/stars_1.png',
-  './assets/icons/stars_2.png',
-  './assets/icons/stars_3.png',
-  './assets/icons/ui_empty_slot_glow.png',
   './assets/images/theme_nature.png',
 ];
 

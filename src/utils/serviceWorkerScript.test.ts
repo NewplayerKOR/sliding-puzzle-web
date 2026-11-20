@@ -45,7 +45,7 @@ function createHarness(options: HarnessOptions = {}) {
 
   const caches = {
     open: vi.fn(async () => cache),
-    keys: vi.fn(async () => ['sliding-puzzle-v2.2', 'sliding-puzzle-v2.3']),
+    keys: vi.fn(async () => ['sliding-puzzle-v2.3', 'sliding-puzzle-v2.4']),
     delete: vi.fn(async () => true),
     match: vi.fn(async (key: string | { url: string }) => {
       const url = typeof key === 'string' ? key : key.url;
@@ -116,7 +116,7 @@ describe('public/sw.js', () => {
         './index.html',
         './manifest.webmanifest',
         './assets/icons/icon-192.png',
-        './assets/sprites/ui_icons_spritesheet.png',
+        './assets/icons/apple-touch-icon.png',
         './assets/audio/sfx_slide.mp3',
         './assets/images/theme_nature.png',
       ])
@@ -125,14 +125,19 @@ describe('public/sw.js', () => {
     expect(precached).not.toContain('./assets/images/theme_abstract.png');
     expect(precached).not.toContain('./assets/images/theme_pixel_art.png');
     expect(precached).not.toContain('./assets/images/theme_animal.png');
-    expect(precached).not.toContain('./assets/sprites/sheet_ui_fx.png');
+    expect(precached).not.toContain('./assets/sprites/ui_icons_spritesheet.png');
+    expect(precached).not.toContain('./assets/sprites/fx_animations_spritesheet.png');
+    expect(precached).not.toContain('./assets/icons/badge_trophy.png');
+    expect(precached).not.toContain('./assets/icons/icon_reset.png');
+    expect(precached).not.toContain('./assets/icons/stars_3.png');
+    expect(precached).not.toContain('./assets/icons/ui_empty_slot_glow.png');
     expect(harness.skipWaiting).not.toHaveBeenCalled();
   });
 
   it('keeps the build asset injection marker and current cache version', () => {
     expect(swSource).toContain('const BUILD_ASSETS = [];');
     expect(swSource).toContain('...BUILD_ASSETS');
-    expect(swSource).toContain("const CACHE_NAME = 'sliding-puzzle-v2.3';");
+    expect(swSource).toContain("const CACHE_NAME = 'sliding-puzzle-v2.4';");
   });
 
   it('caches assets individually when addAll rejects', async () => {
@@ -160,8 +165,8 @@ describe('public/sw.js', () => {
 
     await harness.dispatch('activate');
 
-    expect(harness.caches.delete).toHaveBeenCalledWith('sliding-puzzle-v2.2');
-    expect(harness.caches.delete).not.toHaveBeenCalledWith('sliding-puzzle-v2.3');
+    expect(harness.caches.delete).toHaveBeenCalledWith('sliding-puzzle-v2.3');
+    expect(harness.caches.delete).not.toHaveBeenCalledWith('sliding-puzzle-v2.4');
     expect(harness.claim).toHaveBeenCalledTimes(1);
   });
 
