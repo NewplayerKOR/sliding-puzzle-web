@@ -32,18 +32,29 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isDragActive, setIsDragActive] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isImageReady, setIsImageReady] = useState<boolean>(false);
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageObjRef = useRef<HTMLImageElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Load existing custom image if any
+  // 모달을 열 때 저장소 상태와 동기화하고, 닫을 때 내부 크롭 상태를 모두 초기화함.
+  // 외부에서 커스텀 이미지가 해제된 뒤 다시 열어도 이전 캔버스가 남지 않는다.
   useEffect(() => {
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+    setErrorMessage(null);
+    setIsImageReady(false);
+    setImageSrc(null);
+    imageObjRef.current = null;
+
+    if (!isOpen) return;
+
     const saved = readStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
-    if (saved && saved.startsWith('data:image/') && !imageSrc) {
+    if (saved && saved.startsWith('data:image/')) {
       setImageSrc(saved);
     }
-  }, [imageSrc]);
+  }, [isOpen]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -55,20 +66,44 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
 
   // Load image onto Image element when imageSrc changes
   useEffect(() => {
-    if (!imageSrc) return;
+    if (!imageSrc) {
+      imageObjRef.current = null;
+      setIsImageReady(false);
+      return;
+    }
+
+    let cancelled = false;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (canvas && ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    setIsImageReady(false);
+
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
+      if (cancelled) return;
       imageObjRef.current = img;
+      setIsImageReady(true);
+      setErrorMessage(null);
       setOffset({ x: 0, y: 0 });
       setZoom(1);
       drawCanvas();
     };
     img.onerror = () => {
+      if (cancelled) return;
       imageObjRef.current = null;
+      setIsImageReady(false);
       setErrorMessage(t.imageLoadFailed);
     };
     img.src = imageSrc;
+
+    return () => {
+      cancelled = true;
+      img.onload = null;
+      img.onerror = null;
+    };
     // drawCanvas는 imageSrc 변경 시점의 초기 렌더링에만 사용하므로 의존성에서 제외함
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageSrc, t.imageLoadFailed]);
@@ -205,6 +240,11 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    if (!isImageReady || !imageObjRef.current) {
+      setErrorMessage(t.imageLoadFailed);
+      return;
+    }
+
     let dataUrl: string;
     try {
       dataUrl = canvas.toDataURL('image/png');
@@ -328,7 +368,12 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
                 <span>{t.cropUploadBtn}</span>
               </button>
 
-              <button type="button" className="btn-apply-crop" onClick={handleApply}>
+              <button
+                type="button"
+                className="btn-apply-crop"
+                onClick={handleApply}
+                disabled={!isImageReady}
+              >
                 <Check size={18} />
                 <span>{t.cropApplyBtn}</span>
               </button>

@@ -1,11 +1,23 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { cleanup, render, screen, fireEvent } from '@testing-library/react';
+import { cleanup, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from './App';
 import { resetGlobalLanguage } from './i18n/useTranslation';
 
 vi.mock('canvas-confetti', () => ({
   default: vi.fn(),
 }));
+
+class MockImage {
+  onload: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+  width = 512;
+  height = 512;
+  crossOrigin = '';
+
+  set src(_value: string) {
+    queueMicrotask(() => this.onload?.());
+  }
+}
 
 const CUSTOM_IMAGE_KEY = 'sliding_puzzle_custom_image';
 const APPLIED_DATA_URL = 'data:image/png;base64,applied-image';
@@ -42,7 +54,11 @@ const applyCustomImage = async () => {
   fireEvent.change(fileInput, {
     target: { files: [new File(['image'], 'photo.png', { type: 'image/png' })] },
   });
-  fireEvent.click(await screen.findByText('퍼즐로 적용하기'));
+  const applyButton = await screen.findByText('퍼즐로 적용하기');
+  await waitFor(() => {
+    expect((applyButton.closest('button') as HTMLButtonElement).disabled).toBe(false);
+  });
+  fireEvent.click(applyButton);
 };
 
 const openThemeModal = () => fireEvent.click(screen.getByTitle('테마 선택'));
@@ -51,6 +67,7 @@ const closeThemeModal = () => fireEvent.click(screen.getByLabelText('닫기'));
 describe('App custom image preservation', () => {
   beforeEach(() => {
     vi.stubGlobal('localStorage', createMemoryStorage());
+    vi.stubGlobal('Image', MockImage);
     resetGlobalLanguage();
     window.HTMLMediaElement.prototype.play = vi.fn().mockResolvedValue(undefined);
     window.HTMLMediaElement.prototype.pause = vi.fn();
