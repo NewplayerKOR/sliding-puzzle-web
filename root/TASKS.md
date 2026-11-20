@@ -175,24 +175,6 @@
 
 ### [QA / DevOps]
 
-#### [ ] TASK-QA-10 — P1 수정 독립 검증 및 회귀 테스트
-
-- **Phase**: 01
-- **담당**: QA_DEVOPS
-- **우선순위**: P1
-- **목표**: TASK-DEV-29~31이 실제 사용자 경로에서 Reset 치트, PWA 최초 설치 오프라인 실패, Daily 완료 누수를 제거했는지 독립 검증한다.
-- **검증 범위**:
-  - `정답 보기` 후 2수 승리, GameOver 해답 보기 후 승리, Standard·Time Attack·Move Limit·Daily에서 기록·업적·완료 저장 여부
-  - 신규 브라우저 프로필에서 최초 설치 후 오프라인 재로드, 해시 번들·worker 캐시 포함 여부
-  - Daily 시작 → 홈 복귀 → 커스텀 이미지·다시 플레이, 자정 경계에서 완료 날짜 귀속
-  - 기존 핵심 플레이·모달 포커스·언어 전환·360px 레이아웃 회귀
-- **DoD**:
-  - 수정 전 재현 시나리오를 먼저 확인하고, 수정 후에는 승리 모달·기록·업적·Daily 저장이 발생하지 않음을 증거와 함께 기록한다.
-  - 수정 전후 재현 결과를 비교하고 `npm test`, `npm run typecheck`, `npm run build`, `npx playwright test` 실행 결과를 기록한다.
-  - 실기기·Safari/Firefox·스크린리더 등 미실행 범위를 명시한다.
-  - 실패 시 재현 조건·기대·실제 결과를 새 DEV 작업으로 등록한다.
-- **선행 조건**: TASK-DEV-29·30·31 완료 후
-
 #### [ ] TASK-QA-11 — P2 수정 전체 회귀·크로스브라우저 검증
 
 - **Phase**: 01
@@ -214,6 +196,11 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-QA-10** — P1 수정 독립 검증 및 회귀 테스트 (완료일: 2026-11-20)
+  - 핵심 결과: 수정본을 새로 빌드해 Standard·Time Attack·Move Limit·Daily에서 정답 보기가 보드·타이머·이동 수를 바꾸지 않고, 승리·기록·업적·Daily 저장을 만들지 않음을 독립 확인함. Daily 포기 후 커스텀 이미지 승리·다시 플레이·자정 경계에서도 Daily 완료가 새지 않았고, 신규 브라우저 프로필과 `/sub/` 서브패스에서 최초 설치 오프라인 실행이 성공함. 신규 결함 0건
+  - 검증 범위: Vitest 32개 파일/203개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright Chromium 8/8 PASS. 독립 Playwright 37/37 체크와 서브패스 PWA 3/3 체크 PASS. 실제 모바일 실기기·Safari/Firefox·스크린리더·실제 설치 프롬프트는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-10--p1-수정-독립-검증-및-회귀-테스트)
+
 - **TASK-DEV-31** — 일일 챌린지 활성 컨텍스트·날짜 무결성 수정 (완료일: 2026-11-20)
   - 핵심 결과: `activeDaily: { date, boardKey }`로 Daily 시작 날짜와 시작 보드를 함께 보관하고, 승리 시 `moveHistory[0]`의 boardKey가 일치할 때만 시작 날짜로 완료를 저장함. 홈 복귀·커스텀 이미지·새 게임·셔플·재도전·다시 플레이·다음 단계·그리드/모드 변경에서 Daily 활성 상태를 해제함
   - 검증 범위: Vitest 32개 파일/203개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 8/8 PASS. Daily 포기 후 커스텀 이미지·일반 모드 승리 시 Daily 저장 없음(일반 기록은 저장), 23:59 시작·00:00 이후 승리 시 시작 날짜 저장, 다시 플레이 시 저장 함수 재호출 없음 확인. 실제 모바일 실기기·Safari/Firefox·스크린리더는 미실행
@@ -234,13 +221,8 @@
   - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 6.4.5 빌드 성공, Playwright E2E 4/4 PASS. 360×640·360×800·1280×800에서 select·슬라이더·PWA CTA 크기와 배너 오버플로를 측정했고, 24px 미만 타깃 0건, EN·JA·ZH 360×640 이슈 0건. 실제 모바일 실기기·Safari/Firefox·스크린리더·실제 설치/업데이트 이벤트는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-28--모바일-터치-타깃pwa-배너-접근성-정비)
 
-- **TASK-DEV-27** — 360px 모달 텍스트 줄바꿈·잘림 정비 (완료일: 2026-11-08)
-  - 핵심 결과: 모달 5종의 제목·테마명·BGM 트랙명·일일 스트릭 라벨을 단어 중간 줄바꿈 없이 표시하도록 정비함. `--text-word-break` 토큰으로 한국어만 `keep-all`을 적용하고, 헤더 제목 그룹에 `flex: 1`·`min-width: 0`, 360px 제목 16~18px, 테마 카드 이름/카테고리 세로 배치·2줄 이름, BGM 트랙명/장르 2줄 허용, 스트릭 라벨 폭 확보를 적용함. 일본어 BGM의 긴 자동 연동·장르 라벨도 패널 안에 수용하도록 `min-width: 0`·`max-width: 100%`를 보강함
-  - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 6.4.5 빌드 성공, Playwright E2E 4/4 PASS. 360×640·360×800·1280×800 한국어 5개 모달에서 제목 1줄·단어 중간 줄바꿈 0건·가로 잘림 0건·패널/문서 오버플로 0건, EN·JA·ZH 360×640 15개 조합에서도 0건. 실제 모바일 실기기·Safari/Firefox·스크린리더는 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-27--360px-모달-텍스트-줄바꿈잘림-정비)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-DEV-28 (모바일 터치 타깃·PWA 배너 접근성 정비), TASK-DEV-29 (정답 보기 읽기 전용 미리보기·기록 무결성), TASK-DEV-30 (PWA 최초 설치 오프라인 프리캐시), TASK-DEV-31 (Daily 활성 컨텍스트·시작 날짜 무결성), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-DEV-28 (모바일 터치 타깃·PWA 배너 접근성 정비), TASK-DEV-29 (정답 보기 읽기 전용 미리보기·기록 무결성), TASK-DEV-30 (PWA 최초 설치 오프라인 프리캐시), TASK-DEV-31 (Daily 활성 컨텍스트·시작 날짜 무결성), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-QA-10 (P1 수정 독립 검증·회귀 테스트), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)

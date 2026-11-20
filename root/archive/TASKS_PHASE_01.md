@@ -1454,3 +1454,58 @@
   - 테스트: `src/App.daily.test.tsx`, `src/utils/dailyChallenge.test.ts`
   - 코드: `src/App.tsx`, `src/utils/dailyChallenge.ts`
 - **작업 상태**: `root/TASKS.md`의 TASK-DEV-31 완료 요약, `root/FEATURES.md` 반영
+
+## TASK-QA-10 — P1 수정 독립 검증 및 회귀 테스트
+
+- **Phase**: 01
+- **담당**: QA_DEVOPS
+- **우선순위**: P1
+- **완료일**: 2026-11-20
+- **검증 대상**: TASK-DEV-29~31 수정본. 제품 코드 기준 `39a03ca`·`04cfc89`, 문서 반영 `86b6c79` working tree에서 새로 빌드한 `dist`.
+- **목표**: Reset 치트, PWA 최초 설치 오프라인 실패, Daily 완료 누수가 실제 사용자 경로에서 제거됐는지 DEV 자체 검증과 분리해 확인한다.
+- **완료 기준(DoD)**:
+  - 수정 전 재현 시나리오와 수정 후 결과를 비교한다.
+  - `npm test`, `npm run typecheck`, `npm run build`, `npx playwright test`를 새로 실행한다.
+  - Standard·Time Attack·Move Limit·Daily, PWA 최초 설치·오프라인, Daily 포기·다시 플레이·자정 경계, 핵심 플레이·포커스·언어·360px 회귀를 확인한다.
+  - 미실행 범위와 제한을 기록하고, 실패 시 새 DEV 작업을 등록한다.
+
+### 진행 결과
+
+- 수정 전 재현은 2026-11-20 QA 전면 감사에서 기존 `dist`(2026-11-08 빌드)로 확인한 기록을 사용함. 이번 세션은 수정 후 코드만 새로 빌드해 독립 재검증함.
+  - Reset: 3×3 Standard에서 `정답 보기(리셋)` → 타일 8 이동 → 1.3초 대기 → 타일 8 복귀 시 2수/00:01/3성 승리, `bestTime: 1`·`bestMoves: 2`, `first_victory`·`speed_demon`·`purist_no_undo` 저장. Daily에서도 `currentStreak: 1` 저장.
+  - PWA: 최초 방문 후 SW controller는 `true`였지만 해시 `index-*.js`·`index-*.css`가 캐시에 없었고, 오프라인 재로드 시 `#root` 자식 0개·JS/CSS `net::ERR_FAILED`.
+  - Daily: Daily 시작 → 홈 복귀 → 커스텀 이미지 게임 승리 시 Daily 보드를 풀지 않아도 `currentStreak: 1`·오늘 완료 저장.
+- 수정 후 빌드 산출물은 `index-D_X6dEyZ.js`, `index-DozuOIe0.css`, `solver.worker-CyubXBrk.js`이며, `dist/sw.js`의 `BUILD_ASSETS`와 캐시 `sliding-puzzle-v2.3`에 모두 포함됨을 확인함.
+- 독립 Playwright 검증 37개 체크와 서브패스 PWA 3개 체크가 모두 통과함. DEV가 추가한 Vitest·E2E를 그대로 신뢰하지 않고, 별도 스크립트로 실제 프로덕션 빌드를 조작해 확인함.
+- Standard: 정답 미리보기 전후 보드·이동 수·시간이 동일했고, 미리보기 후 2수(00:02)를 두어도 승리 모달·기록·업적·Daily 저장이 없었음.
+- Time Attack: 미리보기 중 00:45→00:43으로 타이머가 계속 진행됐고, 닫은 뒤에도 00:43을 유지해 리셋되지 않았음. 미리보기 중 시간 만료 시 `[role="dialog"]`는 1개만 유지됐고, 닫은 뒤 GameOver가 표시됐음. GameOver의 정답 보기는 읽기 전용 미리보기였으며, GameOver를 닫으면 홈으로 복귀했고 기록·업적·Daily 저장은 없었음.
+- Move Limit: 미리보기 전후 남은 이동 35→35, 이동 1회 후 34, 두 번째 미리보기 후에도 34를 유지했고 기록·Daily 저장은 없었음.
+- Daily: 미리보기에서 15개 정답 타일을 표시하면서 보드는 바뀌지 않았고 Daily 저장도 없었음. Daily 포기 → 홈 → 커스텀 이미지 4×4 승리(81수)에서는 일반 4×4 최고 기록만 저장되고 Daily 저장은 없었음. Daily 실제 승리는 시작 날짜로 1회 저장됐고, 다시 플레이 후 재승리해도 Daily 저장은 1회를 유지했음.
+- Daily 자정: 2026-11-20 23:59:50 시작 → 2026-11-21 00:00:10 완료에서도 `lastCompletedDate`와 `completedDates`가 2026-11-20으로 저장되고 2026-11-21은 포함되지 않았음.
+- PWA: 신규 BrowserContext 최초 방문에서 캐시 33건(v2.3), 해시 JS·CSS·solver worker를 확인함. 페이지를 닫고 오프라인으로 새 페이지를 열어도 타이틀이 렌더링됐고(`#root` 자식 1개) script/stylesheet 실패는 0건이었음. `/sub/` 서브패스에서도 SW scope·캐시 경로·오프라인 타이틀이 정상임을 확인함.
+- 회귀: 360×640에서 타이틀·게임·정답 모달 가로 오버플로 0건, 게임 보드 폭 281.6px. 테마 모달 포커스 트랩 15회 Tab·Escape 복귀 정상. EN 전환 후 `html lang="en"`·새로고침 유지. 일반 3×3 승리(24수/00:03)에서 승리 모달·최고 기록·업적 3종 저장, 페이지 오류 0건.
+- 신규 결함은 발견하지 않아 DEV Backlog에 추가 등록하지 않음.
+
+### 검증
+
+- **대상 리비전**: `86b6c79` working tree, 제품 코드 `39a03ca`·`04cfc89`
+- **실행 명령과 결과**:
+  - `npm test`: 32개 파일/203개 케이스 PASS
+  - `npm run typecheck`: 0 Errors
+  - `npm run build`: Vite 8.3.6 성공. `dist/assets` 3개(JS·CSS·solver worker) 생성
+  - `npx playwright test`: Chromium 8/8 PASS. `smoke` 4건, `solution-modal` 3건, `pwa-offline` 1건
+  - 독립 Playwright QA 스크립트: 37/37 체크 PASS. Standard·Time Attack·Move Limit·Daily·PWA·360px·포커스·언어·핵심 플레이 포함
+  - 서브패스 PWA 스크립트: 3/3 체크 PASS. scope `/sub/`, 캐시 33건, 오프라인 타이틀
+- **증거**:
+  - `root/archive/assets/task-qa-10/verification.json` — 37개 체크, 시나리오별 실제 값·저장소 쓰기 기록
+  - `root/archive/assets/task-qa-10/subpath-pwa.json` — 서브패스 SW scope·캐시·오프라인 결과
+  - `root/archive/assets/task-qa-10/solution-1280x800.png`, `solution-360x640.png`
+  - `root/archive/assets/task-qa-10/pwa-offline-title.png`, `pwa-subpath-offline-title.png`
+  - `root/archive/assets/task-qa-10/daily-custom-win.png`, `core-win.png`
+- **미실행·제한**:
+  - 실제 모바일 실기기, Safari/Firefox, 스크린리더 수동 검증은 미실행.
+  - Lighthouse는 QA-10 범위가 아니므로 재실행하지 않음. TASK-QA-11에서 확인 필요.
+  - 브라우저의 실제 `beforeinstallprompt`·설치 수락 UI는 자동화하지 않음. 오프라인 캐시·SW 동작만 검증함.
+  - 수정 전 재현은 이번 세션에서 과거 커밋을 다시 빌드해 재실행하지 않고, 2026-11-20 QA 감사 기록을 비교 기준으로 사용함.
+  - Vercel 프로젝트는 소유자가 의도적으로 pause한 상태이며 결함으로 판단하지 않음.
+- **작업 상태**: `root/TASKS.md`의 TASK-QA-10 완료 요약과 Phase 보관 링크 반영. DEV-29~31의 기능 명세는 `root/FEATURES.md`에 이미 반영되어 있음.

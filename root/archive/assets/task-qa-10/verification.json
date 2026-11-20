@@ -1,0 +1,872 @@
+{
+  "task": "TASK-QA-10",
+  "generatedAt": "2026-11-20T11:49:12.514Z",
+  "baseUrl": "http://127.0.0.1:4173/",
+  "build": {
+    "assets": [
+      "index-D_X6dEyZ.js",
+      "index-DozuOIe0.css",
+      "solver.worker-CyubXBrk.js"
+    ],
+    "cacheName": "sliding-puzzle-v2.3",
+    "buildAssets": [
+      "./assets/index-D_X6dEyZ.js",
+      "./assets/index-DozuOIe0.css",
+      "./assets/solver.worker-CyubXBrk.js"
+    ]
+  },
+  "checks": [
+    {
+      "name": "Standard: solution preview leaves the board unchanged",
+      "pass": true,
+      "details": {}
+    },
+    {
+      "name": "Standard: solution preview leaves move/time counters unchanged",
+      "pass": true,
+      "details": {
+        "beforeStats": [
+          "0",
+          "00:00",
+          "-"
+        ],
+        "afterOpenStats": [
+          "0",
+          "00:00",
+          "-"
+        ]
+      }
+    },
+    {
+      "name": "Standard: solution preview renders 8 tiles in a dialog",
+      "pass": true,
+      "details": {
+        "previewCount": 8,
+        "dialogCount": 1
+      }
+    },
+    {
+      "name": "Standard: two moves after preview do not produce a win modal",
+      "pass": true,
+      "details": {}
+    },
+    {
+      "name": "Standard: two moves after preview keep the normal move counter",
+      "pass": true,
+      "details": {
+        "before": [
+          "0",
+          "00:00",
+          "-"
+        ],
+        "afterOpen": [
+          "0",
+          "00:00",
+          "-"
+        ],
+        "afterMoves": [
+          "2",
+          "00:02",
+          "-"
+        ]
+      }
+    },
+    {
+      "name": "Standard: two moves after preview do not write records/achievements/daily",
+      "pass": true,
+      "details": {
+        "records": [],
+        "achievements": [],
+        "daily": []
+      }
+    },
+    {
+      "name": "Standard: no page errors",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "Time Attack: preview keeps the timer running",
+      "pass": true,
+      "details": {
+        "startStats": [
+          "0",
+          "00:45",
+          "-"
+        ],
+        "duringStats": [
+          "0",
+          "00:43",
+          "-"
+        ]
+      }
+    },
+    {
+      "name": "Time Attack: closing preview does not reset the timer",
+      "pass": true,
+      "details": {
+        "startStats": [
+          "0",
+          "00:45",
+          "-"
+        ],
+        "afterPreviewStats": [
+          "0",
+          "00:43",
+          "-"
+        ]
+      }
+    },
+    {
+      "name": "Time Attack: expiry while preview is open does not stack dialogs",
+      "pass": true,
+      "details": {
+        "solutionVisible": true,
+        "gameOverVisible": false,
+        "dialogs": 1
+      }
+    },
+    {
+      "name": "Time Attack: GameOver exposes the read-only solution preview",
+      "pass": true,
+      "details": {
+        "solutionVisible": true,
+        "gameOverVisible": false,
+        "records": null
+      }
+    },
+    {
+      "name": "Time Attack: GameOver/solution path writes no records or daily completion",
+      "pass": true,
+      "details": {
+        "visible": true,
+        "records": null,
+        "achievements": null,
+        "daily": null,
+        "writes": {
+          "records": [],
+          "daily": []
+        }
+      }
+    },
+    {
+      "name": "Time Attack: closing GameOver returns home without records",
+      "pass": true,
+      "details": {
+        "homeVisible": true,
+        "records": null,
+        "daily": null
+      }
+    },
+    {
+      "name": "Time Attack: no page errors",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "Move Limit: preview leaves remaining moves unchanged",
+      "pass": true,
+      "details": {
+        "startStats": [
+          "35",
+          "00:00",
+          "-"
+        ],
+        "afterPreview": [
+          "35",
+          "00:00",
+          "-"
+        ]
+      }
+    },
+    {
+      "name": "Move Limit: a move after preview decreases the counter normally",
+      "pass": true,
+      "details": {
+        "startStats": [
+          "35",
+          "00:00",
+          "-"
+        ],
+        "afterMove": [
+          "34",
+          "00:00",
+          "-"
+        ]
+      }
+    },
+    {
+      "name": "Move Limit: second preview does not reset the counter",
+      "pass": true,
+      "details": {
+        "afterMove": [
+          "34",
+          "00:00",
+          "-"
+        ],
+        "afterSecondPreview": [
+          "34",
+          "00:00",
+          "-"
+        ]
+      }
+    },
+    {
+      "name": "Move Limit: preview path writes no records or daily completion",
+      "pass": true,
+      "details": {
+        "stats": {
+          "start": [
+            "35",
+            "00:00",
+            "-"
+          ],
+          "afterPreview": [
+            "35",
+            "00:00",
+            "-"
+          ],
+          "afterMove": [
+            "34",
+            "00:00",
+            "-"
+          ],
+          "afterSecondPreview": [
+            "34",
+            "00:00",
+            "-"
+          ]
+        },
+        "records": null,
+        "writes": {
+          "records": [],
+          "daily": []
+        }
+      }
+    },
+    {
+      "name": "Daily: solution preview does not change the daily board",
+      "pass": true,
+      "details": {}
+    },
+    {
+      "name": "Daily: solution preview writes no daily completion",
+      "pass": true,
+      "details": {
+        "previewCount": 15,
+        "boardUnchanged": true,
+        "daily": null,
+        "writes": []
+      }
+    },
+    {
+      "name": "Daily: abandoned Daily custom-image win stores the standard record",
+      "pass": true,
+      "details": {
+        "3": null,
+        "4": {
+          "bestTime": 12,
+          "bestMoves": 81,
+          "clearedAt": "2026-11-20T11:49:34.052Z"
+        },
+        "5": null
+      }
+    },
+    {
+      "name": "Daily: abandoned Daily custom-image win does not write daily completion",
+      "pass": true,
+      "details": {
+        "grid": 4,
+        "customBoard": [
+          1,
+          7,
+          5,
+          13,
+          2,
+          6,
+          12,
+          8,
+          11,
+          9,
+          4,
+          10,
+          0,
+          3,
+          15,
+          14
+        ],
+        "solveSteps": 81,
+        "winTitle": "퍼즐 완성! 축하합니다!",
+        "records": {
+          "3": null,
+          "4": {
+            "bestTime": 12,
+            "bestMoves": 81,
+            "clearedAt": "2026-11-20T11:49:34.052Z"
+          },
+          "5": null
+        },
+        "daily": null,
+        "customImageStored": true,
+        "writes": {
+          "records": [
+            {
+              "key": "sliding_puzzle_best_records",
+              "value": "{\"3\":null,\"4\":{\"bestTime\":12,\"bestMoves\":81,\"clearedAt\":\"2026-11-20T11:49:34.052Z\"},\"5\":null}"
+            }
+          ],
+          "daily": []
+        }
+      }
+    },
+    {
+      "name": "Daily: real completion saves the started date once",
+      "pass": true,
+      "details": {
+        "steps": 81,
+        "daily": {
+          "currentStreak": 1,
+          "maxStreak": 1,
+          "lastCompletedDate": "2026-11-20",
+          "completedDates": [
+            "2026-11-20"
+          ]
+        },
+        "writes": [
+          {
+            "key": "sliding_puzzle_daily_streak",
+            "value": "{\"currentStreak\":1,\"maxStreak\":1,\"lastCompletedDate\":\"2026-11-20\",\"completedDates\":[\"2026-11-20\"]}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Daily: replay after completion records no second daily write",
+      "pass": true,
+      "details": {
+        "firstWrites": [
+          {
+            "key": "sliding_puzzle_daily_streak",
+            "value": "{\"currentStreak\":1,\"maxStreak\":1,\"lastCompletedDate\":\"2026-11-20\",\"completedDates\":[\"2026-11-20\"]}"
+          }
+        ],
+        "secondWrites": [
+          {
+            "key": "sliding_puzzle_daily_streak",
+            "value": "{\"currentStreak\":1,\"maxStreak\":1,\"lastCompletedDate\":\"2026-11-20\",\"completedDates\":[\"2026-11-20\"]}"
+          }
+        ],
+        "firstDaily": {
+          "currentStreak": 1,
+          "maxStreak": 1,
+          "lastCompletedDate": "2026-11-20",
+          "completedDates": [
+            "2026-11-20"
+          ]
+        },
+        "secondDaily": {
+          "currentStreak": 1,
+          "maxStreak": 1,
+          "lastCompletedDate": "2026-11-20",
+          "completedDates": [
+            "2026-11-20"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Daily midnight: run actually crosses into the next day",
+      "pass": true,
+      "details": {
+        "startDate": "2026-11-20",
+        "endDate": "2026-11-21",
+        "startedAt": "2026-11-20T14:59:50.000Z",
+        "completedAt": "2026-11-20T15:00:10.000Z"
+      }
+    },
+    {
+      "name": "Daily midnight: completion is credited to the start date",
+      "pass": true,
+      "details": {
+        "startDate": "2026-11-20",
+        "endDate": "2026-11-21",
+        "daily": {
+          "currentStreak": 1,
+          "maxStreak": 1,
+          "lastCompletedDate": "2026-11-20",
+          "completedDates": [
+            "2026-11-20"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Daily midnight: exactly one daily write",
+      "pass": true,
+      "details": [
+        {
+          "key": "sliding_puzzle_daily_streak",
+          "value": "{\"currentStreak\":1,\"maxStreak\":1,\"lastCompletedDate\":\"2026-11-20\",\"completedDates\":[\"2026-11-20\"]}"
+        }
+      ]
+    },
+    {
+      "name": "PWA: precache includes the hashed JS/CSS and solver worker",
+      "pass": true,
+      "details": {
+        "keys": [
+          "sliding-puzzle-v2.3"
+        ],
+        "cacheName": "sliding-puzzle-v2.3",
+        "urlCount": 33,
+        "hashed": [
+          "/assets/index-D_X6dEyZ.js",
+          "/assets/index-DozuOIe0.css"
+        ],
+        "workers": [
+          "/assets/solver.worker-CyubXBrk.js"
+        ],
+        "expectedAssets": [
+          "./assets/index-D_X6dEyZ.js",
+          "./assets/index-DozuOIe0.css",
+          "./assets/solver.worker-CyubXBrk.js"
+        ]
+      }
+    },
+    {
+      "name": "PWA: new page loads offline with the title screen",
+      "pass": true,
+      "details": {
+        "navigationError": null,
+        "titleVisible": true,
+        "rootChildren": 1,
+        "scriptFailures": []
+      }
+    },
+    {
+      "name": "PWA: online first load had no script/style failures",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "360x640: title has no horizontal overflow",
+      "pass": true,
+      "details": {
+        "scrollWidth": 360,
+        "innerWidth": 360
+      }
+    },
+    {
+      "name": "360x640: game and solution modal have no horizontal overflow",
+      "pass": true,
+      "details": {
+        "gameMetrics": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "boardWidth": 281.59375
+        },
+        "solutionMetrics": {
+          "scrollWidth": 360,
+          "innerWidth": 360
+        }
+      }
+    },
+    {
+      "name": "Focus: theme modal traps Tab and returns focus to the play button",
+      "pass": true,
+      "details": {
+        "focusInitiallyInside": true,
+        "focusStayedInside": true,
+        "focusReturned": true
+      }
+    },
+    {
+      "name": "Language: EN switch updates lang and persists after reload",
+      "pass": true,
+      "details": {
+        "langAfterSwitch": "en",
+        "buttonText": "Play Now (4×4)",
+        "langAfterReload": "en",
+        "selectValue": "en"
+      }
+    },
+    {
+      "name": "Core play: a normal 3x3 solve shows the win modal and saves a record",
+      "pass": true,
+      "details": {
+        "solveSteps": 24,
+        "winTitle": "퍼즐 완성! 축하합니다!",
+        "record": {
+          "bestTime": 3,
+          "bestMoves": 24,
+          "clearedAt": "2026-11-20T11:50:21.740Z"
+        },
+        "unlocked": [
+          "first_victory",
+          "speed_demon",
+          "purist_no_undo"
+        ],
+        "pageErrors": []
+      }
+    },
+    {
+      "name": "Core play: a normal 3x3 solve unlocks achievements",
+      "pass": true,
+      "details": {
+        "solveSteps": 24,
+        "winTitle": "퍼즐 완성! 축하합니다!",
+        "record": {
+          "bestTime": 3,
+          "bestMoves": 24,
+          "clearedAt": "2026-11-20T11:50:21.740Z"
+        },
+        "unlocked": [
+          "first_victory",
+          "speed_demon",
+          "purist_no_undo"
+        ],
+        "pageErrors": []
+      }
+    },
+    {
+      "name": "Core play: no page errors",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "scenarios": {
+    "standardReset": {
+      "board": {
+        "before": [
+          7,
+          3,
+          5,
+          4,
+          6,
+          0,
+          8,
+          2,
+          1
+        ],
+        "afterOpen": [
+          7,
+          3,
+          5,
+          4,
+          6,
+          0,
+          8,
+          2,
+          1
+        ],
+        "afterMoves": [
+          7,
+          3,
+          5,
+          4,
+          6,
+          0,
+          8,
+          2,
+          1
+        ]
+      },
+      "stats": {
+        "before": [
+          "0",
+          "00:00",
+          "-"
+        ],
+        "afterOpen": [
+          "0",
+          "00:00",
+          "-"
+        ],
+        "afterMoves": [
+          "2",
+          "00:02",
+          "-"
+        ]
+      },
+      "preview": {
+        "previewCount": 8,
+        "dialogCount": 1
+      },
+      "winModalVisible": false,
+      "records": null,
+      "achievements": null,
+      "daily": null,
+      "relevantWrites": {
+        "records": [],
+        "achievements": [],
+        "daily": []
+      },
+      "pageErrors": []
+    },
+    "timeAttack": {
+      "expiryWhilePreview": {
+        "solutionVisible": true,
+        "gameOverVisible": false,
+        "dialogs": 1
+      },
+      "gameOver": {
+        "visible": true,
+        "records": null,
+        "achievements": null,
+        "daily": null,
+        "writes": {
+          "records": [],
+          "daily": []
+        }
+      },
+      "gameOverSolution": {
+        "solutionVisible": true,
+        "gameOverVisible": false,
+        "records": null
+      },
+      "afterGameOverClose": {
+        "homeVisible": true,
+        "records": null,
+        "daily": null
+      },
+      "stats": {
+        "start": [
+          "0",
+          "00:45",
+          "-"
+        ],
+        "duringPreview": [
+          "0",
+          "00:43",
+          "-"
+        ],
+        "afterPreview": [
+          "0",
+          "00:43",
+          "-"
+        ]
+      },
+      "pageErrors": []
+    },
+    "moveLimit": {
+      "stats": {
+        "start": [
+          "35",
+          "00:00",
+          "-"
+        ],
+        "afterPreview": [
+          "35",
+          "00:00",
+          "-"
+        ],
+        "afterMove": [
+          "34",
+          "00:00",
+          "-"
+        ],
+        "afterSecondPreview": [
+          "34",
+          "00:00",
+          "-"
+        ]
+      },
+      "records": null,
+      "writes": {
+        "records": [],
+        "daily": []
+      }
+    },
+    "dailyAbandoned": {
+      "preview": {
+        "previewCount": 15,
+        "boardUnchanged": true,
+        "daily": null,
+        "writes": []
+      },
+      "abandonedCustomImage": {
+        "grid": 4,
+        "customBoard": [
+          1,
+          7,
+          5,
+          13,
+          2,
+          6,
+          12,
+          8,
+          11,
+          9,
+          4,
+          10,
+          0,
+          3,
+          15,
+          14
+        ],
+        "solveSteps": 81,
+        "winTitle": "퍼즐 완성! 축하합니다!",
+        "records": {
+          "3": null,
+          "4": {
+            "bestTime": 12,
+            "bestMoves": 81,
+            "clearedAt": "2026-11-20T11:49:34.052Z"
+          },
+          "5": null
+        },
+        "daily": null,
+        "customImageStored": true,
+        "writes": {
+          "records": [
+            {
+              "key": "sliding_puzzle_best_records",
+              "value": "{\"3\":null,\"4\":{\"bestTime\":12,\"bestMoves\":81,\"clearedAt\":\"2026-11-20T11:49:34.052Z\"},\"5\":null}"
+            }
+          ],
+          "daily": []
+        }
+      }
+    },
+    "dailyReplay": {
+      "first": {
+        "steps": 81,
+        "daily": {
+          "currentStreak": 1,
+          "maxStreak": 1,
+          "lastCompletedDate": "2026-11-20",
+          "completedDates": [
+            "2026-11-20"
+          ]
+        },
+        "writes": [
+          {
+            "key": "sliding_puzzle_daily_streak",
+            "value": "{\"currentStreak\":1,\"maxStreak\":1,\"lastCompletedDate\":\"2026-11-20\",\"completedDates\":[\"2026-11-20\"]}"
+          }
+        ]
+      },
+      "replay": {
+        "steps": 89,
+        "daily": {
+          "currentStreak": 1,
+          "maxStreak": 1,
+          "lastCompletedDate": "2026-11-20",
+          "completedDates": [
+            "2026-11-20"
+          ]
+        },
+        "writes": [
+          {
+            "key": "sliding_puzzle_daily_streak",
+            "value": "{\"currentStreak\":1,\"maxStreak\":1,\"lastCompletedDate\":\"2026-11-20\",\"completedDates\":[\"2026-11-20\"]}"
+          }
+        ]
+      },
+      "records": {
+        "3": null,
+        "4": {
+          "bestTime": 13,
+          "bestMoves": 81,
+          "clearedAt": "2026-11-20T11:49:47.730Z"
+        },
+        "5": null
+      }
+    },
+    "dailyMidnight": {
+      "startedAt": "2026-11-20T14:59:50.000Z",
+      "completedAt": "2026-11-20T15:00:10.000Z",
+      "startDate": "2026-11-20",
+      "endDate": "2026-11-21",
+      "solveSteps": 81,
+      "daily": {
+        "currentStreak": 1,
+        "maxStreak": 1,
+        "lastCompletedDate": "2026-11-20",
+        "completedDates": [
+          "2026-11-20"
+        ]
+      },
+      "writes": [
+        {
+          "key": "sliding_puzzle_daily_streak",
+          "value": "{\"currentStreak\":1,\"maxStreak\":1,\"lastCompletedDate\":\"2026-11-20\",\"completedDates\":[\"2026-11-20\"]}"
+        }
+      ]
+    },
+    "pwa": {
+      "cache": {
+        "keys": [
+          "sliding-puzzle-v2.3"
+        ],
+        "cacheName": "sliding-puzzle-v2.3",
+        "urlCount": 33,
+        "hashed": [
+          "/assets/index-D_X6dEyZ.js",
+          "/assets/index-DozuOIe0.css"
+        ],
+        "workers": [
+          "/assets/solver.worker-CyubXBrk.js"
+        ],
+        "expectedAssets": [
+          "./assets/index-D_X6dEyZ.js",
+          "./assets/index-DozuOIe0.css",
+          "./assets/solver.worker-CyubXBrk.js"
+        ]
+      },
+      "offline": {
+        "navigationError": null,
+        "titleVisible": true,
+        "rootChildren": 1,
+        "scriptFailures": []
+      }
+    },
+    "mobileFocus": {
+      "mobile": {
+        "titleMetrics": {
+          "scrollWidth": 360,
+          "innerWidth": 360
+        },
+        "gameMetrics": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "boardWidth": 281.59375
+        },
+        "solutionMetrics": {
+          "scrollWidth": 360,
+          "innerWidth": 360
+        },
+        "focusInitiallyInside": true,
+        "focusStayedInside": true,
+        "focusReturned": true
+      }
+    },
+    "language": {
+      "language": {
+        "langAfterSwitch": "en",
+        "buttonText": "Play Now (4×4)",
+        "langAfterReload": "en",
+        "selectValue": "en"
+      }
+    },
+    "core": {
+      "core": {
+        "solveSteps": 24,
+        "winTitle": "퍼즐 완성! 축하합니다!",
+        "record": {
+          "bestTime": 3,
+          "bestMoves": 24,
+          "clearedAt": "2026-11-20T11:50:21.740Z"
+        },
+        "unlocked": [
+          "first_victory",
+          "speed_demon",
+          "purist_no_undo"
+        ],
+        "pageErrors": []
+      }
+    }
+  },
+  "failures": [],
+  "verdict": "PASS"
+}
