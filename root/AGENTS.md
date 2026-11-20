@@ -95,9 +95,9 @@
   - `src/test/`: Vitest setup
   - `public/`: 테마 이미지·오디오·스프라이트·PWA manifest·sw.js·robots.txt
   - `scripts/`: 에셋 생성·가공용 Node 스크립트
-- 검증 기준: Vitest 29개 테스트 파일 전체 PASS + `npm run typecheck` 0 Errors + `npm run build` 성공 + Playwright E2E 4/4 PASS
-- 최근 검증 (2026-11-08): Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 4/4 PASS. 360×800·1280×800 1화면, 서브패스 PWA 오프라인·업데이트 배너, BGM 경량화·SW 프리캐시, 저장소 방어, 전 화면 심플·어반 UI, 360×640·360×800·1280×800 모달 5종 텍스트 줄바꿈·잘림 0건, 언어 select 32~34px·볼륨 슬라이더 32px·PWA CTA 44px 터치 타깃과 EN/JA/ZH 360×640 회귀를 확인함. 2026-11-08 최신 도구체인(React 19.3.1·Vite 8.3.6·Vitest 5.1.0·TypeScript 7.0.2·jsdom 31)으로 갱신 후 동일 검증과 `npm audit` 0건을 확인함.
+- 검증 기준: Vitest 32개 테스트 파일 전체 PASS + `npm run typecheck` 0 Errors + `npm run build` 성공 + Playwright E2E 8/8 PASS
+- 최근 검증 (2026-11-20): Vitest 32개 파일/203개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 8/8 PASS. 정답 보기 읽기 전용 모달(보드·타이머·이동 수 불변, GameOver 닫기 홈 복귀), Daily 시작 날짜·보드 키 완료 가드와 포기·자정·다시 플레이 회귀, Vite 해시 JS·CSS·solver worker 프리캐시 주입과 최초 설치 직후 오프라인 재로드를 확인함. 기존 360×800·1280×800 1화면, 서브패스 PWA, 저장소 방어, 심플·어반 UI, 모달 텍스트·터치 타깃 검증은 유지됨. 최신 도구체인(React 19.3.1·Vite 8.3.6·Vitest 5.1.0·TypeScript 7.0.2·jsdom 31)과 `npm audit` 0건도 유지됨.
 - 검증 환경: CI는 `.nvmrc`의 Node.js 26.13.0을 사용하고, 로컬 Node.js 26.13.0 / npm 12.2.2도 동일하게 지원함. WebStorm 번들 경로(`C:\Users\parkt\AppData\Roaming\JetBrains\WebStorm2026.3\node\versions\26.13.0`)는 PATH에 등록되지 않음. Node.js 26에서도 `src/test/setup.ts`가 jsdom Storage를 연결하므로 별도 `NODE_OPTIONS` 없이 `npm test`가 통과함.
 - CI: [.github/workflows/ci.yml](../.github/workflows/ci.yml) — Node.js 26.13.0 기준 test·typecheck·build·audit 후 Playwright Chromium E2E를 실행함.
-- 배포: `dist/` 정적 번들을 정적 호스팅에 배포함. 상세 절차는 [DEPLOYMENT.md](./DEPLOYMENT.md)를 따름. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원하고 `public/sw.js` v2.2가 HTML은 Network First(비정상 응답·오프라인 시 캐시 폴백), 정적 자산은 Cache First로 캐싱함. 프리캐시는 필수 셸·코어 UI·기본 테마 30건/1.31MB로 제한하고 현재 BGM·선택 테마는 첫 사용 시 런타임 캐시함. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 반영함. Vercel 프로젝트는 2026-11-08 기준 소유자가 의도적으로 pause한 상태이며 장애가 아님.
+- 배포: `dist/` 정적 번들을 정적 호스팅에 배포함. 상세 절차는 [DEPLOYMENT.md](./DEPLOYMENT.md)를 따름. `vite.config.ts`의 `base: './'`로 서브패스 배포를 지원하고 `public/sw.js` v2.3이 HTML은 Network First(비정상 응답·오프라인 시 캐시 폴백), 정적 자산은 Cache First(`ignoreVary`)로 캐싱함. 빌드 시 Vite 해시 JS·CSS·solver worker를 `dist/sw.js`에 자동 주입하고, 프리캐시는 셸·코어 UI·기본 테마·빌드 번들 33건/1.76MB로 유지하며 현재 BGM·선택 테마는 첫 사용 시 런타임 캐시함. 새 버전은 업데이트 배너에서 사용자가 선택할 때만 반영함. Vercel 프로젝트는 2026-11-08 기준 소유자가 의도적으로 pause한 상태이며 장애가 아님.
 - 저장소: https://github.com/NewplayerKOR/sliding-puzzle-web.git (main)

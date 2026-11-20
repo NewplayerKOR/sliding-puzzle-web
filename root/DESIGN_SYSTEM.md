@@ -349,3 +349,14 @@ npm run build
 - `npm run test:e2e`: Playwright Chromium 4/4 PASS.
 - Vite 6.4.5 대비 JS 번들은 360.80→380.38KB(gzip 112.12→118.88KB)로 증가했으나 기능·레이아웃 회귀는 확인되지 않음.
 - 미실행: 실제 모바일 실기기·Safari/Firefox·스크린리더, GitHub Actions 원격 실행, Vercel 재배포.
+
+### 6.7 TASK-DEV-29 정답 보기 모달 검증 (2026-11-20)
+
+- `npm test`: 32개 파일/203개 케이스 PASS. `npm run typecheck`: 0 Errors.
+- `npm run build`: Vite 8.3.6 프로덕션 빌드 성공(CSS 80.08KB/gzip 10.72KB, JS 383.07KB/gzip 119.48KB, solver worker 8.73KB).
+- `npm run test:e2e`: Playwright Chromium 8/8 PASS(정답 보기 3건 포함).
+- 모달 구조: `role="dialog"`, `aria-modal="true"`, 제목 연결, 아이콘 전용 닫기 버튼 `aria-label`, Tab 포커스 순환, Escape·오버레이 닫기, 배경 `inert`·`aria-hidden`.
+- 360×640: 콘텐츠 328×424px, 보드 294px, 닫기 44×44px, 가로 오버플로 0건. 360×800: 콘텐츠 328×424px, 보드 294px. 1280×800: 콘텐츠 420×524px, 보드 378px.
+- 숫자 모드와 이미지 모드 모두 정답 배치를 표시하고, 이미지 모드에서는 8개 이미지 슬라이스 위에 숫자 오버레이를 표시함. 미리보기 중 보드·타이머·이동 수는 변하지 않음.
+- 토큰: 배경 `--color-paper` `rgb(247,247,243)`, radius 8px, 1px 보더, 그림자 없음, 시스템 폰트 스택, `overscroll-behavior: contain`, `prefers-reduced-motion` 전역 규칙 적용.
+- 스크린샷·측정 원문: `root/archive/assets/task-dev-29/`의 숫자 모드 3건·이미지 모드 1건 WebP와 `metrics.json`, `verification.json`.

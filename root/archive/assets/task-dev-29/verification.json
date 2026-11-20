@@ -1,0 +1,43 @@
+{
+  "task": "TASK-DEV-29",
+  "before": {
+    "existingCheatPath": "3×3 Standard → 정답 보기(리셋) → 타일 8 밖으로 이동 → 1.3초 대기 → 타일 8 안으로 이동 시 2수·00:01 승리, bestTime 1·bestMoves 2, first_victory·speed_demon·purist_no_undo 저장",
+    "rootCause": "resetGame()이 정답 보드와 idle 상태를 만들고 isAutoSolved를 false로 유지해 이후 moveTile() 승리 판정과 App 후처리가 그대로 실행됨",
+    "regressionSuite": "구현 전 src/App.solution.test.tsx 8개 테스트가 모두 실패해 정답 보기 모달 부재와 기존 동작 차이를 확인함"
+  },
+  "after": {
+    "behavior": "정답 보기는 게임 보드·타이머·이동 수·Undo 기록을 바꾸지 않는 읽기 전용 모달로 동작함. GameOver 닫기는 홈 복귀로 변경",
+    "unit": {
+      "files": 32,
+      "tests": 203,
+      "passed": 203
+    },
+    "solutionRegression": {
+      "file": "src/App.solution.test.tsx",
+      "tests": 8,
+      "passed": 8
+    },
+    "e2e": {
+      "file": "e2e/solution-modal.spec.ts",
+      "tests": 3,
+      "passed": 3,
+      "viewports": ["360×640", "360×800", "1280×800"]
+    },
+    "modalMetrics": {
+      "closeButton": "44×44px",
+      "mobileContentWidth": 328,
+      "mobileBoardWidth": 294,
+      "desktopContentWidth": 420,
+      "horizontalOverflow": 0,
+      "focusTrap": "Tab 8회 순환 유지",
+      "escape": "모달 닫힘"
+    }
+  },
+  "evidence": [
+    "root/archive/assets/task-dev-29/metrics.json",
+    "root/archive/assets/task-dev-29/solution-360x640.webp",
+    "root/archive/assets/task-dev-29/solution-360x800.webp",
+    "root/archive/assets/task-dev-29/solution-1280x800.webp",
+    "root/archive/assets/task-dev-29/solution-image-360x640.webp"
+  ]
+}

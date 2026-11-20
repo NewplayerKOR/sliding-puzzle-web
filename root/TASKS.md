@@ -27,60 +27,6 @@
 
 ### [DEV]
 
-#### [ ] TASK-DEV-29 — 정답 보기(리셋) 승리·기록·일일 완료 무결성 수정
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P1
-- **목표**: `정답 보기(리셋)` 또는 GameOver의 해답 보기로 만든 정답 보드를 플레이해 승리·최고 기록·업적·일일 완료가 인정되는 경로를 제거한다.
-- **대상 파일**: `src/hooks/usePuzzleGame.ts`, `src/App.tsx`, 관련 테스트
-- **재현/증거**:
-  - 3×3 Standard → `정답 보기 (리셋)` → 타일 8을 밖으로 이동 → 1.3초 대기 → 타일 8을 안으로 이동 시 승리 모달(2수·00:01·3성), `bestTime: 1`·`bestMoves: 2` 기록, `first_victory`·`speed_demon`·`purist_no_undo` 업적이 저장됨.
-  - Daily 4×4에서 동일 재현 시 `currentStreak: 1`, `lastCompletedDate` 저장.
-  - `resetGame()`은 정답 보드와 `idle` 상태를 만들고 `isAutoSolved`를 false로 유지함(`src/hooks/usePuzzleGame.ts:198-209`). 이후 `moveTile()`의 승리 판정과 `App`의 후처리가 그대로 실행됨(`:284-288`, `src/App.tsx:358-397`). GameOver의 `onViewSolution`·`onClose`도 같은 함수를 호출함(`src/App.tsx:639-640`).
-- **DoD**:
-  - `정답 보기`는 읽기 전용 미리보기이거나, 새 셔플 전까지 승리·기록·업적·일일 저장이 발생하지 않도록 상태를 분리한다.
-  - Time Attack은 리셋으로 제한 시간을 초기화할 수 없고, Move Limit은 이동 수를 초기화할 수 없다.
-  - 정답 보기 후 2수 승리, GameOver 해답 보기 후 승리, Daily 정답 보기 후 완료가 모두 재현되지 않는 회귀 테스트를 추가한다.
-  - `npm test`, `npm run typecheck`, `npm run build` 결과와 변경 전·후 재현 결과를 기록한다.
-- **선행 조건**: 없음
-
-#### [ ] TASK-DEV-30 — PWA 최초 설치 오프라인 프리캐시 수정
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P1
-- **목표**: Vite가 생성한 해시 번들과 solver worker를 프리캐시해, 최초 설치 직후 오프라인에서도 앱 셸이 실행되게 한다.
-- **대상 파일**: `public/sw.js`, `vite.config.ts`, `src/utils/serviceWorkerScript.test.ts`, `e2e/`, 필요한 빌드 스크립트
-- **재현/증거**:
-  - 신규 BrowserContext에서 최초 방문 후 SW controller는 `true`였지만 `sliding-puzzle-v2.2` 캐시에 `dist/assets/index-*.js`와 `index-*.css`가 없었음.
-  - 오프라인 재로드 시 `#root` 자식 0개·본문 길이 0, JS/CSS 요청은 `net::ERR_FAILED`.
-  - 현재 SW 프리캐시는 정적 목록만 포함함(`public/sw.js:6-37`, `:40-56`). 서비스 워커 테스트도 목록 포함 여부만 확인함(`src/utils/serviceWorkerScript.test.ts:107-130`).
-- **DoD**:
-  - 최초 설치·최초 방문 직후 오프라인 재로드에서 타이틀 화면이 렌더링된다.
-  - 현재 빌드의 JS·CSS 해시 번들과 `solver.worker` 청크가 프리캐시에 포함된다.
-  - 업데이트 배너·캐시 정리 동작이 기존과 동일하게 유지된다.
-  - 최초 설치 오프라인 E2E와 서비스 워커 테스트를 추가하고 `npm test`, `npm run typecheck`, `npm run build`, `npx playwright test` 결과를 기록한다.
-- **선행 조건**: 없음
-
-#### [ ] TASK-DEV-31 — 일일 챌린지 활성 컨텍스트·날짜 무결성 수정
-
-- **Phase**: 01
-- **담당**: DEV
-- **우선순위**: P1
-- **목표**: Daily 완료를 실제 Daily 보드와 시작 날짜에만 연결하고, 홈 복귀·커스텀 이미지·다시 플레이에서 이전 Daily 상태가 남지 않게 한다.
-- **대상 파일**: `src/App.tsx`, `src/utils/dailyChallenge.ts`, 관련 테스트
-- **재현/증거**:
-  - Daily 시작 → 홈 복귀 → 타이틀에서 커스텀 사진 적용 → 해당 게임에서 승리 시, Daily 보드를 풀지 않았는데도 `currentStreak: 1`과 오늘 완료가 저장됨.
-  - 완료 저장은 승리 시점의 `getTodayDateString()`을 사용해, 자정을 넘겨 완료하면 다음 날짜의 Daily로 기록될 수 있음(`src/App.tsx:369-371`, 시작 날짜 `:411`).
-  - `handleStartDailyChallenge`는 `isDailyGameActive`를 true로 설정하지만 홈 복귀·커스텀 이미지 시작·WinModal의 `onPlayAgain`에서 해제하지 않음(`src/App.tsx:408-414`, `:446-450`, `:511-514`, `:654`).
-- **DoD**:
-  - `activeDaily: { date, boardKey }`처럼 시작 날짜와 보드 식별자를 보관하고, 완료 시 실제 보드가 일치할 때만 해당 시작 날짜로 저장한다.
-  - 홈 복귀·커스텀 이미지 적용·다시 플레이·새 게임에서 Daily 활성 상태를 해제한다.
-  - 자정 경계와 Daily를 포기한 뒤 다른 모드를 플레이하는 시나리오의 회귀 테스트를 추가한다.
-  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
-- **선행 조건**: 없음
-
 #### [ ] TASK-DEV-32 — AI 힌트 폴백·토스트 타이머 정리
 
 - **Phase**: 01
@@ -268,6 +214,21 @@
 
 ## 3. Recent Completions (최근 완료 요약)
 
+- **TASK-DEV-31** — 일일 챌린지 활성 컨텍스트·날짜 무결성 수정 (완료일: 2026-11-20)
+  - 핵심 결과: `activeDaily: { date, boardKey }`로 Daily 시작 날짜와 시작 보드를 함께 보관하고, 승리 시 `moveHistory[0]`의 boardKey가 일치할 때만 시작 날짜로 완료를 저장함. 홈 복귀·커스텀 이미지·새 게임·셔플·재도전·다시 플레이·다음 단계·그리드/모드 변경에서 Daily 활성 상태를 해제함
+  - 검증 범위: Vitest 32개 파일/203개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 8/8 PASS. Daily 포기 후 커스텀 이미지·일반 모드 승리 시 Daily 저장 없음(일반 기록은 저장), 23:59 시작·00:00 이후 승리 시 시작 날짜 저장, 다시 플레이 시 저장 함수 재호출 없음 확인. 실제 모바일 실기기·Safari/Firefox·스크린리더는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-31--일일-챌린지-활성-컨텍스트날짜-무결성-수정)
+
+- **TASK-DEV-30** — PWA 최초 설치 오프라인 프리캐시 수정 (완료일: 2026-11-20)
+  - 핵심 결과: Vite 빌드 플러그인이 현재 해시 JS·CSS·solver worker를 `dist/sw.js`의 `BUILD_ASSETS`에 주입하도록 하고 캐시를 v2.3으로 갱신함. crossorigin 번들의 `Vary: Origin` 캐시 불일치를 `ignoreVary` 매칭으로 보정하고, 정적 자산 Cache First·업데이트 배너 동작은 유지함
+  - 검증 범위: Vitest 32개 파일/203개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 8/8 PASS. 신규 BrowserContext 최초 방문 후 오프라인 재로드에서 타이틀 렌더링·`#root` 자식 1개·script/stylesheet 실패 0건, 캐시 v2.3/33건/1,846,566바이트 확인. 실제 모바일 실기기·Safari/Firefox·Vercel 재배포는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-30--pwa-최초-설치-오프라인-프리캐시-수정)
+
+- **TASK-DEV-29** — 정답 보기(리셋) 승리·기록·일일 완료 무결성 수정 (완료일: 2026-11-20)
+  - 핵심 결과: `정답 보기`를 게임 상태를 바꾸지 않는 읽기 전용 모달로 분리함. 보드·타이머·이동 수·Undo 기록을 유지하고, 정답 보기 후 2수 승리·GameOver 해답 보기 후 승리·Daily 정답 보기 후 완료가 발생하지 않음. GameOver를 닫으면 홈으로 복귀함
+  - 검증 범위: Vitest 32개 파일/203개 케이스 PASS(정답 보기 회귀 8건 포함), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 8/8 PASS(정답 모달 3건 포함). 360×640·360×800·1280×800 가로 오버플로 0건, 닫기 44×44px, Tab 포커스 순환·Escape 복귀 확인. 실제 모바일 실기기·Safari/Firefox·스크린리더는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-29--정답-보기리셋-승리기록일일-완료-무결성-수정)
+
 - **TASK-DEV-28** — 모바일 터치 타깃·PWA 배너 접근성 정비 (완료일: 2026-11-08)
   - 핵심 결과: 언어 선택 래퍼를 label로 바꾸고 select를 64×32px(타이틀)·64×34px(게임 헤더)로 확장해 래퍼 여백 클릭도 select 포커스로 연결함. BGM 볼륨 슬라이더는 시각 트랙 4px를 유지하면서 input 32px·thumb 16px로 확대하고, 자동 연동 체크박스를 24×24px로 맞춤. PWA 설치·업데이트 CTA와 닫기·나중에 버튼을 44px로 조정하고, 400px 이하 아이콘 전용 업데이트 버튼에 `aria-label`을 추가함. PWA 설치 배너는 설명 2줄·480px 이하 액션 행 분리로 전체 문구를 표시함
   - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 6.4.5 빌드 성공, Playwright E2E 4/4 PASS. 360×640·360×800·1280×800에서 select·슬라이더·PWA CTA 크기와 배너 오버플로를 측정했고, 24px 미만 타깃 0건, EN·JA·ZH 360×640 이슈 0건. 실제 모바일 실기기·Safari/Firefox·스크린리더·실제 설치/업데이트 이벤트는 미실행
@@ -278,23 +239,8 @@
   - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 6.4.5 빌드 성공, Playwright E2E 4/4 PASS. 360×640·360×800·1280×800 한국어 5개 모달에서 제목 1줄·단어 중간 줄바꿈 0건·가로 잘림 0건·패널/문서 오버플로 0건, EN·JA·ZH 360×640 15개 조합에서도 0건. 실제 모바일 실기기·Safari/Firefox·스크린리더는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-27--360px-모달-텍스트-줄바꿈잘림-정비)
 
-- **TASK-PM-05** — Node.js 요구사항·배포 문서 링크 정합화 (완료일: 2026-11-08)
-  - 핵심 결과: README·AGENTS의 Node/npm 요구사항을 `engines`·`.nvmrc`·CI 기준으로 맞추고, 기술 스택을 lockfile 버전(React 19.2.8·Vite 6.4.5 등)으로 갱신. `DEPLOYMENT.md`·CI·`robots.txt` 링크와 Vercel pause 상태를 문서에 연결
-  - 검증 범위: 문서 링크 누락 0건, Node 26.13.0에서 `npm test` 29개 파일/183개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 6.4.5 성공. GitHub Actions 원격 실행·Vercel 실제 배포·실기기 검증은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-pm-05--nodejs-요구사항배포-문서-링크-정합화)
-
-- **TASK-QA-09** — 심플·어반 UI/UX·가독성·시각 회귀 검증 (완료일: 2026-11-08)
-  - 핵심 결과: 360×640·360×800·1280×800에서 타이틀·게임·HUD·보드·8종 모달·Win/GameOver·토스트·PWA 배너를 검증함. 가로 오버플로·12px 미만 텍스트·그라데이션·blur·9999px pill·UI 이모지 0건, 모달 공통 평면 스타일·포커스 링·숫자 가독성·reduced motion 확인. 360px 모달 제목/카드명 줄바꿈·잘림과 언어 select·볼륨 슬라이더·PWA CTA 터치 타깃/업데이트 버튼 접근성 문제를 `TASK-DEV-27`·`TASK-DEV-28`로 발주함
-  - 검증 범위: Vitest 29개 파일/183개 케이스 PASS, tsc 0 Errors, Vite 빌드 성공, Playwright E2E 4/4 PASS, Lighthouse 8개 화면 접근성·Best Practices·SEO 1.0. P0 0/P1 0/P2 2. 실제 모바일 실기기·Safari/Firefox·스크린리더·OS 수준 reduced-motion은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-09--심플어반-uiux가독성시각-회귀-검증)
-
-- **TASK-QA-08** — CI/CD·테스트 환경·의존성·배포 문서 정비 (완료일: 2026-11-08)
-  - 핵심 결과: GitHub Actions CI(`quality`·`e2e`)와 Node 24 기준 `.nvmrc`·`engines`를 추가하고, Node 26에서도 수동 환경 변수 없이 `npm test`가 통과하도록 jsdom Storage setup을 보정함. `npm audit fix`로 Vite 6.4.5·Vitest 4.1.12·sharp 0.35.5 등을 갱신해 전체 취약점 0건을 달성하고, Playwright E2E 4개 시나리오·`robots.txt`·배포 절차 문서를 추가함. README/AGENTS 문서 정합화는 `TASK-PM-05`로 PM에 전달함
-  - 검증 범위: Node 24.15.0·26.13.0에서 `npm ci`·Vitest 29개 파일/183개 케이스 PASS·tsc 0 Errors·Vite 6.4.5 빌드 성공·Playwright 4/4 PASS, `npm audit` prod/전체 0건, CI YAML 파싱 성공. GitHub Actions 원격 실행·Vercel 실제 배포·실제 모바일 실기기는 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-08--cicd테스트-환경의존성배포-문서-정비)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-DEV-28 (모바일 터치 타깃·PWA 배너 접근성 정비), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-DEV-28 (모바일 터치 타깃·PWA 배너 접근성 정비), TASK-DEV-29 (정답 보기 읽기 전용 미리보기·기록 무결성), TASK-DEV-30 (PWA 최초 설치 오프라인 프리캐시), TASK-DEV-31 (Daily 활성 컨텍스트·시작 날짜 무결성), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)

@@ -1,0 +1,36 @@
+{
+  "task": "TASK-DEV-30",
+  "before": {
+    "cacheName": "sliding-puzzle-v2.2",
+    "precache": "정적 셸·UI·기본 테마 30건/1.31MB",
+    "missingBuildAssets": [
+      "assets/index-*.js",
+      "assets/index-*.css",
+      "assets/solver.worker-*.js"
+    ],
+    "firstInstallOffline": "#root 자식 0개·본문 길이 0, JS/CSS 요청 net::ERR_FAILED"
+  },
+  "after": {
+    "cacheName": "sliding-puzzle-v2.3",
+    "precacheCount": 33,
+    "totalBytes": 1846566,
+    "buildAssets": [
+      "/assets/index-D_X6dEyZ.js",
+      "/assets/index-DozuOIe0.css",
+      "/assets/solver.worker-CyubXBrk.js"
+    ],
+    "firstInstallOffline": "타이틀 화면 렌더링, #root 자식 1개, script/stylesheet requestfailed 0건",
+    "varyFix": "crossorigin 번들의 Vary: Origin 캐시 매칭 불일치를 caches.match(..., { ignoreVary: true })로 해결"
+  },
+  "tests": {
+    "swPrecache": "4 passed",
+    "serviceWorkerScript": "12 passed",
+    "playwrightOffline": "1 passed",
+    "fullE2E": "8 passed"
+  },
+  "evidence": [
+    "root/archive/assets/task-dev-30/offline-cache.json",
+    "root/archive/assets/task-dev-30/online-title.webp",
+    "root/archive/assets/task-dev-30/offline-title.webp"
+  ]
+}

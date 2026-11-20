@@ -1338,3 +1338,119 @@
   - 측정 원문: `root/archive/assets/task-dev-28/metrics.json`(한국어 15개 상태×뷰포트), `language-metrics.json`(EN·JA·ZH 360×640)
   - 소스: `src/components/Title/TitleScreen.tsx`, `TitleScreen.css`, `Header/Header.tsx`, `Header.css`, `Modal/BgmSelectModal.css`, `PWA/PwaInstallBanner.tsx`, `PwaInstallBanner.css`, `PWA/ServiceWorkerUpdateBanner.tsx`, `ServiceWorkerUpdateBanner.css`, `ServiceWorkerUpdateBanner.test.tsx`
 - **작업 상태**: `root/TASKS.md`의 TASK-DEV-28 완료 요약, `root/DESIGN_SYSTEM.md`의 포커스·터치 기준과 검증 결과 반영
+
+## TASK-DEV-29 — 정답 보기(리셋) 승리·기록·일일 완료 무결성 수정
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: `정답 보기(리셋)` 또는 GameOver의 해답 보기로 만든 정답 보드를 플레이해 승리·최고 기록·업적·일일 완료가 인정되는 경로를 제거한다.
+- **대상 파일**: `src/hooks/usePuzzleGame.ts`, `src/App.tsx`, 관련 테스트
+- **재현/증거**:
+  - 3×3 Standard → `정답 보기 (리셋)` → 타일 8을 밖으로 이동 → 1.3초 대기 → 타일 8을 안으로 이동 시 승리 모달(2수·00:01·3성), `bestTime: 1`·`bestMoves: 2` 기록, `first_victory`·`speed_demon`·`purist_no_undo` 업적이 저장됨.
+  - Daily 4×4에서 동일 재현 시 `currentStreak: 1`, `lastCompletedDate` 저장.
+  - `resetGame()`은 정답 보드와 `idle` 상태를 만들고 `isAutoSolved`를 false로 유지함(`src/hooks/usePuzzleGame.ts:198-209`). 이후 `moveTile()`의 승리 판정과 `App`의 후처리가 그대로 실행됨(`:284-288`, `src/App.tsx:358-397`). GameOver의 `onViewSolution`·`onClose`도 같은 함수를 호출함(`src/App.tsx:639-640`).
+- **DoD**:
+  - `정답 보기`는 읽기 전용 미리보기이거나, 새 셔플 전까지 승리·기록·업적·일일 저장이 발생하지 않도록 상태를 분리한다.
+  - Time Attack은 리셋으로 제한 시간을 초기화할 수 없고, Move Limit은 이동 수를 초기화할 수 없다.
+  - 정답 보기 후 2수 승리, GameOver 해답 보기 후 승리, Daily 정답 보기 후 완료가 모두 재현되지 않는 회귀 테스트를 추가한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과와 변경 전·후 재현 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - `정답 보기`를 게임 상태를 바꾸지 않는 읽기 전용 `SolutionModal`로 분리함. 완성 보드를 숫자/이미지 모드로 표시하고 타일을 움직일 수 없음.
+  - `Controls`의 `onReset`을 `onViewSolution`으로 바꾸고 버튼 라벨을 `t.checkSolution`으로 통일함. `resetBoard` 번역 키는 제거함.
+  - `App`에 `isSolutionOpen`을 추가하고 `isAnyModalOpen`에 포함함. GameOver의 해답 보기는 미리보기 모달을 열고, 미리보기 동안 GameOver를 숨김. GameOver의 `onClose`는 `resetGame()` 대신 홈 복귀(`handleReturnHome`)로 변경함.
+  - `resetGame()`은 게임을 완전히 떠날 때만 호출하도록 주석으로 명시함. 읽기 전용 모달은 훅 상태를 변경하지 않아 Time Attack 제한 시간·Move Limit 이동 수·Undo 기록이 유지됨.
+  - 접근성: `role="dialog"`, `aria-modal`, 제목 연결, 44×44px 닫기 버튼, Tab 포커스 순환, Escape·오버레이 닫기, `overscroll-behavior: contain`, `--text-word-break`, 기존 디자인 토큰과 `prefers-reduced-motion` 적용.
+  - 기존 `App.test.tsx`의 정답 보기 2수 승리 테스트는 버그를 고정한 테스트였으므로, 3×3 고정 보드의 정상 풀이로 승리 모달을 검증하는 테스트로 대체함. 기존 키보드 테스트의 reset 의존도 실제 movable 타일 기반으로 수정함.
+- **검증**:
+  - 변경 전: `src/App.solution.test.tsx` 8개 테스트가 모두 실패해 정답 보기 모달 부재와 기존 동작 차이를 확인함. 기존 코드의 정답 보기 2수 승리 경로는 기존 `App.test.tsx`에서 통과하고 있었음.
+  - `npm test`: 32개 파일/203개 케이스 PASS. 정답 보기 회귀 8건, 기존 App/keyboard 테스트 포함.
+  - `npm run typecheck`: 0 Errors.
+  - `npm run build`: Vite 8.3.6 성공. CSS 80.08KB(gzip 10.72KB), JS 383.07KB(gzip 119.48KB), solver worker 8.73KB.
+  - `npm run test:e2e`: Playwright Chromium 8/8 PASS. 정답 모달 E2E 3건 포함.
+  - 360×640·360×800·1280×800: 콘텐츠 328×424px/328×424px/420×524px, 보드 294/294/378px, 닫기 44×44px, 가로 오버플로 0건. Tab 8회 순환·Escape 복귀 확인.
+- **미실행**: 실제 모바일 실기기·Safari/Firefox·스크린리더 수동 검증, Vercel 재배포.
+- **증거**:
+  - `root/archive/assets/task-dev-29/metrics.json`
+  - `root/archive/assets/task-dev-29/solution-360x640.webp`, `solution-360x800.webp`, `solution-1280x800.webp`, `solution-image-360x640.webp`
+  - `root/archive/assets/task-dev-29/verification.json`
+  - 테스트: `src/App.solution.test.tsx`, `src/App.test.tsx`, `src/App.keyboard.test.tsx`, `e2e/solution-modal.spec.ts`
+  - 코드: `src/components/Modal/SolutionModal.tsx`, `SolutionModal.css`, `src/components/Controls/Controls.tsx`, `src/App.tsx`, `src/i18n/translations.ts`
+- **작업 상태**: `root/TASKS.md`의 TASK-DEV-29 완료 요약, `root/FEATURES.md`·`root/DESIGN_SYSTEM.md`·`root/AGENTS.md` 반영
+
+## TASK-DEV-30 — PWA 최초 설치 오프라인 프리캐시 수정
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: Vite가 생성한 해시 번들과 solver worker를 프리캐시해, 최초 설치 직후 오프라인에서도 앱 셸이 실행되게 한다.
+- **대상 파일**: `public/sw.js`, `vite.config.ts`, `src/utils/serviceWorkerScript.test.ts`, `e2e/`, 필요한 빌드 스크립트
+- **재현/증거**:
+  - 신규 BrowserContext에서 최초 방문 후 SW controller는 `true`였지만 `sliding-puzzle-v2.2` 캐시에 `dist/assets/index-*.js`와 `index-*.css`가 없었음.
+  - 오프라인 재로드 시 `#root` 자식 0개·본문 길이 0, JS/CSS 요청은 `net::ERR_FAILED`.
+  - 현재 SW 프리캐시는 정적 목록만 포함함(`public/sw.js:6-37`, `:40-56`). 서비스 워커 테스트도 목록 포함 여부만 확인함(`src/utils/serviceWorkerScript.test.ts:107-130`).
+- **DoD**:
+  - 최초 설치·최초 방문 직후 오프라인 재로드에서 타이틀 화면이 렌더링된다.
+  - 현재 빌드의 JS·CSS 해시 번들과 `solver.worker` 청크가 프리캐시에 포함된다.
+  - 업데이트 배너·캐시 정리 동작이 기존과 동일하게 유지된다.
+  - 최초 설치 오프라인 E2E와 서비스 워커 테스트를 추가하고 `npm test`, `npm run typecheck`, `npm run build`, `npx playwright test` 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - `public/sw.js` 캐시를 `sliding-puzzle-v2.3`으로 올리고 `BUILD_ASSETS` 마커를 `ASSETS_TO_CACHE`에 spread함.
+  - `src/utils/swPrecache.ts`에 `collectPrecacheAssets()`·`injectPrecacheAssets()`를 추가해 Vite 번들 루트의 JS·CSS·worker 청크만 수집하고 마커를 치환함.
+  - `vite.config.ts`에 build 전용 플러그인을 추가해 `generateBundle`에서 해시 파일명을 수집하고 `closeBundle`에서 `public/sw.js` 원문을 `dist/sw.js`로 주입함. Vite 8의 public 복사 이후 실행되는 것을 확인함.
+  - 첫 E2E에서 crossorigin 번들의 `Vary: Origin` 때문에 `caches.match(event.request)`가 빗나가 JS/CSS가 `net::ERR_FAILED`가 되는 문제를 발견해 `caches.match(event.request, { ignoreVary: true })`로 보정함.
+  - 업데이트 배너·`SKIP_WAITING`·구버전 캐시 정리 동작은 기존과 동일하게 유지함.
+- **검증**:
+  - 변경 전: v2.2 프리캐시 30건/1.31MB에 해시 JS·CSS·worker가 없어 오프라인 재로드 시 `#root` 자식 0개·JS/CSS 실패.
+  - `npm test`: 32개 파일/203개 케이스 PASS. `swPrecache` 4건, `serviceWorkerScript` 12건 포함.
+  - `npm run typecheck`: 0 Errors.
+  - `npm run build`: Vite 8.3.6 성공. `dist/sw.js` `BUILD_ASSETS`에 `index-D_X6dEyZ.js`, `index-DozuOIe0.css`, `solver.worker-CyubXBrk.js` 주입 확인.
+  - `npm run test:e2e`: Playwright Chromium 8/8 PASS. 신규 BrowserContext 최초 방문 후 오프라인 재로드에서 타이틀 렌더링, `#root` 자식 1개, script/stylesheet 실패 0건.
+  - 캐시 v2.3/33건/1,846,566바이트. 오프라인 캐시에 index JS·CSS·solver worker 포함.
+- **미실행**: 실제 모바일 실기기·Safari/Firefox의 SW 캐시 동작, Vercel 재배포, GitHub Actions 원격 실행.
+- **증거**:
+  - `root/archive/assets/task-dev-30/offline-cache.json`
+  - `root/archive/assets/task-dev-30/online-title.webp`, `offline-title.webp`
+  - `root/archive/assets/task-dev-30/verification.json`
+  - 테스트: `src/utils/swPrecache.test.ts`, `src/utils/serviceWorkerScript.test.ts`, `e2e/pwa-offline.spec.ts`
+  - 코드: `public/sw.js`, `vite.config.ts`, `src/utils/swPrecache.ts`
+- **작업 상태**: `root/TASKS.md`의 TASK-DEV-30 완료 요약, `root/FEATURES.md`·`root/AGENTS.md`·`root/DEPLOYMENT.md` 반영
+
+## TASK-DEV-31 — 일일 챌린지 활성 컨텍스트·날짜 무결성 수정
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: Daily 완료를 실제 Daily 보드와 시작 날짜에만 연결하고, 홈 복귀·커스텀 이미지·다시 플레이에서 이전 Daily 상태가 남지 않게 한다.
+- **대상 파일**: `src/App.tsx`, `src/utils/dailyChallenge.ts`, 관련 테스트
+- **재현/증거**:
+  - Daily 시작 → 홈 복귀 → 타이틀에서 커스텀 사진 적용 → 해당 게임에서 승리 시, Daily 보드를 풀지 않았는데도 `currentStreak: 1`과 오늘 완료가 저장됨.
+  - 완료 저장은 승리 시점의 `getTodayDateString()`을 사용해, 자정을 넘겨 완료하면 다음 날짜의 Daily로 기록될 수 있음(`src/App.tsx:369-371`, 시작 날짜 `:411`).
+  - `handleStartDailyChallenge`는 `isDailyGameActive`를 true로 설정하지만 홈 복귀·커스텀 이미지 시작·WinModal의 `onPlayAgain`에서 해제하지 않음(`src/App.tsx:408-414`, `:446-450`, `:511-514`, `:654`).
+- **DoD**:
+  - `activeDaily: { date, boardKey }`처럼 시작 날짜와 보드 식별자를 보관하고, 완료 시 실제 보드가 일치할 때만 해당 시작 날짜로 저장한다.
+  - 홈 복귀·커스텀 이미지 적용·다시 플레이·새 게임에서 Daily 활성 상태를 해제한다.
+  - 자정 경계와 Daily를 포기한 뒤 다른 모드를 플레이하는 시나리오의 회귀 테스트를 추가한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
+- **진행 결과**:
+  - `ActiveDailyChallenge { date, boardKey }`와 `createBoardKey(board)`를 추가함.
+  - `App`의 `isDailyGameActive` boolean을 `activeDaily` 객체로 교체함. Daily 시작 시 날짜와 초기 보드 key를 저장하고, 승리 시 `moveHistory[0]`의 key가 일치할 때만 `saveDailyCompletion(activeDaily.date)`를 호출함.
+  - 홈 복귀·커스텀 이미지 적용·새 게임/셔플·재도전·다시 플레이·다음 단계·그리드 크기 변경·챌린지 모드 변경에서 `activeDaily`를 해제함. 테마 변경은 보드를 바꾸지 않으므로 유지함.
+  - 4×4 Daily 테스트는 `generateDailyBoard`·`shuffleBoard`를 2수 풀이 가능한 고정 보드로 모킹해 BFS 비용 없이 검증함.
+- **검증**:
+  - `npm test`: 32개 파일/203개 케이스 PASS. `src/App.daily.test.tsx` 4건, `dailyChallenge` `createBoardKey` 2건 포함.
+  - `npm run typecheck`: 0 Errors.
+  - `npm run build`: Vite 8.3.6 성공.
+  - `npm run test:e2e`: Playwright Chromium 8/8 PASS.
+  - Daily 포기 → 홈 → 커스텀 이미지 4×4 승리: Daily 저장 없음, 일반 4×4 최고 기록 저장. Daily 포기 → 일반 3×3 승리: Daily 저장 없음.
+  - 23:59 시작 → 00:00 이후 승리: `lastCompletedDate` 2026-11-20, `completedDates` 2026-11-20만 포함, 2026-11-21 미포함, `currentStreak: 1`.
+  - Daily 승리 → 다시 플레이 → 재승리: `saveDailyCompletion` 호출 1회 유지.
+- **미실행**: 실제 모바일 실기기·Safari/Firefox·스크린리더, Vercel 재배포.
+- **증거**:
+  - `root/archive/assets/task-dev-31/verification.json`
+  - 테스트: `src/App.daily.test.tsx`, `src/utils/dailyChallenge.test.ts`
+  - 코드: `src/App.tsx`, `src/utils/dailyChallenge.ts`
+- **작업 상태**: `root/TASKS.md`의 TASK-DEV-31 완료 요약, `root/FEATURES.md` 반영

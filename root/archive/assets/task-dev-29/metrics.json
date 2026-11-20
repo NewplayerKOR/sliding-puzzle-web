@@ -1,0 +1,59 @@
+{
+  "360x640": {
+    "scrollWidth": 360,
+    "innerWidth": 360,
+    "content": {
+      "left": 16,
+      "top": 112,
+      "right": 344,
+      "bottom": 536,
+      "width": 328,
+      "height": 424
+    },
+    "boardWidth": 294,
+    "tileCount": 8,
+    "closeWidth": 44,
+    "closeHeight": 44,
+    "background": "rgb(247, 247, 243)",
+    "borderRadius": "8px",
+    "fontFamily": "system-ui, -apple-system, \"Segoe UI\", \"Malgun Gothic\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+  },
+  "360x800": {
+    "scrollWidth": 360,
+    "innerWidth": 360,
+    "content": {
+      "left": 16,
+      "top": 192,
+      "right": 344,
+      "bottom": 616,
+      "width": 328,
+      "height": 424
+    },
+    "boardWidth": 294,
+    "tileCount": 8,
+    "closeWidth": 44,
+    "closeHeight": 44,
+    "background": "rgb(247, 247, 243)",
+    "borderRadius": "8px",
+    "fontFamily": "system-ui, -apple-system, \"Segoe UI\", \"Malgun Gothic\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+  },
+  "1280x800": {
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "content": {
+      "left": 430,
+      "top": 142,
+      "right": 850,
+      "bottom": 666,
+      "width": 420,
+      "height": 524
+    },
+    "boardWidth": 378,
+    "tileCount": 8,
+    "closeWidth": 44,
+    "closeHeight": 44,
+    "background": "rgb(247, 247, 243)",
+    "borderRadius": "8px",
+    "fontFamily": "system-ui, -apple-system, \"Segoe UI\", \"Malgun Gothic\", \"Apple SD Gothic Neo\", \"Noto Sans KR\", sans-serif"
+  }
+}

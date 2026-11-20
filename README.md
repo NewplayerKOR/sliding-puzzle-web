@@ -125,17 +125,18 @@ src/
 
 ## 5. 테스트 및 검증
 
-2026-11-08 기준 결과입니다.
+2026-11-20 기준 결과입니다.
 
 | 항목 | 결과 |
 | :--- | :--- |
-| 유닛·통합 테스트 | **29개 파일 / 183개 케이스 PASS** |
+| 유닛·통합 테스트 | **32개 파일 / 203개 케이스 PASS** |
 | 타입 검사 | **0 Errors** |
 | 프로덕션 빌드 | **Vite 8.3.6 성공** |
-| E2E | **Playwright Chromium 4/4 PASS** |
+| E2E | **Playwright Chromium 8/8 PASS** |
 | Lighthouse | 8개 화면 접근성·Best Practices·SEO **1.0** |
 
 - Node.js 26.13.0에서도 별도 `NODE_OPTIONS` 없이 `npm test`가 통과합니다.
+- PWA 최초 설치 직후 오프라인 재로드에서 타이틀 화면이 표시되는 경로를 Chromium E2E로 확인했습니다.
 - 실제 모바일 실기기·Safari/Firefox·스크린리더 검증은 수행하지 않았습니다.
 
 ---
