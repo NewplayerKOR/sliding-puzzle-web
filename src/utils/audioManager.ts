@@ -473,6 +473,10 @@ class AudioManager {
   public setAutoThemeBgm(enabled: boolean): void {
     this.config.autoThemeBgm = enabled;
     this.saveSettings();
+    // 켜는 즉시 현재 테마의 권장 BGM으로 전환해 UI 문구와 동작을 일치시킴
+    if (enabled) {
+      this.syncThemeBgm(this.currentThemeId);
+    }
   }
 
   public toggleBgmMute(): boolean {
@@ -552,7 +556,8 @@ class AudioManager {
   private synthesizeThemeMove(ctx: AudioContext, theme: string, pitch: number): void {
     const t0 = ctx.currentTime;
     const masterGain = ctx.createGain();
-    masterGain.gain.setValueAtTime(this.config.sfxVolume, t0);
+    // 개별 gain에만 sfxVolume을 적용해 Web Audio와 HTMLAudio의 음량 스케일을 한 번으로 맞춤
+    masterGain.gain.setValueAtTime(1, t0);
     masterGain.connect(ctx.destination);
 
     if (theme === 'pixel_art') {

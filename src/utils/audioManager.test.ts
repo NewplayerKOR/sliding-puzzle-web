@@ -141,6 +141,45 @@ describe('AudioManager Unit Tests', () => {
     expect(audioManager.getConfig().currentBgmTrackId).toBe('jazz');
   });
 
+  it('switches to the current theme recommendation immediately when autoThemeBgm is enabled', () => {
+    audioManager.setAutoThemeBgm(false);
+    audioManager.setCurrentTheme('pixel_art');
+    audioManager.switchBgm('chill');
+
+    audioManager.setAutoThemeBgm(true);
+
+    expect(audioManager.getConfig().autoThemeBgm).toBe(true);
+    expect(audioManager.getConfig().currentBgmTrackId).toBe('synth');
+
+    audioManager.setAutoThemeBgm(false);
+  });
+
+  it('applies SFX volume once in Web Audio synthesis instead of squaring it', () => {
+    const mockCtx = createMockAudioContext();
+    audioManager.setAudioContextForTesting(mockCtx as unknown as AudioContext);
+    audioManager.setSfxVolume(0.5);
+    if (audioManager.getConfig().sfxMuted) audioManager.toggleSfxMute();
+
+    audioManager.playThemeMoveSfx('abstract', 1);
+
+    const gainNodes = mockCtx.createGain.mock.results.map(
+      (result) => (result.value as { gain: { setValueAtTime: ReturnType<typeof vi.fn>; linearRampToValueAtTime: ReturnType<typeof vi.fn> } }).gain
+    );
+    const setValues = gainNodes.flatMap((gain) =>
+      gain.setValueAtTime.mock.calls.map((call) => call[0] as number)
+    );
+    const ramps = gainNodes.flatMap((gain) =>
+      gain.linearRampToValueAtTime.mock.calls.map((call) => call[0] as number)
+    );
+
+    expect(setValues).toContain(1);
+    expect(setValues).not.toContain(0.5);
+    expect(ramps).toContain(0.425);
+    expect(ramps).not.toContain(0.2125);
+
+    audioManager.setSfxVolume(0.8);
+  });
+
   describe('TASK-DEV-13: Combo Pitch System & Theme SFX Synthesis', () => {
     it('calculates accurate combo pitch multipliers up to MAX_COMBO', () => {
       expect(getComboPitchMultiplier(0)).toBe(1.0);

@@ -42,6 +42,20 @@ describe('BgmSelectModal Component', () => {
     expect(audioManager.getConfig().currentBgmTrackId).toBe('zen');
   });
 
+  it('switches to the current theme recommendation immediately when auto-sync is enabled', () => {
+    audioManager.setAutoThemeBgm(false);
+    audioManager.setCurrentTheme('pixel_art');
+    audioManager.switchBgm('chill');
+    render(<BgmSelectModal isOpen={true} onClose={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole('checkbox'));
+
+    expect(audioManager.getConfig().autoThemeBgm).toBe(true);
+    expect(audioManager.getConfig().currentBgmTrackId).toBe('synth');
+
+    audioManager.setAutoThemeBgm(false);
+  });
+
   it('toggles BGM mute and adjusts volume sliders', () => {
     const handleClose = vi.fn();
     render(<BgmSelectModal isOpen={true} onClose={handleClose} />);
