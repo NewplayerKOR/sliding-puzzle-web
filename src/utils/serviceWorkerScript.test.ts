@@ -45,7 +45,7 @@ function createHarness(options: HarnessOptions = {}) {
 
   const caches = {
     open: vi.fn(async () => cache),
-    keys: vi.fn(async () => ['sliding-puzzle-v2.1', 'sliding-puzzle-v2.2']),
+    keys: vi.fn(async () => ['sliding-puzzle-v2.2', 'sliding-puzzle-v2.3']),
     delete: vi.fn(async () => true),
     match: vi.fn(async (key: string | { url: string }) => {
       const url = typeof key === 'string' ? key : key.url;
@@ -129,6 +129,12 @@ describe('public/sw.js', () => {
     expect(harness.skipWaiting).not.toHaveBeenCalled();
   });
 
+  it('keeps the build asset injection marker and current cache version', () => {
+    expect(swSource).toContain('const BUILD_ASSETS = [];');
+    expect(swSource).toContain('...BUILD_ASSETS');
+    expect(swSource).toContain("const CACHE_NAME = 'sliding-puzzle-v2.3';");
+  });
+
   it('caches assets individually when addAll rejects', async () => {
     const harness = createHarness({ addAllFails: true });
 
@@ -154,8 +160,8 @@ describe('public/sw.js', () => {
 
     await harness.dispatch('activate');
 
-    expect(harness.caches.delete).toHaveBeenCalledWith('sliding-puzzle-v2.1');
-    expect(harness.caches.delete).not.toHaveBeenCalledWith('sliding-puzzle-v2.2');
+    expect(harness.caches.delete).toHaveBeenCalledWith('sliding-puzzle-v2.2');
+    expect(harness.caches.delete).not.toHaveBeenCalledWith('sliding-puzzle-v2.3');
     expect(harness.claim).toHaveBeenCalledTimes(1);
   });
 
@@ -227,6 +233,23 @@ describe('public/sw.js', () => {
     expect(response).toBe(networkResponse);
     expect(harness.cacheStore.get('https://example.com/sub/')).toBe(networkResponse);
     expect(harness.cacheStore.get(INDEX_URL)).toBe(networkResponse);
+  });
+
+  it('static assets are matched with ignoreVary for crossorigin bundles', async () => {
+    const harness = createHarness({
+      fetchImpl: async () => ({ ok: true, status: 200, clone() { return this; } }),
+    });
+    const request = {
+      method: 'GET',
+      url: 'https://example.com/sub/assets/index-abc.js',
+      headers: { get: () => null },
+      mode: 'cors',
+      destination: 'script',
+    };
+
+    await harness.dispatch('fetch', { request });
+
+    expect(harness.caches.match).toHaveBeenCalledWith(request, { ignoreVary: true });
   });
 
   it('returns a network error when offline and nothing is cached', async () => {

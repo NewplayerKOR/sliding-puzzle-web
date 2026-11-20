@@ -1,9 +1,12 @@
-const CACHE_NAME = 'sliding-puzzle-v2.2';
+const CACHE_NAME = 'sliding-puzzle-v2.3';
+// Vite 빌드 시 해시된 엔트리 JS·CSS·solver worker 목록으로 치환됨
+const BUILD_ASSETS = [];
 // 서브패스 배포에서도 동작하도록 SW 위치 기준으로 셸 URL을 계산함
 const INDEX_URL = new URL('./index.html', self.location.href).href;
 // 필수 셸·코어 UI 자산·기본 테마만 프리캐시함.
 // 현재 BGM과 나머지 테마 이미지는 첫 사용 시 런타임 캐시에 저장함.
 const ASSETS_TO_CACHE = [
+  ...BUILD_ASSETS,
   './',
   './index.html',
   './manifest.webmanifest',
@@ -145,8 +148,9 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Cache First Strategy for Static Assets (Images, Sounds, JS/CSS bundles)
+  // crossorigin 번들의 Vary: Origin 불일치로 캐시 매칭이 빗나가지 않도록 ignoreVary를 사용함
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
+    caches.match(event.request, { ignoreVary: true }).then((cachedResponse) => {
       if (cachedResponse) {
         return cachedResponse;
       }
