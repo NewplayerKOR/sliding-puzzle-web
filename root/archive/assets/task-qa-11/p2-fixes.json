@@ -1,0 +1,467 @@
+{
+  "task": "TASK-QA-11",
+  "part": "P2 fixes",
+  "generatedAt": "2026-11-20T12:48:44.289Z",
+  "baseUrl": "http://127.0.0.1:4173/",
+  "checks": [
+    {
+      "name": "AI fallback: hint appears without a Worker",
+      "pass": true,
+      "details": {
+        "hintCount": 1,
+        "calculating": false,
+        "toast": null
+      }
+    },
+    {
+      "name": "AI fallback: hint survives beyond the old 5s timeout",
+      "pass": true,
+      "details": {
+        "hintCount": 1,
+        "calculating": false,
+        "toast": null,
+        "buttonText": "AI 힌트"
+      }
+    },
+    {
+      "name": "AI fallback: hint clears when the board changes",
+      "pass": true,
+      "details": {
+        "hintCount": 0,
+        "moves": "1"
+      }
+    },
+    {
+      "name": "AI fallback: no page errors",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "Modal scroll: background is locked and marked inert",
+      "pass": true,
+      "details": {
+        "scrollY": 0,
+        "overflow": "hidden",
+        "paddingRight": "",
+        "appInert": true,
+        "appHidden": "true",
+        "overscroll": "contain"
+      }
+    },
+    {
+      "name": "Modal scroll: wheel/PageDown do not move the document",
+      "pass": true,
+      "details": {
+        "scrollY": 0,
+        "overflow": "hidden"
+      }
+    },
+    {
+      "name": "Modal scroll: overflow is restored after closing",
+      "pass": true,
+      "details": {
+        "overflow": "",
+        "paddingRight": "",
+        "appInert": false,
+        "appHidden": null
+      }
+    },
+    {
+      "name": "Modal scroll: overlay uses overscroll-behavior contain",
+      "pass": true,
+      "details": {
+        "scrollY": 0,
+        "overflow": "hidden",
+        "paddingRight": "",
+        "appInert": true,
+        "appHidden": "true",
+        "overscroll": "contain"
+      }
+    },
+    {
+      "name": "Modal focus: Tab stays inside and Escape returns focus",
+      "pass": true,
+      "details": {
+        "focusStayedInside": true,
+        "focusReturned": true
+      }
+    },
+    {
+      "name": "Modal stacking: expiry closes BGM and shows one GameOver dialog",
+      "pass": true,
+      "details": {
+        "bgmVisible": false,
+        "gameOverVisible": true,
+        "solutionVisible": false,
+        "dialogCount": 1,
+        "overflow": "hidden"
+      }
+    },
+    {
+      "name": "Modal stacking: closing GameOver returns home and unlocks scroll",
+      "pass": true,
+      "details": {
+        "overflow": "",
+        "titleVisible": true
+      }
+    },
+    {
+      "name": "Custom image: keyboard pan changes the crop canvas",
+      "pass": true,
+      "details": {
+        "changed": true,
+        "activeClass": "canvas-viewport",
+        "tabIndex": "0"
+      }
+    },
+    {
+      "name": "Custom image: normal apply stores and renders the image",
+      "pass": true,
+      "details": {
+        "stored": "data:image/png;base64,",
+        "dataTiles": 8
+      }
+    },
+    {
+      "name": "Custom image: theme change clears storage and tiles",
+      "pass": true,
+      "details": {
+        "stored": null,
+        "dataTiles": 0
+      }
+    },
+    {
+      "name": "Custom image: reopening after external clear shows the dropzone",
+      "pass": true,
+      "details": {
+        "cropper": false,
+        "dropzone": true
+      }
+    },
+    {
+      "name": "Custom image: corrupt data URL shows an error and disables apply",
+      "pass": true,
+      "details": {
+        "cropper": true,
+        "error": "이미지를 불러오지 못했습니다. 다른 파일을 선택해 주세요.",
+        "applyDisabled": true
+      }
+    },
+    {
+      "name": "Confetti: win shows a celebration canvas",
+      "pass": true,
+      "details": {
+        "fixedCanvases": 1,
+        "winVisible": true
+      }
+    },
+    {
+      "name": "Share: AbortError does not fall back or show a toast",
+      "pass": true,
+      "details": {
+        "calls": 1,
+        "clipboard": 0,
+        "anchors": 0,
+        "mode": "abort",
+        "toast": null
+      }
+    },
+    {
+      "name": "Share: real failure falls back to download",
+      "pass": true,
+      "details": {
+        "calls": 1,
+        "clipboard": 1,
+        "anchors": 1,
+        "mode": "fail"
+      }
+    },
+    {
+      "name": "Toast: fallback toast stays 3 seconds and then disappears",
+      "pass": true,
+      "details": {
+        "toastText": "결과 카드가 이미지 파일로 다운로드되었습니다!",
+        "toastAt2500": true,
+        "toastAt3600": false
+      }
+    },
+    {
+      "name": "Win modal: Escape does not dismiss the completion state",
+      "pass": true,
+      "details": {}
+    },
+    {
+      "name": "Confetti: retry removes the fixed canvas and loop",
+      "pass": true,
+      "details": {
+        "fixedCanvases": 0,
+        "winVisible": false
+      }
+    },
+    {
+      "name": "Share/confetti: no page errors",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "Audio: master gain stays at 1",
+      "pass": true,
+      "details": {
+        "setValues": [
+          1,
+          0.001
+        ],
+        "ramps": [
+          0.425,
+          0.001
+        ],
+        "gains": 2
+      }
+    },
+    {
+      "name": "Audio: sfx volume is applied once (0.425, not 0.2125)",
+      "pass": true,
+      "details": {
+        "setValues": [
+          1,
+          0.001
+        ],
+        "ramps": [
+          0.425,
+          0.001
+        ],
+        "gains": 2
+      }
+    },
+    {
+      "name": "BGM: enabling auto-sync immediately selects the theme recommendation",
+      "pass": true,
+      "details": {
+        "initial": {
+          "track": null,
+          "auto": null
+        },
+        "initialChecked": true,
+        "afterToggle": {
+          "track": "zen",
+          "auto": "true",
+          "selected": "Zen Nature자연 / 앰비언트맑은 자연의 숨결과 평온한 명상 앰비언스재생 중"
+        }
+      }
+    },
+    {
+      "name": "BGM: changing the theme with auto-sync selects the new recommendation",
+      "pass": true,
+      "details": {
+        "afterTheme": {
+          "track": "synth",
+          "theme": null
+        },
+        "selected": "Cyber Synth\n신스웨이브 / 일렉트로\n\n미래적인 신시사이저와 레트로 사이버네틱 리듬\n\n재생 중"
+      }
+    },
+    {
+      "name": "Time Attack: a move after the limit is rejected and ends the game",
+      "pass": true,
+      "details": {
+        "winVisible": false,
+        "gameOverVisible": true,
+        "moves": "17",
+        "timer": "00:00",
+        "records": null
+      }
+    },
+    {
+      "name": "Time Attack: the rejected move does not increment moves or save a record",
+      "pass": true,
+      "details": {
+        "movesBefore": "17",
+        "resultState": {
+          "winVisible": false,
+          "gameOverVisible": true,
+          "moves": "17",
+          "timer": "00:00",
+          "records": null
+        }
+      }
+    }
+  ],
+  "scenarios": {
+    "aiFallback": {
+      "initial": {
+        "hintCount": 1,
+        "calculating": false,
+        "toast": null
+      },
+      "later": {
+        "hintCount": 1,
+        "calculating": false,
+        "toast": null,
+        "buttonText": "AI 힌트"
+      },
+      "afterMove": {
+        "hintCount": 0,
+        "moves": "1"
+      },
+      "pageErrors": []
+    },
+    "modalScroll": {
+      "mobile": {
+        "before": {
+          "scrollY": 0,
+          "overflow": "hidden",
+          "paddingRight": "",
+          "appInert": true,
+          "appHidden": "true",
+          "overscroll": "contain"
+        },
+        "during": {
+          "scrollY": 0,
+          "overflow": "hidden"
+        },
+        "after": {
+          "overflow": "",
+          "paddingRight": "",
+          "appInert": false,
+          "appHidden": null
+        }
+      },
+      "desktopFocus": {
+        "focusStayedInside": true,
+        "focusReturned": true
+      }
+    },
+    "modalStacking": {
+      "stacking": {
+        "stacking": {
+          "bgmVisible": false,
+          "gameOverVisible": true,
+          "solutionVisible": false,
+          "dialogCount": 1,
+          "overflow": "hidden"
+        },
+        "afterStack": {
+          "overflow": "",
+          "titleVisible": true
+        }
+      }
+    },
+    "customImage": {
+      "applied": {
+        "stored": "data:image/png;base64,",
+        "dataTiles": 8
+      },
+      "afterTheme": {
+        "stored": null,
+        "dataTiles": 0
+      },
+      "reopen": {
+        "cropper": false,
+        "dropzone": true
+      },
+      "keyboardPan": {
+        "changed": true,
+        "activeClass": "canvas-viewport",
+        "tabIndex": "0"
+      },
+      "corrupt": {
+        "cropper": true,
+        "error": "이미지를 불러오지 못했습니다. 다른 파일을 선택해 주세요.",
+        "applyDisabled": true
+      }
+    },
+    "shareConfetti": {
+      "beforeRetry": {
+        "fixedCanvases": 1,
+        "winVisible": true
+      },
+      "abort": {
+        "calls": 1,
+        "clipboard": 0,
+        "anchors": 0,
+        "mode": "abort",
+        "toast": null
+      },
+      "fallback": {
+        "calls": 1,
+        "clipboard": 1,
+        "anchors": 1,
+        "mode": "fail",
+        "toastText": "결과 카드가 이미지 파일로 다운로드되었습니다!",
+        "visibleAt2500": true,
+        "visibleAt3600": false
+      },
+      "escapeKeepsWin": true,
+      "afterRetry": {
+        "fixedCanvases": 0,
+        "winVisible": false
+      },
+      "pageErrors": []
+    },
+    "audio": {
+      "audio": {
+        "setValues": [
+          1,
+          0.001
+        ],
+        "ramps": [
+          0.425,
+          0.001
+        ],
+        "gains": 2
+      },
+      "theme": null
+    },
+    "bgm": {
+      "bgm": {
+        "initial": {
+          "track": null,
+          "auto": null
+        },
+        "initialChecked": true,
+        "afterToggle": {
+          "track": "zen",
+          "auto": "true",
+          "selected": "Zen Nature자연 / 앰비언트맑은 자연의 숨결과 평온한 명상 앰비언스재생 중"
+        },
+        "afterTheme": {
+          "track": "synth",
+          "theme": null
+        },
+        "selected": "Cyber Synth\n신스웨이브 / 일렉트로\n\n미래적인 신시사이저와 레트로 사이버네틱 리듬\n\n재생 중"
+      }
+    },
+    "timeAttackGate": {
+      "nearWin": {
+        "steps": 17,
+        "board": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          0,
+          8
+        ],
+        "finalMove": {
+          "tileValue": 8,
+          "tileIndex": 8,
+          "direction": "left"
+        },
+        "movesBeforeFinal": 17
+      },
+      "movesBefore": "17",
+      "result": {
+        "winVisible": false,
+        "gameOverVisible": true,
+        "moves": "17",
+        "timer": "00:00",
+        "records": null
+      }
+    }
+  },
+  "failures": [],
+  "verdict": "PASS"
+}

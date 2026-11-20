@@ -1,0 +1,573 @@
+{
+  "task": "TASK-QA-11",
+  "part": "PWA branding precache install update offline",
+  "generatedAt": "2026-11-20T12:51:00.676Z",
+  "baseUrl": "http://127.0.0.1:4173/",
+  "checks": [
+    {
+      "name": "PWA branding: manifest uses current colors and no orientation lock",
+      "pass": true,
+      "details": {
+        "background": "#EFEFEA",
+        "theme": "#BB3E0B",
+        "orientation": null,
+        "icons": [
+          {
+            "src": "./assets/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "./assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "./assets/icons/icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+          },
+          {
+            "src": "./assets/icons/icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+          }
+        ],
+        "themeMeta": "#EFEFEA"
+      }
+    },
+    {
+      "name": "PWA branding: browser theme-color matches the manifest",
+      "pass": true,
+      "details": {
+        "background": "#EFEFEA",
+        "theme": "#BB3E0B",
+        "orientation": null,
+        "icons": [
+          {
+            "src": "./assets/icons/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "./assets/icons/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "./assets/icons/icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+          },
+          {
+            "src": "./assets/icons/icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+          }
+        ],
+        "themeMeta": "#EFEFEA"
+      }
+    },
+    {
+      "name": "PWA branding: all icons have the expected dimensions",
+      "pass": true,
+      "details": [
+        {
+          "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\icon-192.png",
+          "width": 192,
+          "height": 192,
+          "expected": 192
+        },
+        {
+          "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\icon-512.png",
+          "width": 512,
+          "height": 512,
+          "expected": 512
+        },
+        {
+          "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\icon-maskable-192.png",
+          "width": 192,
+          "height": 192,
+          "expected": 192
+        },
+        {
+          "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\icon-maskable-512.png",
+          "width": 512,
+          "height": 512,
+          "expected": 512
+        },
+        {
+          "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\apple-touch-icon.png",
+          "width": 180,
+          "height": 180,
+          "expected": 180
+        }
+      ]
+    },
+    {
+      "name": "PWA branding: icons use the current neutral/signal palette",
+      "pass": true,
+      "details": [
+        [
+          "23,23,19",
+          "239,239,234",
+          "131,131,126",
+          "77,77,73",
+          "64,33,17",
+          "105,42,15",
+          "187,62,11"
+        ],
+        [
+          "23,23,19",
+          "239,239,234",
+          "187,62,11"
+        ],
+        [
+          "23,23,19",
+          "239,239,234",
+          "131,131,126",
+          "77,77,73",
+          "64,33,17",
+          "105,42,15",
+          "187,62,11"
+        ],
+        [
+          "23,23,19",
+          "239,239,234",
+          "187,62,11"
+        ],
+        [
+          "23,23,19",
+          "77,77,73",
+          "131,131,126",
+          "108,108,104",
+          "239,239,234",
+          "192,192,188",
+          "155,155,150",
+          "123,47,14",
+          "152,54,13",
+          "87,38,16",
+          "187,62,11",
+          "105,42,15",
+          "64,33,17"
+        ]
+      ]
+    },
+    {
+      "name": "PWA branding: maskable artwork stays inside the 80% safe zone",
+      "pass": true,
+      "details": {
+        "minX": 112,
+        "minY": 112,
+        "maxX": 399,
+        "maxY": 399,
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "name": "PWA precache: v2.4 contains the build bundles and solver worker",
+      "pass": true,
+      "details": {
+        "cacheName": "sliding-puzzle-v2.4",
+        "buildAssets": [
+          "/assets/index-1DZ7ssts.js",
+          "/assets/index-WUZa5-lU.css"
+        ],
+        "worker": [
+          "/assets/solver.worker-CyubXBrk.js"
+        ]
+      }
+    },
+    {
+      "name": "PWA precache: unused sprite/icon assets are not precached",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "PWA precache: precache is limited to 17 entries and about 1.2MB",
+      "pass": true,
+      "details": {
+        "count": 17,
+        "totalBytes": 1209937
+      }
+    },
+    {
+      "name": "PWA install: banner is a complementary region with a 44px install button",
+      "pass": true,
+      "details": {
+        "tag": "ASIDE",
+        "role": null,
+        "label": "앱으로 설치하여 오프라인에서도 즐겨보세요!",
+        "installHeight": 44,
+        "installName": null,
+        "promptState": {
+          "calls": 0,
+          "defaultPrevented": true
+        }
+      }
+    },
+    {
+      "name": "PWA install: banner fits 360x640 and 1280x800",
+      "pass": true,
+      "details": {
+        "banner360": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "left": 400,
+          "right": 880,
+          "width": 480
+        },
+        "bannerMobile": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "left": 16,
+          "right": 344,
+          "top": 516.203125,
+          "bottom": 624
+        },
+        "banner1280": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "left": 400,
+          "right": 880,
+          "top": 711.40625,
+          "bottom": 784
+        }
+      }
+    },
+    {
+      "name": "PWA install: prompt is used once and dismissal closes the banner",
+      "pass": true,
+      "details": {
+        "calls": 1,
+        "defaultPrevented": true
+      }
+    },
+    {
+      "name": "PWA install: prompt rejection and appinstalled close the banner safely",
+      "pass": true,
+      "details": {}
+    },
+    {
+      "name": "PWA update: banner exposes status and 44px actions, and both buttons close it",
+      "pass": true,
+      "details": {
+        "role": "status",
+        "live": "polite",
+        "applyHeight": 44,
+        "dismissHeight": 44
+      }
+    },
+    {
+      "name": "PWA: online first load has no script/style failures",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "PWA offline: new page renders offline with no script/style failures",
+      "pass": true,
+      "details": {
+        "navigationError": null,
+        "titleVisible": true,
+        "rootChildren": 1,
+        "scriptFailures": []
+      }
+    }
+  ],
+  "scenarios": {},
+  "failures": [],
+  "manifest": {
+    "background": "#EFEFEA",
+    "theme": "#BB3E0B",
+    "orientation": null,
+    "icons": [
+      {
+        "src": "./assets/icons/icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "./assets/icons/icon-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any"
+      },
+      {
+        "src": "./assets/icons/icon-maskable-192.png",
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "maskable"
+      },
+      {
+        "src": "./assets/icons/icon-maskable-512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable"
+      }
+    ],
+    "themeMeta": "#EFEFEA"
+  },
+  "icons": [
+    {
+      "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\icon-192.png",
+      "width": 192,
+      "height": 192,
+      "expected": 192,
+      "colors": [
+        "23,23,19",
+        "239,239,234",
+        "131,131,126",
+        "77,77,73",
+        "64,33,17",
+        "105,42,15",
+        "187,62,11"
+      ],
+      "bounds": {
+        "minX": 24,
+        "minY": 24,
+        "maxX": 167,
+        "maxY": 167,
+        "width": 192,
+        "height": 192
+      }
+    },
+    {
+      "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\icon-512.png",
+      "width": 512,
+      "height": 512,
+      "expected": 512,
+      "colors": [
+        "23,23,19",
+        "239,239,234",
+        "187,62,11"
+      ],
+      "bounds": {
+        "minX": 64,
+        "minY": 64,
+        "maxX": 447,
+        "maxY": 447,
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\icon-maskable-192.png",
+      "width": 192,
+      "height": 192,
+      "expected": 192,
+      "colors": [
+        "23,23,19",
+        "239,239,234",
+        "131,131,126",
+        "77,77,73",
+        "64,33,17",
+        "105,42,15",
+        "187,62,11"
+      ],
+      "bounds": {
+        "minX": 42,
+        "minY": 42,
+        "maxX": 149,
+        "maxY": 149,
+        "width": 192,
+        "height": 192
+      }
+    },
+    {
+      "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\icon-maskable-512.png",
+      "width": 512,
+      "height": 512,
+      "expected": 512,
+      "colors": [
+        "23,23,19",
+        "239,239,234",
+        "187,62,11"
+      ],
+      "bounds": {
+        "minX": 112,
+        "minY": 112,
+        "maxX": 399,
+        "maxY": 399,
+        "width": 512,
+        "height": 512
+      }
+    },
+    {
+      "file": "C:\\dev\\work\\sliding-puzzle-web\\public\\assets\\icons\\apple-touch-icon.png",
+      "width": 180,
+      "height": 180,
+      "expected": 180,
+      "colors": [
+        "23,23,19",
+        "77,77,73",
+        "131,131,126",
+        "108,108,104",
+        "239,239,234",
+        "192,192,188",
+        "155,155,150",
+        "123,47,14",
+        "152,54,13",
+        "87,38,16",
+        "187,62,11",
+        "105,42,15",
+        "64,33,17"
+      ],
+      "bounds": {
+        "minX": 22,
+        "minY": 22,
+        "maxX": 157,
+        "maxY": 157,
+        "width": 180,
+        "height": 180
+      }
+    }
+  ],
+  "cache": {
+    "keys": [
+      "sliding-puzzle-v2.4"
+    ],
+    "cacheName": "sliding-puzzle-v2.4",
+    "entries": [
+      {
+        "path": "/assets/index-1DZ7ssts.js",
+        "size": 389440
+      },
+      {
+        "path": "/assets/index-WUZa5-lU.css",
+        "size": 83342
+      },
+      {
+        "path": "/assets/solver.worker-CyubXBrk.js",
+        "size": 8734
+      },
+      {
+        "path": "/",
+        "size": 2268
+      },
+      {
+        "path": "/index.html",
+        "size": 2268
+      },
+      {
+        "path": "/manifest.webmanifest",
+        "size": 906
+      },
+      {
+        "path": "/assets/audio/sfx_slide.mp3",
+        "size": 3761
+      },
+      {
+        "path": "/assets/audio/sfx_blocked.mp3",
+        "size": 3134
+      },
+      {
+        "path": "/assets/audio/sfx_shuffle.mp3",
+        "size": 17554
+      },
+      {
+        "path": "/assets/audio/sfx_victory.mp3",
+        "size": 63320
+      },
+      {
+        "path": "/assets/audio/sfx_click.mp3",
+        "size": 2507
+      },
+      {
+        "path": "/assets/icons/icon-192.png",
+        "size": 795
+      },
+      {
+        "path": "/assets/icons/icon-512.png",
+        "size": 3510
+      },
+      {
+        "path": "/assets/icons/icon-maskable-192.png",
+        "size": 730
+      },
+      {
+        "path": "/assets/icons/icon-maskable-512.png",
+        "size": 3084
+      },
+      {
+        "path": "/assets/icons/apple-touch-icon.png",
+        "size": 786
+      },
+      {
+        "path": "/assets/images/theme_nature.png",
+        "size": 623798
+      }
+    ],
+    "totalBytes": 1209937,
+    "buildAssets": [
+      "/assets/index-1DZ7ssts.js",
+      "/assets/index-WUZa5-lU.css"
+    ],
+    "worker": [
+      "/assets/solver.worker-CyubXBrk.js"
+    ],
+    "unused": []
+  },
+  "install": {
+    "bannerInitial": {
+      "tag": "ASIDE",
+      "role": null,
+      "label": "앱으로 설치하여 오프라인에서도 즐겨보세요!",
+      "installHeight": 44,
+      "installName": null,
+      "promptState": {
+        "calls": 0,
+        "defaultPrevented": true
+      }
+    },
+    "banner360": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "left": 400,
+      "right": 880,
+      "width": 480
+    },
+    "bannerMobile": {
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "left": 16,
+      "right": 344,
+      "top": 516.203125,
+      "bottom": 624
+    },
+    "banner1280": {
+      "scrollWidth": 1280,
+      "innerWidth": 1280,
+      "left": 400,
+      "right": 880,
+      "top": 711.40625,
+      "bottom": 784
+    },
+    "afterInstall": {
+      "calls": 1,
+      "defaultPrevented": true
+    }
+  },
+  "update": {
+    "role": "status",
+    "live": "polite",
+    "applyHeight": 44,
+    "dismissHeight": 44
+  },
+  "offline": {
+    "navigationError": null,
+    "titleVisible": true,
+    "rootChildren": 1,
+    "scriptFailures": []
+  },
+  "verdict": "PASS"
+}

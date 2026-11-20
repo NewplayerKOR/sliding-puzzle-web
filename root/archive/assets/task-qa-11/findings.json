@@ -1,0 +1,71 @@
+{
+  "task": "TASK-QA-11",
+  "generatedAt": "2026-11-20T12:20:00.000Z",
+  "sourceRevision": "acbb8a5",
+  "newDefects": [
+    {
+      "id": "QA11-F01",
+      "title": "WebKit 첫 설치에서 업데이트 배너가 오탐 표시됨",
+      "priority": "P2",
+      "affected": ["PWA / Service Worker update"],
+      "reproduction": [
+        "Playwright WebKit 신규 BrowserContext에서 / 를 첫 방문한다.",
+        "약 1.2초 후 .sw-update-banner가 표시되고 '새 버전이 준비되었습니다' 문구가 나온다.",
+        "같은 시점 navigator.serviceWorker.controller는 true이지만 registration.waiting과 registration.installing은 모두 null이다."
+      ],
+      "expected": "첫 설치에는 업데이트 배너가 표시되지 않고, 기존 제어 페이지가 실제 새 워커를 받았을 때만 표시된다.",
+      "actual": "WebKit 첫 설치에서 업데이트 배너가 표시된다. 배너는 상단 고정 레이어로 헤더 BGM 버튼과 겹쳐 포인터 입력을 가로챈다.",
+      "impact": "PWA 첫 설치 사용자가 불필요한 업데이트 안내를 보고, 배너를 닫기 전까지 헤더 조작이 막힐 수 있다. 간헐 재현성 있음.",
+      "evidence": [
+        "root/archive/assets/task-qa-11/webkit-update-repro.json",
+        "root/archive/assets/task-qa-11/cross-browser.json",
+        "src/utils/swUpdateManager.ts:45-56"
+      ],
+      "suggestedFix": "등록 시작 시점의 controller 유무를 보관해 첫 설치와 업데이트를 구분하고, 첫 설치에서는 updatefound/installed 알림을 억제한다. controller가 늦게 활성화되는 WebKit 레이스를 재현하는 단위 테스트를 추가한다."
+    },
+    {
+      "id": "QA11-F02",
+      "title": "Daily 캘린더 grid의 row 구조 누락",
+      "priority": "P2",
+      "affected": ["접근성 / Daily Challenge"],
+      "reproduction": [
+        "타이틀에서 Daily 캘린더를 연다.",
+        "DOM과 Chrome Accessibility Tree를 확인한다."
+      ],
+      "expected": "role='grid' 아래에 role='row'가 있고 각 row가 gridcell을 포함한다.",
+      "actual": "role='grid' 아래에 30개의 gridcell이 직접 배치되고 row는 0개다. AX Tree에서도 rowCount=0, gridCellCount=30으로 노출된다.",
+      "impact": "스크린리더의 grid 탐색·행/열 안내가 일관되지 않을 수 있다. 셀 label과 aria-current='date'는 정상 제공된다.",
+      "evidence": [
+        "root/archive/assets/task-qa-11/accessibility-tree.json",
+        "root/archive/assets/task-qa-11/a11y-layout.json",
+        "src/components/Modal/DailyModal.tsx:128-152"
+      ],
+      "suggestedFix": "주 단위 role='row' 래퍼를 추가하거나, grid 대신 list/listitem 구조로 단순화한다. 기존 aria-label·aria-current는 유지한다."
+    },
+    {
+      "id": "QA11-F03",
+      "title": "BGM 모달 음소거 버튼의 동작·상태 라벨 누락",
+      "priority": "P2",
+      "affected": ["접근성 / BGM 설정"],
+      "reproduction": [
+        "타이틀에서 BGM 설정 모달을 연다.",
+        "BGM·SFX 볼륨 행의 .btn-vol-mute 버튼의 접근성 이름과 상태를 확인한다."
+      ],
+      "expected": "버튼의 접근성 이름이 'BGM 음소거'/'BGM 음소거 해제'처럼 동작을 설명하고 aria-pressed로 상태를 노출한다.",
+      "actual": "접근성 이름은 'BGM', 'SFX'뿐이고 aria-label·aria-pressed가 없다. 상태는 title과 아이콘에만 의존한다.",
+      "impact": "스크린리더 사용자가 현재 음소거 상태와 버튼 동작을 알기 어렵다.",
+      "evidence": [
+        "root/archive/assets/task-qa-11/accessibility-tree.json",
+        "root/archive/assets/task-qa-11/a11y-layout.json",
+        "src/components/Modal/BgmSelectModal.tsx:114-156"
+      ],
+      "suggestedFix": "타이틀·헤더 토글과 동일하게 aria-label(동작+상태)과 aria-pressed를 추가하고, BGM/SFX 각각의 상태를 테스트한다."
+    }
+  ],
+  "reclassified": {
+    "P0": 0,
+    "P1": 0,
+    "P2 fixes from DEV-32~39": "PASS",
+    "newP2": 3
+  }
+}

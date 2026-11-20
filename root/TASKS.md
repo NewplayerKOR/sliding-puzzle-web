@@ -27,30 +27,71 @@
 
 ### [DEV]
 
-(대기 중인 작업 없음)
+#### [ ] TASK-DEV-40 — PWA 첫 설치 업데이트 배너 오탐 방지
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 첫 설치 중 controller가 먼저 활성화되는 WebKit 레이스에서 업데이트 배너를 표시하지 않고, 실제 새 워커가 준비된 경우에만 안내한다.
+- **대상 파일**: `src/utils/swUpdateManager.ts`, `src/utils/swUpdateManager.test.ts`, 필요 시 `e2e/`
+- **재현/증거**:
+  - Playwright WebKit 신규 BrowserContext 첫 방문 약 1.2초 후 `.sw-update-banner` 표시. 이때 `navigator.serviceWorker.controller`는 `true`, `registration.waiting`·`registration.installing`은 모두 `null`.
+  - 배너가 상단 고정 레이어로 헤더 BGM 버튼과 겹쳐 포인터 입력을 가로챔. 교차 브라우저 검증 중 배너를 닫은 뒤 나머지 흐름을 완료함.
+  - 현재 조건은 `newWorker.state === 'installed' && navigator.serviceWorker.controller`로, 첫 설치에서도 controller가 먼저 true가 되면 업데이트로 오인함(`src/utils/swUpdateManager.ts:45-56`).
+  - 증거: `root/archive/assets/task-qa-11/webkit-update-repro.json`, `cross-browser.json`, `findings.json`
+- **DoD**:
+  - 등록 시작 시점의 controller 유무 또는 기존 active/waiting 상태를 기준으로 첫 설치와 업데이트를 구분한다.
+  - 첫 설치에서 controller가 늦게 활성화되는 레이스를 재현하는 단위 테스트를 추가하고, 첫 설치에는 이벤트가 발생하지 않게 한다.
+  - 실제 대기 워커가 있는 업데이트에서는 기존처럼 배너·SKIP_WAITING·사용자 선택 새로고침이 동작한다.
+  - `npm test`, `npm run typecheck`, `npm run build`, `npx playwright test` 결과와 WebKit 확인 결과를 기록한다.
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-41 — Daily 캘린더 grid row 구조 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: Daily 캘린더의 ARIA grid 구조를 유효하게 만들거나 단순 목록 구조로 바꿔 스크린리더 탐색을 일관되게 한다.
+- **대상 파일**: `src/components/Modal/DailyModal.tsx`, `src/components/Modal/DailyModal.test.tsx`
+- **재현/증거**:
+  - `role="grid"` 아래에 `role="row"` 없이 `role="gridcell"` 30개가 직접 배치됨. Chrome Accessibility Tree에서도 rowCount 0, gridCellCount 30.
+  - 셀 `aria-label`, 오늘 `aria-current="date"`는 정상 제공됨.
+  - 증거: `root/archive/assets/task-qa-11/accessibility-tree.json`, `a11y-layout.json`, `findings.json`
+- **DoD**:
+  - 주 단위 `role="row"` 래퍼를 추가하거나 grid 대신 list/listitem 구조로 단순화한다.
+  - 기존 날짜 label·완료 상태·오늘 상태를 유지하고 테스트로 구조와 값을 검증한다.
+  - 360×640·1280×800 레이아웃 회귀와 `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
+
+#### [ ] TASK-DEV-42 — BGM 모달 음소거 상태 라벨 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: BGM 설정 모달의 BGM/SFX 음소거 버튼이 동작과 현재 상태를 접근성 이름과 `aria-pressed`로 노출하게 한다.
+- **대상 파일**: `src/components/Modal/BgmSelectModal.tsx`, `src/components/Modal/BgmSelectModal.test.tsx`
+- **재현/증거**:
+  - 음소거 버튼의 접근성 이름이 `BGM`, `SFX`뿐이고 `aria-label`·`aria-pressed`가 없음. 상태는 `title`과 아이콘에만 의존함.
+  - AX Tree에서 버튼 이름이 `BGM`/`SFX`로만 노출됨.
+  - 증거: `root/archive/assets/task-qa-11/accessibility-tree.json`, `a11y-layout.json`, `findings.json`
+- **DoD**:
+  - 타이틀·헤더 토글과 동일하게 동작·상태를 포함한 `aria-label`과 `aria-pressed`를 적용한다.
+  - BGM/SFX 각각의 음소거·해제 상태를 테스트로 검증한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **선행 조건**: 없음
 
 ### [QA / DevOps]
 
-#### [ ] TASK-QA-11 — P2 수정 전체 회귀·크로스브라우저 검증
-
-- **Phase**: 01
-- **담당**: QA_DEVOPS
-- **우선순위**: P2
-- **목표**: TASK-DEV-32~39의 P2 수정이 기능·접근성·시각 회귀를 만들지 않았는지 전체 검증한다.
-- **검증 범위**:
-  - AI 폴백·토스트, 모달 배경 스크롤·중첩, 커스텀 이미지, Confetti·공유, PWA 브랜딩·프리캐시, 오디오·Time Attack, 접근성·파괴적 액션
-  - 360×640·360×800·1280×800 레이아웃과 핵심 플레이·테마·BGM·업적·PWA 업데이트
-  - Chromium 외 WebKit/Firefox 가능 범위, 실제 모바일·스크린리더는 가능한 범위에서 확인
-- **DoD**:
-  - 수정 항목별 재현·수정 후 결과와 P0/P1/P2 재분류를 기록한다.
-  - Vitest·tsc·Vite 빌드·Playwright E2E·Lighthouse 결과를 기록한다.
-  - 실제 모바일·Safari/Firefox·스크린리더 등 미실행 범위와 제한을 명시한다.
-  - 새 결함은 재현 조건과 영향도를 포함해 DEV Backlog에 등록한다.
-- **선행 조건**: TASK-DEV-32~39 완료 후
+(대기 중인 작업 없음)
 
 ---
 
 ## 3. Recent Completions (최근 완료 요약)
+
+- **TASK-QA-11** — P2 수정 전체 회귀·크로스브라우저 검증 (완료일: 2026-11-20)
+  - 핵심 결과: DEV-32~39의 P2 수정 8건이 모두 통과함. AI 폴백 5.5초 유지·이동 시 해제, 모달 스크롤 잠금·중첩 방지, 커스텀 이미지 상태·손상 차단, Confetti 정리·공유 취소 무폴백, PWA v2.4/17건 오프라인, Web Audio 단일 볼륨 스케일·BGM 자동 전환, Time Attack 46초 이동 거부, 접근성·홈 확인을 확인함. 검증 중 WebKit 첫 설치 업데이트 배너 오탐, Daily grid row 누락, BGM 모달 음소거 상태 라벨 누락 등 신규 P2 3건을 DEV-40~42로 등록함
+  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Chromium E2E 16/16 PASS, Lighthouse 접근성 1.0. 독립 Playwright 86개 체크 PASS(Chromium·WebKit·Firefox·서브패스 포함). 실제 모바일 실기기·Safari 네이티브·스크린리더 수동 검증은 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-11--p2-수정-전체-회귀크로스브라우저-검증)
 
 - **TASK-DEV-39** — 접근성·파괴적 액션 UX 잔여 정비 (완료일: 2026-11-20)
   - 핵심 결과: 업적 토스트를 `role="status"`·`aria-live="polite"`로 바꾸고 PWA 설치 배너를 `aside` complementary landmark로 정리함. 업적 진행 바에 `progressbar` 값, Daily 캘린더에 `grid`/`gridcell`·`aria-current="date"`를 제공하고, 장식 모드 카드의 `div onClick`을 제거해 선택은 내부 버튼으로만 변경됨. BGM/SFX 토글에 동작·상태 라벨과 `aria-pressed`를 추가하고, 전역 텍스트 선택을 허용하며 커스텀 이미지 캔버스에 방향키 팬 대안을 추가함. 진행 중 홈 복귀는 확인 모달을 거치며 WinModal은 Escape로 닫지 않는 완료 상태 정책을 적용함
@@ -72,13 +113,8 @@
   - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(아이콘 규격·maskable safe zone·매니페스트·프리캐시 포함), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 16/16 PASS. 360×640·1280×800 설치 배너와 오프라인 재로드 확인. 실제 설치 프롬프트·실기기 홈 화면 아이콘·Safari/Firefox는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-36--pwa-브랜딩매니페스트프리캐시-자산-정리)
 
-- **TASK-DEV-35** — 승리 Confetti·공유 흐름 후처리 안정성 (완료일: 2026-11-20)
-  - 핵심 결과: 승리 모달을 닫거나 언마운트할 때 Confetti RAF와 캔버스를 정리함. 공유 시트 취소(`AbortError`)는 다운로드·클립보드 폴백 없이 종료하고, 실제 공유 실패에만 폴백하며 Blob 생성 실패를 안내함. 테마 이미지 로드에 3초 타임아웃을 두고 다운로드 앵커를 문서에 연결한 뒤 Object URL을 1초 후 해제함
-  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(`WinModal` 2건, `shareCardGenerator` 5건), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 16/16 PASS. 실제 공유 시트·Safari/Firefox 다운로드 동작은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-35--승리-confetti공유-흐름-후처리-안정성)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-DEV-28 (모바일 터치 타깃·PWA 배너 접근성 정비), TASK-DEV-29 (정답 보기 읽기 전용 미리보기·기록 무결성), TASK-DEV-30 (PWA 최초 설치 오프라인 프리캐시), TASK-DEV-31 (Daily 활성 컨텍스트·시작 날짜 무결성), TASK-DEV-32 (AI 힌트 폴백·토스트 타이머), TASK-DEV-33 (모달 배경 스크롤·중첩), TASK-DEV-34 (커스텀 이미지 상태·로드 실패), TASK-DEV-35 (Confetti·공유 후처리), TASK-DEV-36 (PWA 브랜딩·프리캐시 자산), TASK-DEV-37 (오디오 볼륨·BGM 자동 연동), TASK-DEV-38 (Time Attack 이동 시점 검사), TASK-DEV-39 (접근성·파괴적 액션 UX), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-QA-10 (P1 수정 독립 검증·회귀 테스트), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-DEV-28 (모바일 터치 타깃·PWA 배너 접근성 정비), TASK-DEV-29 (정답 보기 읽기 전용 미리보기·기록 무결성), TASK-DEV-30 (PWA 최초 설치 오프라인 프리캐시), TASK-DEV-31 (Daily 활성 컨텍스트·시작 날짜 무결성), TASK-DEV-32 (AI 힌트 폴백·토스트 타이머), TASK-DEV-33 (모달 배경 스크롤·중첩), TASK-DEV-34 (커스텀 이미지 상태·로드 실패), TASK-DEV-35 (Confetti·공유 후처리), TASK-DEV-36 (PWA 브랜딩·프리캐시 자산), TASK-DEV-37 (오디오 볼륨·BGM 자동 연동), TASK-DEV-38 (Time Attack 이동 시점 검사), TASK-DEV-39 (접근성·파괴적 액션 UX), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-QA-10 (P1 수정 독립 검증·회귀 테스트), TASK-QA-11 (P2 수정 전체 회귀·크로스브라우저 검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)

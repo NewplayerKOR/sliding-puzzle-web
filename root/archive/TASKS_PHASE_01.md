@@ -1781,3 +1781,62 @@
   - `home-confirm-360x640.webp`, `home-confirm-1280x800.webp`, `daily-calendar-360x640.webp`, `achievement-progress-360x640.webp`
   - 테스트: `src/App.accessibility.test.tsx`, `src/App.homeConfirm.test.tsx`, `e2e/accessibility-ux.spec.ts`
 - **작업 상태**: `root/TASKS.md` 최근 완료 요약 반영, Phase 01 보관
+
+## TASK-QA-11 — P2 수정 전체 회귀·크로스브라우저 검증
+
+- **Phase**: 01
+- **담당**: QA_DEVOPS
+- **우선순위**: P2
+- **완료일**: 2026-11-20
+- **검증 대상**: TASK-DEV-32~39 수정본. 제품 코드 기준 `acbb8a5` working tree에서 새로 빌드한 `dist`.
+- **목표**: P2 8건의 수정이 실제 사용자 경로에서 동작하고 기능·접근성·시각 회귀를 만들지 않았는지 Chromium·WebKit·Firefox에서 확인한다.
+- **완료 기준(DoD)**:
+  - 수정 항목별 재현·수정 후 결과와 P0/P1/P2 재분류를 기록한다.
+  - Vitest·tsc·Vite 빌드·Playwright E2E·Lighthouse 결과를 기록한다.
+  - 실제 모바일·Safari/Firefox·스크린리더 등 미실행 범위와 제한을 명시한다.
+  - 새 결함은 재현 조건과 영향도를 포함해 DEV Backlog에 등록한다.
+
+### 진행 결과
+
+- P2 수정 8건은 모두 통과함.
+  - AI 폴백: Worker 비활성 Chromium에서 힌트가 표시되고 5.5초 후에도 유지됐으며, 이동 시 즉시 사라짐. 시간 초과 토스트 없음.
+  - 모달: 360×640에서 테마 모달 중 wheel·PageDown 후 `scrollY=0`, body `overflow=hidden`, `.app-content` inert/aria-hidden, overlay `overscroll-behavior: contain` 확인. 닫은 뒤 스크롤 복원. Time Attack 만료 시 BGM 모달이 닫히고 GameOver 다이얼로그 1개만 표시됨.
+  - 커스텀 이미지: 테마 변경으로 저장소가 비면 재열기 시 드롭존으로 복귀. 손상 data URL은 오류와 Apply 비활성으로 차단. 키보드 방향키 팬으로 캔버스 data URL이 변경됨. 정상 적용·저장·타일 렌더링 확인.
+  - Confetti·공유: 승리 시 고정 캔버스 1개, `다시 플레이` 후 0개. 공유 취소(`AbortError`)는 클립보드·다운로드 폴백 없이 종료. 실제 실패는 다운로드 폴백 1회, 토스트는 2.5초에 표시 중이고 3.6초에 사라짐. WinModal은 Escape로 닫히지 않음.
+  - PWA: 매니페스트 `#EFEFEA`/`#BB3E0B`, orientation 제거, 아이콘 5종 규격·팔레트·maskable 80% safe zone 확인. 프리캐시 v2.4/17건/1,209,937바이트, 해시 JS·CSS·solver worker 포함, 미사용 스프라이트·개별 아이콘 0건. 최초 설치 오프라인 새 페이지 렌더링. 설치 프롬프트 수락·거부·appinstalled 처리와 업데이트 배너 44px 액션 확인.
+  - 오디오: 가짜 AudioContext로 `sfxVolume 0.5`일 때 master gain 1, 개별 gain 0.425(이중 적용 0.2125 아님) 확인. 자동 연동 켜기 → zen, pixel_art 테마 시작 → synth 즉시 전환.
+  - Time Attack: 정답까지 1수 남긴 뒤 46초 시점에 마지막 수를 동기 클릭해 이동 거부·gameover·이동 수 26 유지·기록 없음 확인.
+  - 접근성: 업적 토스트 `role=status`/polite/atomic, PWA 배너 `aside`, 진행 바 값, Daily 셀 label·`aria-current="date"`, 모드 카드 장식화, 타이틀·헤더 오디오 `aria-pressed`, 본문 텍스트 선택, 홈 복귀 확인 모달, WinModal Escape 정책을 확인함.
+- 레이아웃: 360×640·360×800·1280×800에서 타이틀·게임·BGM/Daily/업적/테마 모달의 가로 오버플로 0건, 모달 경계가 뷰포트 안에 들어옴. 360×640 확인 모달도 화면 안에 들어오고 Tab 순환이 유지됨.
+- 크로스브라우저: WebKit·Firefox 모두 타이틀·3×3 이동·테마 모달 포커스·홈 확인·3×3 승리·설치 배너·360×640 레이아웃·오프라인 PWA를 통과함. Firefox는 오프라인 새 페이지도 통과함. WebKit은 간헐적으로 첫 설치 직후 업데이트 배너가 표시되어 닫은 뒤 나머지 검증을 완료함.
+- 신규 P2 결함 3건을 발견해 DEV Backlog에 등록함.
+  - `QA11-F01` / `TASK-DEV-40`: WebKit 첫 설치에서 업데이트 배너 오탐. 최초 방문 약 1.2초 후 controller=true, waiting/installing=null 상태에서 배너가 표시됨. 배너가 헤더 BGM 버튼과 겹쳐 입력을 가로챔. 간헐 재현.
+  - `QA11-F02` / `TASK-DEV-41`: Daily 캘린더 `role=grid` 아래에 `role=row` 없이 gridcell 30개가 직접 배치됨. AX Tree에서도 rowCount=0. 셀 label·aria-current는 정상.
+  - `QA11-F03` / `TASK-DEV-42`: BGM 모달 음소거 버튼의 접근성 이름이 `BGM`/`SFX`뿐이고 aria-pressed·aria-label이 없어 상태를 알 수 없음.
+- P0/P1 회귀는 발견하지 않음.
+
+### 검증
+
+- **대상 리비전**: `acbb8a5` working tree
+- **실행 명령과 결과**:
+  - `npm test`: 41개 파일/247개 케이스 PASS
+  - `npm run typecheck`: 0 Errors
+  - `npm run build`: Vite 8.3.6 성공. `index-1DZ7ssts.js`, `index-WUZa5-lU.css`, `solver.worker-CyubXBrk.js` 생성
+  - `npx playwright test`: Chromium 16/16 PASS
+  - 독립 Playwright: P2 수정 29개 체크 PASS, 접근성·레이아웃 19개 체크 PASS, PWA 15개 체크 PASS, WebKit/Firefox 20개 체크 PASS, 서브패스 PWA 3개 체크 PASS — 총 86개 체크 PASS
+  - Lighthouse 12.8.2 접근성(타이틀, 모바일 기본): **1.0**
+- **증거**:
+  - `root/archive/assets/task-qa-11/p2-fixes.json`, `a11y-layout.json`, `pwa.json`, `cross-browser.json`, `subpath-pwa.json`
+  - `root/archive/assets/task-qa-11/accessibility-tree.json` — Daily grid row 0·gridcell 30, BGM 모달 버튼 이름/상태
+  - `root/archive/assets/task-qa-11/findings.json` — 신규 P2 3건과 재현·영향
+  - `root/archive/assets/task-qa-11/webkit-update-repro.json`, `cross-browser.json` — WebKit 업데이트 배너 오탐
+  - `root/archive/assets/task-qa-11/lighthouse-accessibility-mobile.json`
+  - 스크린샷: `ai-hint-fallback.png`, `gameover-after-bgm.png`, `custom-image-error.png`, `win-modal-share.png`, `timeattack-move-gate.png`, `home-confirm-360x640.png`, `core-win-1280x800.png`, `pwa-install-banner-360x640.png`, `pwa-offline-title.png`, `pwa-subpath-offline-title.png`
+- **미실행·제한**:
+  - 실제 모바일 실기기, 실제 스크린리더(NVDA·VoiceOver) 수동 검증은 미실행.
+  - Playwright WebKit은 Safari 네이티브가 아니므로 Safari 고유 동작은 미검증.
+  - 브라우저의 실제 `beforeinstallprompt` 설치 수락 UI와 홈 화면 아이콘·스플래시는 자동화하지 않음.
+  - Lighthouse는 타이틀 화면만 측정했고 게임·모달 화면은 측정하지 않음.
+  - 실제 Web Share 시트·Safari/Firefox 다운로드 동작과 Vercel 재배포는 미실행.
+  - WebKit 업데이트 배너 오탐은 간헐 재현이라 발생 빈도는 정량화하지 못함.
+- **작업 상태**: `root/TASKS.md`의 TASK-QA-11 완료 요약과 Phase 보관 링크 반영. 신규 DEV-40~42를 Backlog에 등록.

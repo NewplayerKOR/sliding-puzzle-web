@@ -1,0 +1,191 @@
+{
+  "daily": {
+    "grid": {
+      "nodeId": "268",
+      "parentId": "262",
+      "role": "grid",
+      "name": "2026년 11월 출석 현황",
+      "ignored": false,
+      "childIds": [
+        "269",
+        "272",
+        "275",
+        "278",
+        "281",
+        "284",
+        "287",
+        "290",
+        "293",
+        "296",
+        "299",
+        "302",
+        "305",
+        "308",
+        "311",
+        "314",
+        "317",
+        "320",
+        "323",
+        "326",
+        "329",
+        "332",
+        "335",
+        "338",
+        "341",
+        "344",
+        "347",
+        "350",
+        "353",
+        "356"
+      ],
+      "properties": [
+        {
+          "name": "multiselectable",
+          "value": false
+        },
+        {
+          "name": "readonly",
+          "value": false
+        }
+      ]
+    },
+    "descendantRoles": [
+      {
+        "role": "grid",
+        "name": "2026년 11월 출석 현황",
+        "ignored": false,
+        "properties": [
+          {
+            "name": "multiselectable",
+            "value": false
+          },
+          {
+            "name": "readonly",
+            "value": false
+          }
+        ]
+      },
+      {
+        "role": "gridcell",
+        "name": "1일",
+        "ignored": false,
+        "properties": [
+          {
+            "name": "readonly",
+            "value": false
+          },
+          {
+            "name": "required",
+            "value": false
+          }
+        ]
+      },
+      {
+        "role": "none",
+        "ignored": true
+      },
+      {
+        "role": "StaticText",
+        "name": "1",
+        "ignored": false,
+        "properties": []
+      },
+      {
+        "role": "InlineTextBox",
+        "name": "1",
+        "ignored": false,
+        "properties": []
+      },
+      {
+        "role": "gridcell",
+        "name": "2일",
+        "ignored": false,
+        "properties": [
+          {
+            "name": "readonly",
+            "value": false
+          },
+          {
+            "name": "required",
+            "value": false
+          }
+        ]
+      },
+      {
+        "role": "none",
+        "ignored": true
+      },
+      {
+        "role": "StaticText",
+        "name": "2",
+        "ignored": false,
+        "properties": []
+      },
+      {
+        "role": "InlineTextBox",
+        "name": "2",
+        "ignored": false,
+        "properties": []
+      },
+      {
+        "role": "gridcell",
+        "name": "3일",
+        "ignored": false,
+        "properties": [
+          {
+            "name": "readonly",
+            "value": false
+          },
+          {
+            "name": "required",
+            "value": false
+          }
+        ]
+      },
+      {
+        "role": "none",
+        "ignored": true
+      },
+      {
+        "role": "StaticText",
+        "name": "3",
+        "ignored": false,
+        "properties": []
+      }
+    ],
+    "rowCount": 0,
+    "gridCellCount": 30
+  },
+  "bgm": {
+    "buttons": [
+      {
+        "nodeId": "402",
+        "name": "BGM",
+        "properties": [
+          {
+            "name": "invalid",
+            "value": "false"
+          },
+          {
+            "name": "focusable",
+            "value": true
+          }
+        ]
+      },
+      {
+        "nodeId": "413",
+        "name": "SFX",
+        "properties": [
+          {
+            "name": "invalid",
+            "value": "false"
+          },
+          {
+            "name": "focusable",
+            "value": true
+          }
+        ]
+      }
+    ]
+  }
+}

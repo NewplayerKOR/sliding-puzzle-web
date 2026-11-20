@@ -1,0 +1,569 @@
+{
+  "samples": [
+    {
+      "label": "first-0",
+      "controller": false,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "first-1",
+      "controller": false,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "first-2",
+      "controller": true,
+      "banner": true,
+      "text": "새 버전이 준비되었습니다. 지금 업데이트하면 최신 수정 사항이 적용됩니다.지금 업데이트"
+    },
+    {
+      "label": "reload-0",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-1",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-2",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-3",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-4",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-5",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-6",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-7",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-8",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-9",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-10",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-11",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-12",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-13",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-14",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-15",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-16",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-17",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-18",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-19",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-20",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-21",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-22",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-23",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-24",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-25",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-26",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-27",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-28",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "reload-29",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-0",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-1",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-2",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-3",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-4",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-5",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-6",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-7",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-8",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-9",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-10",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-11",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-12",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-13",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-14",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-15",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-16",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-17",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-18",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-19",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-20",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-21",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-22",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-23",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-24",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-25",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-26",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-27",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-28",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-page-29",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-0",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-1",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-2",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-3",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-4",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-5",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-6",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-7",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-8",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-9",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-10",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-11",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-12",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-13",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-14",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-15",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-16",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-17",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-18",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-19",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-20",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-21",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-22",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-23",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-24",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-25",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-26",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-27",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-28",
+      "controller": true,
+      "banner": false,
+      "text": null
+    },
+    {
+      "label": "second-reload-29",
+      "controller": true,
+      "banner": false,
+      "text": null
+    }
+  ],
+  "registration": {
+    "scope": "http://127.0.0.1:4173/",
+    "active": "activated",
+    "waiting": null,
+    "installing": null,
+    "controller": "http://127.0.0.1:4173/sw.js"
+  }
+}

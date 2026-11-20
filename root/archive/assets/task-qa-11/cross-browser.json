@@ -1,0 +1,310 @@
+{
+  "task": "TASK-QA-11",
+  "part": "Cross-browser WebKit Firefox",
+  "generatedAt": "2026-11-20T12:54:51.665Z",
+  "baseUrl": "http://127.0.0.1:4173/",
+  "checks": [
+    {
+      "name": "WebKit: title and audio controls render",
+      "pass": true,
+      "details": {
+        "lang": "ko",
+        "titleVisible": true,
+        "audioPressed": 2,
+        "scrollWidth": 1274,
+        "innerWidth": 1280
+      }
+    },
+    {
+      "name": "WebKit: standard 3x3 accepts a move",
+      "pass": true,
+      "details": {
+        "moves": "1",
+        "boardVisible": true
+      }
+    },
+    {
+      "name": "WebKit: theme modal traps Tab and Escape restores the game",
+      "pass": true,
+      "details": {
+        "focusInside": true,
+        "afterTheme": {
+          "overflow": "",
+          "boardVisible": true
+        }
+      }
+    },
+    {
+      "name": "WebKit: home confirm opens and cancel keeps the game",
+      "pass": true,
+      "details": {
+        "overflow": "hidden",
+        "visible": true
+      }
+    },
+    {
+      "name": "WebKit: 3x3 solve reaches the win modal",
+      "pass": true,
+      "details": {
+        "win": {
+          "visible": true,
+          "stars": 3,
+          "records": true
+        },
+        "solveSteps": 18
+      }
+    },
+    {
+      "name": "WebKit: WinModal ignores Escape",
+      "pass": true,
+      "details": {}
+    },
+    {
+      "name": "WebKit: install banner is a complementary region",
+      "pass": true,
+      "details": {
+        "tag": "ASIDE",
+        "role": null
+      }
+    },
+    {
+      "name": "WebKit: 360x640 has no horizontal overflow",
+      "pass": true,
+      "details": {
+        "mobileTitle": {
+          "scrollWidth": 354,
+          "innerWidth": 360
+        },
+        "mobileGame": {
+          "scrollWidth": 354,
+          "innerWidth": 360,
+          "boardWidth": 281.59375
+        }
+      }
+    },
+    {
+      "name": "WebKit: no page errors",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "WebKit: offline reload renders after first install",
+      "pass": true,
+      "details": {
+        "supported": true,
+        "navigationError": null,
+        "titleVisible": true,
+        "failures": []
+      }
+    },
+    {
+      "name": "Firefox: title and audio controls render",
+      "pass": true,
+      "details": {
+        "lang": "ko",
+        "titleVisible": true,
+        "audioPressed": 2,
+        "scrollWidth": 1280,
+        "innerWidth": 1280
+      }
+    },
+    {
+      "name": "Firefox: standard 3x3 accepts a move",
+      "pass": true,
+      "details": {
+        "moves": "1",
+        "boardVisible": true
+      }
+    },
+    {
+      "name": "Firefox: theme modal traps Tab and Escape restores the game",
+      "pass": true,
+      "details": {
+        "focusInside": true,
+        "afterTheme": {
+          "overflow": "",
+          "boardVisible": true
+        }
+      }
+    },
+    {
+      "name": "Firefox: home confirm opens and cancel keeps the game",
+      "pass": true,
+      "details": {
+        "overflow": "hidden",
+        "visible": true
+      }
+    },
+    {
+      "name": "Firefox: 3x3 solve reaches the win modal",
+      "pass": true,
+      "details": {
+        "win": {
+          "visible": true,
+          "stars": 3,
+          "records": true
+        },
+        "solveSteps": 24
+      }
+    },
+    {
+      "name": "Firefox: WinModal ignores Escape",
+      "pass": true,
+      "details": {}
+    },
+    {
+      "name": "Firefox: install banner is a complementary region",
+      "pass": true,
+      "details": {
+        "tag": "ASIDE",
+        "role": null
+      }
+    },
+    {
+      "name": "Firefox: 360x640 has no horizontal overflow",
+      "pass": true,
+      "details": {
+        "mobileTitle": {
+          "scrollWidth": 360,
+          "innerWidth": 360
+        },
+        "mobileGame": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "boardWidth": 281.6000061035156
+        }
+      }
+    },
+    {
+      "name": "Firefox: no page errors",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "Firefox: offline reload renders after first install",
+      "pass": true,
+      "details": {
+        "supported": true,
+        "navigationError": null,
+        "titleVisible": true,
+        "failures": []
+      }
+    }
+  ],
+  "scenarios": {
+    "webkit": {
+      "name": "WebKit",
+      "title": {
+        "lang": "ko",
+        "titleVisible": true,
+        "audioPressed": 2,
+        "scrollWidth": 1274,
+        "innerWidth": 1280
+      },
+      "updateBanner": {
+        "atTitle": false,
+        "afterStart": false,
+        "afterMove": false,
+        "afterTheme": true
+      },
+      "afterMove": {
+        "moves": "1",
+        "boardVisible": true
+      },
+      "focusInside": true,
+      "afterTheme": {
+        "overflow": "",
+        "boardVisible": true
+      },
+      "confirm": {
+        "overflow": "hidden",
+        "visible": true
+      },
+      "solveSteps": 18,
+      "win": {
+        "visible": true,
+        "stars": 3,
+        "records": true
+      },
+      "escapeKeepsWin": true,
+      "banner": {
+        "tag": "ASIDE",
+        "role": null
+      },
+      "mobileTitle": {
+        "scrollWidth": 354,
+        "innerWidth": 360
+      },
+      "mobileGame": {
+        "scrollWidth": 354,
+        "innerWidth": 360,
+        "boardWidth": 281.59375
+      },
+      "pageErrors": [],
+      "offline": {
+        "supported": true,
+        "navigationError": null,
+        "titleVisible": true,
+        "failures": []
+      }
+    },
+    "firefox": {
+      "name": "Firefox",
+      "title": {
+        "lang": "ko",
+        "titleVisible": true,
+        "audioPressed": 2,
+        "scrollWidth": 1280,
+        "innerWidth": 1280
+      },
+      "updateBanner": {
+        "atTitle": false,
+        "afterStart": false,
+        "afterMove": false,
+        "afterTheme": false
+      },
+      "afterMove": {
+        "moves": "1",
+        "boardVisible": true
+      },
+      "focusInside": true,
+      "afterTheme": {
+        "overflow": "",
+        "boardVisible": true
+      },
+      "confirm": {
+        "overflow": "hidden",
+        "visible": true
+      },
+      "solveSteps": 24,
+      "win": {
+        "visible": true,
+        "stars": 3,
+        "records": true
+      },
+      "escapeKeepsWin": true,
+      "banner": {
+        "tag": "ASIDE",
+        "role": null
+      },
+      "mobileTitle": {
+        "scrollWidth": 360,
+        "innerWidth": 360
+      },
+      "mobileGame": {
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "boardWidth": 281.6000061035156
+      },
+      "pageErrors": [],
+      "offline": {
+        "supported": true,
+        "navigationError": null,
+        "titleVisible": true,
+        "failures": []
+      }
+    }
+  },
+  "failures": [],
+  "verdict": "PASS"
+}

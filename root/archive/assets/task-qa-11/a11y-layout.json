@@ -1,0 +1,671 @@
+{
+  "task": "TASK-QA-11",
+  "part": "Accessibility layout core regression",
+  "generatedAt": "2026-11-20T12:49:57.558Z",
+  "baseUrl": "http://127.0.0.1:4173/",
+  "checks": [
+    {
+      "name": "A11y: description text is selectable and cards are not clickable containers",
+      "pass": true,
+      "details": {
+        "title": {
+          "userSelect": "text",
+          "cardCursor": "auto",
+          "audioButtons": [
+            {
+              "pressed": "true",
+              "label": "BGM 음소거"
+            },
+            {
+              "pressed": "true",
+              "label": "SFX 음소거"
+            }
+          ]
+        },
+        "cardSelection": {
+          "standardSelected": true,
+          "timeAttackSelected": false
+        }
+      }
+    },
+    {
+      "name": "A11y: audio toggles expose aria-pressed and action/state labels",
+      "pass": true,
+      "details": {
+        "title": {
+          "userSelect": "text",
+          "cardCursor": "auto",
+          "audioButtons": [
+            {
+              "pressed": "true",
+              "label": "BGM 음소거"
+            },
+            {
+              "pressed": "true",
+              "label": "SFX 음소거"
+            }
+          ]
+        },
+        "audioAfterClick": [
+          {
+            "pressed": "false",
+            "label": "BGM 사운드 켜기"
+          },
+          {
+            "pressed": "true",
+            "label": "SFX 음소거"
+          }
+        ]
+      }
+    },
+    {
+      "name": "A11y: Daily calendar exposes grid cells, labels, and today state",
+      "pass": true,
+      "details": {
+        "gridRole": "grid",
+        "gridLabel": "2026년 11월 출석 현황",
+        "gridCells": 30,
+        "directGridCells": 30,
+        "rows": 0,
+        "currentDate": 1,
+        "firstCellLabel": "1일"
+      }
+    },
+    {
+      "name": "A11y: achievement progress bars expose values",
+      "pass": true,
+      "details": {
+        "count": 4,
+        "now": "0",
+        "max": "3",
+        "text": "0 / 3",
+        "label": "별들의 수집가"
+      }
+    },
+    {
+      "name": "A11y: no page errors",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "Home confirm: destructive return asks first and fits 360x640",
+      "pass": true,
+      "details": {
+        "visible": {
+          "overflow": "hidden",
+          "inert": true,
+          "dialogName": null,
+          "dialogDescribed": null
+        },
+        "metrics": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 189.40625,
+          "bottom": 458.59375,
+          "width": 328,
+          "height": 269.1875
+        },
+        "focusInside": true
+      }
+    },
+    {
+      "name": "Home confirm: cancel keeps the game",
+      "pass": true,
+      "details": {
+        "boardVisible": true,
+        "titleVisible": false,
+        "overflow": ""
+      }
+    },
+    {
+      "name": "Home confirm: confirm returns home and restores scroll",
+      "pass": true,
+      "details": {
+        "titleVisible": true,
+        "overflow": ""
+      }
+    },
+    {
+      "name": "A11y: achievement toast is polite status and win is a modal dialog",
+      "pass": true,
+      "details": {
+        "role": "status",
+        "live": "polite",
+        "atomic": "true",
+        "winRole": "dialog",
+        "winModal": "true",
+        "boardSelect": "none",
+        "bodySelect": "text"
+      }
+    },
+    {
+      "name": "A11y: board selection is disabled while body text remains selectable",
+      "pass": true,
+      "details": {
+        "role": "status",
+        "live": "polite",
+        "atomic": "true",
+        "winRole": "dialog",
+        "winModal": "true",
+        "boardSelect": "none",
+        "bodySelect": "text"
+      }
+    },
+    {
+      "name": "Win modal: Escape keeps the completion dialog open",
+      "pass": true,
+      "details": {}
+    },
+    {
+      "name": "Core play: normal 3x3 solve reaches the win modal",
+      "pass": true,
+      "details": {
+        "steps": 27,
+        "board": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Core play: no page errors",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "Layout 360x640: title and game have no horizontal overflow",
+      "pass": true,
+      "details": {
+        "title": {
+          "scrollWidth": 360,
+          "innerWidth": 360
+        },
+        "game": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "boardWidth": 281.59375
+        }
+      }
+    },
+    {
+      "name": "Layout 360x640: BGM/Daily/Achievement/Theme modals stay inside the viewport",
+      "pass": true,
+      "details": {
+        "bgm": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 44.765625,
+          "bottom": 603.234375,
+          "width": 328,
+          "height": 558.46875
+        },
+        "daily": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 78.296875,
+          "bottom": 569.6875,
+          "width": 328,
+          "height": 491.390625
+        },
+        "achievement": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 61,
+          "bottom": 587,
+          "width": 328,
+          "height": 526
+        },
+        "theme": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 112.390625,
+          "bottom": 535.609375,
+          "width": 328,
+          "height": 423.21875
+        }
+      }
+    },
+    {
+      "name": "Layout 360x800: title and game have no horizontal overflow",
+      "pass": true,
+      "details": {
+        "title": {
+          "scrollWidth": 360,
+          "innerWidth": 360
+        },
+        "game": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "boardWidth": 310
+        }
+      }
+    },
+    {
+      "name": "Layout 360x800: BGM/Daily/Achievement/Theme modals stay inside the viewport",
+      "pass": true,
+      "details": {
+        "bgm": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 800,
+          "left": 16,
+          "right": 344,
+          "top": 124.765625,
+          "bottom": 683.234375,
+          "width": 328,
+          "height": 558.46875
+        },
+        "daily": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 800,
+          "left": 16,
+          "right": 344,
+          "top": 158.296875,
+          "bottom": 649.6875,
+          "width": 328,
+          "height": 491.390625
+        },
+        "achievement": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 800,
+          "left": 16,
+          "right": 344,
+          "top": 93,
+          "bottom": 715,
+          "width": 328,
+          "height": 622
+        },
+        "theme": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 800,
+          "left": 16,
+          "right": 344,
+          "top": 192.390625,
+          "bottom": 615.609375,
+          "width": 328,
+          "height": 423.21875
+        }
+      }
+    },
+    {
+      "name": "Layout 1280x800: title and game have no horizontal overflow",
+      "pass": true,
+      "details": {
+        "title": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280
+        },
+        "game": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "boardWidth": 330
+        }
+      }
+    },
+    {
+      "name": "Layout 1280x800: BGM/Daily/Achievement/Theme modals stay inside the viewport",
+      "pass": true,
+      "details": {
+        "bgm": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "innerHeight": 800,
+          "left": 410,
+          "right": 870,
+          "top": 117.015625,
+          "bottom": 690.96875,
+          "width": 460,
+          "height": 573.953125
+        },
+        "daily": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "innerHeight": 800,
+          "left": 420,
+          "right": 860,
+          "top": 119.65625,
+          "bottom": 688.34375,
+          "width": 440,
+          "height": 568.6875
+        },
+        "achievement": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "innerHeight": 800,
+          "left": 380,
+          "right": 900,
+          "top": 95.5,
+          "bottom": 712.5,
+          "width": 520,
+          "height": 617
+        },
+        "theme": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "innerHeight": 800,
+          "left": 400,
+          "right": 880,
+          "top": 100.625,
+          "bottom": 707.375,
+          "width": 480,
+          "height": 606.75
+        }
+      }
+    }
+  ],
+  "scenarios": {
+    "accessibility": {
+      "title": {
+        "title": {
+          "userSelect": "text",
+          "cardCursor": "auto",
+          "audioButtons": [
+            {
+              "pressed": "true",
+              "label": "BGM 음소거"
+            },
+            {
+              "pressed": "true",
+              "label": "SFX 음소거"
+            }
+          ]
+        },
+        "cardSelection": {
+          "standardSelected": true,
+          "timeAttackSelected": false
+        },
+        "audioAfterClick": [
+          {
+            "pressed": "false",
+            "label": "BGM 사운드 켜기"
+          },
+          {
+            "pressed": "true",
+            "label": "SFX 음소거"
+          }
+        ]
+      },
+      "calendar": {
+        "gridRole": "grid",
+        "gridLabel": "2026년 11월 출석 현황",
+        "gridCells": 30,
+        "directGridCells": 30,
+        "rows": 0,
+        "currentDate": 1,
+        "firstCellLabel": "1일"
+      },
+      "progress": {
+        "count": 4,
+        "now": "0",
+        "max": "3",
+        "text": "0 / 3",
+        "label": "별들의 수집가"
+      },
+      "bgmMuteButtons": [
+        {
+          "text": "BGM",
+          "title": "BGM 켜기",
+          "ariaLabel": null,
+          "ariaPressed": null
+        },
+        {
+          "text": "SFX",
+          "title": "SFX 음소거",
+          "ariaLabel": null,
+          "ariaPressed": null
+        }
+      ],
+      "pageErrors": []
+    },
+    "homeConfirm": {
+      "visible": {
+        "overflow": "hidden",
+        "inert": true,
+        "dialogName": null,
+        "dialogDescribed": null
+      },
+      "metrics": {
+        "scrollWidth": 360,
+        "innerWidth": 360,
+        "innerHeight": 640,
+        "left": 16,
+        "right": 344,
+        "top": 189.40625,
+        "bottom": 458.59375,
+        "width": 328,
+        "height": 269.1875
+      },
+      "focusInside": true,
+      "afterCancel": {
+        "boardVisible": true,
+        "titleVisible": false,
+        "overflow": ""
+      },
+      "afterConfirm": {
+        "titleVisible": true,
+        "overflow": ""
+      }
+    },
+    "winAccessibility": {
+      "solve": {
+        "steps": 27,
+        "board": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          0
+        ]
+      },
+      "toast": {
+        "role": "status",
+        "live": "polite",
+        "atomic": "true",
+        "winRole": "dialog",
+        "winModal": "true",
+        "boardSelect": "none",
+        "bodySelect": "text"
+      },
+      "escapeKeepsWin": true,
+      "pageErrors": []
+    },
+    "layout": {
+      "360x640": {
+        "title": {
+          "scrollWidth": 360,
+          "innerWidth": 360
+        },
+        "bgm": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 44.765625,
+          "bottom": 603.234375,
+          "width": 328,
+          "height": 558.46875
+        },
+        "daily": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 78.296875,
+          "bottom": 569.6875,
+          "width": 328,
+          "height": 491.390625
+        },
+        "achievement": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 61,
+          "bottom": 587,
+          "width": 328,
+          "height": 526
+        },
+        "game": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "boardWidth": 281.59375
+        },
+        "theme": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 640,
+          "left": 16,
+          "right": 344,
+          "top": 112.390625,
+          "bottom": 535.609375,
+          "width": 328,
+          "height": 423.21875
+        }
+      },
+      "360x800": {
+        "title": {
+          "scrollWidth": 360,
+          "innerWidth": 360
+        },
+        "bgm": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 800,
+          "left": 16,
+          "right": 344,
+          "top": 124.765625,
+          "bottom": 683.234375,
+          "width": 328,
+          "height": 558.46875
+        },
+        "daily": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 800,
+          "left": 16,
+          "right": 344,
+          "top": 158.296875,
+          "bottom": 649.6875,
+          "width": 328,
+          "height": 491.390625
+        },
+        "achievement": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 800,
+          "left": 16,
+          "right": 344,
+          "top": 93,
+          "bottom": 715,
+          "width": 328,
+          "height": 622
+        },
+        "game": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "boardWidth": 310
+        },
+        "theme": {
+          "scrollWidth": 360,
+          "innerWidth": 360,
+          "innerHeight": 800,
+          "left": 16,
+          "right": 344,
+          "top": 192.390625,
+          "bottom": 615.609375,
+          "width": 328,
+          "height": 423.21875
+        }
+      },
+      "1280x800": {
+        "title": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280
+        },
+        "bgm": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "innerHeight": 800,
+          "left": 410,
+          "right": 870,
+          "top": 117.015625,
+          "bottom": 690.96875,
+          "width": 460,
+          "height": 573.953125
+        },
+        "daily": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "innerHeight": 800,
+          "left": 420,
+          "right": 860,
+          "top": 119.65625,
+          "bottom": 688.34375,
+          "width": 440,
+          "height": 568.6875
+        },
+        "achievement": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "innerHeight": 800,
+          "left": 380,
+          "right": 900,
+          "top": 95.5,
+          "bottom": 712.5,
+          "width": 520,
+          "height": 617
+        },
+        "game": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "boardWidth": 330
+        },
+        "theme": {
+          "scrollWidth": 1280,
+          "innerWidth": 1280,
+          "innerHeight": 800,
+          "left": 400,
+          "right": 880,
+          "top": 100.625,
+          "bottom": 707.375,
+          "width": 480,
+          "height": 606.75
+        }
+      }
+    }
+  },
+  "failures": [],
+  "verdict": "PASS"
+}
