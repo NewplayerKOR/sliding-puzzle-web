@@ -21,6 +21,7 @@ import { GameChallengeMode, GridSize } from './types/puzzle';
 import { getLocalizedTheme, DEFAULT_THEME_ID } from './utils/themeData';
 import { getBestRecords, saveBestRecord } from './utils/recordStorage';
 import { useAssetPreloader } from './hooks/useAssetPreloader';
+import { useTransientToast } from './hooks/useTransientToast';
 import { preloadAllThemeAssets } from './utils/assetPreloader';
 import { audioManager } from './utils/audioManager';
 import { findNextOptimalMove, AISolutionStep } from './utils/aiSolver';
@@ -136,7 +137,7 @@ export const App: React.FC = () => {
   // 최고 기록 및 토스트 알림 상태
   const [bestRecords, setBestRecords] = useState(() => getBestRecords());
   const [isNewRecord, setIsNewRecord] = useState<boolean>(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const { message: toastMessage, showToast } = useTransientToast();
 
   const clearAiHintTimer = useCallback(() => {
     if (aiHintTimerRef.current !== null) {
@@ -228,14 +229,13 @@ export const App: React.FC = () => {
   useEffect(() => {
     if (!aiHintError) return;
 
-    setToastMessage(t[aiHintError]);
+    showToast(t[aiHintError]);
     const timer = window.setTimeout(() => {
-      setToastMessage(null);
       setAiHintError(null);
     }, 3000);
 
     return () => window.clearTimeout(timer);
-  }, [aiHintError, t]);
+  }, [aiHintError, t, showToast]);
 
   // AI 힌트 쿨다운 타이머
   useEffect(() => {
@@ -316,7 +316,9 @@ export const App: React.FC = () => {
       return;
     }
 
-    // Worker를 생성할 수 없는 환경에서는 동기 계산으로 폴백함
+    // Worker를 생성할 수 없는 환경에서는 동기 계산으로 폴백함.
+    // 5초 Worker 타임아웃을 먼저 취소해야 폴백 성공 후 늦게 도착한 타임아웃이 힌트를 지우지 않음.
+    clearAiHintTimer();
     aiHintTimerRef.current = window.setTimeout(() => {
       if (latestRequestIdRef.current !== requestId) return;
       pendingRequestIdRef.current = null;
@@ -479,11 +481,8 @@ export const App: React.FC = () => {
     setCurrentScreen('game');
   };
 
-  // 토스트 메시지 노티파이어
-  const handleNotify = (msg: string) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
-  };
+  // 토스트 메시지 노티파이어: 새 메시지마다 이전 타이머를 정리해 3초 표시를 보장함
+  const handleNotify = showToast;
 
   return (
     <div className="app-container">

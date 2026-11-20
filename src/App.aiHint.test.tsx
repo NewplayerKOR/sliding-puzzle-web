@@ -7,6 +7,18 @@ vi.mock('canvas-confetti', () => ({
   default: vi.fn(),
 }));
 
+const aiSolverMocks = vi.hoisted(() => ({
+  findNextOptimalMove: vi.fn(),
+}));
+
+vi.mock('./utils/aiSolver', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./utils/aiSolver')>();
+  return {
+    ...actual,
+    findNextOptimalMove: aiSolverMocks.findNextOptimalMove,
+  };
+});
+
 class FakeWorker {
   static instances: FakeWorker[] = [];
 
@@ -61,6 +73,7 @@ const hintResult = (requestId: number) => ({
 describe('App AI hint lifecycle', () => {
   beforeEach(() => {
     FakeWorker.instances = [];
+    aiSolverMocks.findNextOptimalMove.mockReset();
     vi.stubGlobal('localStorage', createMemoryStorage());
     vi.stubGlobal('Worker', FakeWorker as unknown as typeof Worker);
     resetGlobalLanguage();
@@ -158,5 +171,58 @@ describe('App AI hint lifecycle', () => {
     });
 
     expect(document.querySelector('.tile-ai-hint-overlay')).toBeNull();
+  });
+
+  it('keeps the synchronous fallback hint after the 5 second worker timeout window', () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('Worker', undefined);
+    aiSolverMocks.findNextOptimalMove.mockReturnValue({
+      tileValue: 1,
+      tileIndex: 0,
+      direction: 'up',
+    });
+
+    render(<App />);
+    startStandardGame();
+    fireEvent.click(aiHintButton());
+
+    act(() => {
+      vi.advanceTimersByTime(30);
+    });
+
+    expect(aiSolverMocks.findNextOptimalMove).toHaveBeenCalledTimes(1);
+    expect(document.querySelector('.tile-ai-hint-overlay')).not.toBeNull();
+    expect(aiHintButton().textContent).toContain('3s');
+
+    act(() => {
+      vi.advanceTimersByTime(6000);
+    });
+
+    expect(document.querySelector('.tile-ai-hint-overlay')).not.toBeNull();
+    expect(screen.queryByText(/AI 힌트 계산 시간이 초과되었습니다/)).toBeNull();
+  });
+
+  it('reports a synchronous fallback failure with a single localized message', () => {
+    vi.useFakeTimers();
+    vi.stubGlobal('Worker', undefined);
+    aiSolverMocks.findNextOptimalMove.mockReturnValue(null);
+
+    render(<App />);
+    startStandardGame();
+    fireEvent.click(aiHintButton());
+
+    act(() => {
+      vi.advanceTimersByTime(30);
+    });
+
+    expect(
+      screen.getByText('이동 가능한 힌트를 찾지 못했습니다. 보드를 섞은 뒤 다시 시도해 주세요.')
+    ).toBeDefined();
+
+    act(() => {
+      vi.advanceTimersByTime(5000);
+    });
+
+    expect(screen.queryByText(/AI 힌트 계산 시간이 초과되었습니다/)).toBeNull();
   });
 });
