@@ -262,6 +262,7 @@ export interface Translations {
   themeLabel: string;
   shareCopied: string;
   shareDownloaded: string;
+  shareFailed: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -508,6 +509,7 @@ export const translations: Record<Language, Translations> = {
     themeLabel: '테마',
     shareCopied: '결과 카드가 클립보드에 복사되었습니다!',
     shareDownloaded: '결과 카드가 이미지 파일로 다운로드되었습니다!',
+    shareFailed: '결과 카드를 만들지 못했습니다. 다시 시도해 주세요.',
   },
   en: {
     appTitle: 'Sliding Puzzle',
@@ -752,6 +754,7 @@ export const translations: Record<Language, Translations> = {
     themeLabel: 'Theme',
     shareCopied: 'Result card copied to the clipboard!',
     shareDownloaded: 'Result card downloaded as an image file!',
+    shareFailed: 'Could not create the result card. Please try again.',
   },
   ja: {
     appTitle: 'スライディングパズル',
@@ -996,6 +999,7 @@ export const translations: Record<Language, Translations> = {
     themeLabel: 'テーマ',
     shareCopied: '結果カードをクリップボードにコピーしました！',
     shareDownloaded: '結果カードを画像ファイルとしてダウンロードしました！',
+    shareFailed: '結果カードを作成できませんでした。もう一度お試しください。',
   },
   zh: {
     appTitle: '华容道拼图',
@@ -1240,5 +1244,6 @@ export const translations: Record<Language, Translations> = {
     themeLabel: '主题',
     shareCopied: '结果卡片已复制到剪贴板！',
     shareDownloaded: '结果卡片已作为图片文件下载！',
+    shareFailed: '无法生成成绩卡，请重试。',
   },
 };

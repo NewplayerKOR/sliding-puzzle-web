@@ -53,11 +53,24 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
   try {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = ctx.themeImageSrc;
-    await new Promise((resolve) => {
-      img.onload = resolve;
-      img.onerror = resolve;
+    await new Promise<void>((resolve) => {
+      let settled = false;
+      let timer = 0;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        if (timer) window.clearTimeout(timer);
+        resolve();
+      };
+      // 이미지 응답이 멈춰도 결과 카드 생성 전체가 대기하지 않도록 제한 시간을 둠
+      img.onload = finish;
+      img.onerror = finish;
+      timer = window.setTimeout(finish, SHARE_IMAGE_TIMEOUT_MS);
+      img.src = ctx.themeImageSrc;
     });
+    if (img.naturalWidth === 0) {
+      throw new Error('theme image is not ready');
+    }
     c.drawImage(img, thumbX, thumbY, thumbSize, thumbSize);
   } catch {
     c.fillStyle = '#E4E4DC';
@@ -146,13 +159,29 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
   });
 }
 
+const SHARE_IMAGE_TIMEOUT_MS = 3000;
+const DOWNLOAD_URL_LIFETIME_MS = 1000;
+
+function isAbortError(error: unknown): boolean {
+  return (
+    (error instanceof DOMException && error.name === 'AbortError') ||
+    (typeof error === 'object' &&
+      error !== null &&
+      'name' in error &&
+      (error as { name?: string }).name === 'AbortError')
+  );
+}
+
 export async function shareOrDownloadResult(
   ctx: ShareCardContext,
   onNotify: (msg: string) => void
 ): Promise<void> {
   const t = translations[getCurrentLanguage()] || translations.ko;
   const blob = await generateShareCardBlob(ctx);
-  if (!blob) return;
+  if (!blob) {
+    onNotify(t.shareFailed);
+    return;
+  }
 
   const file = new File([blob], `sliding-puzzle-${ctx.gridSize}x${ctx.gridSize}-victory.png`, {
     type: 'image/png',
@@ -167,8 +196,10 @@ export async function shareOrDownloadResult(
         files: [file],
       });
       return;
-    } catch {
-      // user cancelled or share failed, fallback below
+    } catch (error) {
+      // 사용자가 공유 시트를 닫은 경우에는 의도한 취소이므로 폴백하지 않음
+      if (isAbortError(error)) return;
+      // 실제 공유 실패만 클립보드·다운로드 폴백으로 이어감
     }
   }
 
@@ -192,7 +223,12 @@ export async function shareOrDownloadResult(
   const a = document.createElement('a');
   a.href = url;
   a.download = `sliding-puzzle-victory.png`;
+  a.rel = 'noopener';
+  // 일부 브라우저는 문서에 연결되지 않은 앵커의 다운로드를 무시함
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  a.remove();
+  // Safari/Firefox가 다운로드를 시작하기 전에 URL이 해제되지 않도록 지연함
+  window.setTimeout(() => URL.revokeObjectURL(url), DOWNLOAD_URL_LIFETIME_MS);
   onNotify(t.shareDownloaded);
 }

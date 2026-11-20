@@ -52,44 +52,53 @@ export const WinModal: React.FC<WinModalProps> = ({
   const [replaySpeed, setReplaySpeed] = useState<number>(200); // ms per step
 
   useEffect(() => {
-    if (isOpen) {
-      // 승리 축하 Confetti는 1회성 피드백으로 유지하되, reduced motion에서는 생략함
-      const reduceMotion =
-        typeof window.matchMedia === 'function' &&
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!isOpen) return;
 
-      if (!reduceMotion) {
-        const duration = 2.5 * 1000;
-        const animationEnd = Date.now() + duration;
+    setShowReplay(false);
+    setReplayStep(0);
+    setIsPlayingReplay(false);
 
-        const frame = () => {
-          confetti({
-            particleCount: 4,
-            angle: 60,
-            spread: 60,
-            origin: { x: 0, y: 0.7 },
-            colors: ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'],
-          });
-          confetti({
-            particleCount: 4,
-            angle: 120,
-            spread: 60,
-            origin: { x: 1, y: 0.7 },
-            colors: ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'],
-          });
+    // 승리 축하 Confetti는 1회성 피드백으로 유지하되, reduced motion에서는 생략함
+    const reduceMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-          if (Date.now() < animationEnd) {
-            requestAnimationFrame(frame);
-          }
-        };
+    if (reduceMotion) return;
 
-        frame();
+    const duration = 2.5 * 1000;
+    const animationEnd = Date.now() + duration;
+    let rafId: number | null = null;
+
+    const frame = () => {
+      confetti({
+        particleCount: 4,
+        angle: 60,
+        spread: 60,
+        origin: { x: 0, y: 0.7 },
+        colors: ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'],
+      });
+      confetti({
+        particleCount: 4,
+        angle: 120,
+        spread: 60,
+        origin: { x: 1, y: 0.7 },
+        colors: ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'],
+      });
+
+      if (Date.now() < animationEnd) {
+        rafId = requestAnimationFrame(frame);
       }
+    };
 
-      setShowReplay(false);
-      setReplayStep(0);
-      setIsPlayingReplay(false);
-    }
+    frame();
+
+    // 모달을 닫거나 언마운트하면 남은 RAF와 Confetti 캔버스를 즉시 정리함
+    return () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      confetti.reset();
+    };
   }, [isOpen]);
 
   // Replay interval timer
