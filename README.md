@@ -132,7 +132,7 @@ src/
 | 유닛·통합 테스트 | **41개 파일 / 247개 케이스 PASS** |
 | 타입 검사 | **0 Errors** |
 | 프로덕션 빌드 | **Vite 8.3.6 성공** |
-| E2E | **Playwright Chromium 15/15 PASS** |
+| E2E | **Playwright Chromium 16/16 PASS** |
 | Lighthouse | 타이틀 화면 접근성 **1.0** |
 
 - Node.js 26.13.0에서도 별도 `NODE_OPTIONS` 없이 `npm test`가 통과합니다.

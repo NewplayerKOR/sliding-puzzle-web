@@ -365,7 +365,7 @@ npm run build
 
 - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors.
 - `npm run build`: Vite 8.3.6 성공. CSS 83.34KB(gzip 11.07KB), JS 389.44KB(gzip 121.29KB), solver worker 8.73KB.
-- `npm run test:e2e`: Playwright Chromium 15/15 PASS. 360×640·1280×800 모달 스크롤 잠금·Tab 순환·Escape, 홈 복귀 확인, 접근성 역할 검증 포함.
+- `npm run test:e2e`: Playwright Chromium 16/16 PASS. 360×640·1280×800 모달 스크롤 잠금·Tab 순환·Escape, 홈 복귀 확인, 접근성 역할 검증 포함.
 - Lighthouse(타이틀 화면) 접근성 **1.0**. 게임·모달은 Playwright DOM 검증으로 대체했고 Lighthouse 점수 범위는 타이틀 화면이다.
 - 모달 수명주기: 열림 동안 `body.overflow: hidden`·스크롤바 폭 보정, 닫힘 시 이전 값 복원. 오버레이·콘텐츠에 `overscroll-behavior: contain`. 승리·게임오버 시 보조 모달 자동 종료로 `aria-modal` 다이얼로그 1개 유지.
 - 홈 복귀 확인: 진행 중(`playing`·이동 1회 이상)일 때만 표시. 360×640 콘텐츠 328px, 1280×800 400px, 가로 오버플로 0건, 취소·확인 버튼 44px, Tab 순환·Escape 취소.

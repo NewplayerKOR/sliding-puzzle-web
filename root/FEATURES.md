@@ -95,7 +95,7 @@
 - **단위·통합 테스트**: `npm test` — 41개 테스트 파일 / 247개 케이스 전건 PASS (2026-11-20, Node.js 26.13.0).
 - **타입 검사**: `npx tsc --noEmit` — 0 Errors (`npm run build`의 tsc 단계에서 확인).
 - **프로덕션 빌드**: `npm run build` — Vite 8.3.6(Rolldown) 빌드 성공 (2026-11-20, React 19.3.1·TypeScript 7.0.2·Vitest 5.1.0). CSS 83.34KB(gzip 11.07KB), JS 389.44KB(gzip 121.29KB), solver worker 8.73KB.
-- **E2E**: `npm run test:e2e` — Playwright Chromium 15/15 PASS (기존 4 + 정답 모달 3 + PWA 오프라인 1 + 모달 수명주기 2 + 접근성·파괴적 UX 5).
+- **E2E**: `npm run test:e2e` — Playwright Chromium 16/16 PASS (기존 4 + 정답 모달 3 + PWA 오프라인 1 + 모달 수명주기 2 + 접근성·파괴적 UX 5 + PWA 브랜딩 배너 1).
 - **접근성 감사**: 2026-11-20 TASK-DEV-39에서 타이틀 화면 Lighthouse 접근성 **1.0**을 확인했다. 게임 화면·모달은 Playwright로 landmark·progressbar·gridcell·aria-pressed·포커스 트랩을 검증했으며, Lighthouse 점수는 타이틀 화면 범위다. SEO의 `robots.txt` 유효성 항목은 접근성 범위가 아니며 TASK-QA-08에서 다룬다.
 - **반응형 레이아웃**: 360×800과 1280×800 게임 화면은 `bodyScrollHeight`가 각각 800px로 스크롤 없이 배치되고, 360×640은 가로 클리핑 없이 세로 스크롤만 허용한다(2026-11-08, TASK-DEV-20). 360×800 타이틀 상단 바는 341px/341px로 잘림이 없다.
 - **PWA·오프라인**: 2026-11-08 TASK-DEV-21에서 서브패스(`/sliding-puzzle/`) 프로덕션 빌드를 검증했다. SW scope는 `/sliding-puzzle/`, 프리캐시 37건, 매니페스트 아이콘 4종은 192×192·512×512 규격과 200 응답을 확인했다. 서버가 502를 반환하거나 중단된 상태에서도 캐시된 셸로 타이틀 화면이 렌더링됐고, 업데이트는 배너 표시 후 "나중에"에서 새로고침 없이 유지되며 "지금 업데이트"에서 새 워커 활성화와 1회 새로고침이 확인됐다.

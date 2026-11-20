@@ -54,27 +54,27 @@
 
 - **TASK-DEV-39** — 접근성·파괴적 액션 UX 잔여 정비 (완료일: 2026-11-20)
   - 핵심 결과: 업적 토스트를 `role="status"`·`aria-live="polite"`로 바꾸고 PWA 설치 배너를 `aside` complementary landmark로 정리함. 업적 진행 바에 `progressbar` 값, Daily 캘린더에 `grid`/`gridcell`·`aria-current="date"`를 제공하고, 장식 모드 카드의 `div onClick`을 제거해 선택은 내부 버튼으로만 변경됨. BGM/SFX 토글에 동작·상태 라벨과 `aria-pressed`를 추가하고, 전역 텍스트 선택을 허용하며 커스텀 이미지 캔버스에 방향키 팬 대안을 추가함. 진행 중 홈 복귀는 확인 모달을 거치며 WinModal은 Escape로 닫지 않는 완료 상태 정책을 적용함
-  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 15/15 PASS. 360×640·1280×800 홈 확인 모달 328px/400px·가로 오버플로 0건, Tab 순환·Escape 취소, 배경 스크롤 잠금 확인. 타이틀 화면 Lighthouse 접근성 1.0. 실제 모바일 실기기·Safari/Firefox·스크린리더 수동 검증은 미실행
+  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 16/16 PASS. 360×640·1280×800 홈 확인 모달 328px/400px·가로 오버플로 0건, Tab 순환·Escape 취소, 배경 스크롤 잠금 확인. 타이틀 화면 Lighthouse 접근성 1.0. 실제 모바일 실기기·Safari/Firefox·스크린리더 수동 검증은 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-39--접근성파괴적-액션-ux-잔여-정비)
 
 - **TASK-DEV-38** — Time Attack 이동 시점 제한 시간 검사 (완료일: 2026-11-20)
   - 핵심 결과: `moveTile()` 진입 시 실제 경과 초를 확인해 제한 시간 이상이면 이동을 거부하고 `gameover`로 전환함. 250ms 인터벌과 이동 이벤트 사이의 틈·탭 복귀 직후에도 제한 시간 이후 승리와 기록 저장이 발생하지 않음. 만료 시 정답 미리보기는 닫고 GameOver만 표시함
-  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(`usePuzzleGame` 13건, 틱 사이 이동·완성 수 거부 포함), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 15/15 PASS. 실제 모바일 실기기·Safari/Firefox·스크린리더는 미실행
+  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(`usePuzzleGame` 13건, 틱 사이 이동·완성 수 거부 포함), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 16/16 PASS. 실제 모바일 실기기·Safari/Firefox·스크린리더는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-38--time-attack-이동-시점-제한-시간-검사)
 
 - **TASK-DEV-37** — 오디오 볼륨·BGM 자동 연동 정합화 (완료일: 2026-11-20)
   - 핵심 결과: Web Audio master gain과 개별 gain에 중복 적용되던 `sfxVolume`을 개별 gain 1회로 정리해 HTMLAudio 폴백과 음량 스케일을 통일함. `setAutoThemeBgm(true)`가 현재 테마의 권장 BGM으로 즉시 전환하고 이후 테마 변경에도 동기화하도록 수정하고 4개 국어 설명을 실제 동작에 맞춤
-  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(`audioManager` 15건, `BgmSelectModal` 6건), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 15/15 PASS. 실제 기기 음량 청취·Safari/Firefox 오디오 검증은 미실행
+  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(`audioManager` 15건, `BgmSelectModal` 6건), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 16/16 PASS. 실제 기기 음량 청취·Safari/Firefox 오디오 검증은 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-37--오디오-볼륨bgm-자동-연동-정합화)
 
 - **TASK-DEV-36** — PWA 브랜딩·매니페스트·프리캐시 자산 정리 (완료일: 2026-11-20)
   - 핵심 결과: 매니페스트 색상을 `#EFEFEA`/`#BB3E0B`로 맞추고 `orientation`을 제거해 가로 태블릿·데스크톱 설치를 허용함. 192·512·maskable·apple-touch 아이콘을 현재 심플·어반 팔레트로 재생성하고, 사용하지 않는 스프라이트·개별 아이콘을 프리캐시에서 제거해 v2.4/17건/약 1.21MB로 축소함. 설치 프롬프트 거부·오류·`appinstalled`를 안전하게 처리하고 배너를 complementary landmark로 전환함
-  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(아이콘 규격·maskable safe zone·매니페스트·프리캐시 포함), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 15/15 PASS. 360×640·1280×800 설치 배너와 오프라인 재로드 확인. 실제 설치 프롬프트·실기기 홈 화면 아이콘·Safari/Firefox는 미실행
+  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(아이콘 규격·maskable safe zone·매니페스트·프리캐시 포함), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 16/16 PASS. 360×640·1280×800 설치 배너와 오프라인 재로드 확인. 실제 설치 프롬프트·실기기 홈 화면 아이콘·Safari/Firefox는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-36--pwa-브랜딩매니페스트프리캐시-자산-정리)
 
 - **TASK-DEV-35** — 승리 Confetti·공유 흐름 후처리 안정성 (완료일: 2026-11-20)
   - 핵심 결과: 승리 모달을 닫거나 언마운트할 때 Confetti RAF와 캔버스를 정리함. 공유 시트 취소(`AbortError`)는 다운로드·클립보드 폴백 없이 종료하고, 실제 공유 실패에만 폴백하며 Blob 생성 실패를 안내함. 테마 이미지 로드에 3초 타임아웃을 두고 다운로드 앵커를 문서에 연결한 뒤 Object URL을 1초 후 해제함
-  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(`WinModal` 2건, `shareCardGenerator` 5건), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 15/15 PASS. 실제 공유 시트·Safari/Firefox 다운로드 동작은 미실행
+  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS(`WinModal` 2건, `shareCardGenerator` 5건), tsc 0 Errors, Vite 8.3.6 빌드 성공, Playwright E2E 16/16 PASS. 실제 공유 시트·Safari/Firefox 다운로드 동작은 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-35--승리-confetti공유-흐름-후처리-안정성)
 
 ---

@@ -1631,7 +1631,7 @@
 - **검증**:
   - `WinModal.test.tsx`: 2건 PASS. 닫기 시 RAF 취소·Confetti reset, reduced motion 시 생략.
   - `shareCardGenerator.test.ts`: 5건 PASS. 취소 시 폴백 없음, 실제 실패 시 클립보드, 클립보드 실패 시 지연 다운로드, Blob 실패 안내, 이미지 타임아웃 후 생성.
-  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 16/16 PASS.
 - **미실행**: 실제 Web Share 시트·Safari/Firefox 다운로드·모바일 공유.
 - **증거**:
   - `root/archive/assets/task-dev-35/verification.json`, `win-modal-360x640.webp`
@@ -1666,7 +1666,7 @@
   - `PwaInstallBanner.test.tsx`: 4건 PASS. complementary landmark·1회 prompt·거부·오류·appinstalled.
   - `serviceWorkerScript.test.ts`: 12건 PASS. v2.4·17건 목록·미사용 자산 제외·캐시 정리.
   - `e2e/pwa-offline.spec.ts`: 1건 PASS. 최초 설치 직후 오프라인 재로드.
-  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 16/16 PASS.
 - **미실행**: 실제 설치 프롬프트·홈 화면 아이콘·스플래시, Safari/Firefox, Vercel 재배포.
 - **증거**:
   - `root/archive/assets/task-dev-36/verification.json`, `pwa-icons.webp`, `install-banner-360x640.webp`, `install-banner-1280x800.webp`
@@ -1696,7 +1696,7 @@
 - **검증**:
   - `audioManager.test.ts`: 15건 PASS. `sfxVolume 0.5`에서 master 1·개별 0.425 적용, 즉시 BGM 전환 포함.
   - `BgmSelectModal.test.tsx`: 6건 PASS. 체크박스 활성화 시 현재 테마 권장 트랙 전환.
-  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 16/16 PASS.
 - **미실행**: 실제 기기 음량 청취, Safari/Firefox Web Audio 동작.
 - **증거**:
   - `root/archive/assets/task-dev-37/verification.json`
@@ -1725,7 +1725,7 @@
 - **검증**:
   - `usePuzzleGame.test.ts`: 13건 PASS. 틱 콜백 없이 벽시계만 46초 이동한 뒤 이동 거부, 2수 풀이 보드의 마지막 수 거부·gameover·moveCount 유지.
   - `App.solution.test.tsx`: 8건 PASS. 만료 시 정답 미리보기를 닫고 GameOver 1개만 표시.
-  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 16/16 PASS.
 - **미실행**: 실제 저사양 기기·백그라운드 스로틀링에서의 수동 재현.
 - **증거**:
   - `root/archive/assets/task-dev-38/verification.json`
@@ -1774,7 +1774,7 @@
   - `e2e/accessibility-ux.spec.ts`: 5건 PASS. 장식 카드·텍스트 선택·오디오 상태·홈 확인·캘린더/진행 바·360×640 모달 레이아웃.
   - 360×640 확인 모달 328px, 1280×800 400px, 가로 오버플로 0건, body overflow hidden.
   - Lighthouse(타이틀 화면) 접근성 **1.0**.
-  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 15/15 PASS.
+  - `npm test`: 41개 파일/247개 케이스 PASS. `npm run typecheck`: 0 Errors. `npm run build`: Vite 8.3.6 성공. Playwright E2E 16/16 PASS.
 - **미실행**: 실제 스크린리더(NVDA·VoiceOver) 수동 확인, 실제 모바일 실기기, Safari/Firefox, 게임·모달 화면의 Lighthouse 점수.
 - **증거**:
   - `root/archive/assets/task-dev-39/verification.json`, `metrics.json`, `lighthouse-accessibility.json`

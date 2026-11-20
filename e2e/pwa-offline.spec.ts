@@ -37,6 +37,10 @@ test.describe('PWA 최초 설치 오프라인', () => {
     expect(cacheInfo.urls.some((url) => /\/assets\/solver\.worker-.*\.js$/.test(url))).toBe(
       true
     );
+    expect(cacheInfo.urls).toContain('/assets/icons/icon-192.png');
+    expect(cacheInfo.urls).toContain('/assets/icons/apple-touch-icon.png');
+    expect(cacheInfo.urls).not.toContain('/assets/sprites/ui_icons_spritesheet.png');
+    expect(cacheInfo.urls).not.toContain('/assets/icons/stars_3.png');
 
     await context.setOffline(true);
     await page.reload({ waitUntil: 'domcontentloaded' });
