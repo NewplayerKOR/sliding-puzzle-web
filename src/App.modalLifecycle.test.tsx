@@ -59,6 +59,7 @@ describe('TASK-DEV-33 modal lifecycle', () => {
     vi.useRealTimers();
     vi.restoreAllMocks();
     vi.unstubAllGlobals();
+    document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
     document.body.style.paddingRight = '';
     resetGlobalLanguage();
@@ -68,10 +69,12 @@ describe('TASK-DEV-33 modal lifecycle', () => {
     render(<App />);
 
     openThemeModalFromTitle();
+    expect(document.documentElement.style.overflow).toBe('hidden');
     expect(document.body.style.overflow).toBe('hidden');
 
     fireEvent.click(screen.getByLabelText('닫기'));
     expect(screen.queryByRole('dialog')).toBeNull();
+    expect(document.documentElement.style.overflow).toBe('');
     expect(document.body.style.overflow).toBe('');
   });
 
@@ -90,6 +93,7 @@ describe('TASK-DEV-33 modal lifecycle', () => {
     expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(1);
     expect(screen.getByRole('dialog', { name: /게임 오버/ })).toBeDefined();
     expect(screen.queryByRole('dialog', { name: /BGM/ })).toBeNull();
+    expect(document.documentElement.style.overflow).toBe('hidden');
     expect(document.body.style.overflow).toBe('hidden');
   });
 
@@ -102,12 +106,14 @@ describe('TASK-DEV-33 modal lifecycle', () => {
       vi.advanceTimersByTime(46_000);
     });
 
+    expect(document.documentElement.style.overflow).toBe('hidden');
     expect(document.body.style.overflow).toBe('hidden');
 
     fireEvent.keyDown(window, { key: 'Escape' });
 
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(screen.getByText('일반 모드')).toBeDefined();
+    expect(document.documentElement.style.overflow).toBe('');
     expect(document.body.style.overflow).toBe('');
   });
 });
