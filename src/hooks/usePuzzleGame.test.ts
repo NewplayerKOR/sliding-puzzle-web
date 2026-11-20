@@ -1,6 +1,7 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { usePuzzleGame } from './usePuzzleGame';
+import { createNearSolved3x3Board } from '../test/nearSolvedBoard';
 
 describe('usePuzzleGame Hook', () => {
   it('initializes with solved board and idle state', () => {
@@ -315,6 +316,67 @@ describe('usePuzzleGame Hook', () => {
       expect(result.current.elapsedTime).toBe(46);
       expect(result.current.remainingTime).toBe(0);
       expect(result.current.status).toBe('gameover');
+    });
+
+    it('타이머 틱 사이의 제한 시간 직후 이동을 거부하고 게임오버로 전환한다', () => {
+      vi.useFakeTimers();
+      const { result } = renderHook(() => usePuzzleGame(3));
+
+      act(() => {
+        result.current.changeChallengeMode('timeAttack');
+      });
+      act(() => {
+        result.current.moveTile(7);
+      });
+      expect(result.current.status).toBe('playing');
+      expect(result.current.moveCount).toBe(1);
+
+      act(() => {
+        // 인터벌 콜백은 실행하지 않고 벽시계만 제한 시간 너머로 이동함
+        vi.setSystemTime(Date.now() + 46_000);
+      });
+
+      let moved = true;
+      act(() => {
+        moved = result.current.moveTile(8);
+      });
+
+      expect(moved).toBe(false);
+      expect(result.current.status).toBe('gameover');
+      expect(result.current.isWon).toBe(false);
+      expect(result.current.moveCount).toBe(1);
+      expect(result.current.elapsedTime).toBe(46);
+    });
+
+    it('제한 시간 직후 완성되는 수를 승리·기록으로 인정하지 않는다', () => {
+      vi.useFakeTimers();
+      const { result } = renderHook(() => usePuzzleGame(3));
+
+      act(() => {
+        result.current.changeChallengeMode('timeAttack');
+      });
+      act(() => {
+        result.current.startSeededGame(createNearSolved3x3Board(), 3);
+      });
+      act(() => {
+        const firstMove = result.current.moveTile(7);
+        expect(firstMove).toBe(true);
+      });
+      expect(result.current.status).toBe('playing');
+
+      act(() => {
+        vi.setSystemTime(Date.now() + 46_000);
+      });
+
+      let winningMoveAccepted = true;
+      act(() => {
+        winningMoveAccepted = result.current.moveTile(8);
+      });
+
+      expect(winningMoveAccepted).toBe(false);
+      expect(result.current.status).toBe('gameover');
+      expect(result.current.isWon).toBe(false);
+      expect(result.current.moveCount).toBe(1);
     });
 
     it('탭 복귀(visibilitychange) 시 즉시 경과 시간을 보정한다', () => {

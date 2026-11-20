@@ -248,6 +248,18 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
         return false;
       }
 
+      // 250ms 타이머 틱 사이의 틈에서도 제한 시간을 넘긴 이동을 거부함
+      if (challengeMode === 'timeAttack' && status === 'playing') {
+        const liveElapsed = getElapsedSeconds();
+        if (liveElapsed >= timeLimit) {
+          setElapsedTime(liveElapsed);
+          timerStartedAtRef.current = null;
+          setStatus('gameover');
+          audioManager.playSfx('blocked');
+          return false;
+        }
+      }
+
       const moveResult = moveTileLine(board, index, gridSize);
       if (!moveResult) {
         audioManager.playSfx('blocked');
@@ -289,7 +301,7 @@ export function usePuzzleGame(initialSize: GridSize = 4): UsePuzzleGameReturn {
 
       return true;
     },
-    [board, emptyIndex, gridSize, status, moveCount, challengeMode, moveLimit, getElapsedSeconds]
+    [board, emptyIndex, gridSize, status, moveCount, challengeMode, moveLimit, timeLimit, getElapsedSeconds]
   );
 
   // 키보드 방향키 이동

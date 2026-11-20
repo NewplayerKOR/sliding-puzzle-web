@@ -165,7 +165,7 @@ describe('TASK-DEV-29 정답 보기 무결성', () => {
     expect(screen.queryByRole('dialog', { name: /게임 오버/ })).toBeNull();
   });
 
-  it('Time Attack 만료 시 정답 미리보기를 닫으면 GameOver를 표시한다', () => {
+  it('Time Attack 만료 시 정답 미리보기를 닫고 GameOver를 표시한다', () => {
     vi.useFakeTimers();
     render(<App />);
     startTimedGame('timeattack');
@@ -175,10 +175,10 @@ describe('TASK-DEV-29 정답 보기 무결성', () => {
       vi.advanceTimersByTime(46_000);
     });
 
-    expect(screen.queryByRole('dialog', { name: /게임 오버/ })).toBeNull();
-
-    closeWithEscape();
+    // 만료 시 미리보기를 닫아 aria-modal 다이얼로그가 겹치지 않게 함
+    expect(screen.queryByRole('dialog', { name: /정답 보기/ })).toBeNull();
     expect(screen.getByRole('dialog', { name: /게임 오버/ })).toBeDefined();
+    expect(document.querySelectorAll('[role="dialog"]')).toHaveLength(1);
     expect(readJson('sliding_puzzle_best_records')).toBeNull();
   });
 
