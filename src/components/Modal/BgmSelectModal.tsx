@@ -119,6 +119,8 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                   toggleBgmMute();
                 }}
                 title={bgmMuted ? t.bgmUnmute : t.bgmMute}
+                aria-label={`${t.bgm} ${bgmMuted ? t.soundOn : t.soundOff}`}
+                aria-pressed={!bgmMuted}
               >
                 {bgmMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                 <span>BGM</span>
@@ -150,6 +152,8 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                   toggleSfxMute();
                 }}
                 title={sfxMuted ? t.sfxUnmute : t.sfxMute}
+                aria-label={`${t.sfx} ${sfxMuted ? t.soundOn : t.soundOff}`}
+                aria-pressed={!sfxMuted}
               >
                 {sfxMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                 <span>SFX</span>
@@ -213,9 +217,12 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
                 >
                   <div className="track-left-info">
                     {/* Active Equalizer Animation or Disc Icon */}
-                    <div className={`track-disc-box ${isPlayingNow ? 'playing' : ''}`}>
+                    <div
+                      className={`track-disc-box ${isPlayingNow ? 'playing' : ''}`}
+                      aria-hidden="true"
+                    >
                       {isPlayingNow ? (
-                        <div className="equalizer-bars" aria-label={t.playing}>
+                        <div className="equalizer-bars">
                           <span className="eq-bar bar-1"></span>
                           <span className="eq-bar bar-2"></span>
                           <span className="eq-bar bar-3"></span>

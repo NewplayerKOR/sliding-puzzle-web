@@ -8,6 +8,9 @@ describe('BgmSelectModal Component', () => {
   beforeEach(() => {
     localStorage.clear();
     resetGlobalLanguage();
+    if (audioManager.getConfig().bgmMuted) audioManager.toggleBgmMute();
+    if (audioManager.getConfig().sfxMuted) audioManager.toggleSfxMute();
+    audioManager.setAutoThemeBgm(false);
     window.HTMLMediaElement.prototype.play = vi.fn().mockResolvedValue(undefined);
     window.HTMLMediaElement.prototype.pause = vi.fn();
   });
@@ -56,14 +59,29 @@ describe('BgmSelectModal Component', () => {
     audioManager.setAutoThemeBgm(false);
   });
 
-  it('toggles BGM mute and adjusts volume sliders', () => {
-    const handleClose = vi.fn();
-    render(<BgmSelectModal isOpen={true} onClose={handleClose} />);
+  it('exposes mute action and pressed state for BGM and SFX buttons', () => {
+    render(<BgmSelectModal isOpen={true} onClose={vi.fn()} />);
 
-    const bgmMuteBtn = screen.getByTitle(/BGM 음소거/i);
+    const bgmMuteBtn = screen.getByRole('button', { name: 'BGM 음소거' });
+    const sfxMuteBtn = screen.getByRole('button', { name: 'SFX 음소거' });
+    expect(bgmMuteBtn.getAttribute('aria-pressed')).toBe('true');
+    expect(sfxMuteBtn.getAttribute('aria-pressed')).toBe('true');
+
     fireEvent.click(bgmMuteBtn);
 
     expect(audioManager.getConfig().bgmMuted).toBe(true);
+    expect(bgmMuteBtn.getAttribute('aria-pressed')).toBe('false');
+    expect(bgmMuteBtn.getAttribute('aria-label')).toBe('BGM 사운드 켜기');
+
+    fireEvent.click(sfxMuteBtn);
+
+    expect(audioManager.getConfig().sfxMuted).toBe(true);
+    expect(sfxMuteBtn.getAttribute('aria-pressed')).toBe('false');
+    expect(sfxMuteBtn.getAttribute('aria-label')).toBe('SFX 사운드 켜기');
+  });
+
+  it('adjusts volume sliders after muting', () => {
+    render(<BgmSelectModal isOpen={true} onClose={vi.fn()} />);
 
     const sfxSlider = screen.getByLabelText('SFX 볼륨 슬라이더');
     fireEvent.change(sfxSlider, { target: { value: '40' } });
