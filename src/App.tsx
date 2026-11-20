@@ -13,6 +13,7 @@ import { AchievementModal } from './components/Modal/AchievementModal';
 import { GameOverModal } from './components/Modal/GameOverModal';
 import { BgmSelectModal } from './components/Modal/BgmSelectModal';
 import { SolutionModal } from './components/Modal/SolutionModal';
+import { ConfirmModal } from './components/Modal/ConfirmModal';
 import { AchievementToast } from './components/Achievement/AchievementToast';
 import { PwaInstallBanner } from './components/PWA/PwaInstallBanner';
 import { ServiceWorkerUpdateBanner } from './components/PWA/ServiceWorkerUpdateBanner';
@@ -99,6 +100,7 @@ export const App: React.FC = () => {
   const [isAchievementModalOpen, setIsAchievementModalOpen] = useState<boolean>(false);
   const [isBgmModalOpen, setIsBgmModalOpen] = useState<boolean>(false);
   const [isSolutionOpen, setIsSolutionOpen] = useState<boolean>(false);
+  const [isHomeConfirmOpen, setIsHomeConfirmOpen] = useState<boolean>(false);
   const [pendingGameStart, setPendingGameStart] = useState<{
     mode: GameChallengeMode;
     size: GridSize;
@@ -121,6 +123,7 @@ export const App: React.FC = () => {
     isAchievementModalOpen ||
     isBgmModalOpen ||
     isSolutionOpen ||
+    isHomeConfirmOpen ||
     isWon ||
     isGameOver;
 
@@ -139,6 +142,7 @@ export const App: React.FC = () => {
     setIsAchievementModalOpen(false);
     setIsBgmModalOpen(false);
     setIsSolutionOpen(false);
+    setIsHomeConfirmOpen(false);
     setPendingGameStart(null);
   }, [isWon, isGameOver]);
 
@@ -428,8 +432,18 @@ export const App: React.FC = () => {
   const handleReturnHome = () => {
     setActiveDaily(null);
     setIsSolutionOpen(false);
+    setIsHomeConfirmOpen(false);
     resetGame();
     setCurrentScreen('title');
+  };
+
+  // 진행 중인 게임을 폐기하는 홈 복귀는 확인 후 실행함
+  const requestReturnHome = () => {
+    if (status === 'playing' && moveCount > 0) {
+      setIsHomeConfirmOpen(true);
+      return;
+    }
+    handleReturnHome();
   };
 
   // 새 게임을 시작하면 이전 Daily 컨텍스트를 반드시 해제함
@@ -555,7 +569,7 @@ export const App: React.FC = () => {
               bestRecord={bestRecords[gridSize]}
               onOpenDaily={() => setIsDailyModalOpen(true)}
               onOpenBgmModal={() => setIsBgmModalOpen(true)}
-              onReturnHome={handleReturnHome}
+              onReturnHome={requestReturnHome}
             />
 
             <div className="game-card">
@@ -682,11 +696,22 @@ export const App: React.FC = () => {
 
       {/* 게임오버 모달 (타임어택 / 이동제한 실패) */}
       <GameOverModal
-        isOpen={isGameOver && !isSolutionOpen}
+        isOpen={isGameOver && !isSolutionOpen && !isHomeConfirmOpen}
         challengeMode={challengeMode}
         onRetry={handleStartNewGame}
         onViewSolution={() => setIsSolutionOpen(true)}
         onClose={handleReturnHome}
+      />
+
+      {/* 진행 중인 게임을 폐기하는 홈 복귀 확인 모달 */}
+      <ConfirmModal
+        isOpen={isHomeConfirmOpen}
+        title={t.returnHomeTitle}
+        description={t.returnHomeDesc}
+        confirmLabel={t.returnHomeConfirm}
+        cancelLabel={t.returnHomeKeepPlaying}
+        onConfirm={handleReturnHome}
+        onCancel={() => setIsHomeConfirmOpen(false)}
       />
 
       {/* 승리 축하 및 타임랩스/공유 모달 */}

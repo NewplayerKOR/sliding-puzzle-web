@@ -103,26 +103,46 @@ describe('App accessibility structure', () => {
     expect(guide?.textContent).toContain('방향키');
   });
 
+  it('does not let decorative mode card clicks change the selection', () => {
+    render(<App />);
+
+    const standardCard = document.querySelector('.mode-card.standard') as HTMLElement;
+    const timeAttackCard = document.querySelector('.mode-card.timeattack') as HTMLElement;
+
+    expect(standardCard.className).toContain('selected');
+    fireEvent.click(timeAttackCard);
+
+    expect(standardCard.className).toContain('selected');
+    expect(timeAttackCard.className).not.toContain('selected');
+  });
+
+  it('exposes audio toggle state through aria-pressed', () => {
+    render(<App />);
+    const sfxButtons = screen.getAllByRole('button', { name: /^SFX/ });
+    expect(sfxButtons.length).toBeGreaterThan(0);
+    expect(sfxButtons[0].getAttribute('aria-pressed')).toBe('true');
+  });
+
   it('localizes audio control accessible labels in Japanese and Chinese', () => {
     render(<App />);
     const languageSelect = screen.getByLabelText('언어 선택');
 
     fireEvent.change(languageSelect, { target: { value: 'ja' } });
 
-    expect(screen.getAllByLabelText('BGM').length).toBeGreaterThan(0);
-    expect(screen.getAllByLabelText('効果音').length).toBeGreaterThan(0);
+    expect(screen.getAllByLabelText(/^BGM/).length).toBeGreaterThan(0);
+    expect(screen.getAllByLabelText(/^効果音/).length).toBeGreaterThan(0);
 
     // PNG alt 대신 lucide 아이콘을 포함한 버튼의 접근성 이름을 검증함
-    const jaSfxButtons = screen.getAllByRole('button', { name: '効果音' });
+    const jaSfxButtons = screen.getAllByRole('button', { name: /^効果音/ });
     expect(jaSfxButtons.length).toBeGreaterThan(0);
     expect(jaSfxButtons[0].querySelector('svg')).not.toBeNull();
 
     fireEvent.change(languageSelect, { target: { value: 'zh' } });
 
-    expect(screen.getAllByLabelText('音乐').length).toBeGreaterThan(0);
-    expect(screen.getAllByLabelText('音效').length).toBeGreaterThan(0);
+    expect(screen.getAllByLabelText(/^音乐/).length).toBeGreaterThan(0);
+    expect(screen.getAllByLabelText(/^音效/).length).toBeGreaterThan(0);
 
-    const zhSfxButtons = screen.getAllByRole('button', { name: '音效' });
+    const zhSfxButtons = screen.getAllByRole('button', { name: /^音效/ });
     expect(zhSfxButtons.length).toBeGreaterThan(0);
     expect(zhSfxButtons[0].querySelector('svg')).not.toBeNull();
   });

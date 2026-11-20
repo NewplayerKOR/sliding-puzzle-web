@@ -236,6 +236,33 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
 
   const handleTouchEnd = () => setIsDragging(false);
 
+  // 포인터 드래그가 어려운 사용자를 위한 키보드 팬 대안
+  const handleCanvasKeyDown = (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 30 : 10;
+    let deltaX = 0;
+    let deltaY = 0;
+
+    switch (e.key) {
+      case 'ArrowLeft':
+        deltaX = -step;
+        break;
+      case 'ArrowRight':
+        deltaX = step;
+        break;
+      case 'ArrowUp':
+        deltaY = -step;
+        break;
+      case 'ArrowDown':
+        deltaY = step;
+        break;
+      default:
+        return;
+    }
+
+    e.preventDefault();
+    setOffset((previous) => ({ x: previous.x + deltaX, y: previous.y + deltaY }));
+  };
+
   const handleApply = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -335,10 +362,16 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
+              onKeyDown={handleCanvasKeyDown}
+              tabIndex={0}
+              role="group"
+              aria-label={t.cropPanHint}
             >
               <canvas ref={canvasRef} width={512} height={512} className="crop-canvas" />
               <div className="cropper-grid-overlay" />
             </div>
+
+            <p className="crop-pan-hint">{t.cropPanHint}</p>
 
             {/* Zoom Controls */}
             <div className="zoom-controls-row">

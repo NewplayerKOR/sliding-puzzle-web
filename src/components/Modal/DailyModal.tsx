@@ -125,7 +125,11 @@ export const DailyModal: React.FC<DailyModalProps> = ({
             </span>
           </div>
 
-          <div className="calendar-grid">
+          <div
+            className="calendar-grid"
+            role="grid"
+            aria-label={formatMessage(t.dailyCalendarTitle, { year, month: month + 1 })}
+          >
             {days.map(({ dayNum, isCompleted, isToday }) => {
               const statusLabel = isCompleted
                 ? t.dailyDayCompleted
@@ -136,10 +140,13 @@ export const DailyModal: React.FC<DailyModalProps> = ({
                 <div
                   key={dayNum}
                   className={`calendar-day ${isCompleted ? 'completed' : ''} ${isToday ? 'today' : ''}`}
+                  role="gridcell"
+                  aria-current={isToday ? 'date' : undefined}
+                  aria-label={`${formatMessage(t.dailyDayLabel, { day: dayNum })} ${statusLabel}`.trim()}
                   title={`${formatMessage(t.dailyDayLabel, { day: dayNum })} ${statusLabel}`.trim()}
                 >
                   <span className="day-number">{dayNum}</span>
-                  {isCompleted && <CheckCircle className="day-check" size={14} />}
+                  {isCompleted && <CheckCircle className="day-check" size={14} aria-hidden="true" />}
                 </div>
               );
             })}

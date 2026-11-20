@@ -193,11 +193,6 @@
   gap: var(--space-3);
   box-shadow: none;
   transition: border-color var(--transition-fast), background-color var(--transition-fast);
-  cursor: pointer;
-}
-
-.mode-card:hover {
-  border-color: var(--color-concrete-strong);
 }
 
 .mode-card.selected {

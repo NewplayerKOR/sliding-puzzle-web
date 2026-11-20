@@ -43,4 +43,21 @@ describe('DailyModal i18n', () => {
     expect(screen.getByTitle(/^Day 1( \(Today's challenge\))?$/)).toBeDefined();
     expect(screen.getByText("Play today's puzzle")).toBeDefined();
   });
+
+  it('exposes each calendar day status and today as a labeled gridcell', () => {
+    renderModal();
+    const now = new Date();
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+    const grid = screen.getByRole('grid', {
+      name: new RegExp(`${now.getFullYear()}년 ${now.getMonth() + 1}월 출석 현황`),
+    });
+    expect(grid).toBeDefined();
+    expect(screen.getAllByRole('gridcell')).toHaveLength(daysInMonth);
+
+    const today = screen.getByRole('gridcell', {
+      name: new RegExp(`${now.getDate()}일.*오늘의 도전`),
+    });
+    expect(today.getAttribute('aria-current')).toBe('date');
+  });
 });

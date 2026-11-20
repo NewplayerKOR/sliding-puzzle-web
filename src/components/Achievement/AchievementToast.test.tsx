@@ -66,6 +66,7 @@ describe('AchievementToast', () => {
     expect(screen.getByText('첫 승리의 기쁨')).toBeDefined();
     expect(screen.queryByText('스피드 데몬')).toBeNull();
     expect(screen.queryByText('완벽한 직관 (No Undo)')).toBeNull();
+    expect(screen.getByRole('status').getAttribute('aria-live')).toBe('polite');
     expect(mockedPlaySfx).toHaveBeenCalledTimes(1);
     expect(vi.getTimerCount()).toBe(1);
 
@@ -90,7 +91,7 @@ describe('AchievementToast', () => {
       vi.advanceTimersByTime(4500);
     });
 
-    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.queryByRole('status')).toBeNull();
     expect(vi.getTimerCount()).toBe(0);
     expect(mockedPlaySfx).toHaveBeenCalledTimes(3);
   });

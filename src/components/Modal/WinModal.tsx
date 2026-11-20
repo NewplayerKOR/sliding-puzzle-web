@@ -43,6 +43,8 @@ export const WinModal: React.FC<WinModalProps> = ({
   const { t } = useTranslation();
   const contentRef = useRef<HTMLDivElement>(null);
 
+  // 승리 모달은 결과 확인이 필요한 완료 상태라 Escape로 닫지 않는다.
+  // 사용자는 '다시 플레이' 또는 '다음 단계' 중 하나를 선택해 다음 흐름으로 이동한다.
   useModalFocusTrap(isOpen, contentRef);
 
   // Replay timelapse state
@@ -97,7 +99,7 @@ export const WinModal: React.FC<WinModalProps> = ({
       if (rafId !== null) {
         cancelAnimationFrame(rafId);
       }
-      confetti.reset();
+      confetti.reset?.();
     };
   }, [isOpen]);
 

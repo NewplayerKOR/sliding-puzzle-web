@@ -202,4 +202,29 @@ describe('CustomImageModal upload validation', () => {
     expect(onApplyCustomImage).not.toHaveBeenCalled();
     expect(localStorage.getItem(CUSTOM_IMAGE_KEY)).toBe('data:image/png;base64,broken');
   });
+
+  it('pans the crop with arrow keys as a keyboard alternative to dragging', async () => {
+    const drawImage = vi.fn();
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
+      clearRect: vi.fn(),
+      drawImage,
+    } as unknown as CanvasRenderingContext2D);
+    localStorage.setItem(CUSTOM_IMAGE_KEY, 'data:image/png;base64,saved');
+
+    renderModal();
+
+    const viewport = await screen.findByRole('group', {
+      name: /사진을 드래그하거나 방향키/,
+    });
+    await waitFor(() => expect(drawImage).toHaveBeenCalled());
+
+    fireEvent.keyDown(viewport, { key: 'ArrowRight' });
+    fireEvent.keyDown(viewport, { key: 'ArrowDown' });
+
+    await waitFor(() => {
+      expect(
+        drawImage.mock.calls.some((call) => call[1] === 10 && call[2] === 10)
+      ).toBe(true);
+    });
+  });
 });

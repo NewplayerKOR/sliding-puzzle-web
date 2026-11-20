@@ -159,6 +159,21 @@
   cursor: grabbing;
 }
 
+.canvas-viewport:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.crop-pan-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-graphite);
+  line-height: var(--line-height-normal);
+  word-break: var(--text-word-break);
+  overflow-wrap: break-word;
+  text-align: center;
+  margin-top: var(--space-1);
+}
+
 .crop-canvas {
   width: 100%;
   height: 100%;

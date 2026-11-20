@@ -16,6 +16,10 @@ export interface Translations {
   soundOn: string;
   soundOff: string;
   homeTitle: string;
+  returnHomeTitle: string;
+  returnHomeDesc: string;
+  returnHomeConfirm: string;
+  returnHomeKeepPlaying: string;
   currentPlayingMode: string;
 
   // Title Screen & Streak
@@ -104,6 +108,7 @@ export interface Translations {
   cropModalSubtitle: string;
   cropDragPrompt: string;
   cropZoom: string;
+  cropPanHint: string;
   cropUploadBtn: string;
   cropApplyBtn: string;
   dailyModalTitle: string;
@@ -281,6 +286,10 @@ export const translations: Record<Language, Translations> = {
     soundOn: '사운드 켜기',
     soundOff: '음소거',
     homeTitle: '홈으로',
+    returnHomeTitle: '홈으로 돌아갈까요?',
+    returnHomeDesc: '진행 중인 게임은 저장되지 않습니다. 홈으로 돌아가면 현재 보드와 기록이 사라집니다.',
+    returnHomeConfirm: '홈으로 돌아가기',
+    returnHomeKeepPlaying: '계속하기',
     currentPlayingMode: '현재 모드',
 
     titleHeroSub: '두뇌를 자극하는 프리미엄 슬라이딩 블록 퍼즐',
@@ -362,6 +371,7 @@ export const translations: Record<Language, Translations> = {
     cropModalSubtitle: '사진을 업로드하고 1:1 정사각형 영역으로 잘라보세요.',
     cropDragPrompt: '클릭하거나 이미지를 여기로 드래그하세요 (최대 10MB)',
     cropZoom: '확대/축소',
+    cropPanHint: '사진을 드래그하거나 방향키로 위치를 조정할 수 있습니다. Shift와 함께 누르면 더 크게 이동합니다.',
     cropUploadBtn: '다른 사진 선택',
     cropApplyBtn: '퍼즐로 적용하기',
     dailyModalTitle: '오늘의 퍼즐 챌린지',
@@ -526,6 +536,10 @@ export const translations: Record<Language, Translations> = {
     soundOn: 'Sound On',
     soundOff: 'Mute',
     homeTitle: 'Home',
+    returnHomeTitle: 'Leave this game?',
+    returnHomeDesc: 'Your current board and unrecorded progress will be lost when you return home.',
+    returnHomeConfirm: 'Leave game',
+    returnHomeKeepPlaying: 'Keep playing',
     currentPlayingMode: 'Mode',
 
     titleHeroSub: 'Brain-boosting sliding block puzzle challenge',
@@ -607,6 +621,7 @@ export const translations: Record<Language, Translations> = {
     cropModalSubtitle: 'Upload your photo and crop a square 1:1 area.',
     cropDragPrompt: 'Click or drag an image here (Max 10MB)',
     cropZoom: 'Zoom',
+    cropPanHint: 'Drag the photo or use the arrow keys to reposition it. Hold Shift to move further.',
     cropUploadBtn: 'Choose Another Image',
     cropApplyBtn: 'Apply to Puzzle',
     dailyModalTitle: 'Daily Puzzle Challenge',
@@ -771,6 +786,10 @@ export const translations: Record<Language, Translations> = {
     soundOn: 'サウンドON',
     soundOff: 'ミュート',
     homeTitle: 'ホーム',
+    returnHomeTitle: 'ホームに戻りますか？',
+    returnHomeDesc: '進行中のゲームは保存されません。ホームに戻ると現在のボードと記録が失われます。',
+    returnHomeConfirm: 'ホームに戻る',
+    returnHomeKeepPlaying: '続ける',
     currentPlayingMode: 'プレイモード',
 
     titleHeroSub: '頭脳を刺激するスライディングブロックパズル',
@@ -852,6 +871,7 @@ export const translations: Record<Language, Translations> = {
     cropModalSubtitle: '写真をアップロードして1:1の正方形に切り抜きます。',
     cropDragPrompt: 'クリックまたは画像をドラッグしてください（最大10MB）',
     cropZoom: 'ズーム',
+    cropPanHint: '写真をドラッグするか方向キーで位置を調整できます。Shiftを押しながらだと大きく移動します。',
     cropUploadBtn: '別の写真を選択',
     cropApplyBtn: 'パズルに適用',
     dailyModalTitle: '本日のデイリーパズル',
@@ -1016,6 +1036,10 @@ export const translations: Record<Language, Translations> = {
     soundOn: '开启声音',
     soundOff: '静音',
     homeTitle: '主页',
+    returnHomeTitle: '要返回主页吗？',
+    returnHomeDesc: '进行中的游戏不会保存。返回主页后，当前棋盘和未记录进度将丢失。',
+    returnHomeConfirm: '返回主页',
+    returnHomeKeepPlaying: '继续游戏',
     currentPlayingMode: '当前模式',
 
     titleHeroSub: '锻炼思维的经典滑动方块益智游戏',
@@ -1097,6 +1121,7 @@ export const translations: Record<Language, Translations> = {
     cropModalSubtitle: '上传本地照片并裁剪为 1:1 正方形。',
     cropDragPrompt: '点击或拖拽图片至此处上传（最大 10MB）',
     cropZoom: '缩放',
+    cropPanHint: '可拖拽照片或使用方向键调整位置。按住 Shift 可加快移动。',
     cropUploadBtn: '更换其他照片',
     cropApplyBtn: '生成拼图',
     dailyModalTitle: '每日拼图挑战',

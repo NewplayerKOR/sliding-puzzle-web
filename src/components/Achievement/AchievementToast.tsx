@@ -40,8 +40,9 @@ export const AchievementToast: React.FC = () => {
     <div
       key={current.id}
       className="achievement-toast-container"
-      role="alert"
-      aria-live="assertive"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
     >
       <div className="achievement-toast-card">
         <div className="toast-icon-wrapper">

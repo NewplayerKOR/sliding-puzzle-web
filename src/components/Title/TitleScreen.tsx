@@ -134,7 +134,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
                 toggleBgmMute();
               }}
               title={bgmMuted ? t.soundOn : t.soundOff}
-              aria-label={t.bgm}
+              aria-label={`${t.bgm} ${bgmMuted ? t.soundOn : t.soundOff}`}
+              aria-pressed={!bgmMuted}
             >
               {bgmMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
             </button>
@@ -144,7 +145,8 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
               className={`title-audio-btn ${!sfxMuted ? 'active' : 'muted'}`}
               onClick={toggleSfxMute}
               title={sfxMuted ? t.soundOn : t.soundOff}
-              aria-label={t.sfx}
+              aria-label={`${t.sfx} ${sfxMuted ? t.soundOn : t.soundOff}`}
+              aria-pressed={!sfxMuted}
             >
               {sfxMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               <span>{t.sfx}</span>
@@ -164,7 +166,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         {/* 1. 일반 모드 (Standard Mode) */}
         <div
           className={`mode-card standard ${selectedMode === 'standard' ? 'selected' : ''}`}
-          onClick={() => setSelectedMode('standard')}
         >
           <div className="mode-card-header">
             <span className="mode-index">01</span>
@@ -213,7 +214,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         {/* 2. 타임어택 모드 (Time Attack) */}
         <div
           className={`mode-card timeattack ${selectedMode === 'timeAttack' ? 'selected' : ''}`}
-          onClick={() => setSelectedMode('timeAttack')}
         >
           <div className="mode-card-header">
             <span className="mode-index">02</span>
@@ -267,7 +267,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         {/* 3. 이동 제한 모드 (Move Limit) */}
         <div
           className={`mode-card movelimit ${selectedMode === 'moveLimit' ? 'selected' : ''}`}
-          onClick={() => setSelectedMode('moveLimit')}
         >
           <div className="mode-card-header">
             <span className="mode-index">03</span>
@@ -321,7 +320,6 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
         {/* 4. 오늘의 퍼즐 (Daily Challenge) */}
         <div
           className={`mode-card daily ${selectedMode === 'daily' ? 'selected' : ''}`}
-          onClick={() => setSelectedMode('daily')}
         >
           <div className="mode-card-header">
             <span className="mode-index">04</span>

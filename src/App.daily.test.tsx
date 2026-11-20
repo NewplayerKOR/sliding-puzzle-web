@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 import { resetGlobalLanguage } from './i18n/useTranslation';
 import { clickBoardPosition, readBoard, solveBoard } from './test/puzzleTestUtils';
@@ -7,6 +7,18 @@ import { clickBoardPosition, readBoard, solveBoard } from './test/puzzleTestUtil
 vi.mock('canvas-confetti', () => ({
   default: vi.fn(),
 }));
+
+class MockImage {
+  onload: (() => void) | null = null;
+  onerror: (() => void) | null = null;
+  width = 512;
+  height = 512;
+  crossOrigin = '';
+
+  set src(_value: string) {
+    queueMicrotask(() => this.onload?.());
+  }
+}
 
 const dailyMocks = vi.hoisted(() => ({
   saveDailyCompletion: vi.fn(),
@@ -83,7 +95,11 @@ const applyCustomImageFromTitle = async () => {
   fireEvent.change(fileInput, {
     target: { files: [new File(['image'], 'photo.png', { type: 'image/png' })] },
   });
-  fireEvent.click(await screen.findByText('퍼즐로 적용하기'));
+  const applyButton = await screen.findByText('퍼즐로 적용하기');
+  await waitFor(() => {
+    expect((applyButton.closest('button') as HTMLButtonElement).disabled).toBe(false);
+  });
+  fireEvent.click(applyButton);
 };
 
 const winNearSolved4x4 = () => {
@@ -99,6 +115,7 @@ const readJson = (key: string): unknown => {
 describe('TASK-DEV-31 Daily 활성 컨텍스트·날짜 무결성', () => {
   beforeEach(() => {
     vi.stubGlobal('localStorage', createMemoryStorage());
+    vi.stubGlobal('Image', MockImage);
     resetGlobalLanguage();
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date(2026, 10, 20, 12, 0, 0));

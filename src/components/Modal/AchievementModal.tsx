@@ -121,7 +121,15 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ isOpen, onCl
 
                   {/* Optional Progress bar */}
                   {!isUnlocked && item.maxProgress && (
-                    <div className="achieve-progress-bar-wrapper">
+                    <div
+                      className="achieve-progress-bar-wrapper"
+                      role="progressbar"
+                      aria-valuemin={0}
+                      aria-valuemax={item.maxProgress}
+                      aria-valuenow={item.progress || 0}
+                      aria-valuetext={`${item.progress || 0} / ${item.maxProgress}`}
+                      aria-label={t[item.titleKey]}
+                    >
                       <div
                         className="achieve-progress-bar-fill"
                         style={{

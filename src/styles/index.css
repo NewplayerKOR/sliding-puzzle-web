@@ -156,9 +156,9 @@ html, body {
   overscroll-behavior: none;
   overscroll-behavior-y: none;
   overflow-x: hidden;
-  user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
 }
 
 ::selection {
@@ -176,6 +176,7 @@ html, body {
 .hint-modal-overlay,
 .solution-modal-overlay,
 .theme-modal-overlay,
+.confirm-modal-overlay,
 .modal-content,
 .achieve-modal-content,
 .bgm-modal-content,
@@ -184,7 +185,8 @@ html, body {
 .gameover-modal-content,
 .hint-modal-content,
 .solution-modal-content,
-.theme-modal-content {
+.theme-modal-content,
+.confirm-modal-content {
   overscroll-behavior: contain;
 }
 
