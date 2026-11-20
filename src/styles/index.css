@@ -139,6 +139,10 @@
 
 html {
   font-size: 16px;
+  overflow-x: hidden;
+  /* 루트 문서에만 overscroll 억제를 적용함. body에 함께 적용하면 body가 스크롤 컨테이너가 되어
+     모바일 터치 스크롤이 루트 문서로 전달되지 않으므로 html에만 유지함. */
+  overscroll-behavior-y: none;
 }
 
 html, body {
@@ -153,12 +157,14 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   touch-action: manipulation;
-  overscroll-behavior: none;
-  overscroll-behavior-y: none;
-  overflow-x: hidden;
   user-select: text;
   -webkit-user-select: text;
   -webkit-touch-callout: default;
+}
+
+body {
+  /* hidden은 body를 스크롤 컨테이너로 만들어 터치 스크롤 체인을 끊으므로 clip으로 가로만 잘라냄 */
+  overflow-x: clip;
 }
 
 ::selection {
