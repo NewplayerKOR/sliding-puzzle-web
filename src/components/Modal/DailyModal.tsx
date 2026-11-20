@@ -114,7 +114,7 @@ export const DailyModal: React.FC<DailyModalProps> = ({
         {/* Monthly Calendar View */}
         <div className="daily-calendar-wrapper">
           <div className="calendar-header">
-            <span>
+            <span id="daily-calendar-heading">
               {formatMessage(t.dailyCalendarTitle, { year, month: month + 1 })}
             </span>
             <span className="calendar-count">
@@ -125,11 +125,7 @@ export const DailyModal: React.FC<DailyModalProps> = ({
             </span>
           </div>
 
-          <div
-            className="calendar-grid"
-            role="grid"
-            aria-label={formatMessage(t.dailyCalendarTitle, { year, month: month + 1 })}
-          >
+          <ul className="calendar-grid" aria-labelledby="daily-calendar-heading">
             {days.map(({ dayNum, isCompleted, isToday }) => {
               const statusLabel = isCompleted
                 ? t.dailyDayCompleted
@@ -137,20 +133,19 @@ export const DailyModal: React.FC<DailyModalProps> = ({
                 ? t.dailyDayToday
                 : '';
               return (
-                <div
+                <li
                   key={dayNum}
                   className={`calendar-day ${isCompleted ? 'completed' : ''} ${isToday ? 'today' : ''}`}
-                  role="gridcell"
                   aria-current={isToday ? 'date' : undefined}
                   aria-label={`${formatMessage(t.dailyDayLabel, { day: dayNum })} ${statusLabel}`.trim()}
                   title={`${formatMessage(t.dailyDayLabel, { day: dayNum })} ${statusLabel}`.trim()}
                 >
                   <span className="day-number">{dayNum}</span>
                   {isCompleted && <CheckCircle className="day-check" size={14} aria-hidden="true" />}
-                </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         </div>
 
         {/* Action Button */}

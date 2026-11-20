@@ -183,6 +183,8 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: var(--space-1);
+  /* 날짜 현황은 읽기 전용 목록이므로 목록 마커를 표시하지 않음 */
+  list-style: none;
 }
 
 .calendar-day {

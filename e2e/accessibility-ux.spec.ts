@@ -65,14 +65,63 @@ test.describe('접근성·파괴적 액션 UX', () => {
     await page.goto('/');
 
     await page.getByRole('button', { name: /스트릭/ }).click();
-    await expect(page.getByRole('grid', { name: /출석 현황/ })).toBeVisible();
-    await expect(page.getByRole('gridcell').first()).toHaveAttribute('aria-label', /1일/);
+    await expect(page.getByRole('list', { name: /출석 현황/ })).toBeVisible();
+    await expect(page.getByRole('listitem').first()).toHaveAttribute('aria-label', /1일/);
     await page.keyboard.press('Escape');
 
     await page.getByRole('button', { name: '업적 도감' }).click();
     const progressbars = page.getByRole('progressbar');
     await expect(progressbars.first()).toBeVisible();
     await expect(progressbars.first()).toHaveAttribute('aria-valuemax', /\d+/);
+  });
+
+  test('Daily 캘린더 목록이 360×640·1280×800에서 가로 오버플로 없이 표시된다', async ({
+    page,
+  }) => {
+    for (const viewport of [
+      { width: 360, height: 640 },
+      { width: 1280, height: 800 },
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto('/');
+      await page.getByRole('button', { name: /스트릭/ }).click();
+
+      const list = page.getByRole('list', { name: /출석 현황/ });
+      await expect(list).toBeVisible();
+      await expect(page.getByRole('listitem').first()).toHaveAttribute(
+        'aria-label',
+        /1일/
+      );
+      await expect(page.locator('[aria-current="date"]')).toHaveAttribute(
+        'aria-label',
+        /오늘의 도전/
+      );
+
+      const metrics = await page.evaluate(() => {
+        const calendar = document.querySelector('.calendar-grid') as HTMLElement;
+        const firstDay = calendar.querySelector('.calendar-day') as HTMLElement;
+        const calendarRect = calendar.getBoundingClientRect();
+        const firstRect = firstDay.getBoundingClientRect();
+        return {
+          scrollWidth: document.documentElement.scrollWidth,
+          innerWidth: window.innerWidth,
+          listLeft: calendarRect.left,
+          listRight: calendarRect.right,
+          firstDayWidth: firstRect.width,
+          firstDayHeight: firstRect.height,
+          itemCount: calendar.children.length,
+        };
+      });
+
+      expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.innerWidth);
+      expect(metrics.listLeft).toBeGreaterThanOrEqual(0);
+      expect(metrics.listRight).toBeLessThanOrEqual(metrics.innerWidth);
+      expect(metrics.firstDayWidth).toBeGreaterThan(0);
+      expect(metrics.firstDayHeight).toBeGreaterThan(0);
+      expect(metrics.itemCount).toBeGreaterThanOrEqual(28);
+
+      await page.keyboard.press('Escape');
+    }
   });
 
   test.describe('360×640 모바일', () => {
