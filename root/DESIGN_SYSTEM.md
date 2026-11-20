@@ -374,3 +374,17 @@ npm run build
 - PWA: 매니페스트 `#EFEFEA`/`#BB3E0B`, orientation 제거, 2×2 타일 모티프 아이콘 5종, maskable 80% safe zone, 프리캐시 v2.4/17건/1,209,901바이트.
 - 스크린샷·측정 원문: `root/archive/assets/task-dev-33/`, `task-dev-34/`, `task-dev-35/`, `task-dev-36/`, `task-dev-39/`의 WebP·JSON과 `lighthouse-accessibility.json`.
 - 미실행: 실제 스크린리더(NVDA·VoiceOver)·모바일 실기기·Safari/Firefox, 게임·모달 화면 Lighthouse.
+
+### 6.9 TASK-DEV-40~43 모바일 스크롤·PWA·캘린더·오디오 라벨 검증 (2026-11-20)
+
+- `npm test`: 41개 파일/251개 케이스 PASS. `npm run typecheck`: 0 Errors.
+- `npm run build`: Vite 8.3.6 성공. CSS 83.36KB(gzip 11.09KB), JS 389.76KB(gzip 121.42KB), solver worker 8.73KB.
+- `npm run test:e2e`: Playwright Chromium 31/31 PASS. WebKit은 `PW_WEBKIT=1 --project=webkit`로 첫 설치 스펙 2/2 PASS.
+- 모바일 문서 스크롤: `html`만 `overscroll-behavior-y: none`을 유지하고 `body`는 `overflow-x: clip`을 사용. 360×640·360×800·412×839에서 wheel·touch 스크롤과 마지막 콘텐츠 도달, 가로 오버플로 0건을 확인. 412×839 타이틀 scrollY 377, 360×640 게임 scrollY 100.
+- 모달 잠금: 문서 스크롤러가 html로 이동한 뒤에도 잠기도록 `useBodyScrollLock`이 html·body overflow를 함께 저장·복원. 360×640·360×800·412×839에서 모달 열림 중 wheel·touch 후 배경 scrollY 불변, 닫힘 후 복원, 보드 스와이프 시 페이지 스크롤 불변.
+- PWA 업데이트: 등록 시작 시점 controller·기존 active/waiting으로 첫 설치를 구분. 업데이트 배너는 360×640 top 96px(헤더 버튼 bottom 87px), 1280×800 top 96px(bottom 53px)로 헤더 버튼과 교차하지 않음. 실제 업데이트는 기존 SKIP_WAITING·사용자 선택 새로고침 유지.
+- Daily 캘린더: 6.8의 `grid`/`gridcell` 구조를 `ul`/`li` 목록으로 대체. `aria-labelledby`로 캘린더 제목과 연결하고 날짜 `aria-label`·완료 상태·오늘 `aria-current="date"` 유지. 360×640 첫 날짜 36px, 1280×800 50.86px, 항목 30개, 가로 오버플로 0건.
+- BGM 모달: BGM·SFX 음소거 버튼에 `${label} ${음소거 ? 사운드 켜기 : 음소거}` 형식의 `aria-label`과 `aria-pressed={!muted}` 적용. 재생 이퀄라이저는 `aria-hidden="true"` 장식으로 처리.
+- Lighthouse(타이틀 화면) 접근성 **1.0**. 게임·모달은 Playwright DOM 검증으로 대체했고 점수 범위는 타이틀 화면이다.
+- 스크린샷·측정 원문: `root/archive/assets/task-dev-40/` ~ `task-dev-43/`의 WebP·JSON과 `task-dev-43/lighthouse-accessibility.json`.
+- 미실행: Samsung Internet·iOS Safari 실기기, Firefox 터치 스크롤, 실제 설치 PWA 업데이트, 스크린리더의 Daily 목록·BGM 음소거 상태 수동 확인.

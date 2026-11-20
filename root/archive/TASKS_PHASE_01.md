@@ -1840,3 +1840,120 @@
   - 실제 Web Share 시트·Safari/Firefox 다운로드 동작과 Vercel 재배포는 미실행.
   - WebKit 업데이트 배너 오탐은 간헐 재현이라 발생 빈도는 정량화하지 못함.
 - **작업 상태**: `root/TASKS.md`의 TASK-QA-11 완료 요약과 Phase 보관 링크 반영. 신규 DEV-40~42를 Backlog에 등록.
+
+## TASK-DEV-40 — PWA 첫 설치 업데이트 배너 오탐 방지
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 첫 설치 중 controller가 먼저 활성화되는 WebKit 레이스에서 업데이트 배너를 표시하지 않고, 실제 새 워커가 준비된 경우에만 안내한다.
+- **대상 파일**: `src/utils/swUpdateManager.ts`, `src/utils/swUpdateManager.test.ts`, `src/components/PWA/ServiceWorkerUpdateBanner.css`, `playwright.config.ts`, `e2e/sw-first-install.spec.ts`
+- **재현/증거**:
+  - Playwright WebKit 신규 BrowserContext 첫 방문 약 1.2초 후 `.sw-update-banner` 표시. `navigator.serviceWorker.controller`는 true, `waiting`·`installing`은 null.
+  - 기존 조건 `newWorker.state === 'installed' && navigator.serviceWorker.controller`가 첫 설치의 controller 활성화를 업데이트로 오인함.
+  - 배너가 상단 고정 레이어로 헤더 BGM 버튼과 겹쳐 포인터 입력을 가로챔.
+- **DoD**:
+  - 등록 시작 시점의 controller 유무 또는 기존 active/waiting 상태로 첫 설치와 업데이트를 구분한다.
+  - 첫 설치 레이스 단위 테스트를 추가하고 첫 설치에는 이벤트가 발생하지 않게 한다.
+  - 실제 대기 워커 업데이트에서는 배너·SKIP_WAITING·사용자 선택 새로고침이 유지된다.
+  - `npm test`, `npm run typecheck`, `npm run build`, `npx playwright test`와 WebKit 결과를 기록한다.
+- **진행 결과**:
+  - 등록 시작 전 `hadControllerAtStart`와 `getRegistration()`의 기존 active/waiting을 확인해 `isFirstInstall`을 계산함.
+  - `waiting` 즉시 안내와 `statechange === 'installed'` 안내 모두 첫 설치에서 억제하고, 업데이트 경로는 기존 동작을 유지함.
+  - 업데이트 배너를 헤더 상단 버튼 아래로 이동해 BGM/SFX/홈 버튼을 가리지 않게 함.
+  - WebKit 검증용 조건부 Playwright 프로젝트(`PW_WEBKIT=1`)를 추가함.
+- **검증**:
+  - 첫 설치 레이스 단위 테스트는 수정 전 1 failed / 6 skipped, 수정 후 `swUpdateManager` 7/7 PASS.
+  - `e2e/sw-first-install.spec.ts` Chromium 2/2 PASS. WebKit은 `PW_WEBKIT=1 --project=webkit`로 2/2 PASS.
+  - WebKit E2E 첫 설치 시나리오는 수정 전에도 배너가 재현되지 않아, 레이스 고정은 단위 테스트 실패로 확인함.
+  - `npm test` 41개 파일/251개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.6 성공, Chromium E2E 31/31 PASS.
+  - 배너 360×640 top 96px(헤더 버튼 bottom 87px), 1280×800 top 96px(헤더 버튼 bottom 53px)로 교차 0건.
+- **미실행**: 실제 설치된 PWA의 새 워커 업데이트·SKIP_WAITING·새로고침, Safari 네이티브 설치 흐름.
+- **증거**:
+  - `root/archive/assets/task-dev-40/verification.json`, `update-banner-360x640.webp`, `update-banner-1280x800.webp`
+  - 테스트: `src/utils/swUpdateManager.test.ts`, `e2e/sw-first-install.spec.ts`
+
+## TASK-DEV-41 — Daily 캘린더 grid row 구조 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: Daily 캘린더의 ARIA grid 구조를 유효하게 만들거나 단순 목록 구조로 바꿔 스크린리더 탐색을 일관되게 한다.
+- **대상 파일**: `src/components/Modal/DailyModal.tsx`, `src/components/Modal/DailyModal.css`, `src/components/Modal/DailyModal.test.tsx`, `e2e/accessibility-ux.spec.ts`
+- **재현/증거**:
+  - `role="grid"` 아래에 `role="row"` 없이 `role="gridcell"` 30개가 직접 배치됨. Chrome Accessibility Tree에서 rowCount 0, gridCellCount 30.
+  - 셀 `aria-label`, 오늘 `aria-current="date"`는 정상 제공됨.
+- **DoD**:
+  - 주 단위 `role="row"` 래퍼를 추가하거나 grid 대신 list/listitem 구조로 단순화한다.
+  - 기존 날짜 label·완료 상태·오늘 상태를 유지하고 테스트로 구조와 값을 검증한다.
+  - 360×640·1280×800 레이아웃 회귀와 `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **진행 결과**:
+  - 비대화형 날짜 현황에 맞춰 `role="grid"`/`gridcell`을 제거하고 `ul`/`li` 목록으로 전환함.
+  - 캘린더 제목에 id를 부여하고 `aria-labelledby`로 목록의 접근성 이름을 연결함.
+  - 날짜 `aria-label`, 완료 상태, 오늘 `aria-current="date"`를 유지하고 목록 마커를 제거함.
+- **검증**:
+  - `DailyModal.test.tsx` 4/4 PASS. 목록 항목 수, 오늘·완료 라벨, `aria-current`를 확인함.
+  - `e2e/accessibility-ux.spec.ts` 6/6 PASS. 360×640·1280×800에서 목록 표시, 가로 오버플로 0건, 첫 날짜 36px/50.86px 셀 크기를 확인함.
+  - `npm test` 41개 파일/251개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.6 성공, Chromium E2E 31/31 PASS.
+- **미실행**: 실제 스크린리더(NVDA·VoiceOver)의 목록 탐색 수동 확인.
+- **증거**:
+  - `root/archive/assets/task-dev-41/verification.json`, `daily-list-360x640.webp`, `daily-list-1280x800.webp`
+  - 테스트: `src/components/Modal/DailyModal.test.tsx`, `e2e/accessibility-ux.spec.ts`
+
+## TASK-DEV-42 — BGM 모달 음소거 상태 라벨 정비
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: BGM 설정 모달의 BGM/SFX 음소거 버튼이 동작과 현재 상태를 접근성 이름과 `aria-pressed`로 노출하게 한다.
+- **대상 파일**: `src/components/Modal/BgmSelectModal.tsx`, `src/components/Modal/BgmSelectModal.test.tsx`
+- **재현/증거**:
+  - 음소거 버튼의 접근성 이름이 `BGM`, `SFX`뿐이고 `aria-label`·`aria-pressed`가 없음. 상태는 `title`과 아이콘에만 의존함.
+  - AX Tree에서 버튼 이름이 `BGM`/`SFX`로만 노출됨.
+- **DoD**:
+  - 타이틀·헤더 토글과 동일하게 동작·상태를 포함한 `aria-label`과 `aria-pressed`를 적용한다.
+  - BGM/SFX 각각의 음소거·해제 상태를 테스트로 검증한다.
+  - `npm test`, `npm run typecheck`, `npm run build` 결과를 기록한다.
+- **진행 결과**:
+  - BGM·SFX 버튼에 `${t.bgm|t.sfx} ${음소거 ? 사운드 켜기 : 음소거}` 형식의 `aria-label`과 `aria-pressed={!muted}`를 적용함.
+  - 재생 이퀄라이저의 role 없는 `aria-label`을 제거하고 트랙 아이콘 영역을 `aria-hidden="true"`로 장식 처리함.
+  - 버튼 내부 block 요소 재구성은 범위를 늘리지 않도록 후속 작업으로 남김.
+- **검증**:
+  - `BgmSelectModal.test.tsx` 7/7 PASS. 초기 `aria-pressed=true`, 토글 후 `false`·라벨 변경·오디오 상태를 확인함.
+  - `npm test` 41개 파일/251개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.6 성공, Chromium E2E 31/31 PASS.
+- **미실행**: 실제 스크린리더의 상태 낭독 수동 확인.
+- **증거**:
+  - `root/archive/assets/task-dev-42/verification.json`, `bgm-mute-labels-360x640.webp`
+  - 테스트: `src/components/Modal/BgmSelectModal.test.tsx`
+
+## TASK-DEV-43 — 모바일 문서 세로 스크롤 복구
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: Samsung Internet·Chromium 기반 모바일에서 타이틀·게임 화면의 문서 세로 스크롤이 동작하게 하고, 모달 열림/닫힘의 배경 스크롤 잠금과 보드 스와이프는 유지한다.
+- **대상 파일**: `src/styles/index.css`, `src/hooks/useBodyScrollLock.ts`, `e2e/mobile-scroll.spec.ts`
+- **재현/증거**:
+  - Playwright Chromium Pixel 7(412×839, touch)에서 타이틀 `scrollHeight` 1216px > `innerHeight` 839px이나 wheel·touch swipe 후 `scrollY`가 0에 머묾. 게임 화면도 동일하게 재현됨.
+  - `window.scrollTo(0, 200)`는 동작해 문서 자체는 스크롤 가능하지만 입력 스크롤만 차단됨.
+  - `html/body { overflow: hidden auto; overscroll-behavior: none; }` 상태에서 body가 스크롤 컨테이너가 되고 body의 `overscroll-behavior: none`이 루트 문서로의 스크롤 체인을 끊음.
+- **DoD**:
+  - `body`의 `overscroll-behavior: none`을 제거하고 `html`에만 `overscroll-behavior-y: none`을 유지한다.
+  - 360×640·360×800·412×839에서 타이틀·게임 화면이 wheel·touch swipe로 스크롤되고 마지막 콘텐츠까지 도달한다. 가로 오버플로는 0건이다.
+  - 모달 열림 중 배경 스크롤이 잠기고 닫힘 후 복원되며, 보드 스와이프는 타일 이동만 수행한다.
+  - Playwright 모바일 회귀 테스트를 추가해 수정 전 실패·수정 후 통과를 확인한다.
+  - `npm test`, `npm run typecheck`, `npm run build`, `npm run test:e2e` 결과와 Samsung Internet 실기기 확인 여부를 기록한다.
+- **진행 결과**:
+  - `html`에만 `overscroll-behavior-y: none`을 남기고 body에서는 제거함.
+  - body의 `overflow-x: hidden`을 `clip`으로 바꿔 body가 스크롤 컨테이너가 되지 않게 함.
+  - 문서 스크롤이 html로 이동하면서 body만 잠그던 모달 잠금이 뚫리는 회귀를 발견해 `useBodyScrollLock`이 html·body overflow를 함께 저장·복원하도록 보완함.
+  - CDP `Input.dispatchTouchEvent` 기반 모바일 스크롤 E2E와 wheel·모달 잠금·보드 스와이프 검증을 추가함.
+- **검증**:
+  - 수정 전 `e2e/mobile-scroll.spec.ts` 8 failed / 4 passed, 수정 후 12/12 PASS.
+  - 412×839 타이틀 scrollHeight 1216px에서 scrollY 377까지 이동, 게임 740px/640px에서 scrollY 100까지 이동, 가로 오버플로 0건.
+  - 모달 열림 시 html·body overflow hidden, 닫힘 후 복원. 보드 스와이프 후 이동 수 증가·페이지 scrollY 불변.
+  - `npm test` 41개 파일/251개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.6 성공, Chromium E2E 31/31 PASS, Lighthouse 타이틀 접근성 1.0.
+- **미실행**: Samsung Internet 실기기, iOS Safari 실기기, Firefox 터치 스크롤.
+- **증거**:
+  - `root/archive/assets/task-dev-43/verification.json`, `title-scrolled-412x839.webp`, `game-scrolled-360x640.webp`, `modal-scroll-lock-412x839.webp`, `lighthouse-accessibility.json`
+  - 테스트: `e2e/mobile-scroll.spec.ts`, `src/hooks/useBodyScrollLock.test.ts`

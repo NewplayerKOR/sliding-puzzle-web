@@ -1,0 +1,40 @@
+{
+  "task": "TASK-DEV-43",
+  "before": {
+    "mobileChromium": "타이틀 1216px > 839px에서 wheel·touch 후 scrollY 0",
+    "e2e": "e2e/mobile-scroll.spec.ts 8 failed / 4 passed"
+  },
+  "after": {
+    "css": "body overscroll-behavior none 제거, html에만 overscroll-behavior-y none 유지",
+    "bodyOverflowX": "hidden → clip으로 스크롤 컨테이너화 방지",
+    "modalLock": "html·body overflow hidden 동시 적용"
+  },
+  "initial": {
+    "scrollHeight": 1216,
+    "innerHeight": 839,
+    "scrollWidth": 412,
+    "innerWidth": 412
+  },
+  "scrolled": {
+    "scrollY": 377,
+    "scrollHeight": 1216,
+    "innerHeight": 839
+  },
+  "locked": {
+    "rootOverflow": "hidden",
+    "bodyOverflow": "hidden",
+    "scrollY": 0
+  },
+  "gameInitial": {
+    "scrollHeight": 740,
+    "innerHeight": 640
+  },
+  "gameScrolled": {
+    "scrollY": 100
+  },
+  "e2e": "e2e/mobile-scroll.spec.ts 12/12 PASS",
+  "lighthouse": {
+    "accessibility": 1,
+    "scope": "title screen only"
+  }
+}

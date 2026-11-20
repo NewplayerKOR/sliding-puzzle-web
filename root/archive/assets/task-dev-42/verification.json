@@ -1,0 +1,29 @@
+{
+  "task": "TASK-DEV-42",
+  "before": [
+    {
+      "label": "BGM 음소거",
+      "pressed": "true",
+      "title": "BGM 음소거"
+    },
+    {
+      "label": "SFX 음소거",
+      "pressed": "true",
+      "title": "SFX 음소거"
+    }
+  ],
+  "afterBgm": [
+    {
+      "label": "BGM 사운드 켜기",
+      "pressed": "false",
+      "title": "BGM 켜기"
+    },
+    {
+      "label": "SFX 음소거",
+      "pressed": "true",
+      "title": "SFX 음소거"
+    }
+  ],
+  "equalizer": "aria-hidden=true로 장식 처리, role 없는 aria-label 제거",
+  "unit": "BgmSelectModal 7/7 PASS"
+}

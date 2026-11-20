@@ -129,15 +129,16 @@ src/
 
 | 항목 | 결과 |
 | :--- | :--- |
-| 유닛·통합 테스트 | **41개 파일 / 247개 케이스 PASS** |
+| 유닛·통합 테스트 | **41개 파일 / 251개 케이스 PASS** |
 | 타입 검사 | **0 Errors** |
 | 프로덕션 빌드 | **Vite 8.3.6 성공** |
-| E2E | **Playwright Chromium 16/16 PASS** |
+| E2E | **Playwright Chromium 31/31 PASS**, WebKit 첫 설치 2/2 PASS |
 | Lighthouse | 타이틀 화면 접근성 **1.0** |
 
 - Node.js 26.13.0에서도 별도 `NODE_OPTIONS` 없이 `npm test`가 통과합니다.
 - PWA 최초 설치 직후 오프라인 재로드에서 타이틀 화면이 표시되는 경로를 Chromium E2E로 확인했습니다.
-- 실제 모바일 실기기·Safari/Firefox·스크린리더 검증은 수행하지 않았습니다.
+- 360×640·360×800·412×839에서 wheel·touch 문서 스크롤과 모달 배경 잠금을 Chromium E2E로 확인했습니다.
+- 실제 Samsung Internet·iOS Safari·Firefox·스크린리더 검증은 수행하지 않았습니다.
 
 ---
 

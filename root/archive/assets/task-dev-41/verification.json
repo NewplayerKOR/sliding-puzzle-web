@@ -1,0 +1,46 @@
+{
+  "task": "TASK-DEV-41",
+  "structure": "role=grid/gridcell 제거, ul/li 목록 + aria-labelledby",
+  "results": [
+    {
+      "viewport": {
+        "width": 360,
+        "height": 640
+      },
+      "metrics": {
+        "itemCount": 30,
+        "tagName": "UL",
+        "listStyle": "none",
+        "firstDayLabel": "1일",
+        "todayLabel": "20일 (오늘의 도전)",
+        "calendarLeft": 42,
+        "calendarRight": 318,
+        "firstDayWidth": 36,
+        "firstDayHeight": 36,
+        "scrollWidth": 360,
+        "innerWidth": 360
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "metrics": {
+        "itemCount": 30,
+        "tagName": "UL",
+        "listStyle": "none",
+        "firstDayLabel": "1일",
+        "todayLabel": "20일 (오늘의 도전)",
+        "calendarLeft": 450,
+        "calendarRight": 830,
+        "firstDayWidth": 50.859375,
+        "firstDayHeight": 50.859375,
+        "scrollWidth": 1280,
+        "innerWidth": 1280
+      }
+    }
+  ],
+  "unit": "DailyModal 4/4 PASS",
+  "e2e": "e2e/accessibility-ux.spec.ts 6/6 PASS"
+}

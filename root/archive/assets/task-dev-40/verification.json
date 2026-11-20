@@ -1,0 +1,31 @@
+{
+  "task": "TASK-DEV-40",
+  "firstInstall": "등록 시작 시점 controller·기존 active/waiting으로 첫 설치 구분",
+  "bannerPlacement": {
+    "metrics360": {
+      "bannerTop": 96,
+      "bannerBottom": 158,
+      "bannerLeft": 16,
+      "bannerRight": 344,
+      "headerButtonBottom": 87,
+      "scrollWidth": 360,
+      "innerWidth": 360,
+      "role": "status"
+    },
+    "metrics1280": {
+      "bannerTop": 96,
+      "headerButtonBottom": 53,
+      "bannerLeft": 400,
+      "bannerRight": 880,
+      "innerWidth": 1280
+    }
+  },
+  "unit": {
+    "before": "첫 설치 레이스 테스트 1 failed / 6 skipped",
+    "after": "swUpdateManager 7/7 PASS"
+  },
+  "e2e": {
+    "chromium": "e2e/sw-first-install.spec.ts 2/2 PASS",
+    "webkit": "PW_WEBKIT=1 --project=webkit 2/2 PASS"
+  }
+}
