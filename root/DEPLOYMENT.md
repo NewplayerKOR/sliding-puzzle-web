@@ -55,7 +55,7 @@ Vercel 프로젝트가 pause 상태에서 재개될 때 아래 설정을 유지�
 - 홈 화면 아이콘은 `scripts/generate-pwa-icons.js`로 생성한다. `npm run generate:pwa-icons` 실행 후 192·512 `any`, maskable 2종, apple-touch-icon(180×180)이 `public/assets/icons/`에 갱신된다. maskable 아이콘은 중앙 80% safe zone 안에 배치한다.
 - 프리캐시는 셸·SFX 5종·PWA 아이콘 5종·기본 테마·빌드 번들 17건/약 1.21MB다. 실제 코드에서 참조하지 않는 스프라이트·개별 PNG 아이콘은 추가하지 않는다.
 - 설치 프롬프트는 사용자 선택을 1회만 사용할 수 있으므로 수락·거부·오류 모두 배너를 닫고, `appinstalled` 이벤트에서도 닫는다.
-- 업데이트 배너는 등록 시작 시점의 controller와 기존 active/waiting으로 첫 설치와 업데이트를 구분한다. 첫 설치 중 controller가 먼저 활성화돼도 배너를 표시하지 않으며, 배너는 헤더 버튼을 가리지 않도록 상단 유틸리티 바 아래에 배치한다.
+- 업데이트 배너는 등록 시작 시점의 controller와 기존 active/waiting으로 첫 설치와 업데이트를 구분한다. 첫 설치 중 controller가 먼저 활성화돼도 배너를 표시하지 않으며, 배너는 모달이 열리면 배경과 함께 `inert`로 비활성화되고 헤더 버튼을 가리지 않도록 상단 유틸리티 바 아래에 배치한다.
 
 ## 6. 배포 후 확인
 

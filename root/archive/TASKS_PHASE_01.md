@@ -2009,3 +2009,162 @@
   - Lighthouse는 본 작업 DoD가 아니라 측정하지 않음.
   - Vercel 프로젝트는 소유자가 의도적으로 pause한 상태이며 결함으로 판단하지 않음.
 - **작업 상태**: `root/TASKS.md`의 TASK-QA-12 완료 요약과 Phase 보관 링크 반영. AGENTS.md·DESIGN_SYSTEM.md 버전 기록은 PM 갱신 대상.
+
+## TASK-DEV-44 — 모달 inert 범위·오버레이 dialog 구조 정합화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: 모달이 열린 동안 배경 인터랙션을 완전히 차단하고 오버레이·다이얼로그 역할을 표준 구조에 맞춘다.
+- **원문 대상 파일**: `src/App.tsx`, `src/hooks/useBodyScrollLock.ts`, `src/hooks/useModalFocusTrap.ts`, `src/components/Modal/HintModal.tsx`, `src/components/Modal/CustomImageModal.tsx`, `src/components/Modal/WinModal.tsx`, `src/components/Modal/GameOverModal.tsx`, `src/components/Modal/ThemeModal.tsx`
+- **원문 재현/증거**:
+  - 2026-11-23 코드 판독: `App.tsx:534` `inert`는 `.app-content`에만 적용하고 `ServiceWorkerUpdateBanner:631`는 밖에 있어 모달 중에도 배너 포커스·클릭이 가능함.
+  - `HintModal.tsx:36` 오버레이 `div onClick={onClose}`에 `role="dialog"`를 부여하고 키보드 핸들러를 두지 않음. `WinModal.tsx:163`, `CustomImageModal.tsx:300`도 동일 패턴임.
+  - `useBodyScrollLock.ts:19-20` `html`·`body` `overflow: hidden`으로 잠금. `modern-web-guidance` `dialog` 가이드는 `overflow: hidden` 대체를 금지하고 `dialog:modal { overscroll-behavior: contain }`을 요구함.
+  - `npm test` 2026-11-23 1회차 41파일 중 1 failed(`App.daily.test.tsx:162`), 2회차 251/251 PASS로 간헐 실패를 확인함. 모달·포커스 회귀와 직접 인과는 미확정이며 QA-13에서 재현함.
+- **원문 DoD**:
+  - 오버레이 `div`에서 `role="dialog"`·`aria-modal`을 제거하고 내부 콘텐츠 컨테이너로 이동하거나 native `dialog` 마이그레이션 계획을 기록한다.
+  - `inert` 범위에 PWA 배너를 포함하거나 배너를 모달 스택 밖에서 비활성화한다.
+  - `overflow: hidden` 잠금을 유지하더라도 `overscroll-behavior: contain` 보강과 레이아웃 이동·iOS 러버밴딩 검토를 남긴다.
+  - `npm test`, `npm run typecheck`, `npm run build`, `e2e/modal-lifecycle.spec.ts`·`e2e/accessibility-ux.spec.ts` PASS를 확인한다.
+- **진행 결과**:
+  - 10개 모달(Hint·CustomImage·Win·GameOver·Theme·Solution·Confirm·Daily·Achievement·Bgm) 오버레이 `div`에서 `role="dialog"`·`aria-modal`·`aria-labelledby`를 제거하고 내부 콘텐츠 컨테이너로 이동함. 오버레이는 장식 백드롭으로 남겨 키보드 핸들러 요구를 해소하고, WinModal은 light-dismiss 없이 유지함. `App.keyboard.test.tsx`는 dialog 자체가 트랩 범위임을 반영해 수정함.
+  - `ServiceWorkerUpdateBanner`를 `.app-content` 안으로 이동해 모달 중 `inert`·`aria-hidden`이 적용되게 함. `AchievementToast`·global-toast는 live-region 발표가 inert에 묻히지 않게 밖에 둠.
+  - `useBodyScrollLock`에 `modern-web-guidance` 상충·유지 근거 주석을 남김: 커스텀 오버레이+iOS 러버밴딩·`e2e/mobile-scroll` 회귀 때문에 overflow 잠금을 유지하고, 오버레이·콘텐츠 `overscroll-behavior: contain`으로 체인을 함께 차단함. native `dialog` 마이그레이션 시 훅 제거 예정.
+- **검증**:
+  - `npm test` 42개 파일/257개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.8 성공(CSS 83.66KB/gzip 11.15KB, JS 390.78KB/gzip 121.76KB, solver worker 8.73KB).
+  - `npm run test:e2e` Playwright Chromium 31/31 PASS(`modal-lifecycle` 2/2, `accessibility-ux` 6/6 포함).
+  - `npm audit --omit=dev` 0건.
+- **미실행**: native `dialog` 마이그레이션(계획만 기록), 실제 스크린리더·모바일 실기기·Safari/Firefox 네이티브 수동 검증.
+- **증거**: `root/archive/assets/task-dev-44/verification.json`
+- **작업 상태**: `root/TASKS.md` 완료 요약과 Phase 보관 링크 반영.
+
+## TASK-DEV-45 — 보드 입력·타이머·리플레이 상태 안정화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P1
+- **목표**: AI 쿨다운·리플레이·토스트·파일 읽기·Worker 생성의 상태 경쟁과 자원 낭비를 제거한다.
+- **원문 대상 파일**: `src/App.tsx`, `src/components/Modal/WinModal.tsx`, `src/components/Achievement/AchievementToast.tsx`, `src/components/Modal/CustomImageModal.tsx`, `src/hooks/useAssetPreloader.ts`
+- **원문 재현/증거**:
+  - `App.tsx:264` `aiCooldown`을 `setInterval`+`deps [aiCooldown]`으로 매초 재생성함. 드리프트·인터벌 누수 위험이 있음.
+  - `App.tsx:230` 마운트 시 Solver `Worker`를 즉시 생성함. 미사용 세션에서도 메모리를 점유함.
+  - `WinModal.tsx:111` `setReplayStep(prev => { setIsPlayingReplay(false); return prev; })` updater 내부에 side-effect를 둠. StrictMode 이중 호출에서 상태가 꼬일 수 있음.
+  - `AchievementToast.tsx:29` `useEffect[current]`에서 이전 타이머를 취소하므로 큐가 빠르게 쌓이면 첫 토스트 노출이 단축됨.
+  - `CustomImageModal.tsx:159` `FileReader.readAsDataURL` abort·cleanup이 없어 모달을 닫은 뒤에도 `setImageSrc`가 실행될 수 있음.
+- **원문 DoD**:
+  - 쿨다운을 `setTimeout` 체인으로 바꾸거나 단일 인터벌로 고정한다.
+  - Worker를 요청 시점 lazy 생성으로 바꾸거나 eager 유지 근거를 기록한다.
+  - 리플레이 updater를 순수하게 바꾸고 재생 종료를 effect에서 처리한다.
+  - 토스트 큐 노출 시간을 보장하고 파일 리더에 abort를 추가한다.
+  - `npm test`, `npm run typecheck`, `npm run build`, Chromium E2E 31/31 PASS를 확인한다.
+- **진행 결과**:
+  - 쿨다운을 단일 `setTimeout` 체인으로 변경함. Worker 마운트 생성 효과를 제거하고 첫 힌트 요청 시 lazy 생성으로 바꿈(언마운트 정리 유지). `App.aiHint.test.tsx` 4건은 worker 접근을 클릭 이후로 이동해 동일 동작으로 검증함(약화 없음).
+  - 리플레이를 `setTimeout` 체인+종료 감지 effect로 분리해 updater를 순수하게 유지함.
+  - 토스트 effect deps를 `current?.id` 기준으로 고정해 큐 적재 중에도 4.5초 노출을 보장함.
+  - `CustomImageModal`에 `readerRef`+`abortPendingRead`를 추가해 새 파일 선택·모달 닫힘·언마운트 시 진행 중 읽기를 중단함.
+- **검증**:
+  - `npm test` 42개 파일/257개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.8 성공.
+  - `npm run test:e2e` Playwright Chromium 31/31 PASS. `npm audit --omit=dev` 0건.
+- **미실행**: 실제 스크린리더·모바일 실기기·Safari/Firefox 네이티브 수동 검증.
+- **증거**: `root/archive/assets/task-dev-45/verification.json`
+- **작업 상태**: `root/TASKS.md` 완료 요약과 Phase 보관 링크 반영.
+
+## TASK-DEV-46 — 타일·힌트 접근성·터치·모션 정합화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 보드 탐색·힌트 안내·터치 제스처·장식 모션을 접근성 기준에 맞춘다.
+- **원문 대상 파일**: `src/components/Board/Tile.tsx`, `src/components/Board/Tile.css`, `src/components/Board/PuzzleBoard.tsx`, `src/styles/index.css`, `src/components/Modal/BgmSelectModal.css`
+- **원문 재현/증거**:
+  - `Tile.tsx:58` `disabled={!isMovable}`로 비이동 타일을 포커스 순서에서 제거함. 키보드 사용자는 보드 전체를 탐색할 수 없음. `modern-web-guidance` `accessibility`는 `disabled`와 `aria-disabled`를 구분해 사용하도록 요구함.
+  - `Tile.tsx:40` `role="presentation"`+`aria-hidden` 중복. `presentation`은 deprecated이며 `none`을 권장함.
+  - `Tile.tsx:80` `button` 내부에 `role="status"` live-region을 중첩함. SR 미발표·이중 발표 위험이 있음.
+  - `Tile.css:13` `touch-action: none`을 타일 전체에 적용함. `accessibility` 가이드는 필요한 축만 제한(`pan-y`·`pan-x`)하도록 요구함.
+  - `Tile.css:134` `hint-arrow` `nudgeUp 0.9s infinite alternate` 반복. 전역 `prefers-reduced-motion` 축소와 별개로 1회성 피드백 원칙(DESIGN_SYSTEM 4.3)에 어긋남.
+  - `index.css:224` `button { outline: none }` 전역. `:focus-visible` 대체는 있으나 미지원 브라우저에서 포커스 상실 위험이 있음.
+- **원문 DoD**:
+  - 비이동 타일을 `aria-disabled`·roving tabindex·grid 패턴 중 하나로 탐색 가능하게 바꾸고 결정 근거를 기록한다.
+  - `presentation`을 `none`으로 바꾸고 중첩 live-region을 토스트·상태 영역으로 분리한다.
+  - `touch-action`을 보드 제스처에 필요한 범위로 축소한다.
+  - 장식 반복 모션을 1회성으로 바꾸거나 reduced-motion 생략을 명시한다.
+  - `npm test`, `npm run typecheck`, `npm run build`, 키보드·360px E2E PASS를 확인한다.
+- **진행 결과**:
+  - 빈 슬롯 `role="presentation"`→`role="none"`. 비이동 타일을 `disabled`→`aria-disabled`+활성화 가드로 바꿔 포커스 탐색을 유지하고 실제 이동 검사는 `moveTile`이 담당함.
+  - 힌트 오버레이의 `role="status"`·`aria-label`을 제거하고 `aria-hidden` 장식으로 처리, 힌트 문구는 버튼 이름에 포함함.
+  - 타일 `touch-action: none`→`manipulation`(보드 non-passive `touchmove` 스와이프 처리는 유지해 `e2e/mobile-scroll` 보드 스와이프 회귀 통과).
+  - `hint-arrow` 무한 반복→1회성 1 iteration. `index.css`에 `@supports not selector(:focus-visible)` `:focus` 대체 링 추가.
+  - 수치 정렬용 mono(`.u-numeric`·stat 값·타이머)는 정보 구조상 필요해 유지함.
+- **검증**:
+  - `npm test` 42개 파일/257개 케이스 PASS(`Tile.test.tsx` 4건 신규: aria-disabled·활성화·힌트·빈슬롯). `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.8 성공.
+  - `npm run test:e2e` Playwright Chromium 31/31 PASS(보드 스와이프·키보드 Tab·Escape 포함). `npm audit --omit=dev` 0건.
+- **미실행**: 실제 스크린리더(NVDA·VoiceOver) 탐색 수동 검증, 모바일 실기기 터치 체감 검증.
+- **증거**: `root/archive/assets/task-dev-46/verification.json`
+- **작업 상태**: `root/TASKS.md` 완료 요약과 Phase 보관 링크 반영.
+
+## TASK-DEV-47 — 저장·에셋·공유·PWA·i18n 정합화
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 커스텀 이미지 용량·공유 카드 색상·SW 버전·다국어 하드코딩 잔재를 정리한다.
+- **원문 대상 파일**: `src/App.tsx`, `src/components/Modal/CustomImageModal.tsx`, `src/utils/storage.ts`, `src/utils/shareCardGenerator.ts`, `src/components/Modal/WinModal.tsx`, `public/sw.js`, `public/manifest.webmanifest`, `index.html`, `src/components/Modal/BgmSelectModal.css`, `src/utils/audioManager.ts`
+- **원문 재현/증거**:
+  - `App.tsx:84` 저장된 커스텀 이미지를 `startsWith('data:image/')`만 검사하고 길이 상한을 두지 않음. 10MB 파일이 매 시작 시 메모리 적재·5MB quota 초과를 유발할 수 있음. 쓰기 경로는 `storage.ts:28` false 반환으로 방어함.
+  - `shareCardGenerator.ts:25,29,34,39,88` canvas `fillStyle` 12건 하드코딩. `WinModal.tsx:80,87` confetti 색상 2곳 하드코딩. `BgmSelectModal.css:55,106,150,306` `1px solid` 하드코딩으로 토큰 미사용.
+  - `public/sw.js:1` `CACHE_NAME v2.4`와 `package.json:4 version 1.4.0` 수동 버전 불일치. `BUILD_ASSETS=[]` 소스 상태 빈 프리캐시.
+  - `manifest.webmanifest:10` `lang ko` 고정. 앱 4개 국어와 `index.html:22` 동적 `lang` 전환과 정합성이 깨짐.
+  - `index.html:11` `title`·`description` 영문 하드코딩. `App.tsx:623` 푸터 `Sliding Block Puzzle • 100% Serverless...` 번역키 없음. `WinModal.tsx:36` `themeName='Theme'` 영문 폴백. `WinModal.tsx:298` `1x/2x` 하드코딩·`aria-label` 없음.
+  - `audioManager.ts:202,216,374` BGM `preload auto`로 초기 네트워크 경쟁 가능.
+- **원문 DoD**:
+  - 커스텀 이미지 읽기·쓰기에 바이트 상한과 용량 초과 안내를 추가한다.
+  - 공유 카드·confetti 색상을 토큰·상수에서 참조하거나 하드코딩 유지 근거를 기록한다.
+  - SW 캐시명과 패키지 버전 동기화 여부·`lang`·`title`·푸터·속도 토글 문구를 정리하고 FEATURES.md 갱신 여부를 PM에 전달한다.
+  - 오디오 프리로드를 첫 사용 시점으로 늦추거나 유지 근거를 기록한다.
+  - `npm test`, `npm run typecheck`, `npm run build`, PWA 오프라인 E2E PASS를 확인한다.
+- **진행 결과**:
+  - 커스텀 이미지 읽기·쓰기에 4MB 상한을 적용하고 초과분은 파기·안내함(`imageStorageQuotaExceeded` 재사용).
+  - 공유 카드 팔레트를 `SHARE_COLORS` 상수로 토큰 동기화, confetti를 `WIN_CONFETTI_COLORS`로 통일, BGM CSS 7곳을 `var(--border-default)`로 교체함(canvas 텍스트 대문자 장식은 이미지 문구로 유지).
+  - SW 캐시·패키지 수동 동기화 주석 추가. manifest `lang` 제거(런타임 4개 국어는 `documentElement` 전환). `index.html` title·description은 설치·SEO 기본값으로 유지(런타임 UI 전체 현지화, 근거 기록).
+  - 푸터를 `t.footerOfflineReady` 4개 국어로 교체, `WinModal` 테마 폴백을 `t.themeLabel`로, 속도 토글에 `replaySpeedLabel` 4개 국어 `aria-label`을 적용함(`i18n` 키 정합 테스트 통과).
+  - BGM·SFX `preload`를 `none`으로 늦춰 첫 재생 시점에 로드함.
+- **검증**:
+  - `npm test` 42개 파일/257개 케이스 PASS(CustomImage oversize 파기·WinModal 속도 라벨 신규). `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.8 성공.
+  - `npm run test:e2e` Playwright Chromium 31/31 PASS(PWA 오프라인 포함). `npm audit --omit=dev` 0건.
+- **미실행**: 실제 스크린리더 속도 토글 낭독 수동 검증, 저사양 네트워크에서 오디오 첫 재생 지연 체감 검증.
+- **증거**: `root/archive/assets/task-dev-47/verification.json`
+- **작업 상태**: `root/TASKS.md` 완료 요약과 Phase 보관 링크 반영.
+
+## TASK-DEV-48 — 타이틀·히어로 디자인 감점 해소
+
+- **Phase**: 01
+- **담당**: DEV
+- **우선순위**: P2
+- **목표**: 템플릿 티가 나는 번호·대문자·mono·중점 장식을 걷어내고 퍼즐 특유의 촉각·기록 정체성을 살린다.
+- **원문 대상 파일**: `src/components/Title/TitleScreen.tsx`, `src/components/Title/TitleScreen.css`, `src/components/Controls/Controls.tsx`, `src/components/Header/Header.css`, `src/styles/App.css`, `root/DESIGN_SYSTEM.md`
+- **원문 재현/증거**:
+  - 2026-11-23 `frontend-design` 냉정 평가: `TitleScreen.tsx:168,219,272,325` `01/02/03/04` 번호는 순차 프로세스가 아닌 병렬 모드에 붙은 장식임. 스킬은 순서가 아닌 콘텐츠에 번호 사용을 금지함.
+  - `TitleScreen.css:280` `text-transform: uppercase`+`letter-spacing 0.08em` 뱃지(`SPEED/TACTICS/STREAK`), `TitleScreen.css:228,316` mono 인덱스·사이즈, `Header.css:231` 대문자 라벨, `Controls.tsx:97` `•` 구분자는 AI 기본값 5종(대문자 라벨·mono 데이터·중점 메타)과 겹침.
+  - `TitleScreen.css:185` 4개 모드 카드 동일 `radius-2`·1px 보더·동일 CTA로 SaaS-card kit에 해당함. 대표 모드 강조와 밀도 차별이 없음.
+  - `App.tsx:623` 푸터 `•` 중점 메타+기술 자랑(`Serverless/A*/PWA`)은 사용자 언어가 아님.
+  - `TitleScreen.css:10` 페이지 진입 `fadeIn`과 `Tile.css:134` 무한 `nudge`는 사용자 행동에 답하는 모션이 아님.
+  - 캔버스 `#EFEFEA`+신호 `#D9480F`는 크림+테라코타 기본값과 유사한 인상을 줌. 기억에 남는 요소가 보드 타일 외에 없음.
+- **원문 DoD**:
+  - 순차 의미 없는 번호를 제거하고 모드 고유 아이콘·신호 인셋·선택 상태로 위계를 만든다.
+  - 뱃지를 sentence case로 바꾸고 mono·중점·대문자 장식을 정보 구조에 필요한 곳으로 축소한다.
+  - 4카드 동일 밀도를 깨고 대표 모드 강조·나머지 목록형 등 대비를 만든다.
+  - 푸터를 사용자 언어·유용한 상태(버전·오프라인 준비)로 바꾸고 장식 진입 모션을 제거하거나 1회로 한정한다.
+  - DESIGN_SYSTEM 금지·지양 목록 위반 0건과 360·1280 가로 오버플로 0건을 확인한다.
+  - `npm test`, `npm run typecheck`, `npm run build`, 시각 스팟 스크린샷을 남긴다.
+- **진행 결과**:
+  - `mode-index` 4건 제거, 뱃지 sentence case(`Speed/Tactics/Streak`), `size-pill` mono→sans+tabular-nums, `stat-label`·`toast-tag` 대문자→sentence case, `•` 3곳 제거(Controls pill-divider·ThemeModal 뱃지·푸터).
+  - Standard 카드에 `featured` 위계(신호 인셋 상시+큰 제목, 641px↑ 전폭, 나머지 quiet+작은 제목). 푸터는 DEV-47 `footerOfflineReady`로 교체됨. 진입 `fadeIn` 제거, Tile 무한 nudge는 DEV-46에서 1회성으로 한정됨.
+  - 히어로 상단에 28px 신호 바 추가(보드 타일에서 가져온 기억점). 수치 정렬용 mono는 정보 구조상 필요해 유지함.
+- **검증**:
+  - `npm test` 42개 파일/257개 케이스 PASS, `npm run typecheck` 0 Errors, `npm run build` Vite 8.3.8 성공(CSS 83.66KB/gzip 11.15KB, JS 390.78KB/gzip 121.76KB).
+  - 스팟 E2E 360×640·1280×800 가로 오버플로 0건·`mode-index` 0건·대문자 뱃지 0건·`featured` 1건 확인. `text-transform: uppercase` 잔재 0건(src 전체).
+  - `npm run test:e2e` Playwright Chromium 31/31 PASS. `npm audit --omit=dev` 0건.
+- **미실행**: PM 문구·배치 최종 확인(선행 조건), 실제 디자이너 리뷰, 모바일 실기기 체감 검증.
+- **증거**: `root/archive/assets/task-dev-48/verification.json`, `title-hero-360x640.png`, `title-hero-1280x800.png`
+- **작업 상태**: `root/TASKS.md` 완료 요약과 Phase 보관 링크 반영.

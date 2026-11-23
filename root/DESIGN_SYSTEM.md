@@ -388,3 +388,15 @@ npm run build
 - Lighthouse(타이틀 화면) 접근성 **1.0**. 게임·모달은 Playwright DOM 검증으로 대체했고 점수 범위는 타이틀 화면이다.
 - 스크린샷·측정 원문: `root/archive/assets/task-dev-40/` ~ `task-dev-43/`의 WebP·JSON과 `task-dev-43/lighthouse-accessibility.json`.
 - 미실행: Samsung Internet·iOS Safari 실기기, Firefox 터치 스크롤, 실제 설치 PWA 업데이트, 스크린리더의 Daily 목록·BGM 음소거 상태 수동 확인.
+
+### 6.10 TASK-DEV-44~48 모달 구조·타이머·타일·저장·히어로 검증 (2026-11-24)
+
+- `npm test`: 42개 파일/257개 케이스 PASS. `npm run typecheck`: 0 Errors.
+- `npm run build`: Vite 8.3.8 성공. CSS 83.66KB(gzip 11.15KB), JS 390.78KB(gzip 121.76KB), solver worker 8.73KB.
+- `npm run test:e2e`: Playwright Chromium 31/31 PASS.
+- 금지·지양 목록: `text-transform: uppercase` 잔재 0건(src 전체), `•` 중점 구분자 0건(src 전체), `mode-index` 0건, 대문자 뱃지 0건. 수치 정렬용 mono(`.u-numeric`·stat·타이머)는 정보 구조상 유지.
+- 모달 구조: 10개 모달 오버레이 `role="dialog"`를 콘텐츠 컨테이너로 이동, SW 배너 `inert` 포함·토스트 제외, overflow 잠금 유지 근거 기록.
+- 타일·모션: `aria-disabled` 탐색 유지, `role=none`, 힌트 중첩 제거, `touch-action manipulation`, 힌트 1회성, `:focus-visible` 대체 링.
+- 타이틀: 번호 제거·sentence case·`featured` 위계(641px↑ 전폭)·신호 바·진입 모션 제거. 360×640·1280×800 가로 오버플로 0건.
+- 스크린샷·측정 원문: `root/archive/assets/task-dev-44/` ~ `task-dev-48/`의 JSON과 `task-dev-48/title-hero-*.png`.
+- 미실행: native `dialog` 마이그레이션, PM 문구·배치 최종 확인, 실기기·스크린리더 수동 검증.
