@@ -33,11 +33,14 @@ export const HintModal: React.FC<HintModalProps> = ({ isOpen, theme, onClose }) 
   if (!isOpen) return null;
 
   return (
-    <div className="hint-modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="hint-title">
+    <div className="hint-modal-overlay" onClick={onClose}>
       <div
         ref={contentRef}
         className="hint-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="hint-title"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="hint-modal-header">

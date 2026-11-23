@@ -199,7 +199,8 @@ class AudioManager {
       this.bgmAudio = new Audio(track.path);
       this.bgmAudio.loop = true;
       this.bgmAudio.volume = this.config.bgmMuted ? 0 : this.config.bgmVolume;
-      this.bgmAudio.preload = 'auto';
+      // 초기 네트워크 경쟁을 피하려고 첫 재생 시점에 로드함 (play 호출 시 자동 로드)
+      this.bgmAudio.preload = 'none';
     } catch {
       this.bgmAudio = null;
     }
@@ -213,7 +214,8 @@ class AudioManager {
       for (let i = 0; i < this.sfxPoolSize; i++) {
         try {
           const audio = new Audio(primaryPath);
-          audio.preload = 'auto';
+          // 효과음 풀도 첫 재생 시점에 로드해 초기 대역폭 경쟁을 피함
+          audio.preload = 'none';
           if (fallbackPath) {
             audio.addEventListener(
               'error',
@@ -371,7 +373,8 @@ class AudioManager {
       }
       this.bgmAudio = new Audio(track.path);
       this.bgmAudio.loop = true;
-      this.bgmAudio.preload = 'auto';
+      // 트랙 전환 시에도 즉시 로드하지 않고 재생 시점에 로드함
+      this.bgmAudio.preload = 'none';
 
       if (shouldPlay) {
         this.bgmAudio.volume = 0;

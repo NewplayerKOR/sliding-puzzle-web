@@ -1,5 +1,5 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { WinModal } from './WinModal';
 import { resetGlobalLanguage } from '../../i18n/useTranslation';
 
@@ -48,8 +48,7 @@ describe('WinModal confetti lifecycle', () => {
     expect(confettiMock.reset).toHaveBeenCalledTimes(1);
   });
 
-  it('skips confetti when reduced motion is requested', () => {
-    vi.stubGlobal(
+  it('skips confetti when reduced motion is requested', () => {    vi.stubGlobal(
       'matchMedia',
       vi.fn(
         (query: string) =>
@@ -69,5 +68,18 @@ describe('WinModal confetti lifecycle', () => {
     render(<WinModal isOpen={true} {...baseProps} />);
 
     expect(confettiMock).not.toHaveBeenCalled();
+  });
+
+  it('labels the replay speed toggle with its localized action and state', () => {
+    render(<WinModal isOpen={true} {...baseProps} moveHistory={[[], []] as never} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /풀이 타임랩스/ }));
+
+    const speedButton = document.querySelector('.replay-btn.speed') as HTMLButtonElement;
+    expect(speedButton.getAttribute('aria-label')).toContain('재생 속도');
+    expect(speedButton.textContent).toContain('1x');
+
+    fireEvent.click(speedButton);
+    expect(speedButton.getAttribute('aria-label')).toContain('2x');
   });
 });

@@ -42,14 +42,14 @@ export const GameOverModal: React.FC<GameOverModalProps> = ({
     <div
       className="gameover-modal-overlay"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="gameover-title"
     >
       <div
         ref={contentRef}
         className="gameover-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gameover-title"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="gameover-icon-box">

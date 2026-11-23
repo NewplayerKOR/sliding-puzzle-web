@@ -41,15 +41,15 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     <div
       className="confirm-modal-overlay"
       onClick={onCancel}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="confirm-modal-title"
-      aria-describedby="confirm-modal-description"
     >
       <div
         ref={contentRef}
         className="confirm-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-modal-title"
+        aria-describedby="confirm-modal-description"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="confirm-modal-icon-box">

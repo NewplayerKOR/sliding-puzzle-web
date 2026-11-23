@@ -94,7 +94,6 @@ export const Controls: React.FC<ControlsProps> = ({
             <Shield size={15} />
           )}
           <span className="pill-title">{getModeLabel()}</span>
-          <span className="pill-divider">•</span>
           <span className="pill-size">{getSizeLabel()}</span>
         </div>
       </div>

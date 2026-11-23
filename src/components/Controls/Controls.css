@@ -44,11 +44,6 @@
   color: var(--color-graphite);
 }
 
-.pill-divider {
-  color: var(--color-concrete-strong);
-  font-size: var(--font-size-xs);
-}
-
 .pill-size {
   font-family: var(--font-mono);
   font-weight: var(--font-weight-semibold);

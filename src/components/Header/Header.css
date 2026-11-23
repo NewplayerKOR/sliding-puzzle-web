@@ -228,8 +228,7 @@
 .stat-label {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0;
   color: var(--color-steel);
   white-space: nowrap;
 }

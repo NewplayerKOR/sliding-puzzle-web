@@ -37,7 +37,7 @@ export const Tile: React.FC<TileProps> = ({
       <div
         className="puzzle-tile tile-empty"
         aria-hidden="true"
-        role="presentation"
+        role="none"
       />
     );
   }
@@ -49,16 +49,22 @@ export const Tile: React.FC<TileProps> = ({
 
   const isPixelArtTheme = themeImagePath.includes('pixel_art');
 
+  const hintLabel = isAiHintTarget ? `, ${t.aiRecommendedMove}` : '';
+
   return (
     <button
       type="button"
       className={`puzzle-tile tile-filled mode-${gameMode} ${isPixelArtTheme ? 'pixel-art' : ''} ${isMovable ? 'movable' : ''} ${isCorrect ? 'correct' : ''}`}
       style={spriteStyle}
-      onClick={onClick}
-      disabled={!isMovable}
-      aria-label={formatMessage(isMovable ? t.tileMovableLabel : t.tileLabel, {
+      onClick={() => {
+        // aria-disabled 타일은 포커스를 유지하되 활성화는 막음 (실제 이동 검사는 moveTile이 담당)
+        if (!isMovable) return;
+        onClick();
+      }}
+      aria-disabled={!isMovable}
+      aria-label={`${formatMessage(isMovable ? t.tileMovableLabel : t.tileLabel, {
         value: tile.value,
-      })}
+      })}${hintLabel}`}
       title={formatMessage(isMovable ? t.tileMoveTitle : t.tileLabel, {
         value: tile.value,
       })}
@@ -76,9 +82,10 @@ export const Tile: React.FC<TileProps> = ({
       )}
 
       {/* AI 스마트 힌트 타겟 펄스 및 방향 화살표 */}
+      {/* 버튼 내부 live-region 중첩을 피하려고 장식으로 처리하고 힌트 문구는 버튼 이름에 포함함 */}
       {isAiHintTarget && (
-        <div className={`tile-ai-hint-overlay dir-${aiHintDirection || 'up'}`} role="status" aria-label={t.aiRecommendedMove}>
-          <span className="hint-arrow">
+        <div className={`tile-ai-hint-overlay dir-${aiHintDirection || 'up'}`} aria-hidden="true">
+          <span className="hint-arrow" aria-hidden="true">
             {aiHintDirection === 'down' ? '↓' : aiHintDirection === 'up' ? '↑' : aiHintDirection === 'right' ? '→' : '←'}
           </span>
         </div>

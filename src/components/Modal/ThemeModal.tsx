@@ -104,21 +104,21 @@ export const ThemeModal: React.FC<ThemeModalProps> = ({
         : pendingModeInfo.mode === 'moveLimit'
         ? t.modeMoveLimit
         : t.modeStandard;
-    return `${modeName} • ${pendingModeInfo.size}×${pendingModeInfo.size}`;
+    return `${modeName} ${pendingModeInfo.size}×${pendingModeInfo.size}`;
   };
 
   return (
     <div
       className="theme-modal-overlay"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="theme-modal-title"
     >
       <div
         ref={contentRef}
         className="theme-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="theme-modal-title"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="theme-modal-header">

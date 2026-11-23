@@ -203,8 +203,7 @@ describe('CustomImageModal upload validation', () => {
     expect(localStorage.getItem(CUSTOM_IMAGE_KEY)).toBe('data:image/png;base64,broken');
   });
 
-  it('pans the crop with arrow keys as a keyboard alternative to dragging', async () => {
-    const drawImage = vi.fn();
+  it('pans the crop with arrow keys as a keyboard alternative to dragging', async () => {    const drawImage = vi.fn();
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
       clearRect: vi.fn(),
       drawImage,
@@ -226,5 +225,16 @@ describe('CustomImageModal upload validation', () => {
         drawImage.mock.calls.some((call) => call[1] === 10 && call[2] === 10)
       ).toBe(true);
     });
+  });
+
+  it('discards an oversized saved custom image instead of loading it', () => {
+    const oversized = `data:image/png;base64,${'a'.repeat(4 * 1024 * 1024 + 1)}`;
+    localStorage.setItem(CUSTOM_IMAGE_KEY, oversized);
+
+    renderModal();
+
+    expect(getDropzone()).not.toBeNull();
+    expect(document.querySelector('.crop-canvas')).toBeNull();
+    expect(localStorage.getItem(CUSTOM_IMAGE_KEY)).toBeNull();
   });
 });

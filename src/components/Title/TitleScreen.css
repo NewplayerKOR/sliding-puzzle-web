@@ -7,7 +7,6 @@
   max-width: 640px;
   margin: 0 auto;
   padding: var(--space-2) 0 var(--space-6);
-  animation: fadeIn var(--transition-fast);
 }
 
 /* Top Utility Bar */
@@ -158,6 +157,16 @@
   border-bottom: 1px solid var(--color-concrete);
 }
 
+/* 퍼즐 타일에서 가져온 신호 악센트 바: 히어로의 기억점이 됨 */
+.title-hero-section::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 4px;
+  border-radius: var(--radius-1);
+  background-color: var(--color-signal-600);
+}
+
 .title-main-heading {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: var(--font-weight-bold);
@@ -201,6 +210,27 @@
   box-shadow: inset 3px 0 0 var(--color-signal-600);
 }
 
+/* 대표 모드(Standard) 강조: 선택 여부와 무관하게 신호 인셋과 큰 제목으로 위계를 만듬.
+   나머지 카드는 기본 밀도로 quiet하게 유지해 4카드 동일 밀도를 깸. */
+.mode-card.featured {
+  border-color: var(--color-signal-600);
+  box-shadow: inset 3px 0 0 var(--color-signal-600);
+}
+
+.mode-card.featured .mode-card-title {
+  font-size: var(--font-size-xl);
+}
+
+.mode-card:not(.featured) .mode-card-title {
+  font-size: var(--font-size-md);
+}
+
+@media (min-width: 641px) {
+  .mode-card.featured {
+    grid-column: 1 / -1;
+  }
+}
+
 .mode-card.standard,
 .mode-card.timeattack,
 .mode-card.movelimit,
@@ -222,15 +252,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-}
-
-.mode-index {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-steel);
-  letter-spacing: 0.04em;
-  flex-shrink: 0;
 }
 
 .mode-icon-box {
@@ -276,8 +297,8 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   color: var(--color-steel);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 .mode-tag-badge.urgent,
@@ -313,9 +334,10 @@
   border-radius: 0;
   background-color: transparent;
   color: var(--color-graphite);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
   cursor: pointer;
   transition: background-color var(--transition-fast), color var(--transition-fast);
   white-space: nowrap;

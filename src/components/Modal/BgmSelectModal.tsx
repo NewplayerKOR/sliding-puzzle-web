@@ -66,14 +66,14 @@ export const BgmSelectModal: React.FC<BgmSelectModalProps> = ({ isOpen, onClose 
     <div
       className="bgm-modal-overlay"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="bgm-modal-title"
     >
       <div
         ref={contentRef}
         className="bgm-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="bgm-modal-title"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}

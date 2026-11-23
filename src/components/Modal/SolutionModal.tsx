@@ -51,14 +51,14 @@ export const SolutionModal: React.FC<SolutionModalProps> = ({
     <div
       className="solution-modal-overlay"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="solution-modal-title"
     >
       <div
         ref={contentRef}
         className="solution-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="solution-modal-title"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="solution-modal-header">

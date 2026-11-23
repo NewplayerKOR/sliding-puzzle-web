@@ -49,14 +49,14 @@ export const AchievementModal: React.FC<AchievementModalProps> = ({ isOpen, onCl
     <div
       className="achieve-modal-overlay"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="achieve-modal-title"
     >
       <div
         ref={contentRef}
         className="achieve-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="achieve-modal-title"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="achieve-modal-header">

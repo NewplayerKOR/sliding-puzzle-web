@@ -163,6 +163,7 @@ export interface Translations {
   starsAlt: string;
   replayOpen: string;
   replayStepInfo: string;
+  replaySpeedLabel: string;
   trophyAlt: string;
   playAgainAlt: string;
   nextLevelAlt: string;
@@ -268,6 +269,7 @@ export interface Translations {
   shareCopied: string;
   shareDownloaded: string;
   shareFailed: string;
+  footerOfflineReady: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -422,6 +424,7 @@ export const translations: Record<Language, Translations> = {
     starsAlt: '별점 {stars}성',
     replayOpen: '{count}수 재생',
     replayStepInfo: '{current} / {total} 수',
+    replaySpeedLabel: '재생 속도 {speed}',
     trophyAlt: '최고 기록 황금 트로피',
     playAgainAlt: '다시 플레이',
     nextLevelAlt: '다음 도전',
@@ -520,6 +523,7 @@ export const translations: Record<Language, Translations> = {
     shareCopied: '결과 카드가 클립보드에 복사되었습니다!',
     shareDownloaded: '결과 카드가 이미지 파일로 다운로드되었습니다!',
     shareFailed: '결과 카드를 만들지 못했습니다. 다시 시도해 주세요.',
+    footerOfflineReady: '오프라인에서도 이어서 풀 수 있음',
   },
   en: {
     appTitle: 'Sliding Puzzle',
@@ -672,6 +676,7 @@ export const translations: Record<Language, Translations> = {
     starsAlt: '{stars}-star rating',
     replayOpen: 'Play {count} moves',
     replayStepInfo: '{current} / {total} moves',
+    replaySpeedLabel: 'Playback speed {speed}',
     trophyAlt: 'Golden best-record trophy',
     playAgainAlt: 'Play again',
     nextLevelAlt: 'Next challenge',
@@ -770,6 +775,7 @@ export const translations: Record<Language, Translations> = {
     shareCopied: 'Result card copied to the clipboard!',
     shareDownloaded: 'Result card downloaded as an image file!',
     shareFailed: 'Could not create the result card. Please try again.',
+    footerOfflineReady: 'Keeps working offline',
   },
   ja: {
     appTitle: 'スライディングパズル',
@@ -922,6 +928,7 @@ export const translations: Record<Language, Translations> = {
     starsAlt: '星{stars}個の評価',
     replayOpen: '{count}手を再生',
     replayStepInfo: '{current} / {total}手',
+    replaySpeedLabel: '再生速度 {speed}',
     trophyAlt: '最高記録の金トロフィー',
     playAgainAlt: 'もう一度プレイ',
     nextLevelAlt: '次の挑戦',
@@ -1020,6 +1027,7 @@ export const translations: Record<Language, Translations> = {
     shareCopied: '結果カードをクリップボードにコピーしました！',
     shareDownloaded: '結果カードを画像ファイルとしてダウンロードしました！',
     shareFailed: '結果カードを作成できませんでした。もう一度お試しください。',
+    footerOfflineReady: 'オフラインでも続けられる',
   },
   zh: {
     appTitle: '华容道拼图',
@@ -1172,6 +1180,7 @@ export const translations: Record<Language, Translations> = {
     starsAlt: '{stars}星评价',
     replayOpen: '回放{count}步',
     replayStepInfo: '{current} / {total}步',
+    replaySpeedLabel: '回放速度 {speed}',
     trophyAlt: '最高记录金色奖杯',
     playAgainAlt: '再玩一次',
     nextLevelAlt: '下一挑战',
@@ -1270,5 +1279,6 @@ export const translations: Record<Language, Translations> = {
     shareCopied: '结果卡片已复制到剪贴板！',
     shareDownloaded: '结果卡片已作为图片文件下载！',
     shareFailed: '无法生成成绩卡，请重试。',
+    footerOfflineReady: '支持离线继续游玩',
   },
 };

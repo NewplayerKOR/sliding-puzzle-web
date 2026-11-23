@@ -163,12 +163,11 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
 
       {/* 4 Mode Selection Cards Grid */}
       <div className="mode-cards-grid">
-        {/* 1. 일반 모드 (Standard Mode) */}
+        {/* 1. 일반 모드 (Standard Mode): 대표 모드로 전폭 배치함 */}
         <div
-          className={`mode-card standard ${selectedMode === 'standard' ? 'selected' : ''}`}
+          className={`mode-card featured standard ${selectedMode === 'standard' ? 'selected' : ''}`}
         >
           <div className="mode-card-header">
-            <span className="mode-index">01</span>
             <div className="mode-icon-box standard">
               <Shield size={20} />
             </div>
@@ -216,13 +215,12 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           className={`mode-card timeattack ${selectedMode === 'timeAttack' ? 'selected' : ''}`}
         >
           <div className="mode-card-header">
-            <span className="mode-index">02</span>
             <div className="mode-icon-box timeattack">
               <Clock size={20} />
             </div>
             <div className="mode-title-group">
               <h2 className="mode-card-title">{t.modeTimeAttack}</h2>
-              <span className="mode-tag-badge urgent">SPEED</span>
+              <span className="mode-tag-badge urgent">Speed</span>
             </div>
           </div>
 
@@ -269,13 +267,12 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           className={`mode-card movelimit ${selectedMode === 'moveLimit' ? 'selected' : ''}`}
         >
           <div className="mode-card-header">
-            <span className="mode-index">03</span>
             <div className="mode-icon-box movelimit">
               <Footprints size={20} />
             </div>
             <div className="mode-title-group">
               <h2 className="mode-card-title">{t.modeMoveLimit}</h2>
-              <span className="mode-tag-badge limit">TACTICS</span>
+              <span className="mode-tag-badge limit">Tactics</span>
             </div>
           </div>
 
@@ -322,13 +319,12 @@ export const TitleScreen: React.FC<TitleScreenProps> = ({
           className={`mode-card daily ${selectedMode === 'daily' ? 'selected' : ''}`}
         >
           <div className="mode-card-header">
-            <span className="mode-index">04</span>
             <div className="mode-icon-box daily">
               <Flame size={20} />
             </div>
             <div className="mode-title-group">
               <h2 className="mode-card-title">{t.dailyChallenge}</h2>
-              <span className="mode-tag-badge streak">STREAK</span>
+              <span className="mode-tag-badge streak">Streak</span>
             </div>
           </div>
 

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { X, Upload, ZoomIn, ZoomOut, Check, RefreshCw } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
 import { useModalFocusTrap } from '../../hooks/useModalFocusTrap';
-import { readStorageItem, writeStorageItem } from '../../utils/storage';
+import { readStorageItem, removeStorageItem, writeStorageItem } from '../../utils/storage';
 import './CustomImageModal.css';
 
 interface CustomImageModalProps {
@@ -13,6 +13,8 @@ interface CustomImageModalProps {
 
 const CUSTOM_IMAGE_STORAGE_KEY = 'sliding_puzzle_custom_image';
 const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+// 저장·메모리 적재 상한: 5MB quota 초과 전에 안내하고 파기함
+const MAX_CUSTOM_IMAGE_STORAGE_CHARS = 4 * 1024 * 1024;
 const SUPPORTED_IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
 
 export const CustomImageModal: React.FC<CustomImageModalProps> = ({
@@ -37,9 +39,23 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageObjRef = useRef<HTMLImageElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const readerRef = useRef<FileReader | null>(null);
+
+  // 진행 중인 파일 읽기가 있으면 중단해 닫힌 모달에 setImageSrc가 실행되지 않게 함
+  const abortPendingRead = useCallback(() => {
+    if (readerRef.current) {
+      try {
+        readerRef.current.abort();
+      } catch {
+        // 이미 완료·중단된 리더는 무시함
+      }
+      readerRef.current = null;
+    }
+  }, []);
 
   // 모달을 열 때 저장소 상태와 동기화하고, 닫을 때 내부 크롭 상태를 모두 초기화함.
   // 외부에서 커스텀 이미지가 해제된 뒤 다시 열어도 이전 캔버스가 남지 않는다.
+  // 닫힘·언마운트 시 진행 중인 파일 읽기도 중단함.
   useEffect(() => {
     setZoom(1);
     setOffset({ x: 0, y: 0 });
@@ -47,14 +63,20 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
     setIsImageReady(false);
     setImageSrc(null);
     imageObjRef.current = null;
+    abortPendingRead();
 
     if (!isOpen) return;
 
     const saved = readStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
     if (saved && saved.startsWith('data:image/')) {
-      setImageSrc(saved);
+      // 용량 초과 저장값은 모달에 적재하지 않고 파기함
+      if (saved.length > MAX_CUSTOM_IMAGE_STORAGE_CHARS) {
+        removeStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
+      } else {
+        setImageSrc(saved);
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, abortPendingRead]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -156,15 +178,26 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
       }
 
       setErrorMessage(null);
+      abortPendingRead();
       const reader = new FileReader();
+      readerRef.current = reader;
       reader.onload = (event) => {
+        if (readerRef.current !== reader) return;
+        readerRef.current = null;
         if (event.target?.result) {
           setImageSrc(event.target.result as string);
         } else {
           setErrorMessage(t.imageLoadFailed);
         }
       };
-      reader.onerror = () => setErrorMessage(t.imageLoadFailed);
+      reader.onerror = () => {
+        if (readerRef.current !== reader) return;
+        readerRef.current = null;
+        setErrorMessage(t.imageLoadFailed);
+      };
+      reader.onabort = () => {
+        if (readerRef.current === reader) readerRef.current = null;
+      };
       reader.readAsDataURL(file);
     },
     [t]
@@ -280,6 +313,12 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
       return;
     }
 
+    // 캔버스 출력이 상한을 넘으면 저장 시도 전에 안내함
+    if (dataUrl.length > MAX_CUSTOM_IMAGE_STORAGE_CHARS) {
+      setErrorMessage(t.imageStorageQuotaExceeded);
+      return;
+    }
+
     if (!writeStorageItem(CUSTOM_IMAGE_STORAGE_KEY, dataUrl)) {
       // 저장 실패 시 이전 이미지를 유지하고 모달을 닫지 않아 적용 상태를 명확히 함
       setErrorMessage(t.imageStorageQuotaExceeded);
@@ -297,14 +336,14 @@ export const CustomImageModal: React.FC<CustomImageModalProps> = ({
     <div
       className="custom-img-modal-overlay"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="crop-modal-title"
     >
       <div
         ref={contentRef}
         className="custom-img-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="crop-modal-title"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="custom-img-header">

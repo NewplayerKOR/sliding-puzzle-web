@@ -22,17 +22,22 @@ export const AchievementToast: React.FC = () => {
     return unsubscribe;
   }, []);
 
+  const currentId = current?.id;
+
   useEffect(() => {
     if (!current) return;
 
-    // 표시 중인 업적에 맞춰 효과음을 재생하고, 표시 시간이 끝나면 다음 업적으로 넘어감
+    // 표시 중인 업적에 맞춰 효과음을 재생하고, 표시 시간이 끝나면 다음 업적으로 넘어감.
+    // 큐에 항목이 쌓여도 현재 토스트의 타이머를 리셋하지 않아 4.5초 노출을 보장함.
     audioManager.playSfx('victory');
     const timer = setTimeout(() => {
       setQueue((prev) => prev.slice(1));
     }, TOAST_DURATION_MS);
 
     return () => clearTimeout(timer);
-  }, [current]);
+    // current 객체 교체가 아닌 id 기준으로만 타이머를 갱신함
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentId]);
 
   if (!current) return null;
 

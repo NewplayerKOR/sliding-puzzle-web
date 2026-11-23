@@ -69,7 +69,8 @@ describe('App modal focus and keyboard isolation', () => {
     fireEvent.click(trigger);
 
     const dialog = screen.getByRole('dialog');
-    const content = dialog.querySelector('.theme-modal-content') as HTMLElement;
+    // role="dialog"는 내부 콘텐츠 컨테이너에 있으므로 dialog 자체가 포커스 트랩 범위임
+    const content = dialog as HTMLElement;
 
     expect(appContent().hasAttribute('inert')).toBe(true);
     expect(appContent().getAttribute('aria-hidden')).toBe('true');

@@ -93,8 +93,8 @@ describe('App AI hint lifecycle', () => {
     render(<App />);
     startStandardGame();
 
-    const worker = FakeWorker.instances[0];
     fireEvent.click(aiHintButton());
+    const worker = FakeWorker.instances[0];
     const request = sentRequest(worker);
 
     fireEvent.click(screen.getByText(/새 게임/i));
@@ -112,8 +112,8 @@ describe('App AI hint lifecycle', () => {
     render(<App />);
     startStandardGame();
 
-    const worker = FakeWorker.instances[0];
     fireEvent.click(aiHintButton());
+    const worker = FakeWorker.instances[0];
     const request = sentRequest(worker);
 
     act(() => {
@@ -133,8 +133,8 @@ describe('App AI hint lifecycle', () => {
     render(<App />);
     startStandardGame();
 
-    const worker = FakeWorker.instances[0];
     fireEvent.click(aiHintButton());
+    const worker = FakeWorker.instances[0];
 
     act(() => {
       worker.onerror?.(new ErrorEvent('error', { message: 'worker failed' }));
@@ -152,8 +152,8 @@ describe('App AI hint lifecycle', () => {
     render(<App />);
     startStandardGame();
 
-    const worker = FakeWorker.instances[0];
     fireEvent.click(aiHintButton());
+    const worker = FakeWorker.instances[0];
     const request = sentRequest(worker);
 
     act(() => {

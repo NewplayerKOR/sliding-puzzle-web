@@ -36,6 +36,8 @@ import './styles/App.css';
 
 const AI_HINT_TIMEOUT_MS = 5000;
 const CUSTOM_IMAGE_STORAGE_KEY = 'sliding_puzzle_custom_image';
+// data URL 문자열 길이 상한: 5MB LocalStorage quota를 넘기기 전에 안내함
+const MAX_CUSTOM_IMAGE_STORAGE_CHARS = 4 * 1024 * 1024;
 type AiHintErrorKey = 'aiHintUnavailable' | 'aiHintFailed' | 'aiHintTimeout';
 
 export const App: React.FC = () => {
@@ -82,7 +84,13 @@ export const App: React.FC = () => {
 
   const [customImageSrc, setCustomImageSrc] = useState<string | null>(() => {
     const saved = readStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
-    return saved && saved.startsWith('data:image/') ? saved : null;
+    if (!saved || !saved.startsWith('data:image/')) return null;
+    // 용량 초과 저장값은 시작 시 메모리에 적재하지 않고 버림
+    if (saved.length > MAX_CUSTOM_IMAGE_STORAGE_CHARS) {
+      removeStorageItem(CUSTOM_IMAGE_STORAGE_KEY);
+      return null;
+    }
+    return saved;
   });
   const [activeDaily, setActiveDaily] = useState<ActiveDailyChallenge | null>(null);
   const [showNumberOverlay, setShowNumberOverlay] = useState<boolean>(true);
@@ -226,18 +234,15 @@ export const App: React.FC = () => {
     }
   }, [clearAiHintTimer, markAiHintFailure]);
 
-  // Web Worker 초기화 (요청 시점에 이미 생성된 Worker는 덮어쓰지 않음)
+  // Solver Worker는 첫 힌트 요청 시점에 lazy 생성해 미사용 세션의 메모리를 아낌.
+  // 언마운트 시 진행 중 타이머·Worker를 정리함.
   useEffect(() => {
-    if (!solverWorkerRef.current) {
-      solverWorkerRef.current = createSolverWorker();
-    }
-
     return () => {
       clearAiHintTimer();
       solverWorkerRef.current?.terminate();
       solverWorkerRef.current = null;
     };
-  }, [createSolverWorker, clearAiHintTimer]);
+  }, [clearAiHintTimer]);
 
   // 보드·그리드·게임 상태가 바뀌면 진행 중인 힌트 요청과 표시를 즉시 무효화함
   useLayoutEffect(() => {
@@ -260,16 +265,15 @@ export const App: React.FC = () => {
     return () => window.clearTimeout(timer);
   }, [aiHintError, t, showToast]);
 
-  // AI 힌트 쿨다운 타이머
+  // AI 힌트 쿨다운 타이머: 단일 타임아웃 체인으로 1초씩 감소시킴.
+  // setInterval 재생성 방식의 드리프트·누수 없이 쿨다운 변경 시에만 다음 틱을 예약함.
   useEffect(() => {
-    let timer: number | null = null;
-    if (aiCooldown > 0) {
-      timer = window.setInterval(() => {
-        setAiCooldown((prev) => Math.max(0, prev - 1));
-      }, 1000);
-    }
+    if (aiCooldown <= 0) return;
+    const timer = window.setTimeout(() => {
+      setAiCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
     return () => {
-      if (timer !== null) clearInterval(timer);
+      window.clearTimeout(timer);
     };
   }, [aiCooldown]);
 
@@ -520,9 +524,11 @@ export const App: React.FC = () => {
   return (
     <div className="app-container">
       {/* 글로벌 업적 달성 토스트 */}
+      {/* inert 밖에 두어 모달이 열려도 status 발표가 묻히지 않게 함 */}
       <AchievementToast />
 
       {/* 액션 피드백 토스트 (결과 복사/다운로드 등) */}
+      {/* inert 밖에 두어 모달 위에서도 완료 안내를 전달함 */}
       {toastMessage && (
         <div className="global-toast-banner" role="status">
           <span>{toastMessage}</span>
@@ -620,15 +626,15 @@ export const App: React.FC = () => {
         )}
 
         <footer className="app-footer">
-          <p>Sliding Block Puzzle • 100% Serverless Web App • A* Engine & PWA</p>
+          <p>{t.footerOfflineReady}</p>
         </footer>
 
         {/* PWA 설치 배너 */}
         <PwaInstallBanner />
-      </div>
 
-      {/* Service Worker 업데이트 안내 배너 */}
-      <ServiceWorkerUpdateBanner />
+        {/* Service Worker 업데이트 안내 배너: 모달이 열리면 배경과 함께 inert로 비활성화함 */}
+        <ServiceWorkerUpdateBanner />
+      </div>
 
       {/* 완성본 미리보기 모달 */}
       <HintModal

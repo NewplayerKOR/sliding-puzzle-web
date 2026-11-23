@@ -12,6 +12,20 @@ export interface ShareCardContext {
   themeImageSrc: string;
 }
 
+// 캔버스 공유 카드 팔레트: `src/styles/index.css` 디자인 토큰과 동기화함.
+// canvas 2D는 CSS 변수를 참조할 수 없어 토큰 값을 상수로 복제함.
+const SHARE_COLORS = {
+  canvas: '#EFEFEA', // --color-canvas
+  ink: '#171713', // --color-ink
+  charcoal: '#22221D', // --color-charcoal
+  graphite: '#4E4E47', // --color-graphite
+  steel: '#62625A', // --color-steel
+  concrete: '#D2D2C9', // --color-concrete
+  concreteSoft: '#E4E4DC', // --color-concrete-soft
+  paper: '#F7F7F3', // --color-paper
+  signal: '#BB3E0B', // --color-signal-600
+} as const;
+
 export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob | null> {
   const t = translations[getCurrentLanguage()] || translations.ko;
   const canvas = document.createElement('canvas');
@@ -22,21 +36,21 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
   if (!c) return null;
 
   // 1. Off-white Background
-  c.fillStyle = '#EFEFEA';
+  c.fillStyle = SHARE_COLORS.canvas;
   c.fillRect(0, 0, size, size);
 
   // Outer Border
-  c.strokeStyle = '#22221D';
+  c.strokeStyle = SHARE_COLORS.charcoal;
   c.lineWidth = 4;
   c.strokeRect(24, 24, size - 48, size - 48);
 
   // 2. Header Brand
-  c.fillStyle = '#171713';
+  c.fillStyle = SHARE_COLORS.ink;
   c.font = 'bold 44px sans-serif';
   c.textAlign = 'center';
   c.fillText('SLIDING BLOCK PUZZLE', size / 2, 90);
 
-  c.fillStyle = '#4E4E47';
+  c.fillStyle = SHARE_COLORS.graphite;
   c.font = '500 24px sans-serif';
   c.fillText(t.shareCardSubtitle, size / 2, 130);
 
@@ -73,19 +87,19 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
     }
     c.drawImage(img, thumbX, thumbY, thumbSize, thumbSize);
   } catch {
-    c.fillStyle = '#E4E4DC';
+    c.fillStyle = SHARE_COLORS.concreteSoft;
     c.fillRect(thumbX, thumbY, thumbSize, thumbSize);
   }
   c.restore();
 
   // Border around thumbnail
-  c.strokeStyle = '#D2D2C9';
+  c.strokeStyle = SHARE_COLORS.concrete;
   c.lineWidth = 2;
   c.strokeRect(thumbX, thumbY, thumbSize, thumbSize);
 
   // 4. Stars Rating
   const starSymbols = '★'.repeat(ctx.stars) + '☆'.repeat(3 - ctx.stars);
-  c.fillStyle = '#BB3E0B';
+  c.fillStyle = SHARE_COLORS.signal;
   c.font = 'bold 64px sans-serif';
   c.textAlign = 'center';
   c.fillText(starSymbols, size / 2, 620);
@@ -97,20 +111,20 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
 
   // Moves Card
   const mCardX = size / 2 - cardW - 20;
-  c.fillStyle = '#F7F7F3';
+  c.fillStyle = SHARE_COLORS.paper;
   c.beginPath();
   c.roundRect(mCardX, cardY, cardW, cardH, 8);
   c.fill();
-  c.strokeStyle = '#D2D2C9';
+  c.strokeStyle = SHARE_COLORS.concrete;
   c.lineWidth = 2;
   c.stroke();
 
-  c.fillStyle = '#4E4E47';
+  c.fillStyle = SHARE_COLORS.graphite;
   c.font = 'bold 22px sans-serif';
   c.textAlign = 'center';
   c.fillText(t.totalMoves.toUpperCase(), mCardX + cardW / 2, cardY + 42);
 
-  c.fillStyle = '#22221D';
+  c.fillStyle = SHARE_COLORS.charcoal;
   c.font = 'bold 44px sans-serif';
   c.fillText(
     formatMessage(t.moveCountValue, { count: ctx.moveCount }),
@@ -120,11 +134,11 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
 
   // Time Card
   const tCardX = size / 2 + 20;
-  c.fillStyle = '#F7F7F3';
+  c.fillStyle = SHARE_COLORS.paper;
   c.beginPath();
   c.roundRect(tCardX, cardY, cardW, cardH, 8);
   c.fill();
-  c.strokeStyle = '#D2D2C9';
+  c.strokeStyle = SHARE_COLORS.concrete;
   c.lineWidth = 2;
   c.stroke();
 
@@ -132,16 +146,16 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
   const secs = ctx.elapsedTime % 60;
   const timeStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
-  c.fillStyle = '#4E4E47';
+  c.fillStyle = SHARE_COLORS.graphite;
   c.font = 'bold 22px sans-serif';
   c.fillText(t.timeElapsed.toUpperCase(), tCardX + cardW / 2, cardY + 42);
 
-  c.fillStyle = '#22221D';
+  c.fillStyle = SHARE_COLORS.charcoal;
   c.font = 'bold 44px sans-serif';
   c.fillText(timeStr, tCardX + cardW / 2, cardY + 92);
 
   // 6. Footer Info
-  c.fillStyle = '#62625A';
+  c.fillStyle = SHARE_COLORS.steel;
   c.font = '500 22px sans-serif';
   c.textAlign = 'center';
   c.fillText(
@@ -150,7 +164,7 @@ export async function generateShareCardBlob(ctx: ShareCardContext): Promise<Blob
     840
   );
 
-  c.fillStyle = '#BB3E0B';
+  c.fillStyle = SHARE_COLORS.signal;
   c.font = 'bold 24px sans-serif';
   c.fillText(t.shareCardPlayNow, size / 2, 890);
 

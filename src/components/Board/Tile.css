@@ -10,7 +10,9 @@
   font-size: clamp(0.95rem, calc(0.6rem + 2.5vw), 1.8rem);
   user-select: none;
   -webkit-user-select: none;
-  touch-action: none;
+  /* 보드 전체 스와이프는 PuzzleBoard의 non-passive touchmove에서 처리하므로
+     타일 자체는 manipulation만 제한해 페이지 스크롤·핀치줌을 막지 않음 */
+  touch-action: manipulation;
   overflow: hidden;
   image-rendering: -webkit-optimize-contrast;
   transition: border-color var(--transition-fast), filter var(--transition-fast), background-color var(--transition-fast);
@@ -131,7 +133,8 @@
   background: var(--color-charcoal);
   border-radius: var(--radius-1);
   text-shadow: none;
-  animation: nudgeUp 0.9s infinite alternate ease-in-out;
+  /* 장식 반복 모션을 1회성 피드백으로 한정함 (DESIGN_SYSTEM 4.3). reduced-motion은 전역에서 축소됨 */
+  animation: nudgeUp 0.9s 1 ease-in-out;
 }
 
 .tile-ai-hint-overlay.dir-down .hint-arrow {

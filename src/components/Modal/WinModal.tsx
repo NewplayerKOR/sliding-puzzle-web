@@ -25,6 +25,9 @@ interface WinModalProps {
   onNotify?: (msg: string) => void;
 }
 
+// 승리 컨페티 팔레트: 공유 카드와 같은 신호·잉크 계열로 통일함
+const WIN_CONFETTI_COLORS = ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'];
+
 export const WinModal: React.FC<WinModalProps> = ({
   isOpen,
   moveCount,
@@ -33,7 +36,7 @@ export const WinModal: React.FC<WinModalProps> = ({
   challengeMode = 'standard',
   isNewRecord = false,
   moveHistory = [],
-  themeName = 'Theme',
+  themeName,
   themeImageSrc = getAssetUrl('assets/images/theme_nature.png'),
   onPlayAgain,
   onNextLevel,
@@ -41,6 +44,8 @@ export const WinModal: React.FC<WinModalProps> = ({
 }) => {
 
   const { t } = useTranslation();
+  // 호출부가 항상 테마명을 전달하지만 미지정 시에는 번역된 일반 명칭으로 폴백함
+  const displayThemeName = themeName || t.themeLabel;
   const contentRef = useRef<HTMLDivElement>(null);
 
   // 승리 모달은 결과 확인이 필요한 완료 상태라 Escape로 닫지 않는다.
@@ -77,14 +82,14 @@ export const WinModal: React.FC<WinModalProps> = ({
         angle: 60,
         spread: 60,
         origin: { x: 0, y: 0.7 },
-        colors: ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'],
+        colors: [...WIN_CONFETTI_COLORS],
       });
       confetti({
         particleCount: 4,
         angle: 120,
         spread: 60,
         origin: { x: 1, y: 0.7 },
-        colors: ['#BB3E0B', '#D9480F', '#22221D', '#F2B892', '#F7F7F3'],
+        colors: [...WIN_CONFETTI_COLORS],
       });
 
       if (Date.now() < animationEnd) {
@@ -103,24 +108,24 @@ export const WinModal: React.FC<WinModalProps> = ({
     };
   }, [isOpen]);
 
-  // Replay interval timer
+  // Replay interval timer: updater는 순수하게 다음 단계만 계산하고,
+  // 재생 종료는 별도 effect에서 처리해 StrictMode 이중 호출에서도 상태가 꼬이지 않게 함.
   useEffect(() => {
-    let timer: number | null = null;
-    if (isPlayingReplay && moveHistory.length > 0) {
-      timer = window.setInterval(() => {
-        setReplayStep((prev) => {
-          if (prev >= moveHistory.length - 1) {
-            setIsPlayingReplay(false);
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, replaySpeed);
-    }
+    if (!isPlayingReplay || moveHistory.length === 0) return;
+    if (replayStep >= moveHistory.length - 1) return;
+    const timer = window.setTimeout(() => {
+      setReplayStep((prev) => Math.min(prev + 1, moveHistory.length - 1));
+    }, replaySpeed);
     return () => {
-      if (timer !== null) clearInterval(timer);
+      window.clearTimeout(timer);
     };
-  }, [isPlayingReplay, moveHistory.length, replaySpeed]);
+  }, [isPlayingReplay, moveHistory.length, replaySpeed, replayStep]);
+
+  useEffect(() => {
+    if (isPlayingReplay && moveHistory.length > 0 && replayStep >= moveHistory.length - 1) {
+      setIsPlayingReplay(false);
+    }
+  }, [isPlayingReplay, moveHistory.length, replayStep]);
 
   if (!isOpen) return null;
 
@@ -147,7 +152,7 @@ export const WinModal: React.FC<WinModalProps> = ({
         moveCount,
         elapsedTime,
         stars,
-        themeName,
+        themeName: displayThemeName,
         themeImageSrc,
       },
       onNotify
@@ -160,8 +165,15 @@ export const WinModal: React.FC<WinModalProps> = ({
       : null;
 
   return (
-    <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <div ref={contentRef} className="modal-content" tabIndex={-1}>
+    <div className="modal-overlay">
+      <div
+        ref={contentRef}
+        className="modal-content"
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
         {/* 클리어 트로피 */}
         <div className="modal-trophy-wrapper">
           <Trophy size={36} className="win-trophy-icon" aria-hidden="true" />
@@ -294,8 +306,11 @@ export const WinModal: React.FC<WinModalProps> = ({
                     type="button"
                     className="replay-btn speed"
                     onClick={() => setReplaySpeed(replaySpeed === 200 ? 100 : 200)}
+                    aria-label={formatMessage(t.replaySpeedLabel, {
+                      speed: replaySpeed === 200 ? '1x' : '2x',
+                    })}
                   >
-                    <span>{replaySpeed === 200 ? '1x' : '2x'}</span>
+                    <span aria-hidden="true">{replaySpeed === 200 ? '1x' : '2x'}</span>
                   </button>
                 </div>
               </div>

@@ -235,6 +235,18 @@ textarea:focus-visible,
   outline-offset: var(--focus-ring-offset);
 }
 
+/* :focus-visible 미지원 브라우저에서 키보드 포커스가 사라지지 않게 대체함 */
+@supports not selector(:focus-visible) {
+  button:focus,
+  select:focus,
+  input:focus,
+  textarea:focus,
+  [role="button"]:focus {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color);
+    outline-offset: var(--focus-ring-offset);
+  }
+}
+
 /* 타이머·이동 수·기록처럼 값이 변하는 숫자에 사용함 */
 .u-numeric {
   font-family: var(--font-mono);

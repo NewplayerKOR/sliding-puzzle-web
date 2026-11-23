@@ -55,14 +55,14 @@ export const DailyModal: React.FC<DailyModalProps> = ({
     <div
       className="daily-modal-overlay"
       onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="daily-modal-title"
     >
       <div
         ref={contentRef}
         className="daily-modal-content"
         tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="daily-modal-title"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="daily-modal-header">

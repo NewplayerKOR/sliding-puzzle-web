@@ -1,3 +1,6 @@
+// 캐시 버전과 앱 버전의 수동 동기화 정책:
+// `package.json` 1.4.x의 정적 셸이 바뀔 때마다 CACHE_NAME을 올림(v2.4).
+// 빌드 주입 BUILD_ASSETS가 달라지면 이전 캐시를 activate에서 파기함.
 const CACHE_NAME = 'sliding-puzzle-v2.4';
 // Vite 빌드 시 해시된 엔트리 JS·CSS·solver worker 목록으로 치환됨
 const BUILD_ASSETS = [];
