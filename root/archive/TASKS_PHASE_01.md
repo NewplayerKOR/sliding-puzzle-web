@@ -1957,3 +1957,55 @@
 - **증거**:
   - `root/archive/assets/task-dev-43/verification.json`, `title-scrolled-412x839.webp`, `game-scrolled-360x640.webp`, `modal-scroll-lock-412x839.webp`, `lighthouse-accessibility.json`
   - 테스트: `e2e/mobile-scroll.spec.ts`, `src/hooks/useBodyScrollLock.test.ts`
+- **작업 상태**: `root/TASKS.md`의 TASK-DEV-43 완료 요약 반영
+
+## TASK-QA-12 — Context7 기반 최신 도구체인 적용 준비·검증
+
+- **Phase**: 01
+- **담당**: QA_DEVOPS
+- **우선순위**: P2
+- **완료일**: 2026-11-23
+- **목표**: Context7 최신 문서와 npm registry를 대조해 현재 도구체인의 호환성·breaking change를 확인하고, 위험도가 낮은 patch·minor 업데이트와 `@testing-library/jest-dom` 8을 적용한 뒤 전체 회귀를 검증한다. 소스 수정이 필요한 변경은 DEV 후속 작업으로 분리한다.
+- **대상 파일**: `package.json`, `package-lock.json`
+- **완료 기준(DoD)**:
+  - Context7 라이브러리 ID·질의·문서 한계와 `npm outdated`·`npm audit` 결과를 완료 기록에 남긴다.
+  - patch·minor 업데이트와 `@testing-library/jest-dom` 8.0.0을 lockfile 기준으로 적용하고 `npm ci`를 통과한다.
+  - 소스 수정이 필요한 변경은 강제 적용하지 않고 DEV 후속 작업으로 등록한다.
+  - 전체 `npm test`, `npm run typecheck`, `npm run build`, `npm run test:e2e`, `npm audit` 0건을 확인한다.
+  - `root/AGENTS.md`·`root/DESIGN_SYSTEM.md`의 도구체인 버전 기록은 PM에 전달하거나 PM이 갱신한다.
+- **선행 조건**: 없음
+
+### 진행 결과
+
+- Context7에서 `/vitejs/vite`, `/vitest-dev/vitest`, `/react/react` 라이브러리 ID를 resolve하고 각 1건씩 문서를 조회함.
+  - Vite 8: `generateBundle`·`closeBundle`은 Rolldown Plugin hook으로 계속 지원됨. `closeBundle`은 `bundle.close()` finally에서 항상 실행되므로 정리용이며, outDir 후처리는 `writeBundle` 경로가 정석이라는 점을 확인함. 현재 `generateBundle`에서 목록 수집→`closeBundle`에서 `dist/sw.js` 주입 구조와 충돌 없음.
+  - Vitest: `test.environment: 'browser'`는 설정 오류이며 Browser Mode는 `browser.enabled`로만 활성화함. 현재 `environment: 'jsdom'` 단일 설정과 `setupFiles` 구조는 해당 없음.
+  - React: `react`·`react-dom`은 동일 버전 강제이며 현재 19.3.1로 일치함. 19.3은 수정 중심 릴리스라 breaking 없음.
+- `npm outdated --long` 적용 전 잔여 6건: `vite` 8.3.6→8.3.8, `vitest` 5.1.0→5.1.1, `@vitejs/plugin-react` 6.2.1→6.3.0, `jsdom` 31.0.0→31.0.1, `@playwright/test` 1.65.0→1.65.1, `lucide-react` 1.70.0→1.78.0(작업 명세의 1.77.0보다 레지스트리 최신). React 19.3.1·TypeScript 7.0.2는 최신 유지.
+- `package.json`의 `@testing-library/jest-dom`을 `^7.0.1`→`^8.0.0`으로 변경하고 `npm install`로 lockfile을 동기화한 뒤, `npm update`로 나머지 6건을 semver 범위 내 최신으로 올림. 소스 수정 없음.
+- `src` 전체에서 `jest-dom` matcher 직접 사용 0건을 확인함(`jest-dom|toBeInTheDocument|toHaveAttribute|toBeVisible` 검색 무일치). 패키지 제거 여부는 별도 정리 작업으로 남김.
+- `web-design-guidelines` 최신 rules 대조 스팟체크: `outline: none` 2건은 `:focus-visible` 대체 있음, `transition`은 전부 명시적 속성, `user-scalable=no` 없음, action `onClick`은 전부 `<button>`, 이미지에 `alt` 있음, `prefers-reduced-motion` 전역+WinModal 보유. 신규 위반 0건.
+- `frontend-design` 관점: 신규 디자인 제안 없이 기존 심플·어반 정체성 유지 확인. 툴체인 업데이트로 시각 토큰·레이아웃 변경 없음.
+- 소스 수정이 필요한 변경 없음. DEV 후속 작업 등록 없음.
+- `root/AGENTS.md`·`root/DESIGN_SYSTEM.md` 버전 기록은 PM 갱신 대상으로 전달함(본 작업에서 문서 미수정).
+
+### 검증
+
+- **대상 리비전**: 작업 전 `dfec0de`, `package.json`+`package-lock.json` 변경 후 working tree
+- **실행 명령과 결과**:
+  - `npm outdated --long`: 적용 후 잔여 0건
+  - `npm ci`: PASS(`added 113 packages`, `found 0 vulnerabilities`)
+  - `npm test`: 41개 파일/251개 케이스 PASS
+  - `npm run typecheck`: 0 Errors
+  - `npm run build`: Vite 8.3.8 성공(`index-VPCr2crs.js`, `index-DRg5ETGW.css`, `solver.worker-CyubXBrk.js`)
+  - `npx playwright test`: Chromium 31/31 PASS
+  - `npm audit`: 전체 0건, `--omit=dev` 0건
+- **증거**:
+  - `root/archive/assets/task-qa-12/verification.json`
+  - 변경: `package.json`, `package-lock.json`
+- **미실행·제한**:
+  - 실제 모바일 실기기, Safari/Firefox 네이티브, 스크린리더 수동 검증은 미실행.
+  - WebKit/Firefox E2E는 기존 QA-11에서 수행했으며 본 작업 DoD가 아니라 재실행하지 않음.
+  - Lighthouse는 본 작업 DoD가 아니라 측정하지 않음.
+  - Vercel 프로젝트는 소유자가 의도적으로 pause한 상태이며 결함으로 판단하지 않음.
+- **작업 상태**: `root/TASKS.md`의 TASK-QA-12 완료 요약과 Phase 보관 링크 반영. AGENTS.md·DESIGN_SYSTEM.md 버전 기록은 PM 갱신 대상.

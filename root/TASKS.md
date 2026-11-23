@@ -31,31 +31,16 @@
 
 ### [QA / DevOps]
 
-#### [ ] TASK-QA-12 — Context7 기반 최신 도구체인 적용 준비·검증
-
-- **Phase**: 01
-- **담당**: QA_DEVOPS
-- **우선순위**: P2
-- **목표**: Context7 최신 문서와 npm registry를 대조해 현재 도구체인의 호환성·breaking change를 확인하고, 위험도가 낮은 patch·minor 업데이트와 `@testing-library/jest-dom` 8을 적용한 뒤 전체 회귀를 검증한다. 소스 수정이 필요한 변경은 DEV 후속 작업으로 분리한다.
-- **대상 파일**: `package.json`, `package-lock.json`, 필요 시 `.github/workflows/ci.yml`
-- **재현/증거**:
-  - 2026-11-20 `npm outdated --long`: `vite` 8.3.6→8.3.8, `vitest` 5.1.0→5.1.1, `@vitejs/plugin-react` 6.2.1→6.3.0, `jsdom` 31.0.0→31.0.1, `@playwright/test` 1.65.0→1.65.1, `lucide-react` 1.70.0→1.77.0, `@testing-library/jest-dom` 7.0.1→8.0.0. React 19.3.1·TypeScript 7.0.2는 최신.
-  - `npm audit` prod·전체 모두 0건.
-  - Context7 `/vitejs/vite`: Vite 8 Rolldown, Node `^20.19` 또는 `>=22.12`, plugin hook 변경. 현재 Node 26.13.0과 `generateBundle`·`closeBundle` 사용은 지원 범위.
-  - Context7 `/vitest-dev/vitest`: `environment: 'browser'` 금지, jsdom 설정·`setupFiles` 병합·`base: '/'` 변경. 현재 jsdom 단일 설정과 `setupFiles` 구조는 해당 없음.
-  - Context7 `/react/react`: 19.3은 수정 중심이며 `react`·`react-dom` 정확한 버전 일치 필요. 현재 19.3.1로 일치.
-  - `@testing-library/jest-dom` 8.0.0은 Vitest 5 미만 지원을 제거하고 `>=5 <6`을 지원한다. 현재 Vitest 5.1.0과 호환. Context7 문서는 v6.9.1까지만 있어 GitHub release note로 보완.
-- **DoD**:
-  - Context7 라이브러리 ID·질의·문서 한계와 `npm outdated`·`npm audit` 결과를 완료 기록에 남긴다.
-  - patch·minor 업데이트와 `@testing-library/jest-dom` 8.0.0을 lockfile 기준으로 적용하고 `npm ci`를 통과한다. 현재 테스트에서 `jest-dom` matcher를 직접 사용하지 않는 점은 기록하고, 제거 여부는 별도 정리 작업으로 남긴다.
-  - 소스 수정이 필요한 변경은 강제 적용하지 않고 DEV 후속 작업으로 등록한다.
-  - 전체 `npm test`, `npm run typecheck`, `npm run build`, `npm run test:e2e`, `npm audit` 0건을 확인한다. DEV-43 신규 테스트가 있으면 해당 수치를 포함한다.
-  - `root/AGENTS.md`·`root/DESIGN_SYSTEM.md`의 도구체인 버전 기록은 PM에 전달하거나 PM이 갱신한다.
-- **선행 조건**: 없음
+(대기 중인 작업 없음)
 
 ---
 
 ## 3. Recent Completions (최근 완료 요약)
+
+- **TASK-QA-12** — Context7 기반 최신 도구체인 적용 준비·검증 (완료일: 2026-11-23)
+  - 핵심 결과: Context7(`/vitejs/vite`·`/vitest-dev/vitest`·`/react/react`) 대조 후 `@testing-library/jest-dom` 8.0.0과 patch·minor 6건(vite 8.3.8·vitest 5.1.1·plugin-react 6.3.0·jsdom 31.0.1·playwright 1.65.1·lucide 1.78.0)을 lockfile 기준으로 적용함. 소스 수정 없이 `generateBundle`·`closeBundle` 호환 확인, jest-dom matcher 미사용 기록. 설계 스팟체크 신규 위반 0건
+  - 검증 범위: `npm outdated` 잔여 0건, `npm ci` PASS, Vitest 41개 파일/251개 케이스 PASS, tsc 0 Errors, Vite 8.3.8 빌드 성공, Chromium E2E 31/31 PASS, `npm audit` 전체·prod 0건. 실제 모바일 실기기·Safari/Firefox 네이티브·스크린리더·Lighthouse·Vercel 재배포는 미실행
+  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-12--context7-기반-최신-도구체인-적용-준비검증)
 
 - **TASK-DEV-43** — 모바일 문서 세로 스크롤 복구 (완료일: 2026-11-20)
   - 핵심 결과: `body`의 `overscroll-behavior: none`을 제거하고 `html`에만 `overscroll-behavior-y: none`을 유지함. `body`의 `overflow-x`를 `clip`으로 바꿔 스크롤 컨테이너화를 막고, 문서 스크롤이 html로 이동한 뒤 모달 잠금이 뚫리지 않도록 `useBodyScrollLock`이 html·body overflow를 함께 잠그고 복원하게 수정함. CDP touch swipe 기반 모바일 회귀 E2E를 추가함
@@ -77,13 +62,8 @@
   - 검증 범위: Vitest 41개 파일/251개 케이스 PASS(`swUpdateManager` 7/7, 첫 설치 레이스 테스트는 수정 전 1 failed/6 skipped), tsc 0 Errors, Vite 8.3.6 빌드 성공, Chromium E2E 31/31 PASS. `e2e/sw-first-install.spec.ts` Chromium 2/2·WebKit 2/2 PASS. WebKit E2E는 수정 전 배너를 재현하지 못해 레이스 고정은 단위 테스트 실패로 확인함. 배너 360×640 top 96px/헤더 버튼 bottom 87px, 1280×800 top 96px/bottom 53px로 교차 0건. 실제 설치 PWA 업데이트·Safari 네이티브 설치는 미실행
   - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-dev-40--pwa-첫-설치-업데이트-배너-오탐-방지)
 
-- **TASK-QA-11** — P2 수정 전체 회귀·크로스브라우저 검증 (완료일: 2026-11-20)
-  - 핵심 결과: DEV-32~39의 P2 수정 8건이 모두 통과함. AI 폴백 5.5초 유지·이동 시 해제, 모달 스크롤 잠금·중첩 방지, 커스텀 이미지 상태·손상 차단, Confetti 정리·공유 취소 무폴백, PWA v2.4/17건 오프라인, Web Audio 단일 볼륨 스케일·BGM 자동 전환, Time Attack 46초 이동 거부, 접근성·홈 확인을 확인함. 검증 중 WebKit 첫 설치 업데이트 배너 오탐, Daily grid row 누락, BGM 모달 음소거 상태 라벨 누락 등 신규 P2 3건을 DEV-40~42로 등록함
-  - 검증 범위: Vitest 41개 파일/247개 케이스 PASS, tsc 0 Errors, Vite 8.3.6 빌드 성공, Chromium E2E 16/16 PASS, Lighthouse 접근성 1.0. 독립 Playwright 86개 체크 PASS(Chromium·WebKit·Firefox·서브패스 포함). 실제 모바일 실기기·Safari 네이티브·스크린리더 수동 검증은 미실행
-  - 원문: [archive/TASKS_PHASE_01.md](./archive/TASKS_PHASE_01.md#task-qa-11--p2-수정-전체-회귀크로스브라우저-검증)
-
 ---
 
 ## 4. Phase Archives (Phase별 보관 목록)
 
-- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-DEV-28 (모바일 터치 타깃·PWA 배너 접근성 정비), TASK-DEV-29 (정답 보기 읽기 전용 미리보기·기록 무결성), TASK-DEV-30 (PWA 최초 설치 오프라인 프리캐시), TASK-DEV-31 (Daily 활성 컨텍스트·시작 날짜 무결성), TASK-DEV-32 (AI 힌트 폴백·토스트 타이머), TASK-DEV-33 (모달 배경 스크롤·중첩), TASK-DEV-34 (커스텀 이미지 상태·로드 실패), TASK-DEV-35 (Confetti·공유 후처리), TASK-DEV-36 (PWA 브랜딩·프리캐시 자산), TASK-DEV-37 (오디오 볼륨·BGM 자동 연동), TASK-DEV-38 (Time Attack 이동 시점 검사), TASK-DEV-39 (접근성·파괴적 액션 UX), TASK-DEV-40 (PWA 첫 설치 업데이트 배너), TASK-DEV-41 (Daily 캘린더 목록 구조), TASK-DEV-42 (BGM 모달 음소거 라벨), TASK-DEV-43 (모바일 문서 스크롤), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-QA-10 (P1 수정 독립 검증·회귀 테스트), TASK-QA-11 (P2 수정 전체 회귀·크로스브라우저 검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)
+- [Phase 01 완료 원문](./archive/TASKS_PHASE_01.md) — TASK-PM-01~04 (거버넌스 정합화, 기능 카탈로그, 검증 환경, 버전 정렬), TASK-QA-07 (v1.4.0 전면 품질·성능·안정성 검토), TASK-DEV-14 (벽시계 기준 타이머 보정), TASK-DEV-15 (4개 국어 하드코딩 정리), TASK-DEV-16 (커스텀 이미지 보존·업로드 검증), TASK-DEV-17 (AI 힌트 요청 무효화·실패 처리), TASK-DEV-18 (모달 포커스 트랩·키보드 입력 충돌 해결), TASK-DEV-19 (ARIA 구조·대비·확대·라벨 정비), TASK-DEV-20 (360px·1화면 레이아웃·터치 처리), TASK-DEV-21 (PWA 아이콘·SW 폴백·업데이트 안정화), TASK-DEV-22 (BGM·이미지 경량화·초기 로딩 최적화), TASK-DEV-23 (업적 토스트 다중 달성 큐·메타데이터 병합), TASK-DEV-24 (LocalStorage 접근·스키마 방어), TASK-DEV-25 (심플·어반 디자인 시스템·가독성 기준), TASK-DEV-26 (전 화면 심플·어반 UI/UX·가독성 개선), TASK-DEV-27 (360px 모달 텍스트 줄바꿈·잘림 정비), TASK-DEV-28 (모바일 터치 타깃·PWA 배너 접근성 정비), TASK-DEV-29 (정답 보기 읽기 전용 미리보기·기록 무결성), TASK-DEV-30 (PWA 최초 설치 오프라인 프리캐시), TASK-DEV-31 (Daily 활성 컨텍스트·시작 날짜 무결성), TASK-DEV-32 (AI 힌트 폴백·토스트 타이머), TASK-DEV-33 (모달 배경 스크롤·중첩), TASK-DEV-34 (커스텀 이미지 상태·로드 실패), TASK-DEV-35 (Confetti·공유 후처리), TASK-DEV-36 (PWA 브랜딩·프리캐시 자산), TASK-DEV-37 (오디오 볼륨·BGM 자동 연동), TASK-DEV-38 (Time Attack 이동 시점 검사), TASK-DEV-39 (접근성·파괴적 액션 UX), TASK-DEV-40 (PWA 첫 설치 업데이트 배너), TASK-DEV-41 (Daily 캘린더 목록 구조), TASK-DEV-42 (BGM 모달 음소거 라벨), TASK-DEV-43 (모바일 문서 스크롤), TASK-QA-08 (CI/CD·테스트 환경·의존성·배포 문서 정비), TASK-QA-09 (심플·어반 UI/UX·가독성·시각 회귀 검증), TASK-QA-10 (P1 수정 독립 검증·회귀 테스트), TASK-QA-11 (P2 수정 전체 회귀·크로스브라우저 검증), TASK-QA-12 (Context7 기반 최신 도구체인 적용 준비·검증), TASK-PM-05 (Node.js 요구사항·배포 문서 링크 정합화)
